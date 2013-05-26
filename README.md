@@ -14,6 +14,10 @@ http://jfilesync.sourceforge.net/
 
 Don't mix the derived work here and his clean software on sourceforge. Only bother him if it's related to his original version. Other complaints go here :-)
 
+Binary Distribution: 
+
+https://www.dropbox.com/s/3n4snlbw9tyjgec/JFileSync3.zip
+
 Scenario:
 
 You replaced regular backups with online syncing tools like SugarSync, Syncplicity, MegaCloud, Wuala, Google Drive, Dropbox and so on. After having synced your media files, downloaded software, publicly available documents you come to the more confidential stuff...

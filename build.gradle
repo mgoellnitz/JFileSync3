@@ -79,15 +79,10 @@ distZip {
 	//  include '*.ico'
 	//}
 	into(project.name) {
-		from 'scripts'
-		include 'legal/*.*'
-		include 'profiles/*.*'
-		include 'README.md'
-	}
-	into(project.name) {
 		from '.'
 		include 'legal/*.*'
 		include 'profiles/*.*'
+		include 'README.md'
 	}
 	// I personally have the JCE stuff prepared there
 	into(project.name) {
