@@ -110,18 +110,18 @@ task(encryptionTest) << {
 	ant.unzip(src: "test/test-folders.zip", dest: "$buildDir/${project.name}")
 
 	println "Encrypting"
-	String cmd = "cmd /c bin${File.separator}${project.name} -config ..\\..\\profiles\\tests\\1-encrypt-with-metadata.xml -nogui -nohistory -quiet"
+	String cmd = "cmd /c bin${File.separator}${project.name} -config ..\\..\\test\\1-encrypt-with-metadata.xml -nogui -nohistory -quiet"
 	project.exec(cmd, "$buildDir/${project.name}")
 	
 	println "Decrypting taking every folders metadata into account"
-	cmd = "cmd /c bin${File.separator}${project.name} -config ..\\..\\profiles\\tests\\2-decrypt-with-metadata.xml -nogui -nohistory -quiet"
+	cmd = "cmd /c bin${File.separator}${project.name} -config ..\\..\\test\\2-decrypt-with-metadata.xml -nogui -nohistory -quiet"
 	project.exec(cmd, "$buildDir/${project.name}")
 	
 	println "Decrypting ignoring every folders metadata"
-	cmd = "cmd /c bin${File.separator}${project.name} -config ..\\..\\profiles\\tests\\3-decrypt-without-metadata.xml -nogui -nohistory -quiet"
+	cmd = "cmd /c bin${File.separator}${project.name} -config ..\\..\\test\\3-decrypt-without-metadata.xml -nogui -nohistory -quiet"
 	project.exec(cmd, "$buildDir/${project.name}")
 	
 	println "And now please compare by hand"
-	cmd = "cmd /c bin${File.separator}${project.name} -config ..\\..\\profiles\\tests\\4-compare-resulting-folders.xml -nohistory"
+	cmd = "cmd /c bin${File.separator}${project.name} -config ..\\..\\test\\4-compare-resulting-folders.xml -nohistory"
 	project.exec(cmd, "$buildDir/${project.name}")
 }
