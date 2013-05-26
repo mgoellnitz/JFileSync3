@@ -1,0 +1,72 @@
+<html>
+	<head>
+		<title>Introduction</title>
+		<link rel="stylesheet" type="text/css" href="JSSStyle.css"></link>
+	</head>
+	<body>
+		<h1>What is JFileSync?</h1>
+		<p>JFileSync is used to synchronize pairs of directories. For
+			instance, if you want to ensure that a certain set of files
+			located on your workstation matches a corresponding set on
+			your laptop or an external data drive.</p>
+		<p>In order to synchronize directories, you basically have to
+			perform the three following steps:</p>
+		<ol>
+			<li><img src="icons/Profile.gif" alt="JFS"></img>&nbsp;
+				Define a <a href="JFSProfile.html">synchronization
+				profile</a> including the directory pairs you would like
+				to synchronize.</li>
+			<li><img src="icons/Compare.gif" alt="JFS"></img>&nbsp;
+				Perform a comparison of all specified directory pairs in
+				your synchronization profile. The results are presented
+				in the center of the main window. The column labeled with
+				<i>A</i> (for <i>action</i>) shows icons representing
+				the actions that would have to be performed in order to
+				synchronize the directories. That means, whether to copy
+				a file or directory, delete it, or the user has to be asked in
+				order to determine the right action (e.g., in case of
+				inconsistent file lengths or time stamps).</li>
+			<li><img src="icons/Synchronize.gif" alt="JFS"></img>
+				&nbsp; Start the synchronization of all specified
+				directory pairs in your synchronization profile. A
+				dialog appears showing all files and directories that
+				will have to be copied (and deleted). After confirming the
+				lists of copy and delete statements (or selecting a
+				special subset of them), the synchronization will be
+				performed accordingly.</li>
+		</ol>
+		<p>You may save <img src="icons/Save.gif" alt="JFS"></img> and
+			load <img src="icons/Open.gif" alt="JFS"></img> your
+			specified synchronization profiles.</p>
+		<p>JFileSync provides several <a href="JFSSyncModes.html">
+			synchronization modes</a>. The default setting uses the
+			automatic mode that will use the history of synchronized files
+			in order to determine whether a file should be copied or has to be
+			deleted. However, you may also force JFileSync to create an
+			exact copy of one file system ignoring whether a file on one side
+			is newer than its corresponding file.</p>
+		<p>JFileSync provides several <a href="JFSViews.html">
+			views</a> on the presented list of analyzed files. Usually
+			only files that have to be modified in some way (e.g., copied or
+			deleted) are viewed. But you may also view all analyzed files or
+			other certain sub-sets.</p>
+		<p>The complete JFileSync functionality can be controlled via the
+			provided graphical user interface as well as the command line.
+			If you are using JFileSync from the command line, several <a
+				href="JFSCmdLineOptions.txt">command line
+			options</a> are provided (also available when calling
+			<code>java -jar jfs.jar -help</code> from a command shell).
+			You may then perform synchronizations interactively using
+			the build-in <a href="JFSShellOptions.txt">JFS shell</a>
+			or in a script-like manner using the <code>-quiet</code>
+			option.</p>
+		<p>JFileSync also provides a couple of plug-ins which enhance the
+			functionality with respect to time stamp correction (e.g.,
+			when having problems switching from winter to summer time) or
+			detection of read-only files.</p>
+		<p>JFileSync is an open source project provided under the <a
+				href="JFSLicense.html">GNU General Public
+			License</a>. It is hosted on SourceForge:
+			<i>http://jfilesync.sourceforge.net</i>.</p>
+	</body>
+</html>

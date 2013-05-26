@@ -1,0 +1,160 @@
+<html>
+	<head>
+		<title>Synchronization Profile</title>
+		<link rel="stylesheet" type="text/css" href="JSSStyle.css"></link>
+	</head>
+	<body>
+		<h1>Synchronization Profile</h1>
+		<p>The synchronization profile <img src="icons/Profile.gif"
+				alt="JFS"></img> includes all application settings
+			that are relevant for synchronizing a set of specified
+			directory pairs. You may save <img src="icons/Save.gif"
+				alt="JFS"></img> and load <img src="icons/Open.gif"
+				alt="JFS"></img> specified synchronization profiles.
+			You can change all listed options via the profile management
+			dialog available via the JFileSync main frame. A single
+			profile is separated into three different parts:</p>
+		<ol>
+			<li>Basic settings for synchronization including the
+				synchronization mode and the directory pairs you want to
+				synchronize.</li>
+			<li>Advanced settings including the granularity for
+				comparing the time stamps of two files.</li>
+			<li>Files and directories to include and exclude from
+				synchronization.</li>
+			<li>Server settings including the port, pass phrase, user 
+			    name and so one using the profile with a back end 
+			    server.</li>
+		</ol>
+		<h2>Basic Settings</h2>
+		<p>In the following we give an overview of basic profile settings.
+			These options should be defined once for each set of directory
+			pairs you want to synchronize together.</p>
+		<p>(B1) The profile should have a title describing its main purpose
+			(like <code>Synchronizing my data directory between laptop
+			and workstation</code>).</p>
+		<p>(B2) The profile must include a list of directory pairs that
+			should be compared and synchronized. We call the first member
+			in this pair <i>source</i> and the second one <i>target</i>
+			directory. But this is just for labeling the two. You are
+			allowed to copy and delete files from the source directory to
+			the target directory and vice versa. If you want to add a new
+			pair, a directory explorer is opened and you may choose a source
+			and target directory on your local file system.</p>
+		<p>If you want to synchronize a local directory with a directory of
+			an external computer, you have to access a network drive or use a
+			WebDAV back end for
+			synchronization. The easiest way is, to simply connect both
+			computers (via a Local Area Network) and to make the
+			directories of one of your machines available for the other one
+			(e.g., by using Windows File System Sharing, Samba, or NFS).</p>
+		<p>(B3) You may also specify the <a href="JFSSyncModes.html">
+			synchronization mode</a>; i.e., the mode used in order to
+			synchronize the specified pairs of directories. The default
+			settings use the automatic mode that will use the history of
+			synchronized files in order to determine whether a file should
+			be copied or has to be deleted. You may also change the
+			synchronization mode using the corresponding menu items of
+			the JFileSync main frame.</p>
+		<h2>Advanced Settings</h2>
+		<p>In the following we describe more advanced profile settings.
+			These options usually don't have to be modified.</p>
+		<p>(A1) You may specify the granularity in ms for the comparison of
+			two files or directories. Under the DOS and Windows FAT file
+			system, the finest granularity on time resolution is two
+			seconds. So we define the default maximum tolerance range for
+			each comparison as 2000ms.</p>
+		<p>(A2) You may specify the buffer size used for copying files. A
+			buffer size of 262144 bytes is used by default.</p>
+		<p>(A3) A user may set actions for each element of the synchronization
+			table manually. If the flag for keeping user-defined actions is
+			de-activated, such user-defined actions will be overwritten by the
+			original actions when switching between synchronization modes. 
+			The default behavior is to keep such user-defined actions.</p>
+		<p>(A4) You may specify whether JFileSync stores histories of
+			synchronized files. Per default histories are stored to the
+			JFS configuration directory (usually <code>.jfs</code>,
+			located in the user's home directory) for each synchronized
+			directory pair. The histories are used to automatically
+			determine files to copy and delete on source and/or target
+			directory structures. Turning this off for a profile means
+			that the automatic synchronization mode will not be able to
+			determine synchronization actions based on the
+			synchronization history.</p>
+		<p>(A5) You may determine whether the can write property of a file
+			should be replicated during synchronization. Per default a file
+			is set read only, if no right access is granted. However, if the
+			file is changed and would have to be synchronized, the can
+			write property prohibits overwriting the target file if set.</p>
+		<h2>Include and Exclude Filters</h2>
+		<p>You may specify a list of regular expressions that should be used
+			in order to determine whether a certain file or directory
+			should be included/excluded in the comparison and
+			synchronization to be performed. If the name of the file or
+			directory matches the expression, it is
+			included/excluded.</p>
+		<p>Excluding expressions are stronger than including ones; that
+			is, if a file or directory matches an include and exclude
+			expression, it is excluded from comparison.</p>
+		<p>For instance, if you want to exclude all files that use
+			<code>xyz</code> as a file extension (like
+			<code>test.xyz</code>) you may add <code>(.*)\.txt</code>
+			as a regular expression to the list of exclude filters. In a
+			regular expression the dot (<code>.</code>) represents an
+			arbitrary character. If you want to specify the dot itself as a
+			character you have to write a <code>\</code> in front of it.
+			Brackets are just used for grouping purposes.</p>
+		<h2>Server Options</h2>
+		<p>You can change the options to access backend servers when not
+		    only syncronizing local directories via the JFS
+			server configuration panel as part of the profile management
+			dialog..</p>
+		<p>(S1) You may specify the base directory used on server side for
+			finding files. This is the directory added as a parent
+			directory to all files on server side. For instance, if you want
+			to access a directory named <code>dir</code> on the server and
+			the base directory is <code>/home/user</code>, the server is
+			going to search for directory <code>/home/user/dir</code>
+			on server side. The default directory is the current working
+			directory (the directory from which the JFS server was
+			started).</p>
+		<p>(S2) You may specify a pass phrase used for accessing a JFS
+			server. Only connections using this pass phrase for
+			authentication are allowed to use the server. All other
+			connections are rejected. It is highly recommended to change
+			the pass phrase before using a JFS server.</p>
+		<p>(S3) You may specify the standard port used by the JFS server (and
+			used by a client to connect to the server).</p>
+		<p>(S4) You may specify the timeout in ms used for all socket
+			connections. The server is launched with a timeout of 5000 ms by
+			default. If you are using a slow modem connection, you should
+			increase this value to at least one minute (3600000 ms).</p>
+		<p>(S5) You may specify whether a started JFS server is shut down by
+			the JFS client as soon as the synchronization is done. If
+			synchronizations have to run for a very long time, it may be
+			convenient for security reasons to automatically shut down
+			the server after synchronization.</p>
+		<h2>Some Further Hints</h2>
+		<p>In your profile, you can specify directory pairs that should
+			match after synchronization. For instance, let us assume that
+			the source directory is <code>C:\Source</code> and the
+			target directory is <code>E:\Target</code>. That means, all
+			files and directories in <code>C:\Source</code> are
+			synchronized with all files and directories in
+			<code>E:\Target</code>. It does not mean, that the source
+			directory itself is copied to the target directory. The terms
+			<i>source</i> and <i>target</i> are just for labeling two
+			directories that should be synchronized; that means, should
+			contain the same files after synchronization.</p>
+		<p>You may modify existing directory pairs via the profile manager
+			itself. Just do a double-click on the source or target
+			directory's name in the table of directory pairs and modify the
+			directory name accordingly. JFileSync should then ask you for
+			creating a new directory, if the one you entered does not exist.
+			Non-existing directories are written in red color. If you
+			specify a directory located on a JFS server, no such tests are
+			performed in order to avoid connecting to the server each time
+			you change a member of a directory pair. External directories
+			are written in blue color.</p>
+	</body>
+</html>

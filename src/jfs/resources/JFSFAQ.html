@@ -1,0 +1,193 @@
+<html>
+	<head>
+		<title>Synchronization Profile</title>
+		<link rel="stylesheet" type="text/css" href="JSSStyle.css"></link>
+	</head>
+	<body>
+		<h1>FAQ</h1>
+		<ol>
+			<li><a href="#regexp">How can I specify files to include and
+				exclude using regular expressions?</a></li>
+			<li><a href="#timeout">When using a JFS server, the log file
+				tells me something about timeouts. What can I do?</a>
+			</li>
+			<li><a href="#mem">What to do, if Java reports too less
+				memory?</a></li>
+			<li><a href="#script">How to use JFS as part of
+				synchronization scripts?</a></li>
+			<li><a href="#lang">Is it possible to change language and
+				region settings?</a></li>
+			<li><a href="#laf">Can I change the look and feel?</a>
+			</li>
+			<li><a href="#i18n">How to add translations to JFS?</a>
+			</li>
+		</ol>
+		
+		<h2><a name="regexp"></a>How can I specify files to include and
+			exclude using regular expressions?</h2>
+		<p>In order to specify files or directories to include and/or
+			exclude from comparison and synchronization, you have to
+			specify a so called regular expression, which is matched with
+			the names of files and directories.</p>
+		<p>Note that the regular expression is not matched with the
+			complete path of a file or directory. For instance, if you have a
+			file called <code>C:\Documents\Test\Test.txt</code> the
+			expression will only be matched with <code>Test.txt</code>.</p>
+		<p>You may find an introduction to regular expressions in
+			<i>http://www.regular-expressions.info</i>. The
+			following list presents some typical examples for exclude and
+			include patterns.</p>
+		<ol>
+			<li><code>.*\.bak</code> will match all file names ending
+				with <code>.bak</code>.</li>
+			<li><code>.*My Music.*</code> will match all file names
+				including the words <code>My Music</code>.</li>
+			<li><code>CVS</code> will match all file names exactly
+				matching the word <code>CVS</code>.</li>
+		</ol>
+		
+		<h2><a name="timeout"></a>When using a JFS server, the log file
+			tells me something about timeouts. What can I do?</h2>
+		<p>When using a JFS server, the default timeout is set to 5 seconds.
+			Using a slow connection to the JFS server (e.g., via modem) may
+			cause a lot of timeouts during synchronization. Therefore,
+			you should increase the timeout (via the JFS server
+			properties) to at least a minute (3.600.000 ms) before
+			starting synchronization.</p>
+		
+		<h2><a name="mem"></a>What to do, if Java reports too less
+			memory?</h2>
+		<p>If you compare a lot of different files at once, it may happen that
+			the Java virtual machine is out of memory. In this case, you
+			should restart the program like:</p>
+		<p><code>java -Xmx256m -jar jfs.jar</code></p>
+		<p>The parameter <code>-Xmx256</code> will increase the maximum
+			heap size to 256 MB. You may also add this parameter to one of the
+			starting scripts (e.g., <code>JFileSync.bat</code> for
+			Windows systems).</p>
+		
+		<h2><a name="script"></a>How to use JFS as part of
+			synchronization scripts?</h2>
+		<p>JFS can be controlled via the <a
+				href="JFSCmdLineOptions.txt">command line</a>.
+			Normally, the JFS <a href="JFSShellOptions.txt">command
+			line shell</a> is started, when specifying the
+			<code>-nogui</code> option. In this case, JFS performs an
+			interactive synchronization via the shell; that is, you can
+			have a look at the comparison table, specify synchronization
+			modes, answer questions about files that may not be
+			automatically synchronized, and so on. When using the
+			<code>-quiet</code> option, every operation is performed in
+			background without user interaction. This means that files
+			that may not automatically be synchronized (e.g., because of
+			an inconsistent time stamp) will be skipped during
+			synchronization.</p>
+		<p>Assuming that you specified your directory pairs,
+			synchronization mode, and other profile settings in file
+			<code>MyProfile.xml</code> the JFS call as part of a
+			synchronization script may look like follows:</p>
+		<p><code>java -jar jfs.jar -config MyProfile.xml -nogui
+			-quiet</code></p>
+		
+		<h2><a name="lang"></a>Is it possible to change language and
+			region settings?</h2>
+		<p>Yes, it is. By default JFS uses the system defaults of your user.
+			If the selected language and region of your user is not English
+			US, which is the only currently supported language and region,
+			some dialog elements that are provided by the Java Swing User
+			Interface will be displayed according to the chosen system
+			language and region. This holds, for instance, for the file
+			chooser dialogs or the display of time stamps. You may change
+			this behavior by specifying some Java properties when the
+			application is started.</p>
+		<p>If you want a special locale (language and region), like de_DE
+			(German, Germany), you may call JFS as follows:</p>
+		<p><code>java -Duser.language=de -Duser.region=DE -jar
+			jfs.jar</code></p>
+		<p>The parameter <code>-Duser.language=de</code> will set the
+			used language for the Java virtual machine to <code>de</code>
+			and the parameter <code>-Duser.region=DE</code> will set
+			the used region to <code>DE</code>. You may also add this
+			parameter to one of the starting scripts (e.g.,
+			<code>JFileSync.bat</code> for Windows systems).</p>
+		
+		<h2><a name="laf"></a>Can I change the look and feel?</h2>
+		<p>Yes, you can. By default the system look and feels are used for
+			each Java platform. You may specify a specific look and feel,
+			like JGoodies Plastic XP (see <i>jgoodies.com</i>), as
+			follows:</p>
+		<p><code>java -cp lib\jfs.jar;lib\looks-1.3.jar
+			jfs.JFileSync -laf
+			com.jgoodies.looks.plastic.PlasticXPLookAndFeel</code>
+			</p>
+		<p>The Java parameter <code>-cp
+			lib\jfs.jar;lib\looks-1.3.jar</code> specified the
+			location of the JFS library and the JGoodies library
+			containing the look and feel you want to use. The JFS parameter
+			<code>-laf
+			com.jgoodies.looks.plastic.PlasticXPLookAndFeel</code>
+			specified the class in the JGoodies library that represents
+			the look and feel you want to use.</p>
+		<p>Please note that the look and feel class specified by the
+			<code>-laf</code> option is stored in the JFS configuration
+			file (as part of the JFS configuration directory of your home
+			directory). So, you only have to call JFS for the first time
+			including the <code>-laf</code> option. After the first
+			application start, you may use the following call in order to
+			start JFS with the previously chosen look and feel:</p>
+		<p><code>java -cp lib\jfs.jar;lib\looks-1.3.jar
+			jfs.JFileSync</code></p>
+		<p>You may also add this parameter to one of the starting scripts
+			(e.g., <code>JFileSync.bat</code> for Windows
+			systems).</p>
+		
+		<h2><a name="i18n"></a>How to add translations to JFS?</h2>
+		<p>JFS has a quite simple internationalization mechanism. Let us
+			assume, we want to add a German translation for JFS. You may add
+			the new language for the command line and graphical user
+			interface by following the following steps:</p>
+		<ol>
+			<li>Download the JFS development version.</li>
+			<li>Copy file <code>JFSTranslation.properties</code> in
+				directory <code>src/jfs/resources/conf</code> to
+				<code>JFSTranslations_de_DE.properties</code> in
+				order to get a template of all key words that have to be
+				translated.</li>
+			<li>Translate all values for all keys in the copied file.</li>
+			<li>Call <code>ant</code> in order to create a new JFS
+				build.</li>
+			<li>Start JFS with the newly added language and region in order
+				to check your translations: <code>java
+				-Duser.language=de -Duser.region=DE -jar
+				lib/jfs.jar</code>.</li>
+		</ol>
+		<p>You may also add translations for the help files and command line
+			help text files by following the following steps:</p>
+		<ol>
+			<li>Download the JFS development version.</li>
+			<li>Copy file <code>JFSConfig.properties</code> in
+				directory <code>src/jfs/resources/conf</code> to
+				<code>JFSConfig_de_DE.properties</code> in order to
+				get a copy of the main configuration for the locale
+				(language and region) we want to add.</li>
+			<li>Copy the file you want to translate from the directory
+				<code>src/jfs/resources</code> to the same directory
+				and add <code>_de_DE</code> to the file name (before the
+				file extension), like:
+				<code>JFSFAQ_de_DE.html</code>.</li>
+			<li>Translate all text in the copied file.</li>
+			<li>Change the keys of the file
+				<code>JFSConfig_de_DE.properties</code>
+				accordingly, so that the newly translated file is
+				referenced, like <code>HELP_FAQ =
+				JFSFAQ_de_DE.html</code>. The mechanism is quite
+				general; you may even localize the used graphics.</li>
+			<li>Call <code>ant</code> in order to create a new JFS
+				build.</li>
+			<li>Start JFS with the newly added language and region in order
+				to check your translations: <code>java
+				-Duser.language=de -Duser.region=DE -jar
+				lib/jfs.jar</code>.</li>
+		</ol>
+	</body>
+</html>

@@ -1,0 +1,114 @@
+<html>
+	<head>
+		<title>Synchronization Modes</title>
+		<link rel="stylesheet" type="text/css" href="JSSStyle.css"></link>
+	</head>
+	<body>
+		<h1>Available Synchronization Modes</h1>
+		<p>The default setting uses the automatic mode that will use the
+			history of synchronized files in order to determine whether a
+			file should be copied or has to be deleted. However, you may also
+			force JFileSync to create an exact copy of one file system
+			ignoring whether a file on one side is newer than its
+			corresponding file. The following synchronization modes are
+			supported by JFileSync:</p>
+		<h2>Automatic</h2>
+		<p>The synchronization history is used to determine whether to
+			delete or copy files. Example 1: If a file exists on target side
+			and matches a previously synchronized file stored in the
+			synchronization history, but does not exist on source side
+			(any more), the user has deleted the file on source side after
+			the last synchronization. In this case, the file on the target
+			side will be deleted, so that both file structured will match
+			after the synchronization. Example 2: If a file on source side
+			is newer than a file on target side and the file on target side
+			matches a previously synchronized file stored in the
+			synchronization history, the file on source side will be
+			copied to the target side. Example 3: If no synchronization
+			history is available for a file, the user will be asked when two
+			matching files exist having a different time stamp. In this
+			case the source and target files may have been added and
+			modified after the last synchronization and it would be
+			impossible to determine automatically which file to
+			copy.</p>
+		<p>The identifier of this mode is <code>9</code> when using it from
+			the command line.</p>
+		<h2>Merge File Structures</h2>
+		<p>All more up-to-date files and directories on source side will be
+			copied to the target side and vice versa. If a file or directory
+			is missing on source side, it will be copied from target side and
+			vice versa. No files or directories will be deleted at all. The
+			file system structures will simply be merged; no
+			synchronization history will be used.</p>
+		<p>The identifier of this mode is <code>10</code> when using it
+			from the command line.</p>
+		<h2>Transfer Source Files</h2>
+		<p>Only more up-to-date files and directories existing on the
+			source side will be copied to the target side. If a file or
+			directory is missing on the target side, it will be copied from
+			the source side. No files or directories will be deleted at all
+			and no synchronization history will be used.</p>
+		<p>The identifier of this mode is <code>11</code> when using it
+			from the command line.</p>
+		<h2>Transfer Target Files</h2>
+		<p>Only more up-to-date files and directories existing on the
+			target side will be copied to the source side. If a file or
+			directory is missing on the source side, it will be copied from
+			the target side. No files or directories will be deleted at all
+			and no synchronization history will be used.</p>
+		<p>The identifier of this mode is <code>12</code> when using it
+			from the command line.</p>
+		<h2>Transfer Source Structure</h2>
+		<p>Only more up-to-date files and directories existing on the
+			source side will be copied to the target side. If a file or
+			directory is missing on the target side, it will be copied from
+			the source side. If a file or directory on the target side
+			doesn't exist on the source side, it will be deleted from the
+			target side. No files or directories on the source side will be
+			deleted at all and no synchronization history will be
+			used.</p>
+		<p>The identifier of this mode is <code>13</code> when using it
+			from the command line.</p>
+		<h2>Transfer Target Structure</h2>
+		<p>Only more up-to-date files and directories existing on the
+			target side will be copied to the source side. If a file or
+			directory is missing on the source side, it will be copied from
+			the target side. If a file or directory on the source side
+			doesn't exist on the target side, it will be deleted from the
+			source side. No files or directories on the target side will be
+			deleted at all and no synchronization history will be
+			used.</p>
+		<p>The identifier of this mode is <code>14</code> when using it
+			from the command line.</p>
+		<h2>Transfer Common Files</h2>
+		<p>Only files and directories that exist on both sides will be
+			synchronized according to their time stamp. If a file or
+			directory on the source side is more up-to-date than it's
+			counterpart on the target side, it will be copied from the
+			source side and vice versa. No files or directories will be
+			deleted at all and no synchronization history will be
+			used.</p>
+		<p>The identifier of this mode is <code>15</code> when using it
+			from the command line.</p>
+		<h2>Force Source Structure</h2>
+		<p>All newer and even older files and directories from the source
+			side will be copied to the target side. All files not existing on
+			the source side will be deleted from the target side. That
+			means, if a file on the target side is newer than the file on the
+			source side, it will be overwritten with the older file. No
+			files or directories on the source side will be deleted at all
+			and no synchronization history will be used.</p>
+		<p>The identifier of this mode is <code>16</code> when using it
+			from the command line.</p>
+		<h2>Force Target Structure</h2>
+		<p>All newer and even older files and directories from the target
+			side will be copied to the source side. All files not existing on
+			the target side will be deleted from the source side. That
+			means, if a file on the source side is newer than the file on the
+			target side, it will be overwritten with the older file. No
+			files or directories on the target side will be deleted at all
+			and no synchronization history will be used.</p>
+		<p>The identifier of this mode is <code>17</code> when using it
+			from the command line.</p>
+	</body>
+</html>

@@ -1,0 +1,141 @@
+Usage:
+
+  JFileSync [options] | <configuration profile>
+
+Options:
+
+  You can use the following options in any combination and sequence.
+  However, for some options it doesn't make sense to use them twice
+  or even more.
+
+  Basic Settings:
+
+  -config <profile>
+           Loads a JFS configuration profile stored in <profile>. Any other
+           options specified so far will be overwritten with the options
+           specified in the configuration file. However, any options
+           specified after loading the profile will change the loaded
+           options.
+
+  -sync <mode>
+           Sets the number of the synchronization mode. All
+           available and valid numbers are documented in the
+           program's help system (available via the GUI).
+
+  -view <mode>
+           Sets the number of the current view. All available
+           and valid view numbers are documented in the
+           program's help system (available via the GUI).
+
+  -dir <source> <target>
+           Specifies a pair of directories that should be
+           compared. All files and directories in the <source>
+           directory are compared (and synchronized) with the 
+           files and directories in the <target> directory.
+           If you use this option twice or more times all specified
+           directory pairs will be compared (and synchronized).
+
+  Advanced Settings:
+
+  -granularity <value>
+           Sets the granularity of the comparison in milliseconds
+           which is used in order to compare the last modification
+           times of two files.
+           Under the DOS and Windows FAT file system, the finest
+           granularity is two seconds. So we define the default
+           maximum tolerance range for each comparison as 2000ms.
+
+  -buffersize <value>
+           Sets the buffer size used. If this value is not specified
+           a buffer size of 262144 bytes is used by default.
+
+  -overwriteuseractions
+           A user may set actions for each element of the synchronization
+           table manually. If this flag is used, such user-defined actions
+           are overwritten by the original actions when switching between 
+           synchronization modes. The default behavior is to keep such
+           user-defined actions.
+
+  -nohistory
+           This option turns off storing histories of synchronized files.
+           Per default histories are stored to the JFS configuration
+           directory (usually ".jfs", located in the user's home directory)
+           for each synchronized directory pair. They are used to
+           automatically determine files to copy and delete on source and/or
+           target directory structures.
+
+  -nowriteprotection
+           This option determines whether the can write property of a file
+           should be replicated during synchronization. Per default a file
+           is set read only, if no right access is granted. However, if the
+           file is changed and would have to be synchronized, the can
+           write property prohibits overwriting the target file if set.
+
+  -debug   This option turns on the debug mode which is disabled by
+           default. This mode is just for testing and evaluation purposes
+           and may or may not change your files consistently. It should
+           not be activated unless you are debugging the application.
+           
+  Include and Exclude Filters:
+
+  -include <expression> [<property> [<objects>]]
+           Specifies a regular expression that should be used in order to
+           determine whether a certain file or directory should be
+           included in the performed comparison. If the property (name or path)
+           of the object (file or directory) matches the expression, it is
+           included.
+           You may apply the filter to the following properties:
+           - 'name': the name of the file or directory (e.g., 'test.txt').
+           - 'path': the path of the file or directory including source or
+             target path (e.g., '/my-source-dir/files/text/test.txt').
+           - 'relative_path': the relative path of the file or directory
+             excluding source or target path (e.g., 'files/text/test.txt').
+           By default, the 'name' property is checked.
+           You may apply the filter to the following objects:
+           - 'all': all objects including files and directories.
+           - 'directories': includes directories exclusively.
+           - 'files': includes files exclusively.
+           By default, 'all' objects are checked.
+
+  -exclude <expression> [<property> [<objects>]]
+           Specifies a regular expression that should be used in order to
+           determine whether a certain file or directory should be
+           excluded in the performed comparison. If the property (name or path)
+           of the object (file or directory) matches the expression, it is
+           excluded. Excluding expressions are stronger than including ones;
+           that is, if a file or directory matches an include and exclude
+           expression, it is excluded from comparison.
+           Please see the description of include filters for allowed properties
+           and objects.
+
+  Additional Command Line Options:
+
+  -nogui   Starts the program without Graphical User Interface; i.e., 
+           performs the comparison and synchronization according to 
+           the specified options. The command line interface provided
+           allows to access all synchronization functionality.
+           It is possible to interrupt the comparison and
+           synchronization by pressing 'return' during the state of
+           progress is displayed.
+
+  -quiet   If the program is started without GUI (Option '-nogui') it
+           will start a simple shell after the comparison of your
+           specified directory pairs (Option '-dir').
+           If this option is specified, it will perform the
+           synchronization at once without starting the shell.
+
+  -laf [<value>]
+           If no value is provided, this option lists all installed
+           GUI look and feels and their corresponding Java class names.
+           These names can be used as a value in order to apply a specific
+           look and feel. Once specified, this value is stored in the
+           application's settings. If you want to use a different look and
+           feel class that is part of an external library you may start JFS
+           as follows:
+             java -cp <JFS library><separator><LaF library>
+               jfs.JFileSync -laf <LaF class>
+
+  -help, -?
+           Displays this command line help message.
+
+  -version The version of the application.

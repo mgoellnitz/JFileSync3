@@ -117,8 +117,8 @@ You can find a copy all licenses of JFileSync3 and the used libraries in the
 5) Development Notes
 
 Required packages for JFileSync3 development (not included in the distribution):
-- Java 6 SDK >= 1.6.0 (see 'http://java.sun.com')
-- Apache Ant >= 1.6.2 (see 'http://ant.apache.org')
+- Java 7 SDK >= 1.7.0 (see 'http://java.sun.com')
+- Gradle >= 1.4 (see 'http://ant.apache.org')
 
 Used and therewith recommended development tools:
 - Java 7 SDK 1.7.0
@@ -142,12 +142,11 @@ Feel free to issue bug reports and ideas here.
 
 HOW-BUILD:
 
-Create the jar from IDE. :-) 
+gradle distZip
 
-(Rip out the org.bouncycastle part if you put all dependencies in a jar - it needs to be in a separate jar file)
+Take the ZIP file from build/distributions
 
-(Rip out META-INF/maven to save some bytes)
-
+a small test-suite can be found in profiles/test (which is not packaged in the distribtions zip)
 
 6) Included Directories and Files
 
@@ -158,9 +157,4 @@ application:
 - legal: The program licenses.
 - lib: Necessary libraries in order to run the system.
 - profiles: Sample syncing profiles.
-
-- EncFS.bat: Batch file to access encfs directory structures.
-- Extract.bat: Batch file extract files from encrypted directory structures.
-- JFileSync.bat: Batch file to launch JFileSync from Windows.
-- JFileSync.sh: Shell script to launch JFileSync from Unix/Linux.
-- JFileSync.ico: Icon resource file containing the JFileSync logo.
+- scripts: start scripts for the whole tool or parts of it.

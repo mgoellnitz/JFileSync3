@@ -1,0 +1,33 @@
+p, h1, h2, ol, ul, li, a {
+  font-family: sans-serif;
+}
+
+p, h2, ol, ul, li, a, code, pre {
+  font-size: small;
+}
+
+p {
+  margin: 5px 0px 5px 0px;
+  padding: 0px;
+}
+
+h1 {
+  font-size: medium;
+  margin: 5px 0px 5px 0px;
+  padding: 0px;
+}
+
+h2 {
+  margin: 5px 0px 5px 0px;
+  padding: 0px;
+}
+
+ol, ul {
+  margin: 0px 0px 0px 15px;
+  padding: 0px;
+}
+
+li {
+  margin: 5px 0px 5px 0px;
+  padding: 0px;
+}

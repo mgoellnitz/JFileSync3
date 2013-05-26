@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jFileSync title="4. Check and compare both decrypted folder">
+  <directory src="PlaintextIgnoringMetadataFolder" tgt="PlaintextFromMetadataFolder"/>
+</jFileSync>

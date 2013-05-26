@@ -1,0 +1,84 @@
+<html>
+	<head>
+		<title>Views</title>
+		<link rel="stylesheet" type="text/css" href="JSSStyle.css"></link>
+	</head>
+	<body>
+		<h1>Available Views</h1>
+		<p>The default view displays files and directories that will have to be 
+			copied or deleted according to the chosen <a 
+			href="JFSSyncModes.html">synchronization mode</a>. However, you may 
+			also view all compared files or only a certain sub-set of 
+			them. The following views are supported by JFileSync:</p>
+		<h2>All Files</h2>
+		<p>Views all files and directories that have been analyzed during 
+			comparison, even if they don't have to be copied or deleted to 
+			perform the synchronization.</p>
+		<p>The identifier of this view is <code>20</code> when using it from 
+			the command line.</p>
+		<h2>Files to Copy or Delete</h2>
+		<p>Views only files and directories that will have to be copied or 
+			deleted according to the chosen synchronization mode or for which 
+			the user has to be asked in order to perform the synchronization. 
+			This includes files and directories that have to be copied or 
+			deleted, or have an inconsistent file length, or are not part of 
+			the synchronization history, or contradict the information stored 
+			in the synchronization history. The latter two holds when a 
+			history-based synchronization mode is chosen.</p>
+		<p>The identifier of this view is <code>21</code> when using it from 
+			the command line.</p>
+		<h2>Source Files to Copy or Delete</h2>
+		<p>Views only files and directories on the source side that will have 
+			to be copied or deleted according to the chosen synchronization 
+			mode or for which the user has to be asked in order to perform the 
+			synchronization. This includes files and directories that have to 
+			be copied or deleted, or have an inconsistent file length, or are 
+			not part of the synchronization history, or contradict the 
+			information stored in the synchronization history. The latter two 
+			holds when a history-based synchronization mode is chosen.</p>
+		<p>The identifier of this view is <code>22</code> when using it from 
+			the command line.</p>
+		<h2>Target Files to Copy or Delete</h2>
+		<p>Views only files and directories on the target side that will have 
+			to be copied or deleted according to the chosen synchronization 
+			mode or for which the user has to be asked in order to perform the 
+			synchronization. This includes files and directories that have to 
+			be copied or deleted, or have an inconsistent file length, or are 
+			not part of the synchronization history, or contradict the 
+			information stored in the synchronization history. The latter two 
+			holds when a history-based synchronization mode is chosen.</p>
+		<p>The identifier of this view is <code>23</code> when using it from 
+			the command line.</p>
+		<h2>Files to Copy</h2>
+		<p>Views only files and directories that will have to be copied 
+			according to the chosen synchronization mode or for which the user 
+			has to be asked in order to perform the synchronization. 
+			This includes files and directories that have to be copied, or have 
+			an inconsistent file length, or are not part of the synchronization 
+			history, or contradict the information stored in the 
+			synchronization history. The latter two holds when a history-based 
+			synchronization mode is chosen.</p>
+		<p>The identifier of this view is <code>24</code> when using it from 
+			the command line.</p>
+		<h2>Files to Delete</h2>
+		<p>Views only files and directories that will have to be deleted 
+			according to the chosen synchronization mode or for which the user 
+			has to be asked in order to perform the synchronization. 
+			This includes files and directories that have to be deleted, or 
+			have an inconsistent file length, or are not part of the 
+			synchronization history, or contradict the information stored in 
+			the synchronization history. The latter two holds when a 
+			history-based synchronization mode is chosen.</p>
+		<p>The identifier of this view is <code>25</code> when using it from 
+			the command line.</p>
+		<h2>Ambiguous Files</h2>
+		<p>Views only files and directories for which the user has to be asked 
+			in order to perform the synchronization. This includes files and 
+			directories that have an inconsistent file length, or are not part 
+			of the synchronization history, or contradict the information 
+			stored in the synchronization history. The latter two holds when a 
+			history-based synchronization mode is chosen.</p>
+		<p>The identifier of this view is <code>26</code> when using it from 
+			the command line.</p>
+	</body>
+</html>

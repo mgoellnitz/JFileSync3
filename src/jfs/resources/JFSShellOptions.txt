@@ -1,0 +1,45 @@
+JFileSync Shell Commands:
+
+  sync     Starts the synchronization according to the current list
+           of copy and delete statements.
+
+  t        Shows the results of the comparison of all specified
+           directory pairs in form of a single table. The entries
+           shown in the table depend on the specified view.
+
+  c        Shows the current list of copy statements. If a
+           certain line number is marked ('X') the copy statement
+           is performed during the synchronization, otherwise it
+           will be skipped.
+
+  d        Shows the current list of delete statements. If a
+           certain line number is marked ('X') the delete statement
+           is performed during the synchronization, otherwise it
+           will be skipped.
+
+  c <Number>
+           Toggles the copy statement with line number <Number>
+           in the list of copy statements; i.e., if the line is
+           marked (this is the default state) the copy statement
+           is performed, if not the statement is skipped.
+
+  d <Number>
+           Toggles the delete statement with line number <Number>
+           in the list of delete statements; i.e., if the line is
+           marked (this is the default state) the delete statement
+           is performed, if not the statement is skipped.
+
+  sync <mode>
+           Sets the number of the synchronization mode. All
+           available and valid numbers are documented in the
+           program's help system.
+
+  view <mode>
+           Sets the number of the current view. All available
+           and valid view numbers are documented in the
+           program's help system.
+
+  help     Shows this screen of JFileSync Shell Commands.
+
+  exit     Quits the JFileSync Shell without synchronization.
+
