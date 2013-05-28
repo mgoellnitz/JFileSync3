@@ -170,6 +170,10 @@ public class JFSConfigServerView extends JDialog implements ActionListener {
 			config.setServerTimeout(timeout.getNumber().intValue());
 			config.setServerUserName(user.getText());
 			config.setServerPassPhrase(String.valueOf(passphrase.getPassword()));
+			config.setEncryptionCipher(cipher.getText());
+			config.setEncryptionPassPhrase(String.valueOf(encphrase
+					.getPassword()));
 		}
 	}
+	
 }

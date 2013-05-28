@@ -84,11 +84,8 @@ public class JFSWebDavFile extends JFSFile {
 
 
     private FileInfo createFileInfo(String folder, DavResource resource) {
-        if (log.isInfoEnabled()) {
-            log.info("createFileInfo() "+folder+resource.getName()+" ["+resource.isDirectory()+"]"+resource.getCustomProps());
-            for (QName qn : resource.getCustomPropsNS().keySet()) {
-                log.info("createFileInfo() "+qn.getNamespaceURI()+"/"+qn.getLocalPart()+"/"+qn.getPrefix());
-            } // for
+        if (log.isDebugEnabled()) {
+            log.debug("createFileInfo() "+folder+resource.getName()+" ["+resource.isDirectory()+"]"+resource.getCustomProps());
         } // if
         FileInfo result = new FileInfo();
         result.setCanRead(true);
@@ -528,8 +525,7 @@ public class JFSWebDavFile extends JFSFile {
      */
     @Override
     public boolean flush() {
-        // TODO: Post data to server to perform changes:
-        // return access.putInfo(info);
         return true;
     }
+    
 }
