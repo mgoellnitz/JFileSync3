@@ -99,7 +99,7 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
     private JButton toggleDetailsButton;
 
     /** Determines whether details should be shown. */
-    private boolean showDetails;
+    private boolean showDetails = true;
 
 
     /**
@@ -114,7 +114,7 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
         this.mainView = mainView;
-        int width = 280;
+        int width = 75*(int)(mainView.getFrame().getBounds().getWidth())/100;
 
         // Get the translation object:
         JFSText t = JFSText.getInstance();
@@ -220,7 +220,7 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
         cp.add(buttonPanel, BorderLayout.SOUTH);
 
         // Hide details and reset dialog:
-        hideDetails();
+        // hideDetails();
         pack();
         reset();
     }
