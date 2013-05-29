@@ -262,7 +262,7 @@ public class JFSConfigDirectoryView extends JDialog implements ActionListener {
                     chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
                     // Get file:
-                    String prefix = schema+"://localhost/";
+                    String prefix = schema+"://";
                     if (isSource) {
                         chooser.setDialogTitle(t.get("profile.dir.getSrc.title"));
                         if (srcElement.getText().trim().equals("")) {

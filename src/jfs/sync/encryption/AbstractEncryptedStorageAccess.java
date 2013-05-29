@@ -44,17 +44,17 @@ public abstract class AbstractEncryptedStorageAccess {
     private static char[] FILE_NAME_CHARACTERS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
             'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '.', ' ', '_', '-',
             'T', 'S', 'C', 'O', 'P', 'L', 'R', 'M', 'A', 'D', 'E', 'F', 'B', 'V', 'U', 'H', 'W', '<', '>', '*', ':', '/', '|', 'G',
-            'I', 'J', 'K', 'N', 'Q', 'X', 'Y', 'Z', '‰', 'ˆ', '¸', 'ﬂ', 'ƒ', '÷', '‹', '+', '=', '{', '}', '[', ']', '$', '\'', '@',
-            '!', '&', '%', '~', ',', '#', ';', '(', ')', 'ª', '´', '˜', '¥', '`', 'È', 'Ë', '‡', '≤', '?', '"' };
+            'I', 'J', 'K', 'N', 'Q', 'X', 'Y', 'Z', '√§', '√∂', '√º', '√ü', '√Ñ', '√ñ', '√ú', '+', '=', '{', '}', '[', ']', '$', '\'', '@',
+            '!', '&', '%', '~', ',', '#', ';', '(', ')', '¬ª', '¬´', '√∑', '¬¥', '`', '√©', '√®', '√†', '¬≤', '?', '"' };
 
     private static char[] DYNAMIC_SPECIAL_CODES = { '<', '>', '?', '*', ':', '"' };
 
     private static char[] codes = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
             'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e',
-            'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '‰', 'ˆ', '¸',
-            'ﬂ', 'ƒ', '÷', '‹', '\'', 'µ', '˜', '@', '!', '&', '%', '~', '#', '(', ')', '[', ']', ',', '.', '{', '}', '¥', '`', '·',
-            'È', 'Ì', 'Û', '˙', '¡', '…', 'Õ', '”', '⁄', '‡', 'Ë', 'Ï', 'Ú', '˘', '¿', '»', 'Ã', '“', 'Ÿ', '‚', 'Í', 'Ó', 'Ù', '˚',
-            '¬', ' ', 'Œ', '‘', '€', 'ª', '´', 'Â', '≈', 'Ò', '—', 'À', 'Î' };
+            'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '√§', '√∂', '√º',
+            '√ü', '√Ñ', '√ñ', '√ú', '\'', '¬µ', '√∑', '@', '!', '&', '%', '~', '#', '(', ')', '[', ']', ',', '.', '{', '}', '¬¥', '`', '√°',
+            '√©', '√≠', '√≥', '√∫', '√Å', '√â', '√ç', '√ì', '√ö', '√†', '√®', '√¨', '√≤', '√π', '√Ä', '√à', '√å', '√í', '√ô', '√¢', '√™', '√Æ', '√¥', '√ª',
+            '√Ç', '√ä', '√é', '√î', '√õ', '¬ª', '¬´', '√•', '√Ö', '√±', '√ë', '√ã', '√´' };
 
     private byte[] reverseCodes = new byte[256];
 
@@ -128,7 +128,6 @@ public abstract class AbstractEncryptedStorageAccess {
 
 
     protected byte[] getCredentials(String relativePath, String salt) {
-        // System.out.println("path*: "+relativePath);
         String localPwd = getPassword(relativePath)+salt;
         byte[] localBytes = getEncodedFileName("", localPwd);
         byte[] credentials = new byte[32];
@@ -244,7 +243,7 @@ public abstract class AbstractEncryptedStorageAccess {
         for (int i = 0; i<name.length(); i++ ) {
             char code = name.charAt(i);
             if ((int)code>256) {
-                log.error("Strange code at "+name.charAt(i)+" ("+relativePath+":"+name+")");
+                log.error("getEncodedFileName() Strange code at "+name.charAt(i)+" ("+relativePath+":"+name+")");
             } // if
             boolean noSpecial = true;
             for (int sci = 0; (sci<specialCodes.size())&&(noSpecial); sci++ ) {

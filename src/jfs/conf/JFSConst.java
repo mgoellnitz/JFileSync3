@@ -50,7 +50,7 @@ public class JFSConst {
 
 	/** The default location for JFS configuration files. */
 	public final static String HOME_DIR = System.getProperty("user.home", ".")
-			+ File.separator + ".jfs";
+			+ File.separator + ".jfs3";
 
 	/** The current working directory. */
 	public final static String WORKING_DIR = System

@@ -101,7 +101,7 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
      * @param frame
      *            The main frame.
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public JFSConfigView(JFrame frame) {
         super(frame, true);
 
@@ -115,7 +115,7 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
 
         // Create the modal dialog:
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setTitle(t.get("profile.title"));
+        setTitle(t.get("profile.title")+config.getTitle());
         setResizable(false);
 
         Container cp = getContentPane();
@@ -352,32 +352,34 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
         // Test for existence:
         for (String schema : JFSConfigDirectoryView.OTHER_PRODUCER_CODES) {
             if (dir.startsWith(schema)) {
-                dir = dir.substring((schema+"://localhost/").length());
+                dir = dir.substring((schema+"://").length());
             } // if
         } // for
 
-        File file = new File(dir);
+        // No URL given
+        if ( !dir.matches("[a-z][a-z][a-z]*://.*")) {
+            File file = new File(dir);
 
-        // TODO: New discriminator needed
-        if ( !file.exists()) {
-            // Create dialog:
-            JFSText t = JFSText.getInstance();
-            JPanel panel = new JPanel(new GridLayout(3, 1));
-            JLabel msg = new JLabel(t.get("profile.dir.create.message"));
-            JLabel question = new JLabel(t.get("profile.dir.create.question"));
-            JTextField directory = new JTextField(dir);
-            panel.add(msg);
-            panel.add(question);
-            panel.add(directory);
+            if ( !file.exists()) {
+                // Create dialog:
+                JFSText t = JFSText.getInstance();
+                JPanel panel = new JPanel(new GridLayout(3, 1));
+                JLabel msg = new JLabel(t.get("profile.dir.create.message"));
+                JLabel question = new JLabel(t.get("profile.dir.create.question"));
+                JTextField directory = new JTextField(dir);
+                panel.add(msg);
+                panel.add(question);
+                panel.add(directory);
 
-            int result = JOptionPane.showConfirmDialog(component, panel, t.get("profile.dir.create.title"),
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+                int result = JOptionPane.showConfirmDialog(component, panel, t.get("profile.dir.create.title"),
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 
-            if (result==JOptionPane.OK_OPTION) {
-                if ( !file.mkdirs()) {
-                    JLabel failed = new JLabel(t.get("profile.dir.message.failed"));
-                    JOptionPane.showMessageDialog(component, failed, t.get("profile.dir.create.title"),
-                            JOptionPane.WARNING_MESSAGE);
+                if (result==JOptionPane.OK_OPTION) {
+                    if ( !file.mkdirs()) {
+                        JLabel failed = new JLabel(t.get("profile.dir.message.failed"));
+                        JOptionPane.showMessageDialog(component, failed, t.get("profile.dir.create.title"),
+                                JOptionPane.WARNING_MESSAGE);
+                    }
                 }
             }
         }

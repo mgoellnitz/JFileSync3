@@ -47,9 +47,9 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
 
     private String cipherspec = "AES";
 
-    private static final String SALT = "#Mb6{Z-Öu9Rw4[D_jHn~CeKx2QiV]=a8F@1öG5+p}7Äü01-T";
+    private static final String SALT = "#Mb6{Z-Ã–u9Rw4[D_jHn~CeKx2QiV]=a8F@1Ã¶G5+p}7Ã„Ã¼01-T";
 
-    private static final String FILESALT = "4Om27Z+6nF[h'8Ec}L0_ds9J=3Her~5Ke7rv]1-ÜLö9ä@#yX";
+    private static final String FILESALT = "4Om27Z+6nF[h'8Ec}L0_ds9J=3Her~5Ke7rv]1-ÃœLÃ¶9Ã¤@#yX";
 
 
     public EncryptedFileStorageAccess(String cipher) {

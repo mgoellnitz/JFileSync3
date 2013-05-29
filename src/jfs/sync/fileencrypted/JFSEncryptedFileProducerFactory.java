@@ -25,6 +25,7 @@ public class JFSEncryptedFileProducerFactory extends AbstractEncryptedFileProduc
 
     public static final String SCHEME_NAME = "slowenc";
 
+
     @Override
     public String getName() {
         return SCHEME_NAME;
@@ -33,7 +34,8 @@ public class JFSEncryptedFileProducerFactory extends AbstractEncryptedFileProduc
 
     @Override
     public JFSFileProducer createProducer(String uri) {
-        return new JFSEncryptedFileProducer(new PlainDirStorageAccess(), getCompressionsLevels(), SCHEME_NAME, uri);
+        return new JFSEncryptedFileProducer(new PlainDirStorageAccess(), getCompressionsLevels(), SCHEME_NAME,
+                uri.substring(SCHEME_NAME.length()+3));
     } // createProducer()
 
 } // JFSEncryptedFileProducerFactory

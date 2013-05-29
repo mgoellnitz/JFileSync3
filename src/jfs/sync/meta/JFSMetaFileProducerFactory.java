@@ -36,7 +36,7 @@ public class JFSMetaFileProducerFactory extends AbstractEncryptedFileProducerFac
     @Override
     public JFSFileProducer createProducer(String uri) {
         MetaFileStorageAccess storageAccess = new MetaFileStorageAccess(JFSConfig.getInstance().getEncryptionCipher());
-        return new JFSEncryptedFileProducer(storageAccess, getCompressionsLevels(), SCHEME_NAME, uri);
+        return new JFSEncryptedFileProducer(storageAccess, getCompressionsLevels(), SCHEME_NAME, uri.substring(SCHEME_NAME.length()+3));
     } // createProducer()
 
 } // JFSMetaFileProducerFactory

@@ -172,13 +172,18 @@ public class JFSDirectoryTable extends AbstractTableModel implements TableCellRe
      * @see TableCellRenderer#getTableCellRendererComponent(JTable, Object, boolean, boolean, int, int)
      */
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-            int row, int column) {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
+            int column) {
         JFSText t = JFSText.getInstance();
 
-        // Adapt cell label individualy:
         String path = (String)value;
-        File file = new File(path);
+        
+        // Adapt cell label individualy:
+        int idx = path.indexOf(':');
+        String prefix = (idx>1) ? path.substring(0, idx) : "xyz";
+        String dir = (idx>1) ? path.substring(idx+3) : path;
+        
+        File file = new File(dir);
         cell.setText(path);
         cell.setToolTipText(null);
 
@@ -190,9 +195,7 @@ public class JFSDirectoryTable extends AbstractTableModel implements TableCellRe
             cell.setBackground(table.getBackground());
         }
 
-        int idx = path.indexOf(':');
-        String prefix = (idx > 0) ? path.substring(0, idx) : "xyz";
-        if (JFSFileProducerManager.getInstance().getSchemes().contains(prefix)) {
+        if (JFSFileProducerManager.getInstance().getSchemes().contains(prefix)&& dir.matches("[a-z][a-z][a-z]*://.*")) {
             if (isSelected) {
                 cell.setForeground(EXTERNAL_SELECTED);
             } else {
