@@ -67,12 +67,14 @@ public class JFSInfoView extends JDialog implements ActionListener {
         cp.setLayout(new BorderLayout());
 
         // Create info panel:
-        JPanel infoPanel = new JPanel(new GridLayout(3, 1));
+        JPanel infoPanel = new JPanel(new GridLayout(5, 1));
         infoPanel.setBackground(Color.WHITE);
         infoPanel.setForeground(Color.BLACK);
         infoPanel.add(new JLabel(t.get("general.appName")+" "+JFSConst.getInstance().getString("jfs.version")));
         infoPanel.add(new JLabel(t.get("info.copyright")));
         infoPanel.add(new JLabel(t.get("info.author")));
+        infoPanel.add(new JLabel(t.get("info.copyright.addon")));
+        infoPanel.add(new JLabel(t.get("info.author.addon")));
 
         // Create icon panel:
         JPanel iconPanel = new JPanel();

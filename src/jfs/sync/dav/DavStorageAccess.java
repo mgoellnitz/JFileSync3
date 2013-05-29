@@ -28,6 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -230,24 +232,23 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
         FileInfo info = listing.get(pathAndName[1]);
         try {
-            // String url = getUrl(rootPath, relativePath)+(info.isDirectory() ? "/" : "");
-            // String modificationDateString = DATE_FORMAT.format(new Date(modificationDate));
-            // if (log.isInfoEnabled()) {
-            // log.info("setLastModified() setting time for "+url+" to "+modificationDateString);
-            // } // if
-            // Map<QName, String> addProps = new HashMap<QName, String>();
-            // addProps.put(QNAME_LAST_MODIFIED_TIME, modificationDateString);
-            // try {
-            // List<DavResource> result = sardine.patch(url, addProps);
-            // if (log.isInfoEnabled()) {
-            // log.info("setLastModified() result list size "+result.size());
-            // } // if
-            // success = (result.size()==1);
-            // } catch (IOException e) {
-            // log.error("setLastModified()", e);
-            // } // try/catch
-
-            success = true; // resources.size()==1;
+            String url = getUrl(rootPath, relativePath)+(info.isDirectory() ? "/" : "");
+            String modificationDateString = DATE_FORMAT.format(new Date(modificationDate));
+            if (log.isInfoEnabled()) {
+                log.info("setLastModified() setting time for "+url+" to "+modificationDateString);
+            } // if
+            Map<QName, String> addProps = new HashMap<QName, String>();
+            addProps.put(QNAME_LAST_MODIFIED_TIME, modificationDateString);
+            try {
+                List<DavResource> result = sardine.patch(url, addProps);
+                if (log.isInfoEnabled()) {
+                    log.info("setLastModified() result list size "+result.size());
+                } // if
+                success = (result.size()==1);
+            } catch (IOException e) {
+                log.error("setLastModified()", e);
+            } // try/catch
+              // success = true;
         } catch (Exception e) {
             log.error("setLastModified()", e);
         } // try/catch

@@ -38,7 +38,7 @@ import com.github.sardine.SardineFactory;
  * This class produces webdav JFS files to be handled by the algorithm.
  * 
  * @author Martin Goellnitz
- * @version $Id: JFSExternalFileProducer.java,v 1.1 2005/05/06 11:06:56 heidrich Exp $
+ * 
  */
 public class JFSWebDavFileProducer extends JFSFileProducer {
 
@@ -80,11 +80,11 @@ public class JFSWebDavFileProducer extends JFSFileProducer {
             } // if
         } // if
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException ie) {
             log.error("getSardine()", ie);
         } // try/catch
-    }
+    } // JFSWebDavFileProducer()
 
 
     /**

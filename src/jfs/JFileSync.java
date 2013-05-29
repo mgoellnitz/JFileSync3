@@ -194,6 +194,8 @@ public class JFileSync {
                     p.println(t.get("general.appName")+" "+JFSConst.getInstance().getString("jfs.version"));
                     p.println(t.get("info.copyright"));
                     p.println(t.get("info.author"));
+                    p.println(t.get("info.copyright.addon"));
+                    p.println(t.get("info.author.addon"));
                     p.println(t.get("info.home")+" "+getHome());
                     System.exit(0);
                 } else if (args.length==1) {
