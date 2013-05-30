@@ -56,11 +56,11 @@ public class JFSHistoryTable extends AbstractTableModel {
         JFSText t = JFSText.getInstance();
         DefaultTableColumnModel cm = new DefaultTableColumnModel();
 
-        TableColumn source = new TableColumn(0, 85);
+        TableColumn source = new TableColumn(0, 110);
         source.setHeaderValue(t.get("history.table.src"));
         cm.addColumn(source);
 
-        TableColumn target = new TableColumn(1, 85);
+        TableColumn target = new TableColumn(1, 110);
         target.setHeaderValue(t.get("history.table.tgt"));
         cm.addColumn(target);
 
