@@ -1,0 +1,434 @@
+/*
+^ * Copyright (C) 2010-2013, Martin Goellnitz
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
+ */
+package jfs.sync.encfs;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import jfs.conf.JFSConfig;
+import jfs.sync.JFSFile;
+import jfs.sync.JFSFileProducer;
+import jfs.sync.base.AbstractJFSFileProducerFactory;
+import jfs.sync.encryption.FileInfo;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.mrpdaemon.sec.encfs.EncFSFile;
+import org.mrpdaemon.sec.encfs.EncFSVolume;
+
+/**
+ * Represents a file that is stored as EncFS file locally.
+ * 
+ * @author Martin Goellnitz
+ * 
+ */
+public class JFSEncfsFile extends JFSFile {
+
+    private static Log log = LogFactory.getLog(JFSEncfsFile.class);
+
+    /** The retrieved file information object from the server. */
+    private FileInfo info = null;
+
+    private EncFSFile file = null;
+
+    /** The list of included files. */
+    private JFSFile[] list = null;
+
+    private EncFSVolume access;
+
+    private OutputStream output = null;
+
+    InputStream input = null;
+
+
+    /**
+     * Creates a new external file for a certain path using a specific file producer.
+     * 
+     * @param access
+     *            The server access object to use.
+     * @param fileProducer
+     *            The assigned file producer.
+     * @param path
+     *            The path to create the external file for.
+     */
+    public JFSEncfsFile(EncFSVolume access, JFSFileProducer fileProducer, String path, boolean isDirectory) {
+        super(fileProducer, path);
+        path = path.replace(File.separatorChar, '/');
+
+        this.access = access;
+
+        try {
+            String[] pathAndName = AbstractJFSFileProducerFactory.getPathAndName(path, "/");
+            info = new FileInfo();
+            info.setPath(pathAndName[0]);
+            info.setName(pathAndName[1]);
+            info.setDirectory(isDirectory);
+            try {
+                file = access.getFile(path.length()==0 ? "/" : path);
+                info.setCanRead(file.isReadable());
+                info.setCanWrite(file.isWritable());
+                info.setPath(file.getParentPath());
+                info.setName(path.length()==0 ? "" : file.getName());
+                info.setDirectory(file.isDirectory());
+                info.setExists(file.isReadable());
+                info.setModificationDate(file.getLastModified());
+                info.setSize(file.getLength());
+            } catch (IllegalArgumentException iae) {
+                log.warn("()", iae);
+                info.setExists(false);
+            } // try/catch
+
+        } catch (Exception e) {
+            log.error("()", e);
+        } // try/catch
+
+        if (log.isInfoEnabled()) {
+            log.info("() "+(info.isDirectory() ? "d" : "-")+(info.isExists() ? "e" : "-")+" | "+info.getPath()+"/"+info.getName());
+        } // if
+    } // JFSEncfsFile()
+
+
+    /**
+     * Creates a new external root file and reads the structure from server.
+     * 
+     * @param access
+     *            The server access object to use.
+     * @param fileProducer
+     *            The assigned file producer.
+     */
+    public JFSEncfsFile(EncFSVolume access, JFSFileProducer fileProducer) {
+        this(access, fileProducer, "", true);
+    } // JFSWebDavFile()
+
+
+    /**
+     * @see JFSFile#canRead()
+     */
+    @Override
+    public boolean canRead() {
+        return info.isCanRead();
+    }
+
+
+    /**
+     * @see JFSFile#canWrite()
+     */
+    @Override
+    public boolean canWrite() {
+        return info.isCanWrite();
+    }
+
+
+    /**
+     * @see JFSFile#getInputStream()
+     */
+    @Override
+    protected InputStream getInputStream() {
+        if (log.isDebugEnabled()) {
+            log.debug("getInputStream() file "+file.getPath());
+        } // if
+        try {
+            input = file.openInputStream();
+        } catch (Exception e) {
+            log.error("getInputStream()", e);
+        } // try/catch
+        return input;
+    } // getInputStream()
+
+
+    /**
+     * @see JFSFile#getOutputStream()
+     */
+    @Override
+    protected OutputStream getOutputStream() {
+        if (log.isDebugEnabled()) {
+            log.debug("getOutputStream()");
+        } // if
+        try {
+            if ( !info.isExists()) {
+                file = access.createFile(getPath());
+                info.setCanRead(file.isReadable());
+                info.setCanWrite(file.isWritable());
+                info.setExists(true);
+                info.setPath(file.getParentPath());
+                info.setName(file.getName());
+                info.setDirectory(file.isDirectory());
+                info.setSize(file.isDirectory() ? 0 : file.getLength());
+                info.setModificationDate(file.getLastModified());
+            } // if
+            output = file.openOutputStream( -1);
+        } catch (Exception e) {
+            log.error("getOutputStream()", e);
+        } // try/catch
+        return output;
+    } // getOutputStream()
+
+
+    /**
+     * @see JFSFile#closeInputStream()
+     */
+    @Override
+    protected void closeInputStream() {
+        if (input!=null) {
+            try {
+                input.close();
+            } catch (IOException e) {
+                log.error("closeInputStream()", e);
+            } // try/catch
+            input = null;
+        } // if
+    } // closeInputStream()
+
+
+    /**
+     * @see JFSFile#closeOutputStream()
+     */
+    @Override
+    protected void closeOutputStream() {
+        if (output!=null) {
+            try {
+                output.close();
+            } catch (IOException e) {
+                log.error("closeOutputStream()", e);
+            } // try/catch
+            output = null;
+        } // if
+    } // closeOutputStream()
+
+
+    /**
+     * @see JFSFile#delete()
+     */
+    @Override
+    public boolean delete() {
+        if (log.isDebugEnabled()) {
+            log.debug("delete() deleting "+file.getPath());
+        } // if
+        boolean result = false;
+        try {
+            result = file.delete();
+        } catch (IOException e) {
+            log.error("delete()", e);
+        } // try/catch
+        return result;
+    } // delete()
+
+
+    /**
+     * @see JFSFile#exists()
+     */
+    @Override
+    public boolean exists() {
+        return info.isExists();
+    }
+
+
+    /**
+     * @see JFSFile#getLastModified()
+     */
+    @Override
+    public long getLastModified() {
+        return info.getModificationDate();
+    }
+
+
+    /**
+     * @see JFSFile#getLength()
+     */
+    @Override
+    public long getLength() {
+        return info.getSize();
+    }
+
+
+    /**
+     * @see JFSFile#getList()
+     */
+    @Override
+    public JFSFile[] getList() {
+        if (log.isDebugEnabled()) {
+            log.debug("getList() listing "+file.getPath());
+        } // if
+        if (list==null) {
+            list = new JFSEncfsFile[0];
+            if (isDirectory()) {
+                try {
+                    EncFSFile[] listing = file.listFiles();
+                    list = new JFSEncfsFile[listing.length];
+                    int i = 0;
+                    for (EncFSFile f : listing) {
+                        if (log.isDebugEnabled()) {
+                            log.debug("getList("+i+") listing "+f.getPath());
+                        } // if
+                          // TODO: better constructor for this!
+                        list[i] = new JFSEncfsFile(access, fileProducer, f.getPath(), f.isDirectory());
+                        i++ ;
+                    } // for
+                } catch (Exception e) {
+                    log.error("getList()", e);
+                } // try/catch
+            } // if
+        } // getList()
+
+        return list;
+    } // getList()
+
+
+    /**
+     * @see JFSFile#getName()
+     */
+    @Override
+    public String getName() {
+        return info.getName();
+    }
+
+
+    /**
+     * @see JFSFile#getPath()
+     */
+    @Override
+    public String getPath() {
+        return info.getPath()+"/"+info.getName();
+    }
+
+
+    /**
+     * @see JFSFile#isDirectory()
+     */
+    @Override
+    public boolean isDirectory() {
+        return info.isDirectory();
+    }
+
+
+    /**
+     * @see JFSFile#mkdir()
+     */
+    @Override
+    public boolean mkdir() {
+        boolean result = false;
+        try {
+            String path = info.getPath()+"/"+info.getName();
+            if (log.isDebugEnabled()) {
+                log.debug("mkdir() creating "+path);
+            } // if
+            result = access.makeDir(path);
+        } catch (Exception e) {
+            log.error("mkdir()", e);
+        } // try/catch
+        return result;
+    } // mkdir()
+
+
+    /**
+     * @see JFSFile#setLastModified(long)
+     */
+    @Override
+    public boolean setLastModified(long time) {
+        boolean success = false;
+
+        info.setModificationDate(time);
+
+        // TODO:
+        String encPath = getFileProducer().getRootPath()+file.getEncryptedPath().substring(1);
+        File encFile = new File(encPath);
+        if (encFile.exists()) {
+            encFile.setLastModified(info.getModificationDate());
+        } // if
+
+        return success;
+    } // setLastModified()
+
+
+    /**
+     * @see JFSFile#setReadOnly()
+     */
+    @Override
+    public boolean setReadOnly() {
+        if ( !JFSConfig.getInstance().isSetCanWrite()) {
+            return true;
+        }
+
+        info.setCanWrite(false);
+
+        return true;
+    }
+
+
+    /**
+     * @see JFSFile#preCopyTgt(JFSFile)
+     */
+    @Override
+    protected boolean preCopyTgt(JFSFile srcFile) {
+        info.setModificationDate(srcFile.getLastModified());
+        // Set last modified and read-only only when file is no directory:
+        if ( !srcFile.isDirectory()) {
+            info.setSize(srcFile.getLength());
+            if ( !srcFile.canWrite())
+                info.setCanWrite(false);
+        } // if
+
+        return true;
+    } // preCopyTgt()
+
+
+    /**
+     * @see JFSFile#preCopySrc(JFSFile)
+     */
+    @Override
+    protected boolean preCopySrc(JFSFile tgtFile) {
+        return true;
+    }
+
+
+    /**
+     * @see JFSFile#postCopyTgt(JFSFile)
+     */
+    @Override
+    protected boolean postCopyTgt(JFSFile srcFile) {
+        // Update information object after copy. This method is only
+        // called if all operations were performed successfully:
+        info.setDirectory(srcFile.isDirectory());
+        info.setExists(srcFile.exists());
+        info.setSize(srcFile.getLength());
+        setLastModified(srcFile.getLastModified());
+
+        return true;
+    } // postCopyTgt()
+
+
+    /**
+     * @see JFSFile#postCopySrc(JFSFile)
+     */
+    @Override
+    protected boolean postCopySrc(JFSFile tgtFile) {
+        return true;
+    }
+
+
+    /**
+     * @see JFSFile#flush()
+     */
+    @Override
+    public boolean flush() {
+        return true;
+    }
+
+} // JFSEncfsFile
