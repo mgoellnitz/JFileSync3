@@ -30,7 +30,7 @@ b) Trust the providers encryption: use Teamdrive or Wuala. With Teamdrive you ca
 
 c) Encrypt locally on every file access and thus only sync encrypted stuff which you can still see. Boxcryptor, EncFS come into my mind. Disadvantage here is the de- and encryption on nearly every access. Really locally stored are only the encrypted files.
 
-d) If you trust your local system and need to store frequently accessed files, you would like to encrypt only short before or on backing up/syncing files. This is where this software fills the gap. It can sync directories, local or webdav, and it can do this with either of these encrypted.
+d) If you trust your local system and need to store frequently accessed files, you would like to encrypt only short before or on backing up/syncing files. This is where this software fills the gap. It can sync directories, local or webdav, and it can do this with either of these encrypted. Additionally it can sync with encfs volumes stored in local folders (which in turn can be synchronized and used in the net via enfs, encfs4win, BoxCryptor, and Encdroid)
 
 
 1) Introduction
