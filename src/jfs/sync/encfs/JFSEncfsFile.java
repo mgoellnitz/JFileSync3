@@ -202,6 +202,9 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     protected void closeOutputStream() {
+        if (log.isDebugEnabled()) {
+            log.debug("getOutputStream()");
+        } // if
         if (output!=null) {
             try {
                 output.close();
@@ -305,7 +308,7 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     public String getPath() {
-        return info.getPath()+"/"+info.getName();
+        return (info.getPath().length()>1 ? info.getPath() : "")+"/"+info.getName();
     }
 
 
@@ -330,6 +333,9 @@ public class JFSEncfsFile extends JFSFile {
                 log.debug("mkdir() creating "+path);
             } // if
             result = access.makeDir(path);
+            if (result) {
+                file = access.getFile(path);
+            } // if
         } catch (Exception e) {
             log.error("mkdir()", e);
         } // try/catch
@@ -342,13 +348,25 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     public boolean setLastModified(long time) {
+        if (log.isDebugEnabled()) {
+            log.debug("setLastModified() "+info.getPath()+"/"+info.getName());
+        } // if
         boolean success = false;
 
         info.setModificationDate(time);
 
         // TODO:
-        String encPath = getFileProducer().getRootPath()+file.getEncryptedPath().substring(1);
+        if (log.isDebugEnabled()) {
+            log.debug("setLastModified() "+file.getParentPath()+":"+file.getName()+" - "+file.getPath());
+        } // if
+          // Maybe fix this somewhere else...
+        String encryptedPath = file.getEncryptedPath();
+        int idx = encryptedPath.startsWith("//") ? 1 : 0;
+        String encPath = getFileProducer().getRootPath()+encryptedPath.substring(idx);
         File encFile = new File(encPath);
+        if (log.isDebugEnabled()) {
+            log.debug("setLastModified("+encPath+") "+encFile.exists());
+        } // if
         if (encFile.exists()) {
             encFile.setLastModified(info.getModificationDate());
         } // if
@@ -377,6 +395,9 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     protected boolean preCopyTgt(JFSFile srcFile) {
+        if (log.isDebugEnabled()) {
+            log.debug("preCopyTgt() "+info.getPath()+"/"+info.getName());
+        } // if
         info.setModificationDate(srcFile.getLastModified());
         // Set last modified and read-only only when file is no directory:
         if ( !srcFile.isDirectory()) {
@@ -403,8 +424,11 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     protected boolean postCopyTgt(JFSFile srcFile) {
-        // Update information object after copy. This method is only
-        // called if all operations were performed successfully:
+        if (log.isDebugEnabled()) {
+            log.debug("postCopyTgt() "+srcFile.getPath());
+        } // if
+          // Update information object after copy. This method is only
+          // called if all operations were performed successfully:
         info.setDirectory(srcFile.isDirectory());
         info.setExists(srcFile.exists());
         info.setSize(srcFile.getLength());

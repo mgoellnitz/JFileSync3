@@ -1,7 +1,9 @@
 Java based File Syncing Tool
 ==================
 
-Syncing, Encryption, Local, and via WebDAV
+Fiel Syncing with optional Compression and Encryption for Local and WebDAV Folders.
+
+For local folders encryption can use EncFS and thus be compatible with encfs4win, BoxCryptor, Encdroid and so on.
 
 (With GUI, command line, and stored profiles.)
 

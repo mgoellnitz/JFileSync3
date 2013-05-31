@@ -26,7 +26,7 @@ import java.util.Properties;
 public class EncFSConfigWriter {
 
 	// Version to use if the properties file can't be read
-	private static final String ENCFS_JAVA_LIB_VERSION_DEV = "dev";
+	private static final String ENCFS_JAVA_LIB_VERSION_DEV = "JFileSync3";
 
 	// Property file
 	private static final String ENCFS_JAVA_LIB_PROPERTY_FILE = "library.properties";
