@@ -297,7 +297,6 @@ public class EncFSVolume {
 	 */
 	public EncFSFile getFile(String filePath) throws EncFSCorruptDataException,
 			IOException {
-	    System.out.println("getFile() "+filePath);
 		validateAbsoluteFileName(filePath, "filePath");
 
 		String encryptedPath = EncFSCrypto
