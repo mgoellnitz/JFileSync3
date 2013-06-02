@@ -94,12 +94,12 @@ public class JFSComparison {
         }
 
         // Add an element to the comparison table:
+        JFSElement element = new JFSElement(srcFile, tgtFile, parent, isDirectory);
         if (isDirectory) {
             if (log.isInfoEnabled()) {
-                log.info("add() comparisaon table "+srcFile+" "+tgtFile+" "+isDirectory);
+                log.info("add() comparison table "+srcFile+" "+tgtFile+" "+isDirectory+" : "+element.getAction());
             } // if
         } // if
-        JFSElement element = new JFSElement(srcFile, tgtFile, parent, isDirectory);
         JFSTable.getInstance().addElement(element);
 
         // Start algorithm recursively, if the files are directories:

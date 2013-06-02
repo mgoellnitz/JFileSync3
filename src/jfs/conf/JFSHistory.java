@@ -158,10 +158,11 @@ public abstract class JFSHistory implements Comparable<JFSHistory> {
      * @return The corresponding history item.
      */
     public final JFSHistoryItem getHistory(JFSElement element) {
+        String path = element.getRelativePath().replace('/', File.separatorChar);
         if (element.isDirectory()) {
-            return directories.get(element.getRelativePath());
+            return directories.get(path);
         }
-        return files.get(element.getRelativePath());
+        return files.get(path);
     }
 
 

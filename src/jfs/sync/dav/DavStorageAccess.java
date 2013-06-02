@@ -66,6 +66,11 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
 
     private Sardine sardine = null;
 
+    /*
+     * To speed things up we have a second DavResource based directory cache
+     */
+    private Map<String, List<DavResource>> directoryCache = new HashMap<String, List<DavResource>>();
+
 
     public DavStorageAccess(String cipher) {
         super(cipher);
@@ -105,14 +110,46 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
     } // getUrl()
 
 
+    List<DavResource> getListing(String rootPath, String url) throws IOException {
+        if (directoryCache.containsKey(url)) {
+            return directoryCache.get(url);
+        } // if
+        boolean available = true;
+        if (url.length()>rootPath.length()) {
+            String[] pathAndName = getPathAndName(url);
+            available = getListing(rootPath, pathAndName[0]).contains(pathAndName[1]);
+        } // if
+        if (log.isInfoEnabled()) {
+            log.info("getListing() listing: "+url+" - "+available);
+        } // if
+        List<DavResource> listing = null;
+        try {
+            if (available) {
+                listing = getSardine().list(url+getSeparator());
+                if (log.isInfoEnabled()) {
+                    log.info("getListing("+listing.size()+") listing "+url);
+                } // if
+            } else {
+                listing = Collections.emptyList();
+            } // if
+        } catch (Exception e) {
+            listing = Collections.emptyList();
+            log.error("getListing()", e);
+        } // try/catch
+        directoryCache.put(url, listing);
+        return listing;
+    } // getListing()
+
+
     /**
-     * create non existent files
+     * create file info for optionally non existing files
      * 
      * @param file
      * @param pathAndName
      * @return
      */
-    private FileInfo createFileInfo(String url, String[] pathAndName) {
+    private FileInfo createFileInfo(String rootPath, String relativePath, String[] pathAndName) {
+        String url = getUrl(rootPath, relativePath);
         if (log.isDebugEnabled()) {
             log.debug("createFileInfo() url="+url);
         } // if
@@ -129,30 +166,29 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
             if (log.isDebugEnabled()) {
                 log.debug("createFileInfo() - "+urlPathAndName[0]+" / "+urlPathAndName[1]);
             } // if
-            resources = getSardine().list(urlPathAndName[0]+getSeparator());
-            if (resources.size()>0) {
-                for (DavResource resource : resources) {
-                    if (urlPathAndName[1].equals(resource.getName())) {
-                        result.setDirectory(resource.isDirectory());
-                        result.setExists(true);
-                        Date modificationDate = resource.getModified();
-                        String modifiedDateString = resource.getCustomProps().get(PROP_LAST_MODIFIED_TIME);
-                        if (modifiedDateString!=null) {
-                            try {
-                                modificationDate = DATE_FORMAT.parse(modifiedDateString);
-                                if (log.isDebugEnabled()) {
-                                    log.debug("createFileInfo() "+modificationDate+" ["+modificationDate.getTime()+";"
-                                            +resource.getModified().getTime()+"]");
-                                } // if
-                            } catch (Exception e) {
-                                log.error("createFileInfo()", e);
-                            } // try/catch
-                        } // if
-                        result.setModificationDate(modificationDate.getTime());
-                        result.setSize(resource.getContentLength());
-                    }
-                } // for
-            } // if
+              // resources = getSardine().list(urlPathAndName[0]+getSeparator());
+            resources = getListing(rootPath, urlPathAndName[0]);
+            for (DavResource resource : resources) {
+                if (urlPathAndName[1].equals(resource.getName())) {
+                    result.setDirectory(resource.isDirectory());
+                    result.setExists(true);
+                    Date modificationDate = resource.getModified();
+                    String modifiedDateString = resource.getCustomProps().get(PROP_LAST_MODIFIED_TIME);
+                    if (modifiedDateString!=null) {
+                        try {
+                            modificationDate = DATE_FORMAT.parse(modifiedDateString);
+                            if (log.isDebugEnabled()) {
+                                log.debug("createFileInfo() "+modificationDate+" ["+modificationDate.getTime()+";"
+                                        +resource.getModified().getTime()+"]");
+                            } // if
+                        } catch (Exception e) {
+                            log.error("createFileInfo()", e);
+                        } // try/catch
+                    } // if
+                    result.setModificationDate(modificationDate.getTime());
+                    result.setSize(resource.getContentLength());
+                } // if
+            } // for
         } catch (Exception e) {
             log.error("createFileInfo()", e);
         } // try/catch
@@ -170,7 +206,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         String[] pathAndName = getPathAndName(relativePath);
         FileInfo result = getParentListing(rootPath, pathAndName).get(pathAndName[1]);
         if (result==null) {
-            result = createFileInfo(getUrl(rootPath, relativePath), pathAndName);
+            result = createFileInfo(rootPath, relativePath, pathAndName);
         } // if
         return result;
     } // getFileInfo()
@@ -203,7 +239,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         info.setName(pathAndName[1]);
         info.setDirectory(true);
         info.setExists(true);
-        info.setModificationDate(System.currentTimeMillis());
+        info.setModificationDate(0);
         info.setSize(0);
 
         listing.put(pathAndName[1], info);
@@ -231,28 +267,29 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         String[] pathAndName = getPathAndName(relativePath);
         Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
         FileInfo info = listing.get(pathAndName[1]);
-        try {
-            String url = getUrl(rootPath, relativePath)+(info.isDirectory() ? "/" : "");
-            String modificationDateString = DATE_FORMAT.format(new Date(modificationDate));
-            if (log.isInfoEnabled()) {
-                log.info("setLastModified() setting time for "+url+" to "+modificationDateString);
-            } // if
-            Map<QName, String> addProps = new HashMap<QName, String>();
-            addProps.put(QNAME_LAST_MODIFIED_TIME, modificationDateString);
-            try {
-                List<DavResource> result = sardine.patch(url, addProps);
-                if (log.isInfoEnabled()) {
-                    log.info("setLastModified() result list size "+result.size());
-                } // if
-                success = (result.size()==1);
-            } catch (IOException e) {
-                log.error("setLastModified()", e);
-            } // try/catch
-              // success = true;
-        } catch (Exception e) {
-            log.error("setLastModified()", e);
-        } // try/catch
-          // TODO: starting from here it's the same as with local files
+        // TODO: Still not working from time to time...
+        // try {
+        // String url = getUrl(rootPath, relativePath)+(info.isDirectory() ? "/" : "");
+        // String modificationDateString = DATE_FORMAT.format(new Date(modificationDate));
+        // if (log.isInfoEnabled()) {
+        // log.info("setLastModified() setting time for "+url+" to "+modificationDateString);
+        // } // if
+        // Map<QName, String> addProps = new HashMap<QName, String>();
+        // addProps.put(QNAME_LAST_MODIFIED_TIME, modificationDateString);
+        // try {
+        // List<DavResource> result = sardine.patch(url, addProps);
+        // if (log.isInfoEnabled()) {
+        // log.info("setLastModified() result list size "+result.size());
+        // } // if
+        // success = (result.size()==1);
+        // } catch (IOException e) {
+        // log.error("setLastModified()", e);
+        // } // try/catch
+        // } catch (Exception e) {
+        // log.error("setLastModified()", e);
+        // } // try/catch
+        success = true;
+        // TODO: starting from here it's the same as with local files
         if (success) {
             if (log.isInfoEnabled()) {
                 log.info("setLastModified() flushing "+pathAndName[0]+"/"+pathAndName[1]);
@@ -328,7 +365,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         final String url = getUrl(rootPath, relativePath);
         String[] pathAndName = getPathAndName(relativePath);
         if (forPayload&&( !getSardine().exists(url))) {
-            FileInfo info = createFileInfo(url, pathAndName);
+            FileInfo info = createFileInfo(rootPath, relativePath, pathAndName);
             Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
             listing.put(info.getName(), info);
             if (log.isInfoEnabled()) {

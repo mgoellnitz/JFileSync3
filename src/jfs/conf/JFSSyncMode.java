@@ -176,8 +176,8 @@ public class JFSSyncMode {
         } else {
             // Add basic actions based on the stored history:
             computeBasicAction(element);
-            if (log.isDebugEnabled()) {
-                log.debug("computeAction() isAutomatic "+element.getAction());
+            if (log.isInfoEnabled()) {
+                log.info("computeAction() isAutomatic "+element.getAction());
             } // if
 
             // Check whether the parent is also copied if the children are
@@ -216,15 +216,15 @@ public class JFSSyncMode {
         // Use history, if a corresponding history item is available, and
         // else, merge the structures:
         JFSHistory history = element.getRoot().getHistory();
-        if (log.isDebugEnabled()) {
-            log.debug("computeBasicAction() history="+history);
+        if (log.isInfoEnabled()) {
+            log.info("computeBasicAction() history="+history);
         } // fi
         if (history==null) {
             merge(element);
         } else {
             JFSHistoryItem h = history.getHistory(element);
-            if (log.isDebugEnabled()) {
-                log.debug("computeBasicAction() historyItem="+h);
+            if (log.isInfoEnabled()) {
+                log.info("computeBasicAction("+element.getRelativePath()+") historyItem="+h);
             } // if
             if (h!=null) {
                 useHistory(element, h);

@@ -95,20 +95,23 @@ public class JFSWebDavFile extends JFSFile {
         result.setName(resource.getName());
         result.setDirectory(resource.isDirectory());
         result.setSize(resource.isDirectory() ? 0 : resource.getContentLength());
-        Date modificationDate = resource.getModified();
-        String modifiedDateString = resource.getCustomProps().get(PROP_LAST_MODIFIED_TIME);
-        if (modifiedDateString!=null) {
-            try {
-                modificationDate = DATE_FORMAT.parse(modifiedDateString);
-                if (log.isDebugEnabled()) {
-                    log.debug("createFileInfo() "+modificationDate+" ["+modificationDate.getTime()+";"
-                            +resource.getModified().getTime()+"]");
-                } // if
-            } catch (Exception e) {
-                log.error("createFileInfo()", e);
-            } // try/catch
+        long time = 0;
+        if ( !resource.isDirectory()) {
+            Date modificationDate = resource.getModified();
+            String modifiedDateString = resource.getCustomProps().get(PROP_LAST_MODIFIED_TIME);
+            time = modificationDate.getTime();
+            if (modifiedDateString!=null) {
+                try {
+                    modificationDate = DATE_FORMAT.parse(modifiedDateString);
+                    if (log.isDebugEnabled()) {
+                        log.debug("createFileInfo() "+modificationDate+" ["+time+";"+resource.getModified().getTime()+"]");
+                    } // if
+                } catch (Exception e) {
+                    log.error("createFileInfo()", e);
+                } // try/catch
+            } // if
         } // if
-        result.setModificationDate(modificationDate.getTime());
+        result.setModificationDate(time);
         return result;
     } // createFileInfo()
 
@@ -527,5 +530,5 @@ public class JFSWebDavFile extends JFSFile {
     public boolean flush() {
         return true;
     }
-    
+
 }
