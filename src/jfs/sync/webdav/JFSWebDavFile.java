@@ -99,7 +99,6 @@ public class JFSWebDavFile extends JFSFile {
         if ( !resource.isDirectory()) {
             Date modificationDate = resource.getModified();
             String modifiedDateString = resource.getCustomProps().get(PROP_LAST_MODIFIED_TIME);
-            time = modificationDate.getTime();
             if (modifiedDateString!=null) {
                 try {
                     modificationDate = DATE_FORMAT.parse(modifiedDateString);
@@ -110,6 +109,7 @@ public class JFSWebDavFile extends JFSFile {
                     log.error("createFileInfo()", e);
                 } // try/catch
             } // if
+            time = modificationDate.getTime();
         } // if
         result.setModificationDate(time);
         return result;
@@ -238,11 +238,11 @@ public class JFSWebDavFile extends JFSFile {
                 } // if
                 super.close();
                 if (log.isDebugEnabled()) {
-                    log.debug("getOutputStream() obtaining data for "+info.getName());
+                    log.debug("getOutputStream() obtaining data");
                 } // if
                 byte[] data = this.toByteArray();
                 if (log.isDebugEnabled()) {
-                    log.debug("getOutputStream() transferring "+info.getName());
+                    log.debug("getOutputStream() transferring");
                 } // if
                 access.put(url, data);
                 if (log.isDebugEnabled()) {
@@ -462,14 +462,12 @@ public class JFSWebDavFile extends JFSFile {
      */
     @Override
     public boolean setReadOnly() {
-        if ( !JFSConfig.getInstance().isSetCanWrite()) {
-            return true;
-        }
-
-        info.setCanWrite(false);
-
+        if ( JFSConfig.getInstance().isSetCanWrite()) {
+            info.setCanWrite(false);
+        } // if
+ 
         return true;
-    }
+    } // setReadOnly()
 
 
     /**
