@@ -132,10 +132,6 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     public final boolean isDirectory() {
-        /*
-         * if (log.isDebugEnabled()) { log.debug("isDirectory('"+getRelativePath()+"') "+fileInfo.isDirectory()); } //
-         * if
-         */
         return fileInfo.isDirectory();
     }
 
@@ -145,9 +141,6 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     public final boolean canRead() {
-        if (log.isDebugEnabled()) {
-            log.debug("canRead('"+getRelativePath()+"') "+fileInfo.isCanRead());
-        } // if
         return fileInfo.isCanRead();
     }
 
@@ -157,9 +150,6 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     public final boolean canWrite() {
-        if (log.isDebugEnabled()) {
-            log.debug("canWrite('"+getRelativePath()+"') "+fileInfo.isCanWrite());
-        } // if
         return fileInfo.isCanWrite();
     }
 
@@ -255,11 +245,8 @@ public class JFSEncryptedFile extends JFSFile {
             fileInfo.setDirectory(true);
         } // if
 
-        if (log.isDebugEnabled()) {
-            log.debug("mkDir('"+getRelativePath()+"') "+success);
-        } // if
         return success;
-    }
+    } // mkdir()
 
 
     /**
@@ -274,7 +261,7 @@ public class JFSEncryptedFile extends JFSFile {
 
         if (success) {
             fileInfo.setModificationDate(time);
-        }// if
+        } // if
 
         return success;
     }
@@ -285,18 +272,16 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     public final boolean setReadOnly() {
-        if ( !JFSConfig.getInstance().isSetCanWrite()) {
-            return true;
-        }
+        boolean success = true;
+        if (JFSConfig.getInstance().isSetCanWrite()) {
 
-        boolean success = fileProducer.setReadOnly(getRelativePath());
-
-        if (success) {
-            fileInfo.setCanWrite(false);
+            success = fileProducer.setReadOnly(getRelativePath());
+            if (success) {
+                fileInfo.setCanWrite(false);
+            } // if
         } // if
-
         return success;
-    }
+    } // setReadOnly()
 
 
     /**
@@ -428,7 +413,7 @@ public class JFSEncryptedFile extends JFSFile {
             fileInfo.setExists(true);
             fileInfo.setSize(srcFile.getLength());
             success = success&&setLastModified(srcFile.getLastModified());
-            // set last modified has to implicitly 
+            // set last modified has to implicitly
             if ( !success) {
                 fileProducer.flush(fileInfo);
             } // if

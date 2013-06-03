@@ -19,6 +19,7 @@
 
 package jfs.sync;
 
+import java.util.Arrays;
 import java.util.Vector;
 
 import jfs.conf.JFSConfig;
@@ -105,7 +106,7 @@ public class JFSComparison {
         // Start algorithm recursively, if the files are directories:
         // (This is the case, if one of them is a directory!)
         if (isDirectory&& !JFSProgress.getInstance().isCanceled()) {
-            compareDirectories(srcFile, tgtFile, element);            
+            compareDirectories(srcFile, tgtFile, element);
         } // if
     }
 
@@ -129,6 +130,8 @@ public class JFSComparison {
         HeapSort<JFSFile> h = new HeapSort<JFSFile>();
         h.sort(srcFiles);
         h.sort(tgtFiles);
+        // Arrays.sort(srcFiles);
+        // Arrays.sort(tgtFiles);
 
         int srcIndex = 0;
         int tgtIndex = 0;
@@ -209,19 +212,9 @@ public class JFSComparison {
         JFSFile[] tgtDirectoryList = new JFSFile[0];
         int weight = 0;
 
-        // log.debug("compareDirectories() "+parent.getAction());
-
         if (srcDir!=null) {
             srcFileList = srcDir.getFileList();
             srcDirectoryList = srcDir.getDirectoryList();
-
-            // log.debug("compareDirectories() "+srcDir.getPath());
-            // for (JFSFile f : srcFileList) {
-            // log.debug("compareDirectories() - "+f.getPath());
-            // } // for
-            // for (JFSFile f : srcDirectoryList) {
-            // log.debug("compareDirectories() - "+f.getPath());
-            // } // for
 
             monitor.setCurrentSrc(srcDir);
             weight += 1;
@@ -230,14 +223,6 @@ public class JFSComparison {
         if (tgtDir!=null) {
             tgtFileList = tgtDir.getFileList();
             tgtDirectoryList = tgtDir.getDirectoryList();
-
-            // log.debug("compareDirectories() "+tgtDir.getPath());
-            // for (JFSFile f : tgtFileList) {
-            // log.debug("compareDirectories() - "+f.getPath());
-            // } // for
-            // for (JFSFile f : tgtDirectoryList) {
-            // log.debug("compareDirectories() - "+f.getPath());
-            // } // for
 
             monitor.setCurrentTgt(tgtDir);
             weight += 1;
