@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.StreamCorruptedException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
@@ -37,12 +36,12 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.NoSuchPaddingException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import jfs.sync.encrypted.EncryptedFileStorageAccess;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.util.SecurityUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAccess {
 
@@ -64,7 +63,6 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
         } // if
         Map<String, FileInfo> result = new HashMap<String, FileInfo>();
         ObjectInputStream ois = null;
-        boolean reflush = false;
         try {
             InputStream inputStream = getInputStream(rootPath, getMetaDataPath(relativePath));
             byte[] credentials = getCredentials(relativePath);
@@ -73,15 +71,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
             if (log.isDebugEnabled()) {
                 log.debug("getMetaData() reading infos for "+relativePath);
             } // if
-              // TODO: remove plain text meta data reading
-            try {
-                ois = new ObjectInputStream(inputStream);
-            } catch (StreamCorruptedException sce) {
-                log.error("getMetaData() still having plain text meta data for "+relativePath);
-                inputStream = getInputStream(rootPath, getMetaDataPath(relativePath));
-                ois = new ObjectInputStream(inputStream);
-                reflush = true;
-            } // try/catch
+            ois = new ObjectInputStream(inputStream);
             Object o;
             while ((o = ois.readObject())!=null) {
                 if (o instanceof FileInfo) {
@@ -112,15 +102,6 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
             } // try/catch
         } // try/catch
         directoryCache.put(relativePath, result);
-        // TODO: remove reflushing
-        if (reflush) {
-            String[] pathAndName = new String[1];
-            pathAndName[0] = relativePath;
-            if (log.isWarnEnabled()) {
-                log.warn("getMetaData() flushing meta data for '"+relativePath+"'");
-            } // if
-            flushMetaData(rootPath, pathAndName, result);
-        } // if
         return result;
     } // getMetaData()
 
@@ -138,7 +119,8 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
      * flushing listing as meta data info for pathAndName[0] in rootPath
      * 
      * @param rootPath
-     * @param pathAndName path and name for the file and path for which this update takes place
+     * @param pathAndName
+     *            path and name for the file and path for which this update takes place
      * @param listing
      */
     public void flushMetaData(String rootPath, String[] pathAndName, Map<String, FileInfo> listing) {
