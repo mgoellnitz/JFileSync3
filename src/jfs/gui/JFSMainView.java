@@ -32,7 +32,12 @@ import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
@@ -74,8 +79,7 @@ import jfs.sync.JFSTable;
  * @author Jens Heidrich
  * @version $Id: JFSMainView.java,v 1.39 2007/02/26 18:49:10 heidrich Exp $
  */
-public class JFSMainView extends WindowAdapter implements ActionListener, ComponentListener, JFSConfigObserver,
-        JFSLogObserver {
+public class JFSMainView extends WindowAdapter implements ActionListener, ComponentListener, JFSConfigObserver, JFSLogObserver {
 
     /** Stores the corresponding frame. */
     private JFrame frame = null;
@@ -119,6 +123,40 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
     private JFSAssistantView assistantView = null;
 
 
+    private String getAppTitle(String appName) {
+        // determine build date
+        String buildInfo = "";
+        try {
+            URL packageUrl = ClassLoader.getSystemResource("jfs");
+            File jfsFile = null;
+            // JFS started from JAR:
+            if (packageUrl.getProtocol().equals("jar")) {
+                URL jarUrl = new URL(packageUrl.getFile());
+                String uriString = jarUrl.toURI().getPath();
+                int idx = uriString.indexOf('!');
+                if (idx>0) {
+                    uriString = uriString.substring(0, idx);
+                } // if
+                jfsFile = new File(uriString);
+            }
+            // JFS started from classes directory:
+            if (packageUrl.getProtocol().equals("file")) {
+                jfsFile = new File(packageUrl.toURI());
+            }
+            SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+            buildInfo += " - build date "+formatter.format(new Date(jfsFile.lastModified()))+" ";
+        } catch (URISyntaxException use) {
+            ;
+        } catch (MalformedURLException mue) {
+            ;
+        } // try/catch
+
+        String version = JFSConst.getInstance().getString("jfs.version");
+        JFSConfig config = JFSConfig.getInstance();
+        return appName+" "+version+" - "+config.getTitle()+buildInfo;
+    } // getAppTitle()
+
+
     /**
      * Start the application with a certain task object.
      * 
@@ -144,8 +182,8 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         JComponent.setDefaultLocale(t.getLocale());
 
         // Start main window of application:
-        frame.setTitle(t.get("general.appName")+" "+JFSConst.getInstance().getString("jfs.version")+" - "
-                +config.getTitle());
+
+        frame.setTitle(getAppTitle(t.get("general.appName")));
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(this);
         frame.addWindowStateListener(this);
@@ -189,16 +227,15 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         viewGroup = new ButtonGroup();
         byte view = config.getView();
         for (JFSViewMode mode : JFSViewModes.getInstance().getModes()) {
-            viewMenu.add(JFSSupport.getRadioButtonMenuItem(viewGroup, mode.getAlias(), "VIEW_"+mode.getId(), view==mode
-                    .getId(), this));
+            viewMenu.add(JFSSupport.getRadioButtonMenuItem(viewGroup, mode.getAlias(), "VIEW_"+mode.getId(), view==mode.getId(), this));
         }
 
         // Create mode menu:
         syncGroup = new ButtonGroup();
         byte sync = config.getSyncMode();
         for (JFSSyncMode mode : JFSSyncModes.getInstance().getModes()) {
-            modeMenu.add(JFSSupport.getRadioButtonMenuItem(syncGroup, mode.getAlias(), "SYNCMODE_"+mode.getId(),
-                    sync==mode.getId(), this));
+            modeMenu.add(JFSSupport.getRadioButtonMenuItem(syncGroup, mode.getAlias(), "SYNCMODE_"+mode.getId(), sync==mode.getId(),
+                    this));
         }
 
         // Create tools menu:
@@ -328,8 +365,8 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             // Check whether changes need to be stored:
             if ( !config.isCurrentProfileStored()) {
                 JLabel msg = new JLabel(t.get("message.store"));
-                result = JOptionPane.showConfirmDialog(frame, msg, t.get("general.warning"),
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+                result = JOptionPane.showConfirmDialog(frame, msg, t.get("general.warning"), JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
             }
 
             if (result==JOptionPane.OK_OPTION) {
@@ -356,8 +393,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
                         // Show error message if opening failed:
                         if ( !config.load(chooser.getSelectedFile())) {
                             JLabel label = new JLabel(t.get("error.profile.load"));
-                            JOptionPane.showMessageDialog(frame, label, t.get("error.window.title"),
-                                    JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(frame, label, t.get("error.window.title"), JOptionPane.ERROR_MESSAGE);
                             actionPerformed("NEW");
                         }
                     }
@@ -370,8 +406,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
                     // Show error message if opening failed:
                     if ( !config.load(s.getLastOpenedProfiles().get(i))) {
                         JLabel label = new JLabel(t.get("error.profile.load"));
-                        JOptionPane.showMessageDialog(frame, label, t.get("error.window.title"),
-                                JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(frame, label, t.get("error.window.title"), JOptionPane.ERROR_MESSAGE);
                         actionPerformed("NEW");
                     }
                     updateLastOpenedProfiles();
@@ -407,8 +442,8 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
                     // If file already exists ask for overwriting:
                     if (selectedFile.exists()) {
                         JLabel msg = new JLabel(t.get("message.replace"));
-                        result = JOptionPane.showConfirmDialog(frame, msg, t.get("general.warning"),
-                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+                        result = JOptionPane.showConfirmDialog(frame, msg, t.get("general.warning"), JOptionPane.OK_CANCEL_OPTION,
+                                JOptionPane.WARNING_MESSAGE);
                     }
 
                     if (result==JOptionPane.OK_OPTION) {
@@ -475,8 +510,8 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
 
         if (cmd.equals("general.reset")) {
             JLabel msg = new JLabel(t.get("message.reset"));
-            int result = JOptionPane.showConfirmDialog(frame, msg, t.get("general.warning"),
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(frame, msg, t.get("general.warning"), JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
             if (result==JOptionPane.OK_OPTION) {
                 s.clean();
                 config.clean();
@@ -492,8 +527,8 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         if (cmd.equals("EXIT")) {
             // Ask for exiting the program:
             JLabel msg = new JLabel(t.get("message.exit"));
-            int result = JOptionPane.showConfirmDialog(frame, msg, t.get("general.warning"),
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(frame, msg, t.get("general.warning"), JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
 
             if (result==JOptionPane.OK_OPTION) {
                 // Store last entered profile data:
@@ -584,8 +619,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
     public final void updateConfig(JFSConfig config) {
         // Update title:
         JFSText t = JFSText.getInstance();
-        frame.setTitle(t.get("general.appName")+" "+JFSConst.getInstance().getString("jfs.version")+" - "
-                +config.getTitle());
+        frame.setTitle(getAppTitle(t.get("general.appName")));
 
         // Update view selection:
         JRadioButtonMenuItem button;

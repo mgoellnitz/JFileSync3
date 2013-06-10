@@ -280,7 +280,6 @@ public class JFSEncfsFile extends JFSFile {
                         if (log.isDebugEnabled()) {
                             log.debug("getList("+i+") listing "+f.getPath());
                         } // if
-                          // TODO: better constructor for this!
                         list[i] = new JFSEncfsFile(access, fileProducer, f.getPath(), f.isDirectory());
                         i++ ;
                     } // for
@@ -355,11 +354,10 @@ public class JFSEncfsFile extends JFSFile {
 
         info.setModificationDate(time);
 
-        // TODO:
         if (log.isDebugEnabled()) {
             log.debug("setLastModified() "+file.getParentPath()+":"+file.getName()+" - "+file.getPath());
         } // if
-          // Maybe fix this somewhere else...
+          // TODO: Maybe fix this somewhere else...
         String encryptedPath = file.getEncryptedPath();
         int idx = encryptedPath.startsWith("//") ? 1 : 0;
         String encPath = getFileProducer().getRootPath()+encryptedPath.substring(idx);
