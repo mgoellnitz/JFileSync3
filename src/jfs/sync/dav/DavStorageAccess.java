@@ -17,7 +17,6 @@
  */
 package jfs.sync.dav;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -37,6 +36,7 @@ import java.util.TimeZone;
 import javax.xml.namespace.QName;
 
 import jfs.conf.JFSConfig;
+import jfs.sync.base.InOutStreamingBuffer;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.StorageAccess;
 import jfs.sync.meta.AbstractMetaStorageAccess;
@@ -48,6 +48,7 @@ import org.apache.commons.logging.LogFactory;
 import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
+import com.github.sardine.impl.SardineException;
 
 public class DavStorageAccess extends AbstractMetaStorageAccess implements StorageAccess {
 
@@ -221,6 +222,12 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         try {
             getSardine().createDirectory(url);
         } catch (Exception e) {
+            if (e instanceof SardineException) {
+                SardineException se = (SardineException)e;
+                if (log.isWarnEnabled()) {
+                    log.warn("createDirectory() status code: "+se.getStatusCode()+" "+se.getResponsePhrase());
+                } // if
+            } // if
             if (log.isWarnEnabled()) {
                 log.warn("createDirectory()", e);
             } // if
@@ -376,26 +383,39 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
                 log.debug("getOutputStream() getting output stream for "+url+" "+info);
             } // if
         } // if
-        OutputStream result = new ByteArrayOutputStream() {
-            public void close() throws IOException {
-                if (log.isDebugEnabled()) {
-                    log.debug("getOutputStream() closing "+relativePath);
-                } // if
-                super.close();
-                if (log.isDebugEnabled()) {
-                    log.debug("getOutputStream() obtaining data for "+relativePath);
-                } // if
-                byte[] data = this.toByteArray();
-                if (log.isDebugEnabled()) {
-                    log.debug("getOutputStream() transferring "+relativePath);
-                } // if
-                getSardine().put(url, data);
-                if (log.isDebugEnabled()) {
-                    log.debug("getOutputStream() done "+relativePath);
-                } // if
-            } // close()
-        };
+        final InOutStreamingBuffer buffer = new InOutStreamingBuffer();
+        new Thread() {
+            public void run() {
+                try {
+                    getSardine().put(url, buffer.getInputStream());
+                } catch (Exception e) {
+                    log.error("Thread.run()", e);
+                } // try/catch
+            } // run()
+        }.start();
+        OutputStream result = buffer.getOutputStream();
         return result;
+        
+        // OutputStream result = new ByteArrayOutputStream() {
+        // public void close() throws IOException {
+        // if (log.isDebugEnabled()) {
+        // log.debug("getOutputStream() closing "+relativePath);
+        // } // if
+        // super.close();
+        // if (log.isDebugEnabled()) {
+        // log.debug("getOutputStream() obtaining data for "+relativePath);
+        // } // if
+        // byte[] data = this.toByteArray();
+        // if (log.isDebugEnabled()) {
+        // log.debug("getOutputStream() transferring "+relativePath);
+        // } // if
+        // getSardine().put(url, data);
+        // if (log.isDebugEnabled()) {
+        // log.debug("getOutputStream() done "+relativePath);
+        // } // if
+        // } // close()
+        // };
+        // return result;
     } // getOutputStream()
 
 } // DavStorageAccess

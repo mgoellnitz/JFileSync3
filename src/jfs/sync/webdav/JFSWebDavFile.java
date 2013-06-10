@@ -17,7 +17,6 @@
  */
 package jfs.sync.webdav;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,6 +39,7 @@ import jfs.conf.JFSConfig;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 import jfs.sync.base.AbstractJFSFileProducerFactory;
+import jfs.sync.base.InOutStreamingBuffer;
 import jfs.sync.encryption.FileInfo;
 
 import org.apache.commons.logging.Log;
@@ -222,6 +222,11 @@ public class JFSWebDavFile extends JFSFile {
     } // getInputStream()
 
 
+    private Sardine getAccess() {
+        return access;
+    } // getAccess()
+
+
     /**
      * @see JFSFile#getOutputStream()
      */
@@ -231,27 +236,24 @@ public class JFSWebDavFile extends JFSFile {
             log.debug("getOutputStream()");
         } // if
         final String url = getUrl(info.getPath()+"/"+info.getName());
-        OutputStream result = new ByteArrayOutputStream() {
-            public void close() throws IOException {
-                if (log.isDebugEnabled()) {
-                    log.debug("getOutputStream() closing "+info.getName());
-                } // if
-                super.close();
-                if (log.isDebugEnabled()) {
-                    log.debug("getOutputStream() obtaining data");
-                } // if
-                byte[] data = this.toByteArray();
-                if (log.isDebugEnabled()) {
-                    log.debug("getOutputStream() transferring");
-                } // if
-                access.put(url, data);
-                if (log.isDebugEnabled()) {
-                    log.debug("getOutputStream() done "+relativePath);
-                } // if
-            } // close()
-        };
-        output = result;
-        return result;
+
+        try {
+            final InOutStreamingBuffer buffer = new InOutStreamingBuffer();
+            new Thread() {
+                public void run() {
+                    try {
+                        getAccess().put(url, buffer.getInputStream());
+                    } catch (Exception e) {
+                        log.error("Thread.run()", e);
+                    } // try/catch
+                } // run()
+            }.start();
+            OutputStream result = buffer.getOutputStream();
+            output = result;
+            return result;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } // try/catch
     } // getOutputStream()
 
 
@@ -462,10 +464,10 @@ public class JFSWebDavFile extends JFSFile {
      */
     @Override
     public boolean setReadOnly() {
-        if ( JFSConfig.getInstance().isSetCanWrite()) {
+        if (JFSConfig.getInstance().isSetCanWrite()) {
             info.setCanWrite(false);
         } // if
- 
+
         return true;
     } // setReadOnly()
 
@@ -479,8 +481,9 @@ public class JFSWebDavFile extends JFSFile {
         // Set last modified and read-only only when file is no directory:
         if ( !srcFile.isDirectory()) {
             info.setSize(srcFile.getLength());
-            if ( !srcFile.canWrite())
+            if ( !srcFile.canWrite()) {
                 info.setCanWrite(false);
+            } // if
         } // if
 
         return true;
@@ -529,4 +532,4 @@ public class JFSWebDavFile extends JFSFile {
         return true;
     }
 
-}
+} // JFSWebDavFile
