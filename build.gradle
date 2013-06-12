@@ -4,14 +4,22 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 apply plugin:com.smokejumperit.gradle.ExecPlugin
+apply plugin: 'launch4j'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 compileJava.options.encoding = 'UTF-8'
+compileJava.options.deprecation = true
 
 buildscript {
-    repositories { maven { url "http://repo.smokejumperit.com" } }
-    dependencies { classpath 'com.smokejumperit:gradle-plugins:0.8.2' }
+    repositories {
+        maven { url "http://repo.smokejumperit.com" }
+        ivy { artifactPattern 'http://gradle-launch4j.googlecode.com/files/[module]-[revision].[ext]' }
+    }
+    dependencies {
+        classpath 'com.smokejumperit:gradle-plugins:0.8.2'
+        classpath 'edu.sc.seis:gradle-launch4j:1.0.5'
+    }
 }
 
 repositories {
@@ -42,21 +50,34 @@ dependencies {
     // dropbox client
     // compile files(fileTree(dir: 'lib', includes: ['*.jar']))
 
-    // compile "com.googlecode.sardine:sardine:314"
-    compile "org.slf4j:slf4j-api:1.5.8" // 1.7.5
-    compile "org.slf4j:slf4j-log4j12:1.5.8" // 1.7.5
-    compile "org.apache.httpcomponents:httpclient:4.2.5"
+    // compile 'com.googlecode.sardine:sardine:314'
+    compile 'org.slf4j:slf4j-api:1.5.8' // 1.7.5
+    compile 'org.slf4j:slf4j-log4j12:1.5.8' // 1.7.5
+    compile 'org.apache.httpcomponents:httpclient:4.2.5'
 
     // Cifs code looks good but I don't have shares to use so I skip this
-    // compile "jcifs:jcifs:1.3.17"
-    compile "commons-lang:commons-lang:2.6"
-    compile "org.apache.commons:commons-compress:1.3" // 1.5
+    // compile 'jcifs:jcifs:1.3.17'
+    compile 'commons-lang:commons-lang:2.6'
+    compile 'org.apache.commons:commons-compress:1.3' // 1.5
 
-    compile "org.bouncycastle:bcprov-jdk16:1.46"
-    compile "javax.servlet:servlet-api:2.5"
+    compile 'org.bouncycastle:bcprov-jdk16:1.46'
+    compile 'javax.servlet:servlet-api:2.5'
 }
 
-mainClassName = "jfs.JFileSync"
+mainClassName = 'jfs.JFileSync'
+
+launch4j {
+    mainClassName = project.mainClassName
+    version = '3.0.0'
+    copyright = '(C) 2002-2013, J. Heidrich, M. Goellnitz'
+    downloadUrl = 'https://www.dropbox.com/s/3n4snlbw9tyjgec/JFileSync3.zip'
+    supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
+    icon = "$project.projectDir/bin/JFileSync.ico"
+    dontWrapJar = true
+    xmlFileName = 'JFileSync3-launcher.xml'
+    initialHeapSize = 1024
+    maxHeapSize = 1536
+}
 
 startScripts {
     doLast {
@@ -73,10 +94,14 @@ startScripts {
 distZip {
     // TODO: later...
     // into(project.name+"/bin") {
-    //	from 'scripts'
+    //	from 'bin'
     //	include 'E*.bat'
-    //  include '*.ico'
     //}
+    into(project.name) {
+        from "$buildDir/launch4j"
+        include '*.exe'
+        include '*.xml'
+    }
     into(project.name) {
         from '.'
         include 'legal/*.*'

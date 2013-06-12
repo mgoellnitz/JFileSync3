@@ -1,7 +1,7 @@
 Java based File Syncing Tool
 ==================
 
-Fiel Syncing with optional Compression and Encryption for Local and WebDAV Folders.
+File Syncing with optional Compression and Encryption for Local and WebDAV Folders.
 
 For local folders encryption can use EncFS and thus be compatible with encfs4win, BoxCryptor, Encdroid and so on.
 
@@ -9,7 +9,7 @@ For local folders encryption can use EncFS and thus be compatible with encfs4win
 
 This software was developed because I personally needed a easy to use syncing tool to have everyday backups of highly confidential material - business and private. And none of the services I came accross could suite these needs.
 
-It is havily based on the work of Jens Heidrich and the JFileSystem 2.2
+It is havily based on the work of Jens Heidrich and the JFileSync2.2
 
 JFileSync is a SourceForge project and available via the following URL:
 http://jfilesync.sourceforge.net/
@@ -148,11 +148,25 @@ Feel free to issue bug reports and ideas here.
 
 HOW-BUILD:
 
+```bash
 gradle distZip
+```
 
 Take the ZIP file from build/distributions
 
-a small test-suite can be found in profiles/test (which is not packaged in the distribtions zip)
+Optionally if launch4j is installed and available on your path you can build with
+
+```bash
+gradle launch4j distZip
+```
+
+so that the distribution will contain an additional JFileSync3.exe executable file.
+
+a small test-suite can be found in profiles/test (which is not packaged in the distribtions zip) and can be called via 
+
+```bash
+gradle encryptionTest
+```
 
 6) Included Directories and Files
 
