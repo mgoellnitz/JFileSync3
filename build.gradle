@@ -33,7 +33,7 @@ sourceSets {
         java {
             srcDir 'src'
             exclude 'jfs/sync/fileencrypted/*.java'
-            // exclude '**/HeapSort.java'
+            exclude '**/HeapSort.java'
         }
         resources {
             srcDir 'src'

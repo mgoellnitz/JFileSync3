@@ -127,11 +127,11 @@ public class JFSComparison {
         assert srcFiles!=null&&tgtFiles!=null;
 
         // First, sort the input arrays:
-        HeapSort<JFSFile> h = new HeapSort<JFSFile>();
-        h.sort(srcFiles);
-        h.sort(tgtFiles);
-        // Arrays.sort(srcFiles);
-        // Arrays.sort(tgtFiles);
+        // HeapSort<JFSFile> h = new HeapSort<JFSFile>();
+        // h.sort(srcFiles);
+        // h.sort(tgtFiles);
+        Arrays.sort(srcFiles);
+        Arrays.sort(tgtFiles);
 
         int srcIndex = 0;
         int tgtIndex = 0;
