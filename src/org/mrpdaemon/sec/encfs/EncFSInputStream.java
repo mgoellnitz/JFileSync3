@@ -228,7 +228,6 @@ public class EncFSInputStream extends FilterInputStream {
 	 */
 	@Override
 	public boolean markSupported() {
-		// TODO: could support mark()/reset()
 		return false;
 	}
 

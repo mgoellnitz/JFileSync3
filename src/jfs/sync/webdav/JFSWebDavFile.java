@@ -164,7 +164,7 @@ public class JFSWebDavFile extends JFSFile {
                 } // if
             } // for
         } catch (IOException ioe) {
-            log.error("()", ioe);
+            log.error("() getting parent folder list for '"+pathAndName[0]+"': "+ioe.getMessage());
         } // try/catch
 
         if (log.isInfoEnabled()) {
@@ -453,7 +453,7 @@ public class JFSWebDavFile extends JFSFile {
             } // if
             success = (result.size()==1);
         } catch (IOException e) {
-            log.error("setLastModified()", e);
+            log.error("setLastModified() failed for "+url, e);
         } // try/catch
         return success;
     } // setLastModified()

@@ -72,8 +72,6 @@ public class EncFSConfigParser {
 			EncFSInvalidConfigException, IOException {
 
 		EncFSConfig config;
-		// TODO: Need to implement a connector method in EncFSFileProvider for
-		// '/'
 		if (!fileProvider.exists(fileProvider.getFilesystemRootPath() + path)) {
 			// Try old versions
 			for (String altConfigFileName : EncFSVolume.OLD_CONFIG_FILE_NAMES) {

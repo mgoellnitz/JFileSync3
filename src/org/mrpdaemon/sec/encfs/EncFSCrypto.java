@@ -68,9 +68,6 @@ public final class EncFSCrypto {
 	// Returns an IvParameterSpec for the given iv/seed
 	private static IvParameterSpec newIvSpec(Mac mac, byte[] iv, byte[] ivSeed) {
 
-		// TODO: Verify input byte[] lengths, raise Exception on bad ivSeed
-		// length
-
 		byte[] concat = new byte[EncFSVolume.IV_LENGTH_IN_BYTES + 8];
 		System.arraycopy(iv, 0, concat, 0, EncFSVolume.IV_LENGTH_IN_BYTES);
 
@@ -386,7 +383,6 @@ public final class EncFSCrypto {
 		int bytesLeft = input.length;
 
 		while (bytesLeft > 0) {
-			// TODO: 64 should be defined?
 			int toFlip = Math.min(64, bytesLeft);
 
 			for (int i = 0; i < toFlip; i++)

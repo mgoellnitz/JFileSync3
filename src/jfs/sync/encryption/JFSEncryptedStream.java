@@ -295,10 +295,10 @@ public class JFSEncryptedStream extends OutputStream {
         if (bt.compressedValue.length<l) {
             marker = COMPRESSION_BZIP2;
             bytes = bt.compressedValue;
-            l = bytes.length;
             if (log.isWarnEnabled()) {
-                log.warn("close() using bzip2");
+                log.warn("close() using bzip2 and saving "+(l-bytes.length)+" bytes.");
             } // if
+            l = bytes.length;
         } // if
 
         if (log.isInfoEnabled()) {
@@ -382,7 +382,7 @@ public class JFSEncryptedStream extends OutputStream {
             if (log.isDebugEnabled()) {
                 log.debug("JFSEncryptedStream.createInputStream() length check "+expectedLength+" == "+l+"?");
             } // if
-            if (expectedLength!= DONT_CHECK_LENGTH) {
+            if (expectedLength!=DONT_CHECK_LENGTH) {
                 if (l!=expectedLength) {
                     log.error("JFSEncryptedStream.createInputStream() length check failed");
                     return null;

@@ -9,7 +9,7 @@ For local folders encryption can use EncFS and thus be compatible with encfs4win
 
 This software was developed because I personally needed a easy to use syncing tool to have everyday backups of highly confidential material - business and private. And none of the services I came accross could suite these needs.
 
-It is havily based on the work of Jens Heidrich and the JFileSync2.2
+It is heavily based on the work of Jens Heidrich and the JFileSync2.2
 
 JFileSync is a SourceForge project and available via the following URL:
 http://jfilesync.sourceforge.net/
@@ -45,7 +45,7 @@ appropriate configuration profile for JFileSync3.
 
 Nearly all functions of JFileSync3 can be controlled via the Graphical User Interface
 (GUI). However, JFileSync3 provides full access to all features (apart from
-plug-ins) via the command line interface. Call 'java -jar jfs.jar -help' to
+plug-ins) via the command line interface. Call 'bin/JFileSync -help' to
 get an overview of all possible command line options.
 
 
@@ -58,22 +58,11 @@ get an overview of all possible command line options.
 3) Installation and Application Start
 
 - Unzip the distribution file to a directory of your choice.
-- For simplicity reasons a Windows batch file ('JFileSync.bat') and a Unix
-  shell script ('JFileSync.sh') are available via the main distribution
-  directory in order to start the application directly.
+- For simplicity reasons a Windows launcher ('JFileSync3.exe'), a batch file ('bin/JFileSync3.bat') and a Unix
+  shell script ('bin/JFileSync3') are available via the main distribution directory in order to start the application.
   ATTENTION: Because JFileSync is distributed as a Zip archive, Unix users
   will have to give executable rights manually before launching the
   application, e.g.: 'chmod a+rx JFileSync.sh'.
-  If you have problems with the file encoding or line delimiters (when using
-  an older version of the shell script) you will have to convert the script
-  from DOS format to Unix format, e.g.: 'dos2unix JFileSync.sh'.
-- If you do not want to use the start scripts you may also do the following:
-  Enter the 'lib' sub directory of the distribution and call
-  'java -jar jfs.jar' in order to start the Graphical User Interface or
-  call 'java -jar jfs.jar -help' in order to get information about command
-  line options. Depending in your Operating System a double click on
-  'jfs.jar' will also launch the application.
-
 
 2) License and Usage Terms
 

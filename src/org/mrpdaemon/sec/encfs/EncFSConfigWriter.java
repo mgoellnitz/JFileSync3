@@ -59,7 +59,7 @@ public class EncFSConfigWriter {
 
 	// Create config file contents from a given EncFSConfig / password
 	private static String createConfigFileContents(EncFSConfig config) {
-		// XXX: This implementation is pretty horrible, but it works :)
+		// TODO: This implementation is pretty horrible, but it works :)
 		String result = "";
 
 		result += "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";

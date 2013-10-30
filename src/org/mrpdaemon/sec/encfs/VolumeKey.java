@@ -73,7 +73,6 @@ class VolumeKey {
 			EncFSInvalidConfigException, EncFSCorruptDataException,
 			EncFSUnsupportedException {
 		// Decode Base64 encoded ciphertext data
-		// TODO: validate key/IV lengths
 		byte[] cipherVolKeyData;
 		try {
 			cipherVolKeyData = EncFSBase64.decode(config

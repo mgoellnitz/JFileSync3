@@ -33,8 +33,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import javax.xml.namespace.QName;
-
 import jfs.conf.JFSConfig;
 import jfs.sync.base.InOutStreamingBuffer;
 import jfs.sync.encryption.FileInfo;
@@ -54,7 +52,8 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
 
     private static final String PROP_LAST_MODIFIED_TIME = "Win32LastModifiedTime";
 
-    private static final QName QNAME_LAST_MODIFIED_TIME = new QName("urn:schemas-microsoft-com:", PROP_LAST_MODIFIED_TIME, "ns1");
+    // See commented area below
+    // private static final QName QNAME_LAST_MODIFIED_TIME = new QName("urn:schemas-microsoft-com:", PROP_LAST_MODIFIED_TIME, "ns1");
 
     private static DateFormat DATE_FORMAT;
 
