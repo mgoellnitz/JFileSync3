@@ -99,7 +99,7 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
     private JButton toggleDetailsButton;
 
     /** Determines whether details should be shown. */
-    private boolean showDetails = true;
+    private boolean showDetails = false;
 
 
     /**
