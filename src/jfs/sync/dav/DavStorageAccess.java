@@ -17,6 +17,10 @@
  */
 package jfs.sync.dav;
 
+import com.github.sardine.DavResource;
+import com.github.sardine.Sardine;
+import com.github.sardine.SardineFactory;
+import com.github.sardine.impl.SardineException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,21 +36,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
-
 import jfs.conf.JFSConfig;
-import jfs.sync.base.InOutStreamingBuffer;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.StorageAccess;
 import jfs.sync.meta.AbstractMetaStorageAccess;
 import jfs.sync.util.WindowsProxySelector;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.github.sardine.DavResource;
-import com.github.sardine.Sardine;
-import com.github.sardine.SardineFactory;
-import com.github.sardine.impl.SardineException;
 
 public class DavStorageAccess extends AbstractMetaStorageAccess implements StorageAccess {
 
@@ -56,6 +53,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
     // private static final QName QNAME_LAST_MODIFIED_TIME = new QName("urn:schemas-microsoft-com:", PROP_LAST_MODIFIED_TIME, "ns1");
 
     private static DateFormat DATE_FORMAT;
+
 
     {
         DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ROOT);
@@ -143,7 +141,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
 
     /**
      * create file info for optionally non existing files
-     * 
+     *
      * @param file
      * @param pathAndName
      * @return
@@ -166,7 +164,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
             if (log.isDebugEnabled()) {
                 log.debug("createFileInfo() - "+urlPathAndName[0]+" / "+urlPathAndName[1]);
             } // if
-              // resources = getSardine().list(urlPathAndName[0]+getSeparator());
+            // resources = getSardine().list(urlPathAndName[0]+getSeparator());
             resources = getListing(rootPath, urlPathAndName[0]);
             for (DavResource resource : resources) {
                 if (urlPathAndName[1].equals(resource.getName())) {
@@ -222,7 +220,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
             getSardine().createDirectory(url);
         } catch (Exception e) {
             if (e instanceof SardineException) {
-                SardineException se = (SardineException)e;
+                SardineException se = (SardineException) e;
                 if (log.isWarnEnabled()) {
                     log.warn("createDirectory() status code: "+se.getStatusCode()+" "+se.getResponsePhrase());
                 } // if
@@ -321,7 +319,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
             log.debug("delete() "+relativePath);
             log.debug("delete() listing="+listing);
         } // if
-          // remove named item
+        // remove named item
         if (listing.containsKey(pathAndName[1])) {
             FileInfo info = listing.get(pathAndName[1]);
             listing.remove(pathAndName[1]);
@@ -370,7 +368,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         } // if
         final String url = getUrl(rootPath, relativePath);
         String[] pathAndName = getPathAndName(relativePath);
-        if (forPayload&&( !getSardine().exists(url))) {
+        if (forPayload&&(!getSardine().exists(url))) {
             FileInfo info = createFileInfo(rootPath, relativePath, pathAndName);
             Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
             listing.put(info.getName(), info);
@@ -382,39 +380,16 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
                 log.debug("getOutputStream() getting output stream for "+url+" "+info);
             } // if
         } // if
-        final InOutStreamingBuffer buffer = new InOutStreamingBuffer();
-        new Thread() {
-            public void run() {
-                try {
-                    getSardine().put(url, buffer.getInputStream());
-                } catch (Exception e) {
-                    log.error("Thread.run()", e);
-                } // try/catch
-            } // run()
-        }.start();
-        OutputStream result = buffer.getOutputStream();
+        OutputStream result = new com.gc.iotools.stream.os.OutputStreamToInputStream<String>() {
+
+            @Override
+            protected String doRead(InputStream in) throws Exception {
+                getSardine().put(url, in);
+                return "";
+            }
+
+        };
         return result;
-        
-        // OutputStream result = new ByteArrayOutputStream() {
-        // public void close() throws IOException {
-        // if (log.isDebugEnabled()) {
-        // log.debug("getOutputStream() closing "+relativePath);
-        // } // if
-        // super.close();
-        // if (log.isDebugEnabled()) {
-        // log.debug("getOutputStream() obtaining data for "+relativePath);
-        // } // if
-        // byte[] data = this.toByteArray();
-        // if (log.isDebugEnabled()) {
-        // log.debug("getOutputStream() transferring "+relativePath);
-        // } // if
-        // getSardine().put(url, data);
-        // if (log.isDebugEnabled()) {
-        // log.debug("getOutputStream() done "+relativePath);
-        // } // if
-        // } // close()
-        // };
-        // return result;
     } // getOutputStream()
 
 } // DavStorageAccess

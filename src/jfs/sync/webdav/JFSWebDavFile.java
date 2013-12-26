@@ -17,6 +17,8 @@
  */
 package jfs.sync.webdav;
 
+import com.github.sardine.DavResource;
+import com.github.sardine.Sardine;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,27 +34,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
-
 import javax.xml.namespace.QName;
-
 import jfs.conf.JFSConfig;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 import jfs.sync.base.AbstractJFSFileProducerFactory;
-import jfs.sync.base.InOutStreamingBuffer;
 import jfs.sync.encryption.FileInfo;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.github.sardine.DavResource;
-import com.github.sardine.Sardine;
 
 /**
  * Represents an external file and uses a WebDAV backend.
- * 
+ *
  * @author Martin Goellnitz
- * 
+ *
  */
 public class JFSWebDavFile extends JFSFile {
 
@@ -62,6 +58,7 @@ public class JFSWebDavFile extends JFSFile {
 
     private static DateFormat DATE_FORMAT;
 
+
     {
         DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ROOT);
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -69,13 +66,19 @@ public class JFSWebDavFile extends JFSFile {
 
     private static Log log = LogFactory.getLog(JFSWebDavFile.class);
 
-    /** The retrieved file information object from the server. */
+    /**
+     * The retrieved file information object from the server.
+     */
     private FileInfo info = null;
 
-    /** The list of included files. */
+    /**
+     * The list of included files.
+     */
     private JFSFile[] list = null;
 
-    /** The server access object to use. */
+    /**
+     * The server access object to use.
+     */
     private Sardine access = null;
 
     private OutputStream output = null;
@@ -96,7 +99,7 @@ public class JFSWebDavFile extends JFSFile {
         result.setDirectory(resource.isDirectory());
         result.setSize(resource.isDirectory() ? 0 : resource.getContentLength());
         long time = 0;
-        if ( !resource.isDirectory()) {
+        if (!resource.isDirectory()) {
             Date modificationDate = resource.getModified();
             String modifiedDateString = resource.getCustomProps().get(PROP_LAST_MODIFIED_TIME);
             if (modifiedDateString!=null) {
@@ -129,13 +132,13 @@ public class JFSWebDavFile extends JFSFile {
 
     /**
      * Creates a new external file for a certain path using a specific file producer.
-     * 
+     *
      * @param access
-     *            The server access object to use.
+     * The server access object to use.
      * @param fileProducer
-     *            The assigned file producer.
+     * The assigned file producer.
      * @param path
-     *            The path to create the external file for.
+     * The path to create the external file for.
      */
     public JFSWebDavFile(Sardine access, JFSFileProducer fileProducer, String path, boolean isDirectory) {
         super(fileProducer, path);
@@ -157,7 +160,7 @@ public class JFSWebDavFile extends JFSFile {
         } // if
         try {
             String folderUrl = getUrl(pathAndName[0])+"/";
-            List<DavResource> parentListing = ((JFSWebDavFileProducer)getFileProducer()).getListing(folderUrl);
+            List<DavResource> parentListing = ((JFSWebDavFileProducer) getFileProducer()).getListing(folderUrl);
             for (DavResource resource : parentListing) {
                 if (pathAndName[1].equals(resource.getName())) {
                     info = createFileInfo(pathAndName[0], resource);
@@ -175,11 +178,11 @@ public class JFSWebDavFile extends JFSFile {
 
     /**
      * Creates a new external root file and reads the structure from server.
-     * 
+     *
      * @param access
-     *            The server access object to use.
+     * The server access object to use.
      * @param fileProducer
-     *            The assigned file producer.
+     * The assigned file producer.
      */
     public JFSWebDavFile(Sardine access, JFSFileProducer fileProducer) {
         this(access, fileProducer, "", true);
@@ -238,17 +241,15 @@ public class JFSWebDavFile extends JFSFile {
         final String url = getUrl(info.getPath()+"/"+info.getName());
 
         try {
-            final InOutStreamingBuffer buffer = new InOutStreamingBuffer();
-            new Thread() {
-                public void run() {
-                    try {
-                        getAccess().put(url, buffer.getInputStream());
-                    } catch (Exception e) {
-                        log.error("Thread.run()", e);
-                    } // try/catch
-                } // run()
-            }.start();
-            OutputStream result = buffer.getOutputStream();
+            OutputStream result = new com.gc.iotools.stream.os.OutputStreamToInputStream<String>() {
+
+                @Override
+                protected String doRead(InputStream in) throws Exception {
+                    getAccess().put(url, in);
+                    return "";
+                }
+
+            };
             output = result;
             return result;
         } catch (Exception e) {
@@ -347,7 +348,7 @@ public class JFSWebDavFile extends JFSFile {
                 try {
                     String folder = info.getPath()+"/"+info.getName()+"/";
                     String url = getUrl(folder);
-                    List<DavResource> listing = ((JFSWebDavFileProducer)getFileProducer()).getListing(url);
+                    List<DavResource> listing = ((JFSWebDavFileProducer) getFileProducer()).getListing(url);
                     if (listing.size()>1) {
                         list = new JFSWebDavFile[listing.size()-1];
                         int rootLength = new URL(getFileProducer().getRootPath()).getPath().length();
@@ -357,7 +358,7 @@ public class JFSWebDavFile extends JFSFile {
                             if (log.isDebugEnabled()) {
                                 log.debug("getList("+i+") "+folder+" / "+resource.getPath());
                             } // if
-                            if ( !folder.endsWith(resource.getPath())) {
+                            if (!folder.endsWith(resource.getPath())) {
                                 String path = resource.getPath().substring(rootLength);
                                 if (resource.isDirectory()) {
                                     path = path.substring(0, path.length()-1);
@@ -365,7 +366,7 @@ public class JFSWebDavFile extends JFSFile {
                                 if (log.isDebugEnabled()) {
                                     log.debug("getList("+i+") resource uri: "+path+(resource.isDirectory() ? "/" : ""));
                                 } // if
-                                list[i++ ] = new JFSWebDavFile(access, getFileProducer(), path, resource.isDirectory());
+                                list[i++] = new JFSWebDavFile(access, getFileProducer(), path, resource.isDirectory());
                             } // if
                         } // for
                     } // if
@@ -479,9 +480,9 @@ public class JFSWebDavFile extends JFSFile {
     protected boolean preCopyTgt(JFSFile srcFile) {
         info.setModificationDate(srcFile.getLastModified());
         // Set last modified and read-only only when file is no directory:
-        if ( !srcFile.isDirectory()) {
+        if (!srcFile.isDirectory()) {
             info.setSize(srcFile.getLength());
-            if ( !srcFile.canWrite()) {
+            if (!srcFile.canWrite()) {
                 info.setCanWrite(false);
             } // if
         } // if
