@@ -89,6 +89,8 @@ JFileSync3 uses libraries or parts of Open Source projects which are partly incl
 
 - Apache commons: Apache
 
+- IO-Tools: new BSD
+
 - Bouncy Castle providers: BC
 
 - SevenZip/LZMA: LZMA SDK is written and placed in the public domain by Igor Pavlov.
