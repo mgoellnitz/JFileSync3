@@ -1,7 +1,6 @@
 defaultTasks 'clean', 'build'
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'application'
 apply plugin:com.smokejumperit.gradle.ExecPlugin
 apply plugin: 'launch4j'
@@ -42,9 +41,6 @@ sourceSets {
         }
     }
 }
-
-// Project specific default output directory
-eclipse.classpath.conventionMapping.defaultOutputDir = { new File(project.projectDir, 'build/classes/main') }
 
 dependencies {
     // dropbox client
@@ -145,3 +141,7 @@ task(encryptionTest) << {
     cmd = "cmd /c bin${File.separator}${project.name} -config ..\\..\\test\\4-compare-resulting-folders.xml -nohistory"
     project.exec(cmd, "$buildDir/${project.name}")
 }
+
+// Project specific default output directory for eclipse users
+// apply plugin: 'eclipse'
+// eclipse.classpath.conventionMapping.defaultOutputDir = { new File(project.projectDir, 'build/classes/main') }
