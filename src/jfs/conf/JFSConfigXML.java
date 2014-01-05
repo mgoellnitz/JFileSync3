@@ -167,7 +167,6 @@ class JFSConfigXML extends JFSConfig {
                     attr = ((Element)child).getAttributeNode(ATTR_SHORTEN);
                     if (attr!=null) {
                         shortenPaths = Boolean.valueOf(attr.getValue()).booleanValue();
-                        System.err.println("SHORTEN: "+shortenPaths);
                     } // if
                 } // if
 
