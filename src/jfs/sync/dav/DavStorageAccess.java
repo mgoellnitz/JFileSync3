@@ -60,18 +60,18 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
-    private static Log log = LogFactory.getLog(DavStorageAccess.class);
+    private static final Log log = LogFactory.getLog(DavStorageAccess.class);
 
     private Sardine sardine = null;
 
     /*
      * To speed things up we have a second DavResource based directory cache
      */
-    private Map<String, List<DavResource>> directoryCache = new HashMap<String, List<DavResource>>();
+    private final Map<String, List<DavResource>> directoryCache = new HashMap<String, List<DavResource>>();
 
 
     public DavStorageAccess(String cipher) {
-        super(cipher);
+        super(cipher, true);
     } // DavStorageAccess()
 
 

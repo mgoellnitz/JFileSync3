@@ -20,7 +20,6 @@
 package jfs.conf;
 
 import java.io.File;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -29,7 +28,7 @@ import org.w3c.dom.Node;
 
 /**
  * Loads and saves the configuration entries from or to an XML configuration file.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSConfigXML.java,v 1.24 2007/02/26 18:49:11 heidrich Exp $
  * @see jfs.conf.JFSConfig
@@ -39,6 +38,8 @@ class JFSConfigXML extends JFSConfig {
     private static final String ATTR_PASSPHRASE = "passphrase";
 
     private static final String ATTR_CIPHER = "cipher";
+
+    private static final String ATTR_SHORTEN = "shorten";
 
 
     /**
@@ -54,8 +55,9 @@ class JFSConfigXML extends JFSConfig {
         try {
             // Compute root:
             Element root = XMLSupport.getDocumentElement(confFile);
-            if (root==null)
+            if (root==null) {
                 return false;
+            }
 
             // Test root element:
             if ( !root.getNodeName().equals("jFileSync")) {
@@ -69,43 +71,51 @@ class JFSConfigXML extends JFSConfig {
                 Attr attr;
                 attr = root.getAttributeNode("title");
 
-                if (attr!=null)
+                if (attr!=null) {
                     setTitle(attr.getValue());
+                }
 
                 attr = root.getAttributeNode("sync");
 
-                if (attr!=null)
+                if (attr!=null) {
                     setSyncMode(Byte.parseByte(attr.getValue()));
+                }
 
                 attr = root.getAttributeNode("view");
 
-                if (attr!=null)
+                if (attr!=null) {
                     setView(Byte.parseByte(attr.getValue()));
+                }
 
                 attr = root.getAttributeNode("granularity");
 
-                if (attr!=null)
+                if (attr!=null) {
                     setGranularity(Integer.parseInt(attr.getValue()));
+                }
 
                 attr = root.getAttributeNode("buffersize");
 
-                if (attr!=null)
+                if (attr!=null) {
                     setBufferSize(Integer.parseInt(attr.getValue()));
+                }
 
                 attr = root.getAttributeNode("keepuseractions");
 
-                if (attr!=null)
+                if (attr!=null) {
                     setKeepUserActions(Boolean.valueOf(attr.getValue()).booleanValue());
+                }
 
                 attr = root.getAttributeNode("storehistory");
 
-                if (attr!=null)
+                if (attr!=null) {
                     setStoreHistory(Boolean.valueOf(attr.getValue()).booleanValue());
+                }
 
                 attr = root.getAttributeNode("setcanwrite");
 
-                if (attr!=null)
+                if (attr!=null) {
                     setCanWrite(Boolean.valueOf(attr.getValue()).booleanValue());
+                }
             } catch (NumberFormatException e) {
                 // Thrown by parseInt() and parseByte(). Continue in this case.
                 JFSLog.getErr().getStream().println(t.get("error.numberFormat"));
@@ -123,8 +133,9 @@ class JFSConfigXML extends JFSConfig {
                     try {
                         attr = ((Element)child).getAttributeNode("timeout");
 
-                        if (attr!=null)
+                        if (attr!=null) {
                             serverTimeout = Integer.parseInt(attr.getValue());
+                        }
                     } catch (Exception e) {
                         // Thrown by parseInt() and parseByte(). Continue in
                         // this case.
@@ -133,8 +144,9 @@ class JFSConfigXML extends JFSConfig {
 
                     attr = ((Element)child).getAttributeNode("user");
 
-                    if (attr!=null)
+                    if (attr!=null) {
                         serverUserName = attr.getValue();
+                    }
 
                     attr = ((Element)child).getAttributeNode(ATTR_PASSPHRASE);
 
@@ -152,14 +164,20 @@ class JFSConfigXML extends JFSConfig {
                     if (attr!=null) {
                         encryptionCipher = attr.getValue();
                     } // if
+                    attr = ((Element)child).getAttributeNode(ATTR_SHORTEN);
+                    if (attr!=null) {
+                        shortenPaths = Boolean.valueOf(attr.getValue()).booleanValue();
+                        System.err.println("SHORTEN: "+shortenPaths);
+                    } // if
                 } // if
 
                 if (nodeName.equals("directory")) {
                     Attr src = ((Element)child).getAttributeNode("src");
                     Attr tgt = ((Element)child).getAttributeNode("tgt");
 
-                    if (src!=null&&tgt!=null)
+                    if (src!=null&&tgt!=null) {
                         directoryList.add(new JFSDirectoryPair(src.getValue(), tgt.getValue()));
+                    }
                 }
 
                 if (nodeName.equals("include")||nodeName.equals("exclude")) {
@@ -175,14 +193,17 @@ class JFSConfigXML extends JFSConfig {
                             boolean b = Boolean.parseBoolean(active.getValue());
                             f.setActive(b);
                         }
-                        if (type!=null)
+                        if (type!=null) {
                             f.setType(type.getValue());
-                        if (range!=null)
+                        }
+                        if (range!=null) {
                             f.setRange(range.getValue());
-                        if (nodeName.equals("include"))
+                        }
+                        if (nodeName.equals("include")) {
                             includes.add(f);
-                        else
+                        } else {
                             excludes.add(f);
+                        }
                     }
                 }
 
@@ -210,37 +231,46 @@ class JFSConfigXML extends JFSConfig {
         JFSText t = JFSText.getInstance();
         try {
             Document doc = XMLSupport.newDocument();
-            if (doc==null)
+            if (doc==null) {
                 return false;
+            }
 
             Element root = doc.createElement("jFileSync");
             root.setAttribute("version", JFSConst.getInstance().getString("jfs.version"));
 
             // Create and add attributes to root element if the value differs
             // from the default values:
-            if ( !getTitle().equals(JFSText.getInstance().get("profile.defaultTitle")))
+            if ( !getTitle().equals(JFSText.getInstance().get("profile.defaultTitle"))) {
                 root.setAttribute("title", getTitle());
+            }
 
-            if (getSyncMode()!=JFSSyncModes.getInstance().getDefaultMode())
+            if (getSyncMode()!=JFSSyncModes.getInstance().getDefaultMode()) {
                 root.setAttribute("sync", String.valueOf(getSyncMode()));
+            }
 
-            if (getView()!=JFSViewModes.getInstance().getDefaultMode())
+            if (getView()!=JFSViewModes.getInstance().getDefaultMode()) {
                 root.setAttribute("view", String.valueOf(getView()));
+            }
 
-            if (getGranularity()!=JFSConst.GRANULARITY)
+            if (getGranularity()!=JFSConst.GRANULARITY) {
                 root.setAttribute("granularity", String.valueOf(getGranularity()));
+            }
 
-            if (getBufferSize()!=JFSConst.BUFFER_SIZE)
+            if (getBufferSize()!=JFSConst.BUFFER_SIZE) {
                 root.setAttribute("buffersize", String.valueOf(getBufferSize()));
+            }
 
-            if (isKeepUserActions()!=JFSConst.KEEP_USER_ACTIONS)
+            if (isKeepUserActions()!=JFSConst.KEEP_USER_ACTIONS) {
                 root.setAttribute("keepuseractions", String.valueOf(isKeepUserActions()));
+            }
 
-            if (isStoreHistory()!=JFSConst.STORE_HISTORY)
+            if (isStoreHistory()!=JFSConst.STORE_HISTORY) {
                 root.setAttribute("storehistory", String.valueOf(isStoreHistory()));
+            }
 
-            if (isSetCanWrite()!=JFSConst.SET_CAN_WRITE)
+            if (isSetCanWrite()!=JFSConst.SET_CAN_WRITE) {
                 root.setAttribute("setcanwrite", String.valueOf(isSetCanWrite()));
+            }
 
             // Add server settings if not equal to default:
             if (!serverUserName.equals(JFSConst.SERVER_USER_NAME)
@@ -248,14 +278,17 @@ class JFSConfigXML extends JFSConfig {
                     ) {
                 Element element = doc.createElement("server");
 
-                if ( !serverUserName.equals(JFSConst.SERVER_USER_NAME))
+                if ( !serverUserName.equals(JFSConst.SERVER_USER_NAME)) {
                     element.setAttribute("user", serverUserName);
+                }
 
-                if ( !serverPassPhrase.equals(JFSConst.SERVER_PASS_PHRASE))
+                if ( !serverPassPhrase.equals(JFSConst.SERVER_PASS_PHRASE)) {
                     element.setAttribute(ATTR_PASSPHRASE, serverPassPhrase);
+                }
 
-                if (serverTimeout!=JFSConst.SERVER_TIMEOUT)
+                if (serverTimeout!=JFSConst.SERVER_TIMEOUT) {
                     element.setAttribute("timeout", String.valueOf(serverTimeout));
+                }
 
                 root.appendChild(doc.createTextNode("\n  "));
                 root.appendChild(element);
@@ -265,10 +298,15 @@ class JFSConfigXML extends JFSConfig {
             if ( !encryptionPassPhrase.equals("")) {
                 Element element = doc.createElement("encryption");
 
-                if ( !encryptionPassPhrase.equals(""))
+                if ( !encryptionPassPhrase.equals("")) {
                     element.setAttribute(ATTR_PASSPHRASE, encryptionPassPhrase);
-                if ( !encryptionCipher.equals("AES"))
+                }
+                if ( !encryptionCipher.equals("AES")) {
                     element.setAttribute(ATTR_CIPHER, encryptionCipher);
+                }
+               if ( shortenPaths) {
+                    element.setAttribute(ATTR_SHORTEN, "true");
+                }
 
                 root.appendChild(doc.createTextNode("\n  "));
                 root.appendChild(element);

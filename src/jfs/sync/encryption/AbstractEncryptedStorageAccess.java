@@ -23,59 +23,73 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-
 import jfs.conf.JFSConfig;
 import jfs.sync.base.AbstractJFSFileProducerFactory;
 import jfs.sync.util.SecurityUtils;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+
 public abstract class AbstractEncryptedStorageAccess {
 
-    private static Log log = LogFactory.getLog(AbstractEncryptedStorageAccess.class);
+    private static final Log log = LogFactory.getLog(AbstractEncryptedStorageAccess.class);
 
-    private static char[] FILE_NAME_CHARACTERS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
-            'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '.', ' ', '_', '-',
-            'T', 'S', 'C', 'O', 'P', 'L', 'R', 'M', 'A', 'D', 'E', 'F', 'B', 'V', 'U', 'H', 'W', '<', '>', '*', ':', '/', '|', 'G',
-            'I', 'J', 'K', 'N', 'Q', 'X', 'Y', 'Z', 'ä', 'ö', 'ü', 'ß', 'Ä', 'Ö', 'Ü', '+', '=', '{', '}', '[', ']', '$', '\'', '@',
-            '!', '&', '%', '~', ',', '#', ';', '(', ')', '»', '«', '÷', '´', '`', 'é', 'è', 'à', '²', '?', '"' };
+    /** 111 codes for now - so there's some room left */
+    private static final char[] FILE_NAME_CHARACTERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '.', ' ', '_', '-',
+        'T', 'S', 'C', 'O', 'P', 'L', 'R', 'M', 'A', 'D', 'E', 'F', 'B', 'V', 'U', 'H', 'W', '<', '>', '*', ':', '/', '|', 'G',
+        'I', 'J', 'K', 'N', 'Q', 'X', 'Y', 'Z', 'ä', 'ö', 'ü', 'ß', 'Ä', 'Ö', 'Ü', '+', '=', '{', '}', '[', ']', '$', '\'', '@',
+        '!', '&', '%', '~', ',', '#', ';', '(', ')', '»', '«', '÷', '´', '`', 'é', 'è', 'à', '²', '?', '"', 'ê', 'ï', 'ó'};
 
-    private static char[] DYNAMIC_SPECIAL_CODES = { '<', '>', '?', '*', ':', '"' };
+    private static final char[] DYNAMIC_SPECIAL_CODES = {'<', '>', '?', '*', ':', '"'};
 
-    private static char[] codes = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-            'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e',
-            'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ä', 'ö', 'ü',
-            'ß', 'Ä', 'Ö', 'Ü', '\'', 'µ', '÷', '@', '!', '&', '%', '~', '#', '(', ')', '[', ']', ',', '.', '{', '}', '´', '`', 'á',
-            'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú', 'à', 'è', 'ì', 'ò', 'ù', 'À', 'È', 'Ì', 'Ò', 'Ù', 'â', 'ê', 'î', 'ô', 'û',
-            'Â', 'Ê', 'Î', 'Ô', 'Û', '»', '«', 'å', 'Å', 'ñ', 'Ñ', 'Ë', 'ë' };
+    private static final char[] codes = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+        'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e',
+        'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ä', 'ö', 'ü',
+        'ß', 'Ä', 'Ö', 'Ü', '\'', 'µ', '÷', '@', '!', '&', '%', '~', '#', '(', ')', '[', ']', ',', '.', '{', '}', '´', '`', 'á',
+        'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú', 'à', 'è', 'ì', 'ò', 'ù', 'À', 'È', 'Ì', 'Ò', 'Ù', 'â', 'ê', 'î', 'ô', 'û',
+        'Â', 'Ê', 'Î', 'Ô', 'Û', '»', '«', 'å', 'Å', 'ñ', 'Ñ', 'Ë', 'ë'};
 
-    private byte[] reverseCodes = new byte[256];
+    private final byte[] reverseCodes = new byte[256];
 
-    private byte[] reverseCharacters = new byte[256];
+    private final byte[] reverseCharacters = new byte[256];
 
     private int longIndex;
 
-    private Map<String, String> encryptionCache = new HashMap<String, String>();
+    private final Map<String, String> encryptionCache = new HashMap<String, String>();
 
-    private Map<String, String> decryptionCache = new HashMap<String, String>();
+    private final Map<String, String> decryptionCache = new HashMap<String, String>();
+
+    private static int decoding_mask = 32;
+
+    private static int bits = 6;
 
 
-    public AbstractEncryptedStorageAccess() {
+    /**
+     * Storage Access with encrypted everything - names, contents and optional meta data.
+     * When used in six bit mode, most file storage back ends will be able to store the generated files names.
+     * While some may need short path names where seven bit default is more helpful.
+     *
+     * @param shortenPaths extend to seven bit file name character table
+     */
+    public AbstractEncryptedStorageAccess(boolean shortenPaths) {
         if (codes.length!=128) {
             throw new RuntimeException("Character missing in 7bit table");
         } // if
-        for (int i = 0; i<codes.length; i++ ) {
+        if (shortenPaths) {
+            decoding_mask = 64;
+            bits = 7;
+        } // if
+        for (int i = 0; i<codes.length; i++) {
             char c = codes[i];
-            reverseCodes[c] = (byte)i;
+            reverseCodes[c] = (byte) i;
         } // for
-        for (byte i = 0; i<FILE_NAME_CHARACTERS.length; i++ ) {
+        for (byte i = 0; i<FILE_NAME_CHARACTERS.length; i++) {
             reverseCharacters[FILE_NAME_CHARACTERS[i]] = i;
         } // for
         longIndex = reverseCharacters['|'];
@@ -97,7 +111,7 @@ public abstract class AbstractEncryptedStorageAccess {
         String result = defaultValue;
         int idx = relativePath.lastIndexOf(getSeparator());
         if (idx>=0) {
-            idx++ ;
+            idx++;
             result = relativePath.substring(idx);
         } // if
         return result;
@@ -113,10 +127,10 @@ public abstract class AbstractEncryptedStorageAccess {
         int j = relativePath.length()-1;
         while ((i<pwd.length())||(j>=0)) {
             if (i<pwd.length()) {
-                result += pwd.charAt(i++ );
+                result += pwd.charAt(i++);
             } // if
             if (j>=0) {
-                result += relativePath.charAt(j-- );
+                result += relativePath.charAt(j--);
             } // if
         } // while
 
@@ -128,7 +142,7 @@ public abstract class AbstractEncryptedStorageAccess {
         String localPwd = getPassword(relativePath)+salt;
         byte[] localBytes = getEncodedFileName("", localPwd);
         byte[] credentials = new byte[32];
-        for (int i = 0; i<32; i++ ) {
+        for (int i = 0; i<32; i++) {
             credentials[i] = localBytes[i];
         } // for
         return credentials;
@@ -179,11 +193,11 @@ public abstract class AbstractEncryptedStorageAccess {
         int index = 0;
         int bc = 0;
         int currentBitSize = 6;
-        for (int i = 0; i<bytes.length; i++ ) {
+        for (int i = 0; i<bytes.length; i++) {
             for (int mask = 128; mask>0; mask = mask>>1) {
                 int bit = ((bytes[i]&mask)==0) ? 0 : 1;
                 index = (index<<1)+bit;
-                bc++ ;
+                bc++;
                 if (bc==currentBitSize) {
                     char code = FILE_NAME_CHARACTERS[index];
                     if (code=='|') {
@@ -191,7 +205,7 @@ public abstract class AbstractEncryptedStorageAccess {
                     } else {
                         if (code!='/') {
                             String value = ""+code;
-                            for (int sci = 0; sci<specialCodes.size(); sci++ ) {
+                            for (int sci = 0; sci<specialCodes.size(); sci++) {
                                 if (code==DYNAMIC_SPECIAL_CODES[sci]) {
                                     value = specialCodes.get(sci);
                                 } // if
@@ -222,13 +236,13 @@ public abstract class AbstractEncryptedStorageAccess {
 
         int bc = 0;
         byte value = 0;
-        for (int i = 0; i<name.length(); i++ ) {
+        for (int i = 0; i<name.length(); i++) {
             char code = name.charAt(i);
-            if ((int)code>256) {
+            if ((int) code>256) {
                 log.error("getEncodedFileName() Strange code at "+name.charAt(i)+" ("+relativePath+":"+name+")");
             } // if
             boolean noSpecial = true;
-            for (int sci = 0; (sci<specialCodes.size())&&(noSpecial); sci++ ) {
+            for (int sci = 0; (sci<specialCodes.size())&&(noSpecial); sci++) {
                 Integer sl = specialLengths.get(sci);
                 if (sl!=0) {
                     String sc = specialCodes.get(sci);
@@ -239,7 +253,7 @@ public abstract class AbstractEncryptedStorageAccess {
                         // } // if
                         code = DYNAMIC_SPECIAL_CODES[sci];
                         noSpecial = false;
-                        i-- ;
+                        i--;
                         i += sl;
                     } // if
                 } // if
@@ -250,60 +264,60 @@ public abstract class AbstractEncryptedStorageAccess {
                 // issue prefix character with 6 bits
                 for (int mask = 32; mask>0; mask = mask>>1) {
                     int bit = (longIndex&mask)==0 ? 0 : 1;
-                    value = (byte)((value<<1)+bit);
-                    bc++ ;
+                    value = (byte) ((value<<1)+bit);
+                    bc++;
                     if (bc==8) {
                         resultList.add(value);
                         bc = 0;
                         value = 0;
                     } // if
                 } // for
-                  // issue long 7 bit character
+                // issue long 7 bit character
                 for (int mask = 64; mask>0; mask = mask>>1) {
                     int bit = (index&mask)==0 ? 0 : 1;
                     // System.out.print(bit);
-                    value = (byte)((value<<1)+bit);
-                    bc++ ;
+                    value = (byte) ((value<<1)+bit);
+                    bc++;
                     if (bc==8) {
                         resultList.add(value);
                         bc = 0;
                         value = 0;
                     } // if
                 } // for
-                  // System.out.print("|");
+                // System.out.print("|");
             } else {
                 // issue short 6 bit character
                 for (int mask = 32; mask>0; mask = mask>>1) {
                     int bit = (index&mask)==0 ? 0 : 1;
                     // System.out.print(bit);
-                    value = (byte)((value<<1)+bit);
-                    bc++ ;
+                    value = (byte) ((value<<1)+bit);
+                    bc++;
                     if (bc==8) {
                         resultList.add(value);
                         bc = 0;
                         value = 0;
                     } // if
                 } // for
-                  // System.out.print("|");
+                // System.out.print("|");
             } // if
         } // for
         if (bc>0) {
-            value = (byte)(value<<(8-bc));
+            value = (byte) (value<<(8-bc));
             if (bc==2) {
-                value = (byte)(value|(reverseCharacters['/']));
+                value = (byte) (value|(reverseCharacters['/']));
             } // if
             if (bc==1) {
-                value = (byte)(value|(2*reverseCharacters['/']));
+                value = (byte) (value|(2*reverseCharacters['/']));
             } // if
             resultList.add(value);
         } // if
-          // System.out.println(" - "+bc);
+        // System.out.println(" - "+bc);
 
         byte[] result = new byte[resultList.size()];
 
         int i = 0;
         for (byte b : resultList) {
-            result[i++ ] = b;
+            result[i++] = b;
         } // for
 
         return result;
@@ -317,17 +331,19 @@ public abstract class AbstractEncryptedStorageAccess {
         try {
             List<Byte> resultList = new ArrayList<Byte>();
 
+            // System.out.print("D: ");
             int bc = 0;
             byte value = 0;
-            for (int i = 0; i<name.length(); i++ ) {
+            for (int i = 0; i<name.length(); i++) {
                 char code = name.charAt(i);
                 byte index = reverseCodes[code];
-                for (int mask = 64; mask>0; mask = mask>>1) {
+                for (int mask = decoding_mask; mask>0; mask = mask>>1) {
                     int bit = (index&mask)==0 ? 0 : 1;
                     // System.out.print(bit);
-                    value = (byte)((value<<1)+bit);
-                    bc++ ;
+                    value = (byte) ((value<<1)+bit);
+                    bc++;
                     if (bc==8) {
+                        // System.out.print(" "+value+" ");
                         resultList.add(value);
                         bc = 0;
                         value = 0;
@@ -338,8 +354,10 @@ public abstract class AbstractEncryptedStorageAccess {
             byte[] decodedBytes = new byte[resultList.size()];
             int i = 0;
             for (byte b : resultList) {
-                decodedBytes[i++ ] = b;
+                decodedBytes[i++] = b;
             } // for
+
+            // System.out.println("");
 
             Cipher decrypter = SecurityUtils.getCipher(getCipherSpec(), Cipher.DECRYPT_MODE, getCredentials(relativePath));
             byte[] decryptedBytes = decrypter.doFinal(decodedBytes);
@@ -370,28 +388,31 @@ public abstract class AbstractEncryptedStorageAccess {
         } // if
         try {
             Cipher encrypter = SecurityUtils.getCipher(getCipherSpec(), Cipher.ENCRYPT_MODE, getCredentials(relativePath));
-            // byte[] bytes = encoder.doFinal(pathElement.getBytes(Charset.forName("UTF-8")));
             byte[] bytes = encrypter.doFinal(getEncodedFileName(relativePath, pathElement));
             StringBuilder result = new StringBuilder();
             int index = 0;
             int bc = 0;
-            for (int i = 0; i<bytes.length; i++ ) {
+            // System.out.print("E: ");
+            for (int i = 0; i<bytes.length; i++) {
                 for (int mask = 128; mask>0; mask = mask>>1) {
                     int bit = ((bytes[i]&mask)==0) ? 0 : 1;
+                    // System.out.print(bit);
                     index = (index<<1)+bit;
-                    bc++ ;
-                    if (bc==7) {
+                    bc++;
+                    if (bc==bits) {
                         char code = codes[index];
                         result.append(code);
                         bc = 0;
                         index = 0;
                     } // if
                 } // for
+                // System.out.print(" "+bytes[i]+" ");
             } // for
-            index = index<<(7-bc);
+            index = index<<(bits-bc);
             char code = codes[index];
             result.append(code);
             String resultString = result.toString();
+            // System.out.println("");
             encryptionCache.put(relativePath+getSeparator()+pathElement, resultString);
             pathElement = resultString;
         } catch (NoSuchAlgorithmException nsae) {
@@ -420,7 +441,7 @@ public abstract class AbstractEncryptedStorageAccess {
                 String encodedString = getEncryptedFileName(originalPath, pathElement);
                 String checkBack = getDecryptedFileName(originalPath, encodedString);
                 // log.warn("getFile() "+pathElement+" == "+checkBack+"?");
-                if ( !checkBack.equals(pathElement)) {
+                if (!checkBack.equals(pathElement)) {
                     log.fatal("getFileName("+originalPath+") "+pathElement+" != "+checkBack+" in "+relativePath);
                     throw new RuntimeException("getFileName() "+pathElement+" != "+checkBack);
                 } // if

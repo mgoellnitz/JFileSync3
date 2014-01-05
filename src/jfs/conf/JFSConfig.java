@@ -21,12 +21,11 @@ package jfs.conf;
 
 import java.io.File;
 import java.util.Vector;
-
 import jfs.sync.JFSFile;
 
 /**
  * Manages all configuration options of JFileSync user profile.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSConfig.java,v 1.31 2007/06/06 19:51:33 heidrich Exp $
  */
@@ -86,6 +85,9 @@ public abstract class JFSConfig implements Cloneable {
     /** The used cipher type for encryption. */
     protected String encryptionCipher;
 
+    /** shorten paths by use of seven bit file name character tables */
+    protected boolean shortenPaths = false;
+
     /** Determines whether the current profile was stored to a file. */
     protected boolean isCurrentProfileStored;
 
@@ -103,13 +105,13 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Returns the reference of the only object of the class.
-     * 
+     *
      * @return The only instance.
      */
     public static JFSConfig getInstance() {
-        if (instance==null)
+        if (instance==null) {
             instance = new JFSConfigXML();
-
+        }
         return instance;
     }
 
@@ -142,6 +144,7 @@ public abstract class JFSConfig implements Cloneable {
 
         encryptionPassPhrase = "";
         encryptionCipher = "AES";
+        shortenPaths = false;
 
         // When cleaned, the profile is stored by definition:
         isCurrentProfileStored = true;
@@ -170,8 +173,9 @@ public abstract class JFSConfig implements Cloneable {
     public final void storeDefaultFile() {
         File home = new File(JFSConst.HOME_DIR);
 
-        if ( !home.exists())
+        if ( !home.exists()) {
             home.mkdir();
+        }
 
         storeProfile(defaultFile);
     }
@@ -179,7 +183,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Loads a profile.
-     * 
+     *
      * @param profile
      *            The profile to load.
      * @return True if and only if loading did not fail.
@@ -189,7 +193,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Stores a profile.
-     * 
+     *
      * @param profile
      *            The profile to store.
      * @return True if and only if storing did not fail.
@@ -201,14 +205,15 @@ public abstract class JFSConfig implements Cloneable {
      * Loads a profile. If loading the profile did not fail, it sets the profile as the current one in the JFS settings
      * object, and adds the profile to the list of last opened profiles. Else, the current profile is set to null and
      * the profile is removed from the list of opened profiles.
-     * 
+     *
      * @param profile
      *            The profile to load.
      * @return True if and only if loading did not fail.
      */
     public final boolean load(File profile) {
-        if (profile==null)
+        if (profile==null) {
             return false;
+        }
 
         JFSSettings s = JFSSettings.getInstance();
         if (loadProfile(profile)) {
@@ -226,14 +231,15 @@ public abstract class JFSConfig implements Cloneable {
     /**
      * Stores a profile. If storing the profile did not fail, it sets the profile as the current one in the JFS settings
      * object, and adds the profile to the list of last opened profiles.
-     * 
+     *
      * @param profile
      *            The profile to load.
      * @return True if and only if storing did not fail.
      */
     public final boolean store(File profile) {
-        if (profile==null)
+        if (profile==null) {
             return false;
+        }
 
         JFSSettings s = JFSSettings.getInstance();
         if (storeProfile(profile)) {
@@ -248,7 +254,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Returns the name of the configuration.
-     * 
+     *
      * @return Title.
      */
     public final String getTitle() {
@@ -258,7 +264,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Sets the title of the configuration.
-     * 
+     *
      * @param title
      *            The title.
      */
@@ -272,7 +278,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Returns the chosen synchronization mode.
-     * 
+     *
      * @return Number of the choosen mode.
      */
     public final byte getSyncMode() {
@@ -282,7 +288,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Sets the synchronization mode.
-     * 
+     *
      * @param syncMode
      *            Number of the choosen mode.
      */
@@ -297,7 +303,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Returns the chosen view on the comparison table.
-     * 
+     *
      * @return Number of the chosen view.
      */
     public final byte getView() {
@@ -307,7 +313,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Sets the view.
-     * 
+     *
      * @param view
      *            Number of the chosen view.
      */
@@ -322,7 +328,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Returns the vector of all directory pairs that have to be compared.
-     * 
+     *
      * @return Vector of directory pairs.
      */
     public final Vector<JFSDirectoryPair> getDirectoryList() {
@@ -332,7 +338,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Adds a directory pair.
-     * 
+     *
      * @param pair
      *            The pair to add.
      */
@@ -344,7 +350,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Determines whether the configuration contains a special directory pair.
-     * 
+     *
      * @param pair
      *            The pair to check.
      * @return Returns true, if the pair is part of the configuration.
@@ -356,7 +362,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Removes a directory pair.
-     * 
+     *
      * @param index
      *            The index of the element to remove.
      * @return The removed element.
@@ -369,7 +375,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Inserts a directory pair.
-     * 
+     *
      * @param pair
      *            The pair to insert.
      * @param index
@@ -385,7 +391,7 @@ public abstract class JFSConfig implements Cloneable {
      * Returns the chosen granularity of the comparison in milliseconds that is used in order to comapare the last
      * modified time of two files. Under the DOS and Windows FAT filesystem, the finest granularity on time resolution
      * is two seconds. So we define the default maximum tollerance range for each comparison as 2000ms.
-     * 
+     *
      * @return Granularity in ms.
      */
     public final int getGranularity() {
@@ -395,7 +401,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Sets the granularity if it is greater than zero.
-     * 
+     *
      * @param granularity
      *            Granularity in ms.
      */
@@ -409,7 +415,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Returns the chosen buffer size.
-     * 
+     *
      * @return Size in byte.
      */
     public final int getBufferSize() {
@@ -419,7 +425,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Sets the buffer size.
-     * 
+     *
      * @param bufferSize
      *            Size in byte.
      */
@@ -433,7 +439,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Returns whether the system should keep user-defined actions.
-     * 
+     *
      * @return True, if the system should do so.
      */
     public final boolean isKeepUserActions() {
@@ -443,7 +449,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Determines whether the system should keep user-defined actions.
-     * 
+     *
      * @param keepUserActions
      *            True, if the system should do so.
      */
@@ -459,7 +465,7 @@ public abstract class JFSConfig implements Cloneable {
      * Returns whether the program should store the history of a synchronized files. This is needed when the program
      * should automatically use the information of its previous run in order to determine which files to copy and
      * delete.
-     * 
+     *
      * @return True if and only if the program should store the history.
      */
     public boolean isStoreHistory() {
@@ -470,7 +476,7 @@ public abstract class JFSConfig implements Cloneable {
     /**
      * Sets whether the program should store the history of a synchronized files. This is needed when the program should
      * automatically use the information of its previous run in order to determine which files to copy and delete.
-     * 
+     *
      * @param storeHistory
      *            True if and only if the program should store the history.
      */
@@ -492,7 +498,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Determines whether the set can write property of a file is set.
-     * 
+     *
      * @param setCanWrite
      *            True if and only if the set can write property of a file is set.
      */
@@ -506,7 +512,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Returns the vector of filters used to determine whether a file should be included in the comparison.
-     * 
+     *
      * @return Vector of JFSFilter objects.
      */
     public final Vector<JFSFilter> getIncludes() {
@@ -516,7 +522,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Adds an include filter.
-     * 
+     *
      * @param filter
      *            The include filter to add.
      */
@@ -528,7 +534,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Replaces all include filters.
-     * 
+     *
      * @param filters
      *            The include filters to use.
      */
@@ -541,15 +547,16 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Determines whether a given file matches an include expression.
-     * 
+     *
      * @param file
      *            The file to test.
      * @return True, if and only if the file matches at least one include expression.
      */
     public final boolean matchesIncludes(JFSFile file) {
         for (JFSFilter f : includes) {
-            if (f.matches(file))
+            if (f.matches(file)) {
                 return true;
+            }
         }
 
         return false;
@@ -558,7 +565,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Returns the vector of filters used to determine whether a file should be excluded in the comparison.
-     * 
+     *
      * @return Vector of JFSFilter objects.
      */
     public final Vector<JFSFilter> getExcludes() {
@@ -568,7 +575,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Adds an exclude filter.
-     * 
+     *
      * @param filter
      *            The exclude filter to add.
      */
@@ -580,7 +587,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Replaces all exclude filters.
-     * 
+     *
      * @param filters
      *            The exclude filters to use.
      */
@@ -593,15 +600,16 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Determines whether a given file matches an exclude expression.
-     * 
+     *
      * @param file
      *            The file to test.
      * @return True, if and only if the file matches at least one exclude expression.
      */
     public final boolean matchesExcludes(JFSFile file) {
         for (JFSFilter f : excludes) {
-            if (f.matches(file))
+            if (f.matches(file)) {
                 return true;
+            }
         }
 
         return false;
@@ -610,7 +618,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Returns the server base directory for remote connections.
-     * 
+     *
      * @return The server base directory.
      */
     public String getServerUserName() {
@@ -620,7 +628,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Sets the server base directory for remote connections.
-     * 
+     *
      * @param serverBase
      *            The server base directory.
      */
@@ -634,7 +642,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Returns the server pass phrase for remote connections.
-     * 
+     *
      * @return The server pass phrase.
      */
     public String getServerPassPhrase() {
@@ -644,7 +652,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Sets the server pass phrase for remote connections.
-     * 
+     *
      * @param serverPassPhrase
      *            The server pass phrase.
      */
@@ -658,7 +666,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Returns the server timeout.
-     * 
+     *
      * @return The server timeout.
      */
     public int getServerTimeout() {
@@ -668,7 +676,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Sets the server timeout.
-     * 
+     *
      * @param serverTimeout
      *            The server timeout.
      */
@@ -706,6 +714,20 @@ public abstract class JFSConfig implements Cloneable {
     }
 
 
+    public boolean isShortenPaths() {
+        return shortenPaths;
+    }
+
+
+    public void setShortenPaths(boolean shortenPaths) {
+        if ( shortenPaths!=this.shortenPaths) {
+            this.shortenPaths = shortenPaths;
+            setCurrentProfileStored(false);
+        }
+        this.shortenPaths = shortenPaths;
+    }
+
+
     /**
      * Determines whether the current profile was stored to a file. If the profile was changed and is not stored yet,
      * this method will return false.
@@ -717,7 +739,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Determines whether the current profile was stored to a file.
-     * 
+     *
      * @param isCurrentProfileStored
      *            True, if the profile was stored.
      */
@@ -758,7 +780,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Attaches an additional observer.
-     * 
+     *
      * @param observer
      *            The new observer.
      */
@@ -770,7 +792,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Detaches an existing observer.
-     * 
+     *
      * @param observer
      *            An old observer.
      */
@@ -781,7 +803,7 @@ public abstract class JFSConfig implements Cloneable {
 
     /**
      * Updates the current state of the configuration for a special observer.
-     * 
+     *
      * @param observer
      *            The observer to update.
      */
@@ -805,7 +827,7 @@ public abstract class JFSConfig implements Cloneable {
     /**
      * Transfers the content of the configuration object to an other configuration object (without the registered
      * observers).
-     * 
+     *
      * @param config
      *            The transfer target.
      */
@@ -909,14 +931,17 @@ public abstract class JFSConfig implements Cloneable {
         }
 
         // Fire updates accordingly:
-        if (configUpdate)
+        if (configUpdate) {
             config.fireConfigUpdate();
+        }
 
-        if (comparisonUpdate)
+        if (comparisonUpdate) {
             config.fireComparisonUpdate();
+        }
 
-        if (serverUpdate)
+        if (serverUpdate) {
             config.fireServerUpdate();
+        }
     }
 
 

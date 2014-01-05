@@ -23,9 +23,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Set;
-
 import jfs.sync.local.JFSLocalFileProducerFactory;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
  * This class manages all JFS file producer factories that exist for the program. It is able to detect the right file
  * producer for a certain scheme (like "ext" or "file") and advises the corresponding producer factory to create a new
  * file produces or to destroy an already existing file producer.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSFileProducerManager.java,v 1.1 2005/05/06 11:06:57 heidrich Exp $
  */
@@ -71,7 +69,7 @@ public class JFSFileProducerManager {
                     try {
                         Class<JFSFileProducerFactory> c = (Class<JFSFileProducerFactory>)classLoader
                                 .loadClass(className);
-                        Constructor<JFSFileProducerFactory> constructor = c.getConstructor(new Class[0]);
+                        Constructor<JFSFileProducerFactory> constructor = c.getConstructor(new Class<?>[0]);
                         JFSFileProducerFactory factory = constructor.newInstance(new Object[0]);
                         String name = factory.getName();
                         factories.put(name, factory);
@@ -87,7 +85,7 @@ public class JFSFileProducerManager {
 
     /**
      * Returns the reference of the only object of the class.
-     * 
+     *
      * @return The only instance.
      */
     public static JFSFileProducerManager getInstance() {
@@ -110,7 +108,7 @@ public class JFSFileProducerManager {
 
     /**
      * Returns a new procucer for a special URI.
-     * 
+     *
      * @param uri
      *            The URI to create the producer for.
      * @return The created producer.
@@ -122,7 +120,7 @@ public class JFSFileProducerManager {
 
     /**
      * Shuts down an existing producer for a special URI.
-     * 
+     *
      * @param uri
      *            The URI to distroy the producer for.
      */
@@ -133,7 +131,7 @@ public class JFSFileProducerManager {
 
     /**
      * Cancels an existing producer for a special URI.
-     * 
+     *
      * @param uri
      *            The URI to distroy the producer for.
      */
@@ -144,7 +142,7 @@ public class JFSFileProducerManager {
 
     /**
      * Returns the factory for a special URI.
-     * 
+     *
      * @param uri
      *            The URI to create the factory for.
      * @return The created factory.
@@ -157,7 +155,7 @@ public class JFSFileProducerManager {
 
         return defaultFactory;
     }
-    
+
     public Set<String> getSchemes() {
         return factories.keySet();
     } // getSchemes()

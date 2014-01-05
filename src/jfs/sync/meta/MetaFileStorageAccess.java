@@ -24,33 +24,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
-
 import javax.crypto.Cipher;
-
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.JFSEncryptedStream;
 import jfs.sync.util.SecurityUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
 
-    private static Log log = LogFactory.getLog(MetaFileStorageAccess.class);
+    private static final Log log = LogFactory.getLog(MetaFileStorageAccess.class);
 
     private static long outputStreams;
 
     private static long inputStreams;
 
 
-    public MetaFileStorageAccess(String cipher) {
-        super(cipher);
+    public MetaFileStorageAccess(String cipher, boolean sixBits) {
+        super(cipher, sixBits);
     } // MetaFileStorageAccess()
 
 
     /**
      * create non existent files
-     * 
+     *
      * @param file
      * @param pathAndName
      * @return
@@ -219,15 +216,15 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
 
 
     /**
-     * 
+     *
      * Extract one file from encrypted repository.
-     * 
+     *
      * TODO: list directories
-     * 
+     *
      */
     public static void main(String[] args) throws Exception {
         final String password = args[0];
-        MetaFileStorageAccess storage = new MetaFileStorageAccess("Twofish") {
+        MetaFileStorageAccess storage = new MetaFileStorageAccess("Twofish", false) {
 
             protected String getPassword(String relativePath) {
                 String result = "";

@@ -22,6 +22,7 @@ import jfs.sync.JFSFileProducer;
 import jfs.sync.encryption.AbstractEncryptedFileProducerFactory;
 import jfs.sync.encryption.JFSEncryptedFileProducer;
 
+
 public class JFSMetaFileProducerFactory extends AbstractEncryptedFileProducerFactory {
 
     public static final String SCHEME_NAME = "secure";
@@ -35,7 +36,8 @@ public class JFSMetaFileProducerFactory extends AbstractEncryptedFileProducerFac
 
     @Override
     public JFSFileProducer createProducer(String uri) {
-        MetaFileStorageAccess storageAccess = new MetaFileStorageAccess(JFSConfig.getInstance().getEncryptionCipher());
+        final JFSConfig config = JFSConfig.getInstance();
+        MetaFileStorageAccess storageAccess = new MetaFileStorageAccess(config.getEncryptionCipher(), config.isShortenPaths());
         return new JFSEncryptedFileProducer(storageAccess, getCompressionsLevels(), SCHEME_NAME, uri.substring(SCHEME_NAME.length()+3));
     } // createProducer()
 

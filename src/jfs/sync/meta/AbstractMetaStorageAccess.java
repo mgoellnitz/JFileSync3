@@ -30,28 +30,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.NoSuchPaddingException;
-
 import jfs.sync.encrypted.EncryptedFileStorageAccess;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.util.SecurityUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAccess {
 
-    private static Log log = LogFactory.getLog(AbstractMetaStorageAccess.class);
+    private static final Log log = LogFactory.getLog(AbstractMetaStorageAccess.class);
 
-    private static DateFormat formatter = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.MEDIUM, SimpleDateFormat.MEDIUM);
+    private static final DateFormat formatter = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.MEDIUM, SimpleDateFormat.MEDIUM);
 
 
-    public AbstractMetaStorageAccess(String cipher) {
-        super(cipher);
+    public AbstractMetaStorageAccess(String cipher, boolean sixBits) {
+        super(cipher, sixBits);
     } // AbstractMetaStorageAccess()
 
     private Map<String, Map<String, FileInfo>> directoryCache = new HashMap<String, Map<String, FileInfo>>();
@@ -117,7 +114,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
 
     /**
      * flushing listing as meta data info for pathAndName[0] in rootPath
-     * 
+     *
      * @param rootPath
      * @param pathAndName
      *            path and name for the file and path for which this update takes place

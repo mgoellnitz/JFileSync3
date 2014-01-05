@@ -25,11 +25,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashSet;
-
 import jfs.sync.encryption.AbstractEncryptedStorageAccess;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.StorageAccess;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,13 +35,13 @@ import org.apache.commons.logging.LogFactory;
  * This is a storage layer access which encryptes the filenames, compresses and encrytes contents and is aware of the
  * meta solution in the other package. To be able to deal with the original file length, every file has a header
  * containing information about compression and original length.
- * 
+ *
  * It has been refactored from an older version to meet higher security standards concerning known plain text attacks
  * and re-use of encryption keys
  */
 public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess implements StorageAccess {
 
-    private static Log log = LogFactory.getLog(EncryptedFileStorageAccess.class);
+    private static final Log log = LogFactory.getLog(EncryptedFileStorageAccess.class);
 
     private String cipherspec = "AES";
 
@@ -52,7 +50,8 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
     private static final String FILESALT = "4Om27Z+6nF[h'8Ec}L0_ds9J=3Her~5Ke7rv]1-ÜLö9ä@#yX";
 
 
-    public EncryptedFileStorageAccess(String cipher) {
+    public EncryptedFileStorageAccess(String cipher, boolean sixBits) {
+        super(sixBits);
         cipherspec = cipher;
     } // EncryptedFileStorageAccess()
 
@@ -232,7 +231,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
      * Test
      */
     public static void main(String[] args) throws Exception {
-        EncryptedFileStorageAccess d = new EncryptedFileStorageAccess("AES");
+        EncryptedFileStorageAccess d = new EncryptedFileStorageAccess("AES", true);
 
         String relativePath = "a/path/for/me";
 
