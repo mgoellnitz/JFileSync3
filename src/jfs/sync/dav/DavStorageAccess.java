@@ -71,7 +71,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
 
 
     public DavStorageAccess(String cipher) {
-        super(cipher, true);
+        super(cipher, false);
     } // DavStorageAccess()
 
 
@@ -222,7 +222,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
             if (e instanceof SardineException) {
                 SardineException se = (SardineException) e;
                 if (log.isWarnEnabled()) {
-                    log.warn("createDirectory() status code: "+se.getStatusCode()+" "+se.getResponsePhrase());
+                    log.warn("createDirectory("+url+") status code: "+se.getStatusCode()+" "+se.getResponsePhrase());
                 } // if
             } // if
             if (log.isWarnEnabled()) {
@@ -362,7 +362,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
     } // getInputStream()
 
 
-    protected OutputStream getOutputStream(String rootPath, final String relativePath, boolean forPayload) throws IOException {
+    protected OutputStream getOutputStream(String rootPath, final String relativePath, final boolean forPayload) throws IOException {
         if (log.isDebugEnabled()) {
             log.debug("getOutputStream() "+relativePath);
         } // if
@@ -384,7 +384,16 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
 
             @Override
             protected String doRead(InputStream in) throws Exception {
-                getSardine().put(url, in);
+                System.out.println("doRead("+forPayload+") "+url);
+                try {
+                    getSardine().put(url, in);
+                } catch (SardineException se) {
+                    if ((!forPayload)&&(se.getStatusCode()==403))  {
+                        getSardine().put(url, in);
+                    } else {
+                        throw se;
+                    } // if
+                } // try/catch
                 return "";
             }
 

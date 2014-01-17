@@ -47,8 +47,8 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
     private static final DateFormat formatter = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.MEDIUM, SimpleDateFormat.MEDIUM);
 
 
-    public AbstractMetaStorageAccess(String cipher, boolean sixBits) {
-        super(cipher, sixBits);
+    public AbstractMetaStorageAccess(String cipher, boolean shortenPaths) {
+        super(cipher, shortenPaths);
     } // AbstractMetaStorageAccess()
 
     private Map<String, Map<String, FileInfo>> directoryCache = new HashMap<String, Map<String, FileInfo>>();

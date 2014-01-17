@@ -50,8 +50,8 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
     private static final String FILESALT = "4Om27Z+6nF[h'8Ec}L0_ds9J=3Her~5Ke7rv]1-ÜLö9ä@#yX";
 
 
-    public EncryptedFileStorageAccess(String cipher, boolean sixBits) {
-        super(sixBits);
+    public EncryptedFileStorageAccess(String cipher, boolean shortenPaths) {
+        super(shortenPaths);
         cipherspec = cipher;
     } // EncryptedFileStorageAccess()
 

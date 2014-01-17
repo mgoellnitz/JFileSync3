@@ -62,6 +62,7 @@ dependencies {
 }
 
 mainClassName = 'jfs.JFileSync'
+mainClass = 'jfs.JFileSync'
 
 launch4j {
     mainClassName = project.mainClassName
