@@ -16,40 +16,43 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSLog;
 import jfs.conf.JFSText;
 
+
 /**
  * Represents a directory or a simple file. This object encapsulates the Java File object.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSFile.java,v 1.33 2007/07/20 12:27:52 heidrich Exp $
  */
 public abstract class JFSFile implements Comparable<JFSFile> {
 
-    /** The assigned file producer. */
+    /**
+     * The assigned file producer.
+     */
     protected JFSFileProducer fileProducer;
 
-    /** The relative path of the JFS file starting from the root JFS file. */
+    /**
+     * The relative path of the JFS file starting from the root JFS file.
+     */
     protected String relativePath;
 
 
     /**
      * Creates a new JFS file from a relative path.
-     * 
+     *
      * @param fileProducer
-     *            The assigned file producer.
+     * The assigned file producer.
      * @param relativePath
-     *            The relative path of the JFS file starting from the root JFS file.
+     * The relative path of the JFS file starting from the root JFS file.
      */
     protected JFSFile(JFSFileProducer fileProducer, String relativePath) {
         this.fileProducer = fileProducer;
@@ -59,14 +62,14 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Returns the corresponding file object if possible, null otherwise.
-     * 
+     *
      * @return File object.
      */
     // public abstract File getFile();
 
     /**
      * Returns the name of the file.
-     * 
+     *
      * @return Name of the file.
      */
     public abstract String getName();
@@ -74,7 +77,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Returns the path of the file starting from the root JFS file.
-     * 
+     *
      * @return Path of the file.
      */
     public abstract String getPath();
@@ -82,7 +85,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Returns the assigned file producer.
-     * 
+     *
      * @return The file producer.
      */
     public final JFSFileProducer getFileProducer() {
@@ -92,7 +95,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Returns the relative path of the file.
-     * 
+     *
      * @return Path of the file.
      */
     public final String getRelativePath() {
@@ -102,7 +105,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Returns whether the file is a directory.
-     * 
+     *
      * @return True if and only if the file is a directory.
      */
     public abstract boolean isDirectory();
@@ -110,7 +113,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Returns whether we can read the file.
-     * 
+     *
      * @return True if and only if we can read the file.
      */
     public abstract boolean canRead();
@@ -118,7 +121,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Returns whether we can write to the file.
-     * 
+     *
      * @return True if and only if we can write to the file.
      */
     public abstract boolean canWrite();
@@ -126,7 +129,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Returns the length of the file.
-     * 
+     *
      * @return Length of the file.
      */
     public abstract long getLength();
@@ -134,7 +137,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Returns the time of the last modification of the file.
-     * 
+     *
      * @return Time of last modification of the file.
      */
     public abstract long getLastModified();
@@ -143,7 +146,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
     /**
      * Returns the included files. The returned list must be not equal to null. If no children exist, an array of size
      * zero is returned.
-     * 
+     *
      * @return An array of JFSFile objects included in the directory.
      */
     public abstract JFSFile[] getList();
@@ -151,7 +154,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Returns the included directories.
-     * 
+     *
      * @return An array of JFSFile objects included in the directory.
      */
     public final JFSFile[] getDirectoryList() {
@@ -161,18 +164,21 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
         int length = 0;
 
-        for (JFSFile f : list)
-            if (f.isDirectory())
-                length++ ;
+        for (JFSFile f : list) {
+            if (f.isDirectory()) {
+                length++;
+            }
+        }
 
         JFSFile[] directoryList = new JFSFile[length];
         int j = 0;
 
-        for (JFSFile f : list)
+        for (JFSFile f : list) {
             if (f.isDirectory()) {
                 directoryList[j] = f;
-                j++ ;
+                j++;
             }
+        }
 
         return directoryList;
     }
@@ -180,7 +186,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Returns the included files (not directories).
-     * 
+     *
      * @return An array of JFSFile objects included in the directory.
      */
     public final JFSFile[] getFileList() {
@@ -191,8 +197,8 @@ public abstract class JFSFile implements Comparable<JFSFile> {
         int length = 0;
 
         for (JFSFile f : list) {
-            if ( !f.isDirectory()) {
-                length++ ;
+            if (!f.isDirectory()) {
+                length++;
             } // if
         } // for
 
@@ -200,9 +206,9 @@ public abstract class JFSFile implements Comparable<JFSFile> {
         int j = 0;
 
         for (JFSFile f : list) {
-            if ( !f.isDirectory()) {
+            if (!f.isDirectory()) {
                 fileList[j] = f;
-                j++ ;
+                j++;
             }
         } // for
 
@@ -212,7 +218,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Tests whether the file denoted by this abstract pathname exists.
-     * 
+     *
      * @return True if and only if the file denoted by this abstract pathname exists; false otherwise.
      */
     public abstract boolean exists();
@@ -220,7 +226,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Creates the directory named by this abstract pathname.
-     * 
+     *
      * @return True if and only if the directory was created; false otherwise.
      */
     public abstract boolean mkdir();
@@ -228,9 +234,9 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Sets the last-modified time of the file or directory named by this abstract pathname.
-     * 
+     *
      * @param time
-     *            The new last-modified time, measured in milliseconds since the epoch (00:00:00 GMT, January 1, 1970).
+     * The new last-modified time, measured in milliseconds since the epoch (00:00:00 GMT, January 1, 1970).
      * @return True if and only if the operation succeeded; false otherwise.
      */
     public abstract boolean setLastModified(long time);
@@ -238,7 +244,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Marks the file or directory named by this abstract pathname so that only read operations are allowed.
-     * 
+     *
      * @return True if and only if the operation succeeded; false otherwise.
      */
     public abstract boolean setReadOnly();
@@ -247,7 +253,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
     /**
      * Deletes the file or directory denoted by this abstract pathname. If this pathname denotes a directory, then the
      * directory must be empty in order to be deleted.
-     * 
+     *
      * @return True if and only if the file or directory is successfully deleted; false otherwise.
      */
     public abstract boolean delete();
@@ -256,7 +262,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
     /**
      * Returns the input stream if the file is not a directory and null if it is a directory or nor stream could be
      * created.
-     * 
+     *
      * @return The input stream.
      */
     protected abstract InputStream getInputStream();
@@ -265,7 +271,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
     /**
      * Returns the output stream if the file is not a directory and null if it is a directory or nor stream could be
      * created.
-     * 
+     *
      * @return The output stream.
      */
     protected abstract OutputStream getOutputStream();
@@ -286,9 +292,9 @@ public abstract class JFSFile implements Comparable<JFSFile> {
     /**
      * Performs operation before the copy statement on target side, for instance, preparing setting of file attributes
      * like last modified and can write property.
-     * 
+     *
      * @param srcFile
-     *            The file to copy from.
+     * The file to copy from.
      * @return True if and only if the operation was successful.
      */
     protected abstract boolean preCopyTgt(JFSFile srcFile);
@@ -296,9 +302,9 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Performs operation before the copy statement on source side.
-     * 
+     *
      * @param tgtFile
-     *            The file to copy to.
+     * The file to copy to.
      * @return True if and only if the operation was successful.
      */
     protected abstract boolean preCopySrc(JFSFile tgtFile);
@@ -307,9 +313,9 @@ public abstract class JFSFile implements Comparable<JFSFile> {
     /**
      * Performs operation after the copy statement on target side, for instance, preparing setting of file attributes
      * like last modified and can write property.
-     * 
+     *
      * @param srcFile
-     *            The file to copy from.
+     * The file to copy from.
      * @return True if and only if the operation was successful.
      */
     protected abstract boolean postCopyTgt(JFSFile srcFile);
@@ -317,9 +323,9 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Performs operation after the copy statement on source side.
-     * 
+     *
      * @param tgtFile
-     *            The file to copy to.
+     * The file to copy to.
      * @return True if and only if the operation was successful.
      */
     protected abstract boolean postCopySrc(JFSFile tgtFile);
@@ -328,7 +334,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
     /**
      * Flushes all changes to the file object if not performed yet. This is done recursively. So, a flush on the root
      * file performs a flush on all childs.
-     * 
+     *
      * @return True if and only if the operation was successful.
      */
     public abstract boolean flush();
@@ -338,11 +344,11 @@ public abstract class JFSFile implements Comparable<JFSFile> {
      * Writes the content of the JFS file to a new target file. If this file is a directory false is returned. This
      * method just copies the contents from this file to the target file, no attributes, like the last modified date or
      * the can attribute are adopted.
-     * 
+     *
      * @param in
-     *            The input stream of the source file.
+     * The input stream of the source file.
      * @param out
-     *            The output stream of the target file.
+     * The output stream of the target file.
      * @return True if and only if the file is not a directory and was successfully copied; false otherwise.
      */
     private final boolean copy(InputStream in, OutputStream out) {
@@ -355,8 +361,10 @@ public abstract class JFSFile implements Comparable<JFSFile> {
         }
 
         try {
-            if ((in==null)||(out==null))
+            if ((in==null)||(out==null)) {
+                // System.out.println("copy("+this.getPath()+this.getName()+") 2 "+in+" "+out);
                 return false;
+            }
 
             byte[] buf = new byte[JFSConfig.getInstance().getBufferSize()];
             long length = getLength();
@@ -364,16 +372,18 @@ public abstract class JFSFile implements Comparable<JFSFile> {
             int len;
             int maxLen = JFSConfig.getInstance().getBufferSize();
 
-            if (length<maxLen)
-                maxLen = (int)length;
+            if (length<maxLen) {
+                maxLen = (int) length;
+            }
 
-            while (transferedBytes<length&&(len = in.read(buf, 0, maxLen))>0&& !progress.isCanceled()) {
+            while (transferedBytes<length&&(len = in.read(buf, 0, maxLen))>0&&!progress.isCanceled()) {
                 out.write(buf, 0, len);
                 transferedBytes += len;
 
                 long r = length-transferedBytes;
-                if (r<maxLen)
-                    maxLen = (int)r;
+                if (r<maxLen) {
+                    maxLen = (int) r;
+                }
 
                 monitor.setBytesTransferedCurrentFile(transferedBytes);
                 progress.fireUpdate();
@@ -382,12 +392,15 @@ public abstract class JFSFile implements Comparable<JFSFile> {
             if (transferedBytes==length) {
                 return true;
             }
+            // System.out.println("copy() 3");
             return false;
         } catch (IOException e) {
+            e.printStackTrace(System.out);
             PrintStream p = JFSLog.getErr().getStream();
             p.println(t.get("error.io"));
             p.println("  '"+this.getPath()+"'");
 
+            // System.out.println("copy("+this.getPath()+this.getName()+") 4");
             return false;
         }
     }
@@ -396,16 +409,16 @@ public abstract class JFSFile implements Comparable<JFSFile> {
     /**
      * Writes the content of the JFSFile to a new target file. If this JFSFile is a directory the target directory is
      * made.
-     * 
+     *
      * @param tgtFile
-     *            The Target File.
+     * The Target File.
      * @return True if and only if the file is successfully copied; false otherwise.
      */
     public final boolean copy(JFSFile tgtFile) {
         // Test whether the source file (this) can be read by the application
         // and the target file (tgtFile) can be written to. If not, false is
         // returned:
-        if ( !canRead()|| !tgtFile.canWrite()) {
+        if (!canRead()||!tgtFile.canWrite()) {
             return false;
         }
 
@@ -424,7 +437,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
         success = success&&tgtFile.postCopyTgt(this);
         success = success&&postCopySrc(tgtFile);
 
-        if ( !success||(JFSProgress.getInstance().isCanceled())) {
+        if (!success||(JFSProgress.getInstance().isCanceled())) {
             tgtFile.delete();
             success = false;
         }
@@ -435,9 +448,9 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
     /**
      * Returns the result of the comparison of the names of two JFSFile objects.
-     * 
+     *
      * @param jfsFile
-     *            The file object to compare the current object with.
+     * The file object to compare the current object with.
      * @return Result of the comparison.
      */
     @Override
