@@ -123,6 +123,9 @@ public abstract class AbstractEncryptedStorageAccess {
 
         String pwd = JFSConfig.getInstance().getEncryptionPassPhrase();
 
+        // Argh: We forgot to do this on the windows side so now we have to go this way
+        relativePath = relativePath.replace('/', '\\');
+
         int i = 0;
         int j = relativePath.length()-1;
         while ((i<pwd.length())||(j>=0)) {
