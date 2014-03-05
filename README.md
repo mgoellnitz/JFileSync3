@@ -22,17 +22,17 @@ https://www.dropbox.com/s/3n4snlbw9tyjgec/JFileSync3.zip
 
 Scenario:
 
-You replaced regular backups with online syncing tools like SugarSync, Syncplicity, MegaCloud, Wuala, Google Drive, Dropbox and so on. After having synced your media files, downloaded software, publicly available documents you come to the more confidential stuff...
+You replaced regular backups with online syncing tools like SugarSync, Syncplicity, Copy.com, Yandex Drive, Dropbox, Wuala, Google Drive, and so on. After having synced your media files, downloaded software, publicly available documents you come to the more confidential stuff...
 
 Possible Solutions:
 
-a) Trust the providers: Select any of them - I'll write a review for some of them once I find the time
+a) Trust the providers: Select any of them - I'll write a review for some of them once I find the time.
 
-b) Trust the providers encryption: use Teamdrive or Wuala. With Teamdrive you can - in some cases - even see the encrypted files depending on the backend you use. With Wuala you once again have to trust that it's really secure especially since they came up with the nice sharing solutions.
+b) Trust the providers encryption: use Teamdrive, Wuala, or iDrive Sync. With Teamdrive you can - in some cases - even see the encrypted files depending on the backend you use. With Wuala you once again have to trust that it's really secure especially since they came up with the nice sharing solutions. With iDrive Sync you have to provide a custom password as a base for the generated keys (This rips out some functions like sharing which gives you a hint, that they really do what they are saying).
 
 c) Encrypt locally on every file access and thus only sync encrypted stuff which you can still see. Boxcryptor, EncFS come into my mind. Disadvantage here is the de- and encryption on nearly every access. Really locally stored are only the encrypted files.
 
-d) If you trust your local system and need to store frequently accessed files, you would like to encrypt only short before or on backing up/syncing files. This is where this software fills the gap. It can sync directories, local or webdav, and it can do this with either of these encrypted. Additionally it can sync with encfs volumes stored in local folders (which in turn can be synchronized and used in the net via enfs, encfs4win, BoxCryptor, and Encdroid)
+d) If you trust your local system and need to store frequently accessed files, you would like to encrypt only short before or on backing up/syncing files. This is where this software fills the gap. It can sync directories, local or webdav, and it can do this with either of these encrypted. Additionally it can sync with encfs volumes stored in local folders (which in turn can be synchronized and used in the net via encfs, encfs4win, BoxCryptor, and Encdroid)
 
 
 1) Introduction
@@ -131,9 +131,9 @@ Metafiles to speed up acces of the directory structures don't have constant name
 
 Passwords to derive keys from are not constant along the whole directory structure.
 
-So I now have a two-way synching from plain text directories to encrypted directories which I in turn sync with the internet services. As you might see from some code snippets I am playing around or thinking about direct API usage for SugarSync, Dropbox, MegaCloud, and so on..
+So I now have a two-way synching from plain text directories to encrypted directories which I in turn sync with the internet services. As you might see from some code snippets I am playing around or thinking about direct API usage for Dropbox, WebDAV and so on...
 
-You will need the unlimited encryption add on by oracle for your JDK if you want to use anything except the default cipher AES.
+You will need the unlimited encryption add-on by Oracle for your JDK if you want to use anything except the default cipher AES.
 
 Feel free to issue bug reports and ideas here. 
 
@@ -168,4 +168,6 @@ application:
 - legal: The program licenses.
 - lib: Necessary libraries in order to run the system.
 - profiles: Sample syncing profiles.
-- scripts: start scripts for the whole tool or parts of it.
+- ubuntu: Ubuntu Unity desktop integration files
+- win: start scripts for parts of the system as tools - and a Windows icon file
+- test: profiles and data for the encryption test suite
