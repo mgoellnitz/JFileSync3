@@ -12,17 +12,17 @@ compileJava.options.deprecation = true
 
 buildscript {
     repositories {
+        mavenCentral()
         maven { url "http://repo.smokejumperit.com" }
-        ivy { artifactPattern 'http://gradle-launch4j.googlecode.com/files/[module]-[revision].[ext]' }
     }
     dependencies {
         classpath 'com.smokejumperit:gradle-plugins:0.8.2'
-        classpath 'edu.sc.seis:gradle-launch4j:1.0.5'
+        classpath 'edu.sc.seis.gradle:launch4j:1.0.6'
     }
 }
 
 repositories {
-    maven { url "http://repo1.maven.org/maven2" }
+    mavenCentral()
     maven { url "http://sardine.googlecode.com/svn/maven/" }
     maven { url "http://repo2.maven.org/maven2/org/bouncycastle" }
 }
@@ -66,8 +66,8 @@ mainClass = 'jfs.JFileSync'
 
 launch4j {
     mainClassName = project.mainClassName
-    version = '3.0.1'
-    copyright = '(C) 2002-2013, J. Heidrich, M. Goellnitz'
+    version = '3.0.4'
+    copyright = '(C) 2002-2014, J. Heidrich, M. Goellnitz'
     downloadUrl = 'https://www.dropbox.com/s/3n4snlbw9tyjgec/JFileSync3.zip'
     supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
     icon = "$project.projectDir/win/JFileSync.ico"
@@ -100,6 +100,18 @@ distZip {
         include '*.exe'
         include '*.xml'
     }
+    // Sometimes I want to have the icon file at hand
+    into("$project.name/bin") {
+        from 'win'
+        include '*.ico'
+    }
+    // For the Ubuntu Unity desktop integration this looks better
+    into("$project.name/bin") {
+        from 'ubuntu'
+        include '*.desktop'
+        include '*.png'
+    }
+    // legal stuff, examples, and documentation
     into(project.name) {
         from '.'
         include 'legal/*.*'

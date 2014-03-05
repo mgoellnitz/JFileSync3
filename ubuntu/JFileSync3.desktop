@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=JFileSync3 - 3.0.5
+Comment=Syncing and Encryption
+Exec=/opt/JFileSync3/bin/JFileSync3
+Icon=/opt/JFileSync3/bin/JFileSync3.png
+Categories=Application;Java
+Version=1.0
+Type=Application
+Terminal=0
