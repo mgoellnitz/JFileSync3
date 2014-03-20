@@ -62,7 +62,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         result.setModificationDate(file.lastModified());
         result.setName(pathAndName[1]);
         result.setPath(pathAndName[0]);
-        result.setSize(file.length());
+        result.setSize(result.isDirectory() ? 0 : file.length());
 
         if (log.isDebugEnabled()) {
             log.debug("createFileInfo("+pathAndName[0]+"/"+pathAndName[1]+") "+result);
