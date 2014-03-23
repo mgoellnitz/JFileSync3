@@ -18,6 +18,7 @@
 package jfs.sync.meta;
 
 import java.io.EOFException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -83,8 +84,8 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
                 } // if
             } // while
             ois.close();
-        } catch (EOFException e) {
-            // who cares?
+        } catch (FileNotFoundException|EOFException e) {
+            // empty directory or - who cares?
         } catch (Exception e) {
             if (log.isInfoEnabled()) {
                 log.info("getMetaData() possible issue while reading infos "+e, e);
