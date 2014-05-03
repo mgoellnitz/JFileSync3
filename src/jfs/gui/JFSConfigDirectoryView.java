@@ -26,7 +26,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -35,7 +34,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
-
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSDirectoryPair;
 import jfs.conf.JFSSettings;
@@ -45,7 +43,7 @@ import jfs.sync.JFSFileProducerManager;
 
 /**
  * This dialog manages adding/changing directory pairs.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSConfigFilterView.java,v 1.10 2006/08/28 11:31:54 heidrich Exp $
  */
@@ -77,7 +75,7 @@ public class JFSConfigDirectoryView extends JDialog implements ActionListener {
 
     /**
      * Initializes the config view.
-     * 
+     *
      * @param dialog
      *            The main frame.
      * @param config
@@ -253,7 +251,7 @@ public class JFSConfigDirectoryView extends JDialog implements ActionListener {
                 }
             } // if
             for (String schema : OTHER_PRODUCER_CODES) {
-                if (type.equals(t.get("profile.dir.scheme.")+schema)) {
+                if (type.equals(t.get("profile.dir.scheme."+schema))) {
                     JFSSettings settings = JFSSettings.getInstance();
 
                     int returnVal;
