@@ -16,6 +16,8 @@ http://jfilesync.sourceforge.net/
 
 Don't mix the derived work here and his clean software on sourceforge. Only bother him if it's related to his original version. Other complaints go here :-)
 
+Other contributions - though not directly committed by him - are from https://github.com/srmo
+
 Binary Distribution: 
 
 https://www.dropbox.com/s/3n4snlbw9tyjgec/JFileSync3.zip
