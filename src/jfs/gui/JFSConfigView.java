@@ -31,7 +31,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Vector;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -46,7 +45,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSDirectoryPair;
 import jfs.conf.JFSSyncMode;
@@ -55,11 +53,12 @@ import jfs.conf.JFSText;
 
 /**
  * This dialog is responsible for changing options within the configuration object (aka user's profile) currently used.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSConfigView.java,v 1.26 2007/06/06 19:51:33 heidrich Exp $
  */
 public class JFSConfigView extends JDialog implements ActionListener, ListSelectionListener {
+
     /** The UID. */
     private static final long serialVersionUID = 50L;
 
@@ -97,7 +96,7 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
 
     /**
      * Initializes the config view.
-     * 
+     *
      * @param frame
      *            The main frame.
      */
@@ -342,7 +341,7 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
 
     /**
      * Launches a dialog to create a new directory if the specified one doesn't exist.
-     * 
+     *
      * @param component
      *            The frame to attach the dialog.
      * @param dir

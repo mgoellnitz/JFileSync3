@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.awt.BorderLayout;
@@ -29,8 +28,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -39,8 +41,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
-
 import javax.swing.AbstractButton;
+import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -57,7 +59,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
-
+import javax.swing.KeyStroke;
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSConfigObserver;
 import jfs.conf.JFSConst;
@@ -73,33 +75,48 @@ import jfs.sync.JFSProgress;
 import jfs.sync.JFSSynchronization;
 import jfs.sync.JFSTable;
 
+
 /**
  * This class represents the main Java Swing frame of the JFS application.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSMainView.java,v 1.39 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSMainView extends WindowAdapter implements ActionListener, ComponentListener, JFSConfigObserver, JFSLogObserver {
 
-    /** Stores the corresponding frame. */
+    /**
+     * Stores the corresponding frame.
+     */
     private JFrame frame = null;
 
-    /** The synchronization table itself in form of a JTable object. */
+    /**
+     * The synchronization table itself in form of a JTable object.
+     */
     private JTable syncTable;
 
-    /** Group with all possible views of the shown files. */
+    /**
+     * Group with all possible views of the shown files.
+     */
     private ButtonGroup viewGroup;
 
-    /** Group with all possible synchronization modes. */
+    /**
+     * Group with all possible synchronization modes.
+     */
     private ButtonGroup syncGroup;
 
-    /** Stores the overall size state (displayed at the bottom of the frame). */
+    /**
+     * Stores the overall size state (displayed at the bottom of the frame).
+     */
     private JLabel stateOverallSize;
 
-    /** Stores the overall size state (displayed at the bottom of the frame). */
+    /**
+     * Stores the overall size state (displayed at the bottom of the frame).
+     */
     private JLabel stateViewSize;
 
-    /** Stores the overall size state (displayed at the bottom of the frame). */
+    /**
+     * Stores the overall size state (displayed at the bottom of the frame).
+     */
     private JLabel stateDuration;
 
     /**
@@ -107,19 +124,29 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
      */
     private JLabel stateSyncMode;
 
-    /** The last opened profiles. */
+    /**
+     * The last opened profiles.
+     */
     private JMenuItem[] lastOpenedProfiles = new JMenuItem[JFSConst.LAST_OPENED_PROFILES_SIZE];
 
-    /** Shown if an unread error is available in the error log. */
+    /**
+     * Shown if an unread error is available in the error log.
+     */
     private JPanel errorLog;
 
-    /** The progress view. */
+    /**
+     * The progress view.
+     */
     private JFSProgressView progressView;
 
-    /** The used help view. */
+    /**
+     * The used help view.
+     */
     private JFSHelpView helpView = null;
 
-    /** The used assistant view. */
+    /**
+     * The used assistant view.
+     */
     private JFSAssistantView assistantView = null;
 
 
@@ -157,18 +184,82 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
     } // getAppTitle()
 
 
+    private class CommandAction implements Action {
+
+        private JFSMainView me;
+
+        private String action;
+
+        private int keyCode;
+
+
+        public CommandAction(JFSMainView me, String action, int keyCode) {
+            this.me = me;
+            this.action = action;
+            this.keyCode = keyCode;
+        }
+
+
+
+        @Override
+        public Object getValue(String key) {
+            return null;
+        }
+
+
+        @Override
+        public void putValue(String key, Object value) {
+        }
+
+
+        @Override
+        public void setEnabled(boolean b) {
+        }
+
+
+        @Override
+        public boolean isEnabled() {
+            return true;
+        }
+
+
+        @Override
+        public void addPropertyChangeListener(PropertyChangeListener listener) {
+        }
+
+
+        @Override
+        public void removePropertyChangeListener(PropertyChangeListener listener) {
+        }
+
+
+        public void register(JComponent component) {
+            component.getInputMap().put(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK), action);
+            component.getActionMap().put(action, this);
+        } // register()
+
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            me.actionPerformed(action);
+        }
+
+    } // CommandAction
+
+
     /**
      * Start the application with a certain task object.
-     * 
+     *
      * @param loadDefaults
-     *            Determine whether the last loaded configuration should be loaded at GUI startup.
+     * Determine whether the last loaded configuration should be loaded at GUI startup.
      */
     public JFSMainView(boolean loadDefaults) {
         JFSConfig config = JFSConfig.getInstance();
 
         // Load default configuration if option is specified:
-        if (loadDefaults)
+        if (loadDefaults) {
             config.loadDefaultFile();
+        }
 
         // Redirect error stream to log file:
         JFSLog.getErr().resetLogFile();
@@ -182,7 +273,6 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         JComponent.setDefaultLocale(t.getLocale());
 
         // Start main window of application:
-
         frame.setTitle(getAppTitle(t.get("general.appName")));
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(this);
@@ -208,6 +298,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         JMenu helpMenu = new JMenu(t.get("menu.help"));
 
         // Create file menu:
+        fileMenu.setMnemonic(KeyEvent.VK_I);
         fileMenu.add(JFSSupport.getMenuItem("menu.new", "NEW", this, "jfs.icon.new"));
         fileMenu.add(JFSSupport.getMenuItem("menu.open", "OPEN", this, "jfs.icon.open"));
         fileMenu.add(JFSSupport.getMenuItem("menu.save", "SAVE", this, "jfs.icon.save"));
@@ -215,7 +306,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         fileMenu.addSeparator();
         fileMenu.add(JFSSupport.getMenuItem("menu.reset", "general.reset", this));
         fileMenu.addSeparator();
-        for (int i = 0; i<JFSConst.LAST_OPENED_PROFILES_SIZE; i++ ) {
+        for (int i = 0; i<JFSConst.LAST_OPENED_PROFILES_SIZE; i++) {
             lastOpenedProfiles[i] = JFSSupport.getMenuItem("", "OPEN_"+i, this);
             fileMenu.add(lastOpenedProfiles[i]);
         }
@@ -314,6 +405,12 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         // window managers:
         frame.setExtendedState(s.getWindowState());
 
+        new CommandAction(this, "EXIT", KeyEvent.VK_Q).register(fileMenu);
+        new CommandAction(this, "OPEN", KeyEvent.VK_O).register(fileMenu);
+        new CommandAction(this, "OPTIONS", KeyEvent.VK_P).register(fileMenu);
+        new CommandAction(this, "COMPARE", KeyEvent.VK_C).register(fileMenu);
+        new CommandAction(this, "SYNCHRONIZE", KeyEvent.VK_S).register(fileMenu);
+
         // Create the progress view for the algorithm, which is displayed
         // for every comparison and synchronization later:
         progressView = new JFSProgressView(this);
@@ -328,7 +425,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
 
     /**
      * Returns the reference of the used frame.
-     * 
+     *
      * @return The frame of the main view.
      */
     public final JFrame getFrame() {
@@ -349,9 +446,9 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
 
     /**
      * Action Listener of the main frame.
-     * 
+     *
      * @param cmd
-     *            The transmitted command string.
+     * The transmitted command string.
      */
     public void actionPerformed(String cmd) {
         // Get translation objects, configuration, settings, and task:
@@ -363,7 +460,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             int result = JOptionPane.OK_OPTION;
 
             // Check whether changes need to be stored:
-            if ( !config.isCurrentProfileStored()) {
+            if (!config.isCurrentProfileStored()) {
                 JLabel msg = new JLabel(t.get("message.store"));
                 result = JOptionPane.showConfirmDialog(frame, msg, t.get("general.warning"), JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.WARNING_MESSAGE);
@@ -391,7 +488,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
 
                     if (returnVal==JFileChooser.APPROVE_OPTION) {
                         // Show error message if opening failed:
-                        if ( !config.load(chooser.getSelectedFile())) {
+                        if (!config.load(chooser.getSelectedFile())) {
                             JLabel label = new JLabel(t.get("error.profile.load"));
                             JOptionPane.showMessageDialog(frame, label, t.get("error.window.title"), JOptionPane.ERROR_MESSAGE);
                             actionPerformed("NEW");
@@ -404,7 +501,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
                     // Cut "OPEN_":
                     int i = Integer.parseInt(cmd.substring(5));
                     // Show error message if opening failed:
-                    if ( !config.load(s.getLastOpenedProfiles().get(i))) {
+                    if (!config.load(s.getLastOpenedProfiles().get(i))) {
                         JLabel label = new JLabel(t.get("error.profile.load"));
                         JOptionPane.showMessageDialog(frame, label, t.get("error.window.title"), JOptionPane.ERROR_MESSAGE);
                         actionPerformed("NEW");
@@ -435,7 +532,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
                     File selectedFile = chooser.getSelectedFile();
 
                     // If file has no extension add ".xml":
-                    if (selectedFile.getName().indexOf(".")== -1) {
+                    if (selectedFile.getName().indexOf(".")==-1) {
                         selectedFile = new File(selectedFile.getParentFile(), selectedFile.getName()+".xml");
                     }
 
@@ -453,7 +550,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             }
 
             // Show error message if saving failed:
-            if ( !success) {
+            if (!success) {
                 JLabel label = new JLabel(t.get("error.profile.store"));
                 JOptionPane.showMessageDialog(frame, label, t.get("error.window.title"), JOptionPane.ERROR_MESSAGE);
             }
@@ -527,7 +624,8 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         if (cmd.equals("EXIT")) {
             // Ask for exiting the program:
             JLabel msg = new JLabel(t.get("message.exit"));
-            int result = JOptionPane.showConfirmDialog(frame, msg, t.get("general.warning"), JOptionPane.OK_CANCEL_OPTION,
+
+            int result = JFSConfig.getInstance().isDontAskQuestions() ? JOptionPane.OK_OPTION : JOptionPane.showConfirmDialog(frame, msg, t.get("general.warning"), JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.WARNING_MESSAGE);
 
             if (result==JOptionPane.OK_OPTION) {
@@ -551,17 +649,19 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         }
 
         if (cmd.equals("jfs.help.topics")) {
-            if (helpView==null)
+            if (helpView==null) {
                 helpView = new JFSHelpView(frame);
-            else
+            } else {
                 helpView.setVisible(true);
+            }
         }
 
         if (cmd.equals("ASSISTANT")) {
-            if (assistantView==null)
+            if (assistantView==null) {
                 assistantView = new JFSAssistantView(this);
-            else
+            } else {
                 assistantView.setVisible(true);
+            }
         }
 
         if (cmd.equals("HISTORY")) {
@@ -598,14 +698,15 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
     public final void updateLastOpenedProfiles() {
         JFSSettings s = JFSSettings.getInstance();
         ArrayList<File> profiles = s.getLastOpenedProfiles();
-        for (int i = 0; i<profiles.size(); i++ ) {
+        for (int i = 0; i<profiles.size(); i++) {
             String name = profiles.get(i).getName();
-            if (name.length()>30)
+            if (name.length()>30) {
                 name = name.substring(0, 26)+"...";
+            }
             lastOpenedProfiles[i].setText((i+1)+". "+name);
             lastOpenedProfiles[i].setVisible(true);
         }
-        for (int i = profiles.size(); i<JFSConst.LAST_OPENED_PROFILES_SIZE; i++ ) {
+        for (int i = profiles.size(); i<JFSConst.LAST_OPENED_PROFILES_SIZE; i++) {
             lastOpenedProfiles[i].setText("");
             lastOpenedProfiles[i].setVisible(false);
         }
@@ -626,12 +727,13 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         Enumeration<AbstractButton> views = viewGroup.getElements();
 
         while (views.hasMoreElements()) {
-            button = (JRadioButtonMenuItem)views.nextElement();
+            button = (JRadioButtonMenuItem) views.nextElement();
 
-            if (button.getActionCommand().equals("VIEW_"+config.getView()))
+            if (button.getActionCommand().equals("VIEW_"+config.getView())) {
                 button.setSelected(true);
-            else
+            } else {
                 button.setSelected(false);
+            }
         }
 
         // Update snyc mode selection:
@@ -640,12 +742,13 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         stateSyncMode.setText(t.get("statePanel.syncMode")+" "+JFSText.getInstance().get(mode.getAlias()));
 
         while (syncModes.hasMoreElements()) {
-            button = (JRadioButtonMenuItem)syncModes.nextElement();
+            button = (JRadioButtonMenuItem) syncModes.nextElement();
 
-            if (button.getActionCommand().equals("SYNCMODE_"+config.getSyncMode()))
+            if (button.getActionCommand().equals("SYNCMODE_"+config.getSyncMode())) {
                 button.setSelected(true);
-            else
+            } else {
                 button.setSelected(false);
+            }
         }
 
         // Update state panel:

@@ -94,6 +94,9 @@ public abstract class JFSConfig implements Cloneable {
     /** Vector with all oberservers of the configuration object. */
     protected Vector<JFSConfigObserver> observers = new Vector<JFSConfigObserver>();
 
+    /** tell if the user wants safety questions before actions */
+    protected boolean dontAskQuestions = true;
+
 
     /**
      * Sets some default values for the configuration object.
@@ -721,10 +724,22 @@ public abstract class JFSConfig implements Cloneable {
 
     public void setShortenPaths(boolean shortenPaths) {
         if ( shortenPaths!=this.shortenPaths) {
-            this.shortenPaths = shortenPaths;
             setCurrentProfileStored(false);
         }
         this.shortenPaths = shortenPaths;
+    }
+
+
+    public boolean isDontAskQuestions() {
+        return dontAskQuestions;
+    }
+
+
+    public void setDontAskQuestions(boolean dontAskQuestions) {
+        if ( dontAskQuestions!=this.dontAskQuestions) {
+            setCurrentProfileStored(false);
+        }
+        this.dontAskQuestions = dontAskQuestions;
     }
 
 

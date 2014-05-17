@@ -171,7 +171,7 @@ public class JFSConst {
     /**
      * The number of last visited opened profiles to store persistently.
      */
-    public static final int LAST_OPENED_PROFILES_SIZE = 4;
+    public static final int LAST_OPENED_PROFILES_SIZE = 5;
 
     /**
      * The prefix of a history file.
