@@ -70,7 +70,7 @@ launch4j {
     copyright = '(C) 2002-2014, J. Heidrich, M. Goellnitz'
     downloadUrl = 'https://www.dropbox.com/s/3n4snlbw9tyjgec/JFileSync3.zip'
     supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
-    icon = "$project.projectDir/win/JFileSync.ico"
+    icon = "$project.projectDir/win/JFileSync3.ico"
     dontWrapJar = true
     xmlFileName = 'JFileSync3-launcher.xml'
     initialHeapSize = 1024
