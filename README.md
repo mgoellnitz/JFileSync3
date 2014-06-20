@@ -117,11 +117,11 @@ You can find a copy all licenses of JFileSync3 and the used libraries in the
 
 Required packages for JFileSync3 development (not included in the distribution):
 - Java 7 SDK >= 1.7.0 (see 'http://java.sun.com')
-- Gradle >= 1.4 (see 'http://ant.apache.org')
+- Gradle >= 1.4 (see 'http://www.gradle.org')
 
 Used and therewith recommended development tools:
 - Java 7 SDK 1.7.0
-- Eclipse 4.2.0
+- Netbeans 7.4
 
 The encryption backend tries its very best to avoid known plaintext attacks with filenames like in directory names ("src/main/java") and with the contents of the files.
 
