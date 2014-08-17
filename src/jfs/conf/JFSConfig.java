@@ -624,9 +624,9 @@ public abstract class JFSConfig implements Cloneable {
 
 
     /**
-     * Returns the server base directory for remote connections.
+     * Returns the server username for remote connections.
      *
-     * @return The server base directory.
+     * @return The server username.
      */
     public String getServerUserName() {
         return serverUserName;
@@ -634,9 +634,9 @@ public abstract class JFSConfig implements Cloneable {
 
 
     /**
-     * Sets the server base directory for remote connections.
+     * Sets the server username for remote connections.
      *
-     * @param serverBase
+     * @param serverUserName
      *            The server base directory.
      */
     public void setServerUserName(String serverUserName) {
