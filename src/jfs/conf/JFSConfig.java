@@ -31,8 +31,15 @@ import jfs.sync.JFSFile;
  */
 public abstract class JFSConfig implements Cloneable {
 
-    /** Stores the only instance of the class. */
-    private static JFSConfig instance = null;
+    /** Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSConfig.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
+     */
+    private static class SingletonHolder {
+        public static final JFSConfig INSTANCE = new JFSConfigXML();
+
+    }
 
     /** Stores the default configuration file. */
     protected static File defaultFile = new File(JFSConst.HOME_DIR+File.separator+JFSConst.DEFAULT_PROFILE_FILE);
@@ -112,10 +119,7 @@ public abstract class JFSConfig implements Cloneable {
      * @return The only instance.
      */
     public static JFSConfig getInstance() {
-        if (instance==null) {
-            instance = new JFSConfigXML();
-        }
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 
