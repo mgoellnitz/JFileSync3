@@ -1,7 +1,6 @@
-
 /build
 /.classpath
 /.gradle
 /.project
 *.log
-/.nb-gradle/private/
+/.nb-gradle
