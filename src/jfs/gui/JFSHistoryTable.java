@@ -19,14 +19,12 @@
 
 package jfs.gui;
 
-import java.util.Vector;
-
+import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-
 import jfs.conf.JFSHistory;
 import jfs.conf.JFSHistoryManager;
 import jfs.conf.JFSText;
@@ -45,7 +43,7 @@ public class JFSHistoryTable extends AbstractTableModel {
     private final JTable table;
 
     /** The vector of history items to display. */
-    private final Vector<JFSHistory> v = JFSHistoryManager.getInstance().getHistories();
+    private final List<JFSHistory> v = JFSHistoryManager.getInstance().getHistories();
 
 
     /**

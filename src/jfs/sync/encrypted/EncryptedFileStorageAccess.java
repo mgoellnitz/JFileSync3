@@ -102,7 +102,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
         } // for
 
         // sort out meta data
-        Collection<String> itemCollection = new HashSet<String>();
+        Collection<String> itemCollection = new HashSet<>();
         for (String item : result) {
             if ( !getMetaDataFileName(relativePath).equals(item)) {
                 itemCollection.add(item);

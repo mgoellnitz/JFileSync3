@@ -23,7 +23,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-
 import jfs.conf.JFSLog;
 import jfs.conf.JFSText;
 import jfs.sync.JFSComparisonMonitor;
@@ -31,8 +30,8 @@ import jfs.sync.JFSCopyMonitor;
 import jfs.sync.JFSDeleteMonitor;
 import jfs.sync.JFSFormatter;
 import jfs.sync.JFSProgress;
-import jfs.sync.JFSProgressObserver;
 import jfs.sync.JFSProgress.ProgressActivity;
+import jfs.sync.JFSProgressObserver;
 
 /**
  * A simple observer of the algorithm's progress that prints the state to standard out.
@@ -90,10 +89,13 @@ public class JFSProgressPrint implements JFSProgressObserver {
             int percentageValue = progress.getCompletionRatio();
             String percentage = String.valueOf(percentageValue);
 
-            if (percentageValue<10)
+            if (percentageValue<10) {
                 percentage = "  "+percentage;
-            else if (percentageValue<100)
-                percentage = " "+percentage;
+            } else {
+                if (percentageValue<100) {
+                    percentage = " "+percentage;
+                }
+            }
 
             out.print("["+percentage+"%] "+stateString+" ");
             out.println();

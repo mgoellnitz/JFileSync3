@@ -25,7 +25,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -33,7 +32,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.border.TitledBorder;
-
 import jfs.conf.JFSText;
 import jfs.sync.JFSComparison;
 import jfs.sync.JFSComparisonMonitor;
@@ -41,10 +39,10 @@ import jfs.sync.JFSCopyMonitor;
 import jfs.sync.JFSDeleteMonitor;
 import jfs.sync.JFSFormatter;
 import jfs.sync.JFSProgress;
-import jfs.sync.JFSProgressObserver;
-import jfs.sync.JFSSynchronization;
 import jfs.sync.JFSProgress.ProgressActivity;
 import jfs.sync.JFSProgress.ProgressState;
+import jfs.sync.JFSProgressObserver;
+import jfs.sync.JFSSynchronization;
 
 /**
  * A dialog that is shown during the comparison of a set of directory pairs und during the synchronization.
@@ -53,53 +51,54 @@ import jfs.sync.JFSProgress.ProgressState;
  * @version $Id: JFSProgressView.java,v 1.29 2007/07/20 16:35:36 heidrich Exp $
  */
 public class JFSProgressView extends JDialog implements JFSProgressObserver, ActionListener {
+    
     /** The UID. */
     private static final long serialVersionUID = 52L;
 
     /** The main frame ;-). */
-    private JFSMainView mainView;
+    private final JFSMainView mainView;
 
     /** The completion bar for the algorithm. */
-    private JProgressBar completionBar;
+    private final JProgressBar completionBar;
 
     /** The estimated time until the current activity is done. */
-    private JLabel remainingTime;
+    private final JLabel remainingTime;
 
     /** The panel containing details about comparison. */
-    private JPanel comparisonPanel;
+    private final JPanel comparisonPanel;
 
     /** The panel containing details about delete statements. */
-    private JPanel deletePanel;
+    private final JPanel deletePanel;
 
     /** The panel containing details about copy statements. */
-    private JPanel copyPanel;
+    private final JPanel copyPanel;
 
     /** The relative path of the currently compared directory. */
-    private JLabel comparisonCurrentDir;
+    private final JLabel comparisonCurrentDir;
 
     /** The number of performed versus overall delete statements. */
-    private JLabel deleteStmtsNo;
+    private final JLabel deleteStmtsNo;
 
     /** The relative path of the currently deleted file. */
-    private JLabel deleteCurrentFile;
+    private final JLabel deleteCurrentFile;
 
     /** The number of performed versus overall copy statements. */
-    private JLabel copyStmtsNo;
+    private final JLabel copyStmtsNo;
 
     /** Bytes already transfered versus overall number of bytes. */
-    private JLabel copyBytes;
+    private final JLabel copyBytes;
 
     /** The relative path of the currently copied file. */
-    private JLabel copyCurrentFile;
+    private final JLabel copyCurrentFile;
 
     /** Bytes transfered versus overall number of bytes for the current file. */
-    private JLabel copyBytesCurrentFile;
+    private final JLabel copyBytesCurrentFile;
 
     /** Shows and hides synchronization details. */
-    private JButton toggleDetailsButton;
+    private final JButton toggleDetailsButton;
 
     /** Determines whether details should be shown. */
-    private boolean showDetails = false;
+    private boolean doShowDetails = false;
 
 
     /**
@@ -244,7 +243,7 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
     private synchronized void showDetails() {
         JFSText t = JFSText.getInstance();
         JFSProgress progress = JFSProgress.getInstance();
-        showDetails = true;
+        doShowDetails = true;
         toggleDetailsButton.setText(t.get("progress.details.hide"));
         ProgressActivity a = progress.getActivity();
         if (a==ProgressActivity.COMPARISON) {
@@ -268,7 +267,7 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
      */
     private synchronized void hideDetails() {
         JFSText t = JFSText.getInstance();
-        showDetails = false;
+        doShowDetails = false;
         toggleDetailsButton.setText(t.get("progress.details.show"));
         comparisonPanel.setVisible(false);
         deletePanel.setVisible(false);
@@ -280,8 +279,9 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
      * Sets details about the current operation.
      */
     public final synchronized void setDetails() {
-        if ( !showDetails)
+        if ( !doShowDetails) {
             return;
+        }
 
         JFSProgress progress = JFSProgress.getInstance();
         ProgressActivity a = progress.getActivity();
@@ -324,7 +324,7 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
         if (s==ProgressState.PREPARATION) {
             reset();
             setTitle(t.get(a.getName()));
-            if (showDetails) {
+            if (doShowDetails) {
                 showDetails();
             } else {
                 hideDetails();
@@ -355,7 +355,7 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
         String cmd = event.getActionCommand();
 
         if (cmd.equals("TOGGLE_DETAILS")) {
-            if (showDetails) {
+            if (doShowDetails) {
                 hideDetails();
             } else {
                 showDetails();
@@ -429,4 +429,5 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
         // Make dialog window visible:
         dialog.setVisible(true);
     }
+    
 }

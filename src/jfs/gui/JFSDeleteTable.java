@@ -19,14 +19,12 @@
 
 package jfs.gui;
 
-import java.util.Vector;
-
+import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-
 import jfs.conf.JFSText;
 import jfs.sync.JFSDeleteStatement;
 import jfs.sync.JFSFile;
@@ -38,11 +36,12 @@ import jfs.sync.JFSFile;
  * @version $Id: JFSDeleteTable.java,v 1.11 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSDeleteTable extends AbstractTableModel {
+    
     /** The UID. */
     private static final long serialVersionUID = 47L;
 
     /** The object with information that should be displayed by the table. */
-    private Vector<JFSDeleteStatement> v;
+    private List<JFSDeleteStatement> v;
 
     /** The corresponding JTable. */
     private final JTable table;
@@ -54,7 +53,7 @@ public class JFSDeleteTable extends AbstractTableModel {
      * @param v
      *            The vector with all delete statements.
      */
-    public JFSDeleteTable(Vector<JFSDeleteStatement> v) {
+    public JFSDeleteTable(List<JFSDeleteStatement> v) {
         this.v = v;
 
         // Create column model:

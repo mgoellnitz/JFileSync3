@@ -19,7 +19,7 @@
 
 package jfs.sync;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * Monitors the detailed state of the currently performed copy operations.
@@ -305,7 +305,7 @@ public class JFSCopyMonitor {
      *            The copy statements to consider.
      * @return The numer of bytes to transfer.
      */
-    public final static long getBytesToTransfer(Vector<JFSCopyStatement> copyStatements) {
+    public final static long getBytesToTransfer(List<JFSCopyStatement> copyStatements) {
         long bytes = 0;
         for (JFSCopyStatement cs : copyStatements) {
             if (cs.getCopyFlag()&& !cs.getSuccess()) {

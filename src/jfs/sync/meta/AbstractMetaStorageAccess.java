@@ -41,43 +41,47 @@ import jfs.sync.util.SecurityUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+
 public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAccess {
 
-    private static final Log log = LogFactory.getLog(AbstractMetaStorageAccess.class);
+    private static final Log LOG = LogFactory.getLog(AbstractMetaStorageAccess.class);
 
-    private static final DateFormat formatter = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.MEDIUM, SimpleDateFormat.MEDIUM);
+    private static final DateFormat FORMATTER = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.MEDIUM, SimpleDateFormat.MEDIUM);
+
+    private final Map<String, Map<String, FileInfo>> directoryCache = new HashMap<>();
 
 
     public AbstractMetaStorageAccess(String cipher, boolean shortenPaths) {
         super(cipher, shortenPaths);
     } // AbstractMetaStorageAccess()
 
-    private Map<String, Map<String, FileInfo>> directoryCache = new HashMap<String, Map<String, FileInfo>>();
-
 
     protected Map<String, FileInfo> getMetaData(String rootPath, String relativePath) {
         if (directoryCache.containsKey(relativePath)) {
             return directoryCache.get(relativePath);
         } // if
-        Map<String, FileInfo> result = new HashMap<String, FileInfo>();
+        Map<String, FileInfo> result = new HashMap<>();
         ObjectInputStream ois = null;
         try {
             InputStream inputStream = getInputStream(rootPath, getMetaDataPath(relativePath));
             byte[] credentials = getCredentials(relativePath);
             Cipher cipher = SecurityUtils.getCipher(getCipherSpec(), Cipher.DECRYPT_MODE, credentials);
             inputStream = new CipherInputStream(inputStream, cipher);
-            if (log.isDebugEnabled()) {
-                log.debug("getMetaData() reading infos for "+relativePath);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("getMetaData() reading infos for "+relativePath);
             } // if
             ois = new ObjectInputStream(inputStream);
             Object o;
             while ((o = ois.readObject())!=null) {
                 if (o instanceof FileInfo) {
-                    FileInfo fi = (FileInfo)o;
+                    FileInfo fi = (FileInfo) o;
                     if (fi.isDirectory()) {
-                        String date = formatter.format(new Date(fi.getModificationDate()));
-                        if (log.isDebugEnabled()) {
-                            log.debug("getMetaData() "+relativePath+getSeparator()+fi.getName()+": "+date);
+                        String date;
+                        synchronized (FORMATTER) {
+                            date = FORMATTER.format(new Date(fi.getModificationDate()));
+                        }
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("getMetaData() "+relativePath+getSeparator()+fi.getName()+": "+date);
                         } // if
                     } // if
                     result.put(fi.getName(), fi);
@@ -87,8 +91,8 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
         } catch (FileNotFoundException|EOFException e) {
             // empty directory or - who cares?
         } catch (Exception e) {
-            if (log.isInfoEnabled()) {
-                log.info("getMetaData() possible issue while reading infos "+e, e);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("getMetaData() possible issue while reading infos "+e, e);
             } // if
         } finally {
             try {
@@ -118,13 +122,13 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
      *
      * @param rootPath
      * @param pathAndName
-     *            path and name for the file and path for which this update takes place
+     * path and name for the file and path for which this update takes place
      * @param listing
      */
     public void flushMetaData(String rootPath, String[] pathAndName, Map<String, FileInfo> listing) {
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("flushMetaData() flushing "+listing);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("flushMetaData() flushing "+listing);
             } // if
             OutputStream os = getOutputStream(rootPath, getMetaDataPath(pathAndName[0]), false);
 
@@ -133,39 +137,39 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
                 Cipher cipher = SecurityUtils.getCipher(getCipherSpec(), Cipher.ENCRYPT_MODE, credentials);
                 os = new CipherOutputStream(os, cipher);
             } catch (InvalidKeyException e) {
-                log.error("flushMetaData()", e);
+                LOG.error("flushMetaData()", e);
             } catch (NoSuchAlgorithmException e) {
-                log.error("flushMetaData()", e);
+                LOG.error("flushMetaData()", e);
             } catch (NoSuchPaddingException e) {
-                log.error("flushMetaData()", e);
+                LOG.error("flushMetaData()", e);
             } // try/catch
 
             ObjectOutputStream oos = new ObjectOutputStream(os);
 
             for (FileInfo info : listing.values()) {
-                if (log.isDebugEnabled()) {
-                    log.debug("flushMetaData() writing "+info.getName());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("flushMetaData() writing "+info.getName());
                 } // if
                 oos.writeObject(info);
             } // for
             oos.flush();
             os.close();
-            if (log.isDebugEnabled()) {
+            if (LOG.isDebugEnabled()) {
                 Map<String, FileInfo> backtest = getMetaData(rootPath, pathAndName[0]);
                 for (FileInfo info : backtest.values()) {
-                    log.debug("flushMetaData() reading "+info.getName());
+                    LOG.debug("flushMetaData() reading "+info.getName());
                 } // for
             } // if
         } catch (IOException ioe) {
-            log.error("flushMetaData() error writing meta data ", ioe);
+            LOG.error("flushMetaData() error writing meta data ", ioe);
         } // try/catch
     } // flushMetaData()
 
 
     public Map<String, FileInfo> getParentListing(String rootPath, String[] pathAndName) {
         Map<String, FileInfo> listing = getMetaData(rootPath, pathAndName[0]);
-        if (log.isDebugEnabled()) {
-            log.debug("getParentListing("+pathAndName[0]+") "+listing);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getParentListing("+pathAndName[0]+") "+listing);
         } // if
         return listing;
     } // getParentListing()
@@ -177,7 +181,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
         String[] result = new String[listing.size()];
         int i = 0;
         for (String name : listing.keySet()) {
-            result[i++ ] = name;
+            result[i++] = name;
         } // for
         return result;
     } // list()
@@ -193,8 +197,8 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
             listing.remove(info.getName());
         } // if
         listing.put(info.getName(), info);
-        if (log.isInfoEnabled()) {
-            log.info("flush() flushing "+pathAndName[0]+"/"+pathAndName[1]);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("flush() flushing "+pathAndName[0]+"/"+pathAndName[1]);
         } // if
         flushMetaData(rootPath, pathAndName, listing);
     } // flush()

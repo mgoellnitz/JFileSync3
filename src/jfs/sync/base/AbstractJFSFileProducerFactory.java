@@ -18,13 +18,12 @@
 package jfs.sync.base;
 
 import jfs.sync.JFSFileProducerFactory;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public abstract class AbstractJFSFileProducerFactory implements JFSFileProducerFactory {
 
-    private static Log log = LogFactory.getLog(AbstractJFSFileProducerFactory.class);
+    private static final Log LOG = LogFactory.getLog(AbstractJFSFileProducerFactory.class);
 
 
     public static final String[] getPathAndName(String relativePath, String separator) {
@@ -37,8 +36,8 @@ public abstract class AbstractJFSFileProducerFactory implements JFSFileProducerF
             idx++ ;
             name = name.substring(idx);
         } // if
-        if (log.isDebugEnabled()) {
-            log.debug("getPathAndName("+relativePath+") "+parentPath+";"+name);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getPathAndName("+relativePath+") "+parentPath+";"+name);
         } // if
         result[0] = parentPath;
         result[1] = name;

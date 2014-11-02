@@ -20,6 +20,8 @@
 package jfs.conf;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import jfs.sync.JFSFile;
 
@@ -30,16 +32,6 @@ import jfs.sync.JFSFile;
  * @version $Id: JFSConfig.java,v 1.31 2007/06/06 19:51:33 heidrich Exp $
  */
 public abstract class JFSConfig implements Cloneable {
-
-    /** Stores the only instance of the class.
-     *
-     * SingletonHolder is loaded on the first execution of JFSConfig.getInstance()
-     * or the first access to SingletonHolder.INSTANCE, not before.
-     */
-    private static class SingletonHolder {
-        public static final JFSConfig INSTANCE = new JFSConfigXML();
-
-    }
 
     /** Stores the default configuration file. */
     protected static File defaultFile = new File(JFSConst.HOME_DIR+File.separator+JFSConst.DEFAULT_PROFILE_FILE);
@@ -54,7 +46,7 @@ public abstract class JFSConfig implements Cloneable {
     protected byte view;
 
     /** Vector with all directory pairs that have to be compared. */
-    protected Vector<JFSDirectoryPair> directoryList = new Vector<JFSDirectoryPair>();
+    protected List<JFSDirectoryPair> directoryList = new ArrayList<>();
 
     /** Stores the granularity in ms for file comparisons. */
     protected int granularity;
@@ -69,13 +61,13 @@ public abstract class JFSConfig implements Cloneable {
     protected boolean storeHistory;
 
     /** Determines whether the set can write property of a file is set. */
-    protected boolean setCanWrite;
+    protected boolean doSetCanWrite;
 
     /** The files to include in comparison. */
-    protected Vector<JFSFilter> includes = new Vector<JFSFilter>();
+    protected List<JFSFilter> includes = new ArrayList<>();
 
     /** The files to exclude from comparison. */
-    protected Vector<JFSFilter> excludes = new Vector<JFSFilter>();
+    protected List<JFSFilter> excludes = new ArrayList<>();
 
     /** The used server name to log in. */
     protected String serverUserName;
@@ -96,14 +88,25 @@ public abstract class JFSConfig implements Cloneable {
     protected boolean shortenPaths = false;
 
     /** Determines whether the current profile was stored to a file. */
-    protected boolean isCurrentProfileStored;
+    protected boolean currentProfileStored;
 
     /** Vector with all oberservers of the configuration object. */
-    protected Vector<JFSConfigObserver> observers = new Vector<JFSConfigObserver>();
+    protected Vector<JFSConfigObserver> observers = new Vector<>();
 
     /** tell if the user wants safety questions before actions */
     protected boolean dontAskQuestions = true;
 
+
+    /** 
+     * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSConfig.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
+     */
+    private static class SingletonHolder {
+        public static final JFSConfig INSTANCE = new JFSConfigXML();
+
+    }
 
     /**
      * Sets some default values for the configuration object.
@@ -138,7 +141,7 @@ public abstract class JFSConfig implements Cloneable {
         bufferSize = JFSConst.BUFFER_SIZE;
         keepUserActions = JFSConst.KEEP_USER_ACTIONS;
         storeHistory = JFSConst.STORE_HISTORY;
-        setCanWrite = JFSConst.SET_CAN_WRITE;
+        doSetCanWrite = JFSConst.SET_CAN_WRITE;
 
         // Includes and excludes:
         includes.clear();
@@ -154,7 +157,7 @@ public abstract class JFSConfig implements Cloneable {
         shortenPaths = false;
 
         // When cleaned, the profile is stored by definition:
-        isCurrentProfileStored = true;
+        currentProfileStored = true;
     }
 
 
@@ -338,7 +341,7 @@ public abstract class JFSConfig implements Cloneable {
      *
      * @return Vector of directory pairs.
      */
-    public final Vector<JFSDirectoryPair> getDirectoryList() {
+    public final List<JFSDirectoryPair> getDirectoryList() {
         return directoryList;
     }
 
@@ -389,7 +392,7 @@ public abstract class JFSConfig implements Cloneable {
      *            The index of the element to insert.
      */
     public final void insertDirectoryPair(JFSDirectoryPair pair, int index) {
-        directoryList.insertElementAt(pair, index);
+        directoryList.add(index, pair);
         setCurrentProfileStored(false);
     }
 
@@ -499,7 +502,7 @@ public abstract class JFSConfig implements Cloneable {
      * @return Determines whether the set can write property of a file is set.
      */
     public boolean isSetCanWrite() {
-        return setCanWrite;
+        return doSetCanWrite;
     }
 
 
@@ -510,8 +513,8 @@ public abstract class JFSConfig implements Cloneable {
      *            True if and only if the set can write property of a file is set.
      */
     public void setCanWrite(boolean setCanWrite) {
-        if (setCanWrite!=this.setCanWrite) {
-            this.setCanWrite = setCanWrite;
+        if (setCanWrite!=this.doSetCanWrite) {
+            this.doSetCanWrite = setCanWrite;
             setCurrentProfileStored(false);
         }
     }
@@ -522,7 +525,7 @@ public abstract class JFSConfig implements Cloneable {
      *
      * @return Vector of JFSFilter objects.
      */
-    public final Vector<JFSFilter> getIncludes() {
+    public final List<JFSFilter> getIncludes() {
         return includes;
     }
 
@@ -575,7 +578,7 @@ public abstract class JFSConfig implements Cloneable {
      *
      * @return Vector of JFSFilter objects.
      */
-    public final Vector<JFSFilter> getExcludes() {
+    public final List<JFSFilter> getExcludes() {
         return excludes;
     }
 
@@ -752,7 +755,7 @@ public abstract class JFSConfig implements Cloneable {
      * this method will return false.
      */
     public final boolean isCurrentProfileStored() {
-        return isCurrentProfileStored;
+        return currentProfileStored;
     }
 
 
@@ -763,7 +766,7 @@ public abstract class JFSConfig implements Cloneable {
      *            True, if the profile was stored.
      */
     public final void setCurrentProfileStored(boolean isCurrentProfileStored) {
-        this.isCurrentProfileStored = isCurrentProfileStored;
+        this.currentProfileStored = isCurrentProfileStored;
     }
 
 
@@ -826,7 +829,7 @@ public abstract class JFSConfig implements Cloneable {
      * @param observer
      *            The observer to update.
      */
-    private final void updateObserver(JFSConfigObserver observer) {
+    private void updateObserver(JFSConfigObserver observer) {
         observer.updateConfig(this);
         observer.updateComparison(this);
         observer.updateServer(this);
@@ -873,8 +876,9 @@ public abstract class JFSConfig implements Cloneable {
 
         if ( !directoryList.equals(config.directoryList)) {
             config.directoryList.clear();
-            for (JFSDirectoryPair pair : directoryList)
+            for (JFSDirectoryPair pair : directoryList) {
                 config.directoryList.add(pair.clone());
+            }
             comparisonUpdate = true;
         }
 
@@ -899,23 +903,25 @@ public abstract class JFSConfig implements Cloneable {
             configUpdate = true;
         }
 
-        if (setCanWrite!=config.setCanWrite) {
-            config.setCanWrite = setCanWrite;
+        if (doSetCanWrite!=config.doSetCanWrite) {
+            config.doSetCanWrite = doSetCanWrite;
             configUpdate = true;
         }
 
         // Transfer includes and excludes:
         if ( !includes.equals(config.includes)) {
             config.includes.clear();
-            for (JFSFilter f : includes)
+            for (JFSFilter f : includes) {
                 config.includes.add(f.clone());
+            }
             comparisonUpdate = true;
         }
 
         if ( !excludes.equals(config.excludes)) {
             config.excludes.clear();
-            for (JFSFilter f : excludes)
+            for (JFSFilter f : excludes) {
                 config.excludes.add(f.clone());
+            }
             comparisonUpdate = true;
         }
 
@@ -945,8 +951,8 @@ public abstract class JFSConfig implements Cloneable {
         } // if
 
         // Transfer whether profile was stored:
-        if (isCurrentProfileStored!=config.isCurrentProfileStored) {
-            config.isCurrentProfileStored = isCurrentProfileStored;
+        if (currentProfileStored!=config.currentProfileStored) {
+            config.currentProfileStored = currentProfileStored;
         }
 
         // Fire updates accordingly:
@@ -974,4 +980,5 @@ public abstract class JFSConfig implements Cloneable {
 
         return clone;
     }
+    
 }

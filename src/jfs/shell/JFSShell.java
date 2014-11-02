@@ -25,8 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.URL;
-import java.util.Vector;
-
+import java.util.List;
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSConst;
 import jfs.conf.JFSLog;
@@ -84,9 +83,9 @@ public class JFSShell {
 				JFSLog.getErr().getStream()
 						.println(t.get("error.numberFormat"));
 			}
-		} else
-			JFSLog.getErr().getStream().println(
-					t.get("error.inputNumber") + " '" + cmd.length + "'.");
+		} else {
+			JFSLog.getErr().getStream().println(t.get("error.inputNumber") + " '" + cmd.length + "'.");
+                }
 
 		return number;
 	}
@@ -163,35 +162,33 @@ public class JFSShell {
 
 			String input = "";
 
-			while (!input.equals("exit") && !input.equals("sync")) {
+			while (!"exit".equals(input) && !"sync".equals(input)) {
 				p.print("jfs>");
 
 				try {
 					input = din.readLine().toLowerCase();
 
-					if (input.equals("t")) {
+					if ("t".equals(input)) {
 						JFSPrint.printComparisonTable();
-					} else if (input.equals("c")) {
+					} else if ("c".equals(input)) {
 						JFSPrint.printCopyStatements(table.getCopyStatements());
-					} else if (input.equals("d")) {
+					} else if ("d".equals(input)) {
 						JFSPrint.printDeleteStatements(table
 								.getDeleteStatements());
 					} else if (input.startsWith("c ")) {
-						Vector<JFSCopyStatement> list = table
-								.getCopyStatements();
+						List<JFSCopyStatement> list = table.getCopyStatements();
 						int number = JFSShell.parseInt(input, 1, list.size());
 
 						if (number != -1) {
-							JFSCopyStatement cs = list.elementAt(number - 1);
+							JFSCopyStatement cs = list.get(number - 1);
 							cs.setCopyFlag(!cs.getCopyFlag());
 						}
 					} else if (input.startsWith("d ")) {
-						Vector<JFSDeleteStatement> list = table
-								.getDeleteStatements();
+						List<JFSDeleteStatement> list = table.getDeleteStatements();
 						int number = JFSShell.parseInt(input, 1, list.size());
 
 						if (number != -1) {
-							JFSDeleteStatement ds = list.elementAt(number - 1);
+							JFSDeleteStatement ds = list.get(number - 1);
 							ds.setDeleteFlag(!ds.getDeleteFlag());
 						}
 					} else if (input.startsWith("view ")) {
@@ -220,19 +217,16 @@ public class JFSShell {
 							JFSTable.getInstance().recomputeActionsAndView();
 							synchronization.computeSynchronizationLists();
 						} else {
-							JFSLog.getErr().getStream().println(
-									t.get("error.numberFormat"));
+							JFSLog.getErr().getStream().println(t.get("error.numberFormat"));
 						}
-					} else if (input.equals("help")) {
-						JFSShell.printURL(JFSConst.getInstance()
-								.getResourceUrl("jfs.help.topic.shell"));
-					} else if (input.equals("sync")) {
+					} else if ("help".equals(input)) {
+						JFSShell.printURL(JFSConst.getInstance().getResourceUrl("jfs.help.topic.shell"));
+					} else if ("sync".equals(input)) {
 						synchronize();
-					} else if (input.equals("exit")) {
+					} else if ("exit".equals(input)) {
 						// Just leave the loop.
 					} else if (input.length() > 0) {
-						JFSLog.getErr().getStream().println(
-								t.get("error.validCommand"));
+						JFSLog.getErr().getStream().println(t.get("error.validCommand"));
 					}
 				} catch (IOException e) {
 					// Thrown by readLine(). Continue in this case.

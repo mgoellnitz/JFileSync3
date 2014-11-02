@@ -22,7 +22,6 @@ package jfs.gui;
 import java.awt.Component;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
-
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -30,7 +29,6 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToggleButton;
-
 import jfs.conf.JFSConst;
 import jfs.conf.JFSText;
 
@@ -41,7 +39,11 @@ import jfs.conf.JFSText;
  * @author Jens Heidrich
  * @version $Id: JFSSupport.java,v 1.14 2007/02/26 18:49:10 heidrich Exp $
  */
-public class JFSSupport {
+public final class JFSSupport {
+
+
+    private JFSSupport() {
+    }
 
 	/**
 	 * Creates a radio button menu item.
@@ -58,7 +60,7 @@ public class JFSSupport {
 	 *            The action listener.
 	 * @return The generated element.
 	 */
-	static JRadioButtonMenuItem getRadioButtonMenuItem(ButtonGroup group,
+	public static JRadioButtonMenuItem getRadioButtonMenuItem(ButtonGroup group,
 			String nameKey, String alias, boolean isActive,
 			ActionListener listener) {
 		JRadioButtonMenuItem mi;
@@ -83,7 +85,7 @@ public class JFSSupport {
 	 *            The action listener.
 	 * @return The generated element.
 	 */
-	static JCheckBoxMenuItem getCheckBoxMenuItem(String nameKey, String alias,
+	public static JCheckBoxMenuItem getCheckBoxMenuItem(String nameKey, String alias,
 			boolean isActive, ActionListener listener) {
 		JCheckBoxMenuItem mi;
 		mi = new JCheckBoxMenuItem(JFSText.getInstance().get(nameKey), isActive);
@@ -103,7 +105,7 @@ public class JFSSupport {
 	 *            The action listener.
 	 * @return The generated element.
 	 */
-	static JMenuItem getMenuItem(String nameKey, String alias,
+	public static JMenuItem getMenuItem(String nameKey, String alias,
 			ActionListener listener) {
 		JMenuItem mi = new JMenuItem(JFSText.getInstance().get(nameKey));
 		mi.setActionCommand(alias);
@@ -124,7 +126,7 @@ public class JFSSupport {
 	 *            A valid icon key.
 	 * @return The generated element.
 	 */
-	static JMenuItem getMenuItem(String nameKey, String alias,
+	public static JMenuItem getMenuItem(String nameKey, String alias,
 			ActionListener listener, String iconKey) {
 		JMenuItem mi = new JMenuItem(JFSText.getInstance().get(nameKey));
 		mi.setActionCommand(alias);
@@ -146,7 +148,7 @@ public class JFSSupport {
 	 *            The action listener.
 	 * @return The generated element.
 	 */
-	static JButton getButton(String nameKey, String alias,
+	public static JButton getButton(String nameKey, String alias,
 			ActionListener listener) {
 		JButton button = new JButton(JFSText.getInstance().get(nameKey));
 		button.setActionCommand(alias);
@@ -167,7 +169,7 @@ public class JFSSupport {
 	 *            The tool tip text.
 	 * @return The generated element.
 	 */
-	static JButton getButton(String iconKey, String alias,
+	public static JButton getButton(String iconKey, String alias,
 			ActionListener listener, String toolTipKey) {
 		JButton button = new JButton(new ImageIcon(JFSConst.getInstance()
 				.getIconUrl(iconKey)));
@@ -193,7 +195,7 @@ public class JFSSupport {
 	 *            The tool tip text.
 	 * @return The generated element.
 	 */
-	static JToggleButton getToggleButton(String iconKey, String alias,
+	public static JToggleButton getToggleButton(String iconKey, String alias,
 			boolean isActive, ActionListener listener, String toolTipKey) {
 		JToggleButton button = new JToggleButton(new ImageIcon(JFSConst
 				.getInstance().getIconUrl(iconKey)));
@@ -213,9 +215,10 @@ public class JFSSupport {
 	 * @param child
 	 *            The child component.
 	 */
-	static void center(Component father, Component child) {
+	public static void center(Component father, Component child) {
 		child.setLocation(father.getX()
 				+ ((father.getWidth() - child.getWidth()) / 2), father.getY()
 				+ ((father.getHeight() - child.getHeight()) / 2));
 	}
+        
 }

@@ -26,14 +26,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSLog;
 import jfs.conf.JFSText;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 import jfs.sync.JFSProgress;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -102,7 +100,9 @@ public class JFSLocalFile extends JFSFile {
         path = file.getPath();
         isDirectory = file.isDirectory();
         exists = file.exists();
-        log.debug("JFSLocalFile() "+getPath()+" e["+exists+"] d["+isDirectory+"]");
+        if (log.isDebugEnabled()) {
+            log.debug("() "+getPath()+" e["+exists+"] d["+isDirectory+"]");
+        }
         if (exists) {
             canRead = file.canRead();
             canWrite = file.canWrite();
@@ -119,7 +119,9 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final String getName() {
-        log.debug("JFSLocalFile.getName() "+name);
+        if (log.isDebugEnabled()) {
+            log.debug("getName() "+name);
+        }
         return name;
     }
 
@@ -129,7 +131,9 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final String getPath() {
-        log.debug("JFSLocalFile.getPath() "+path);
+        if (log.isDebugEnabled()) {
+            log.debug("getPath() "+path);
+        }
         return path;
     }
 
@@ -151,7 +155,9 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean canRead() {
-        log.debug("JFSLocalFile.canRead() "+canRead);
+        if (log.isDebugEnabled()) {
+            log.debug("canRead() "+canRead);
+        } 
         return canRead;
     }
 
@@ -161,7 +167,9 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean canWrite() {
-        log.debug("JFSLocalFile.canWrite() "+canWrite);
+        if (log.isDebugEnabled()) {
+            log.debug("canWrite() "+canWrite);
+        }
         return canWrite;
     }
 
@@ -171,7 +179,9 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final long getLength() {
-        log.debug("JFSLocalFile.getLength() "+length);
+        if (log.isDebugEnabled()) {
+            log.debug("getLength() "+length);
+        }
         return length;
     }
 
@@ -206,7 +216,9 @@ public class JFSLocalFile extends JFSFile {
             }
         }
 
-        log.debug("JFSLocalFile.getList() "+list);
+        if (log.isDebugEnabled()) {
+            log.debug("getList() "+list);
+        }
         return list;
     }
 

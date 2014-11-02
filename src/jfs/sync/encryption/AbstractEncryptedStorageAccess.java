@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
 
 public abstract class AbstractEncryptedStorageAccess {
 
-    private static final Log log = LogFactory.getLog(AbstractEncryptedStorageAccess.class);
+    private static final Log LOG = LogFactory.getLog(AbstractEncryptedStorageAccess.class);
 
     /** 111 codes for now - so there's some room left */
     private static final char[] FILE_NAME_CHARACTERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
@@ -48,7 +48,7 @@ public abstract class AbstractEncryptedStorageAccess {
 
     private static final char[] DYNAMIC_SPECIAL_CODES = {'<', '>', '?', '*', ':', '"'};
 
-    private static final char[] codes = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+    private static final char[] CODES = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
         'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e',
         'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ä', 'ö', 'ü',
         'ß', 'Ä', 'Ö', 'Ü', '\'', 'µ', '÷', '@', '!', '&', '%', '~', '#', '(', ')', '[', ']', ',', '.', '{', '}', '´', '`', 'á',
@@ -59,11 +59,11 @@ public abstract class AbstractEncryptedStorageAccess {
 
     private final byte[] reverseCharacters = new byte[256];
 
-    private int longIndex;
+    private final int longIndex;
 
-    private final Map<String, String> encryptionCache = new HashMap<String, String>();
+    private final Map<String, String> encryptionCache = new HashMap<>();
 
-    private final Map<String, String> decryptionCache = new HashMap<String, String>();
+    private final Map<String, String> decryptionCache = new HashMap<>();
 
     private static int decoding_mask = 32;
 
@@ -78,15 +78,15 @@ public abstract class AbstractEncryptedStorageAccess {
      * @param shortenPaths extend to seven bit file name character table
      */
     public AbstractEncryptedStorageAccess(boolean shortenPaths) {
-        if (codes.length!=128) {
+        if (CODES.length!=128) {
             throw new RuntimeException("Character missing in 7bit table");
         } // if
         if (shortenPaths) {
             decoding_mask = 64;
             bits = 7;
         } // if
-        for (int i = 0; i<codes.length; i++) {
-            char c = codes[i];
+        for (int i = 0; i<CODES.length; i++) {
+            char c = CODES[i];
             reverseCodes[c] = (byte) i;
         } // for
         for (byte i = 0; i<FILE_NAME_CHARACTERS.length; i++) {
@@ -242,7 +242,7 @@ public abstract class AbstractEncryptedStorageAccess {
         for (int i = 0; i<name.length(); i++) {
             char code = name.charAt(i);
             if ((int) code>256) {
-                log.error("getEncodedFileName() Strange code at "+name.charAt(i)+" ("+relativePath+":"+name+")");
+                LOG.error("getEncodedFileName() Strange code at "+name.charAt(i)+" ("+relativePath+":"+name+")");
             } // if
             boolean noSpecial = true;
             for (int sci = 0; (sci<specialCodes.size())&&(noSpecial); sci++) {
@@ -369,17 +369,17 @@ public abstract class AbstractEncryptedStorageAccess {
             decryptionCache.put(relativePath+getSeparator()+name, decryptedName);
             name = decryptedName;
         } catch (NoSuchAlgorithmException nsae) {
-            log.error("getDecryptedFileName() No Such Algorhithm "+nsae.getLocalizedMessage());
+            LOG.error("getDecryptedFileName() No Such Algorhithm "+nsae.getLocalizedMessage());
         } catch (NoSuchPaddingException nspe) {
-            log.error("getDecryptedFileName() No Such Padding "+nspe.getLocalizedMessage());
+            LOG.error("getDecryptedFileName() No Such Padding "+nspe.getLocalizedMessage());
         } catch (InvalidKeyException ike) {
-            log.error("getDecryptedFileName() Invalid Key "+ike.getLocalizedMessage());
+            LOG.error("getDecryptedFileName() Invalid Key "+ike.getLocalizedMessage());
         } catch (ArrayIndexOutOfBoundsException e) {
-            log.error("getDecryptedFileName() ArrayIndexOutOfBoundsException", e);
+            LOG.error("getDecryptedFileName() ArrayIndexOutOfBoundsException", e);
         } catch (IllegalBlockSizeException e) {
-            log.error("getDecryptedFileName() IllegalBlockSizeException", e);
+            LOG.error("getDecryptedFileName() IllegalBlockSizeException", e);
         } catch (BadPaddingException e) {
-            log.error("getDecryptedFileName() BadPaddingException", e);
+            LOG.error("getDecryptedFileName() BadPaddingException", e);
         } // try/catch
         return name;
     } // getDecryptedFileName()
@@ -403,7 +403,7 @@ public abstract class AbstractEncryptedStorageAccess {
                     index = (index<<1)+bit;
                     bc++;
                     if (bc==bits) {
-                        char code = codes[index];
+                        char code = CODES[index];
                         result.append(code);
                         bc = 0;
                         index = 0;
@@ -412,24 +412,24 @@ public abstract class AbstractEncryptedStorageAccess {
                 // System.out.print(" "+bytes[i]+" ");
             } // for
             index = index<<(bits-bc);
-            char code = codes[index];
+            char code = CODES[index];
             result.append(code);
             String resultString = result.toString();
             // System.out.println("");
             encryptionCache.put(relativePath+getSeparator()+pathElement, resultString);
             pathElement = resultString;
         } catch (NoSuchAlgorithmException nsae) {
-            log.error("getEncryptedFileName() No Such Algorhithm "+nsae.getLocalizedMessage());
+            LOG.error("getEncryptedFileName() No Such Algorhithm "+nsae.getLocalizedMessage());
         } catch (NoSuchPaddingException nspe) {
-            log.error("getEncryptedFileName() No Such Padding "+nspe.getLocalizedMessage());
+            LOG.error("getEncryptedFileName() No Such Padding "+nspe.getLocalizedMessage());
         } catch (InvalidKeyException ike) {
-            log.error("getEncryptedFileName() Invalid Key "+ike.getLocalizedMessage());
+            LOG.error("getEncryptedFileName() Invalid Key "+ike.getLocalizedMessage());
         } catch (ArrayIndexOutOfBoundsException e) {
-            log.error("getEncryptedFileName("+pathElement+") ArrayIndexOutOfBoundsException", e);
+            LOG.error("getEncryptedFileName("+pathElement+") ArrayIndexOutOfBoundsException", e);
         } catch (IllegalBlockSizeException e) {
-            log.error("getEncryptedFileName("+pathElement+") IllegalBlockSizeException", e);
+            LOG.error("getEncryptedFileName("+pathElement+") IllegalBlockSizeException", e);
         } catch (BadPaddingException e) {
-            log.error("getEncryptedFileName("+pathElement+") BadPaddingException", e);
+            LOG.error("getEncryptedFileName("+pathElement+") BadPaddingException", e);
         } // try/catch
         return pathElement;
     } // getEncryptedFileName()
@@ -445,19 +445,19 @@ public abstract class AbstractEncryptedStorageAccess {
                 String checkBack = getDecryptedFileName(originalPath, encodedString);
                 // log.warn("getFile() "+pathElement+" == "+checkBack+"?");
                 if (!checkBack.equals(pathElement)) {
-                    log.fatal("getFileName("+originalPath+") "+pathElement+" != "+checkBack+" in "+relativePath);
+                    LOG.fatal("getFileName("+originalPath+") "+pathElement+" != "+checkBack+" in "+relativePath);
                     throw new RuntimeException("getFileName() "+pathElement+" != "+checkBack);
                 } // if
                 path += getSeparator()+encodedString;
                 originalPath += getSeparator()+pathElement;
             } // if
         } // for
-        if (log.isDebugEnabled()) {
-            log.debug("getFilename() "+relativePath+" -> "+path);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getFilename() "+relativePath+" -> "+path);
         } // if
-        if (log.isWarnEnabled()) {
+        if (LOG.isWarnEnabled()) {
             if (path.length()>245) {
-                log.warn("getFileName() long path "+path.length()+" for "+relativePath);
+                LOG.warn("getFileName() long path "+path.length()+" for "+relativePath);
             } // if
         } // if
         return path;

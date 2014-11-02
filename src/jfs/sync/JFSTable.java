@@ -19,8 +19,8 @@
 
 package jfs.sync;
 
-import java.util.Vector;
-
+import java.util.ArrayList;
+import java.util.List;
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSConfigObserver;
 import jfs.conf.JFSSyncMode;
@@ -40,25 +40,25 @@ import jfs.conf.JFSViewModes;
  * @author Jens Heidrich
  * @version $Id: JFSTable.java,v 1.4 2007/07/20 16:35:36 heidrich Exp $
  */
-public class JFSTable implements JFSConfigObserver {
+public final class JFSTable implements JFSConfigObserver {
 
     /** Stores the only instance of the class. */
     private static JFSTable instance = null;
 
     /** The JFS root elements corresponding to the directory pairs. */
-    private Vector<JFSRootElement> roots = new Vector<JFSRootElement>();
+    private final List<JFSRootElement> roots = new ArrayList<>();
 
     /** The table containing all compared elements in the right sequence. */
-    private Vector<JFSElement> table = new Vector<JFSElement>();
+    private final List<JFSElement> table = new ArrayList<>();
 
     /** The current view on the table. */
-    private Vector<JFSElement> view = new Vector<JFSElement>();
+    private final List<JFSElement> view = new ArrayList<>();
 
     /** The list of copy statements. */
-    private Vector<JFSCopyStatement> copyStatements = new Vector<JFSCopyStatement>();
+    private final List<JFSCopyStatement> copyStatements = new ArrayList<>();
 
     /** The list of delete statements. */
-    private Vector<JFSDeleteStatement> deleteStatements = new Vector<JFSDeleteStatement>();
+    private final List<JFSDeleteStatement> deleteStatements = new ArrayList<>();
 
 
     /**
@@ -75,9 +75,10 @@ public class JFSTable implements JFSConfigObserver {
      * 
      * @return The only instance.
      */
-    public final static JFSTable getInstance() {
-        if (instance==null)
+    public static JFSTable getInstance() {
+        if (instance==null) {
             instance = new JFSTable();
+        }
 
         return instance;
     }
@@ -86,7 +87,7 @@ public class JFSTable implements JFSConfigObserver {
     /**
      * Restores the default values.
      */
-    public final void clean() {
+    public void clean() {
         table.clear();
         view.clear();
 
@@ -102,7 +103,7 @@ public class JFSTable implements JFSConfigObserver {
      *            The index to return.
      * @return The element for the index.
      */
-    public final JFSRootElement getRootElement(int index) {
+    public JFSRootElement getRootElement(int index) {
         return roots.get(index);
     }
 
@@ -114,7 +115,7 @@ public class JFSTable implements JFSConfigObserver {
      *            The index to return.
      * @return The element for the index.
      */
-    public final JFSElement getTableElement(int index) {
+    public JFSElement getTableElement(int index) {
         return table.get(index);
     }
 
@@ -126,7 +127,7 @@ public class JFSTable implements JFSConfigObserver {
      *            The index to return.
      * @return The element for the index.
      */
-    public final JFSElement getViewElement(int index) {
+    public JFSElement getViewElement(int index) {
         return view.get(index);
     }
 
@@ -134,7 +135,7 @@ public class JFSTable implements JFSConfigObserver {
     /**
      * @return Returns the number of JFS root elements.
      */
-    public final int getRootsSize() {
+    public int getRootsSize() {
         return roots.size();
     }
 
@@ -142,7 +143,7 @@ public class JFSTable implements JFSConfigObserver {
     /**
      * @return Returns the size of the overall table.
      */
-    public final int getTableSize() {
+    public int getTableSize() {
         return table.size();
     }
 
@@ -161,13 +162,13 @@ public class JFSTable implements JFSConfigObserver {
      * @param element
      *            The element to add.
      */
-    private final void addElementToView(JFSElement element) {
+    private void addElementToView(JFSElement element) {
         JFSViewMode mode = JFSViewModes.getInstance().getCurrentMode();
         if ( !mode.isViewed(element.getAction())||element.isViewed())
             return;
 
         if (view.size()>0&& !element.isDirectory()) {
-            JFSElement last = view.lastElement();
+            JFSElement last = view.get(view.size()-1);
             if (last.getParent()!=element.getParent()&&last!=element.getParent()) {
                 view.add(element.getParent());
                 element.getParent().setViewed(true);
@@ -188,7 +189,7 @@ public class JFSTable implements JFSConfigObserver {
      * @param element
      *            The element to add.
      */
-    public final void addElement(JFSElement element) {
+    public void addElement(JFSElement element) {
         JFSSyncModes.getInstance().getCurrentMode().computeAction(element);
         table.add(element);
         addElementToView(element);
@@ -201,7 +202,7 @@ public class JFSTable implements JFSConfigObserver {
      * @param element
      *            The element to add.
      */
-    public final void addRoot(JFSRootElement element) {
+    public void addRoot(JFSRootElement element) {
         roots.add(element);
         addElement(element);
         element.setViewed(true);
@@ -214,7 +215,7 @@ public class JFSTable implements JFSConfigObserver {
      * @param element
      *            The element to remove.
      */
-    private final void removeElementFromView(JFSElement element) {
+    private void removeElementFromView(JFSElement element) {
         JFSViewMode mode = JFSViewModes.getInstance().getCurrentMode();
 
         // Remove only, if no children are viewed any more:
@@ -244,7 +245,7 @@ public class JFSTable implements JFSConfigObserver {
      * @param element
      *            The element to remove.
      */
-    public final void removeElement(JFSElement element) {
+    public void removeElement(JFSElement element) {
         table.remove(element);
         removeElementFromView(element);
     }
@@ -258,7 +259,7 @@ public class JFSTable implements JFSConfigObserver {
      * @param element
      *            The element to update.
      */
-    public final void updateElement(JFSElement element) {
+    public void updateElement(JFSElement element) {
         JFSViewMode mode = JFSViewModes.getInstance().getCurrentMode();
         if ( !mode.isViewed(element.getAction())) {
             removeElementFromView(element);
@@ -269,7 +270,7 @@ public class JFSTable implements JFSConfigObserver {
     /**
      * @return Returns all copy statements.
      */
-    public final Vector<JFSCopyStatement> getCopyStatements() {
+    public List<JFSCopyStatement> getCopyStatements() {
         return copyStatements;
     }
 
@@ -277,7 +278,7 @@ public class JFSTable implements JFSConfigObserver {
     /**
      * @return Returns all delete statements.
      */
-    public final Vector<JFSDeleteStatement> getDeleteStatements() {
+    public List<JFSDeleteStatement> getDeleteStatements() {
         return deleteStatements;
     }
 
@@ -285,12 +286,13 @@ public class JFSTable implements JFSConfigObserver {
     /**
      * @return Returns all failed copy statements.
      */
-    public final Vector<JFSCopyStatement> getFailedCopyStatements() {
-        Vector<JFSCopyStatement> v = new Vector<JFSCopyStatement>();
+    public List<JFSCopyStatement> getFailedCopyStatements() {
+        List<JFSCopyStatement> v = new ArrayList<>();
 
         for (JFSCopyStatement cs : copyStatements) {
-            if ( !cs.getSuccess()&&cs.getCopyFlag())
+            if ( !cs.getSuccess()&&cs.getCopyFlag()) {
                 v.add(cs);
+            }
         }
 
         return v;
@@ -300,12 +302,13 @@ public class JFSTable implements JFSConfigObserver {
     /**
      * @return Returns all failed delete statements.
      */
-    public final Vector<JFSDeleteStatement> getFailedDeleteStatements() {
-        Vector<JFSDeleteStatement> v = new Vector<JFSDeleteStatement>();
+    public List<JFSDeleteStatement> getFailedDeleteStatements() {
+        List<JFSDeleteStatement> v = new ArrayList<>();
 
         for (JFSDeleteStatement ds : deleteStatements) {
-            if ( !ds.getSuccess()&&ds.getDeleteFlag())
+            if ( !ds.getSuccess()&&ds.getDeleteFlag()) {
                 v.add(ds);
+            }
         }
 
         return v;
@@ -315,7 +318,7 @@ public class JFSTable implements JFSConfigObserver {
     /**
      * Re-computes the current view for all elements of the comparison table.
      */
-    public final void recomputeView() {
+    public void recomputeView() {
         view.clear();
         for (JFSElement element : table) {
             element.setViewed(false);
@@ -327,7 +330,7 @@ public class JFSTable implements JFSConfigObserver {
     /**
      * Re-computes all actions and the current view for all elements of the comparison table.
      */
-    public final void recomputeActionsAndView() {
+    public void recomputeActionsAndView() {
         view.clear();
         JFSSyncMode mode = JFSSyncModes.getInstance().getCurrentMode();
         for (JFSElement element : table) {
@@ -342,7 +345,7 @@ public class JFSTable implements JFSConfigObserver {
      * @see JFSConfigObserver#updateConfig(JFSConfig)
      */
     @Override
-    public final void updateConfig(JFSConfig config) {
+    public void updateConfig(JFSConfig config) {
         recomputeActionsAndView();
     }
 
@@ -351,7 +354,7 @@ public class JFSTable implements JFSConfigObserver {
      * @see JFSConfigObserver#updateComparison(JFSConfig)
      */
     @Override
-    public final void updateComparison(JFSConfig config) {
+    public void updateComparison(JFSConfig config) {
         // Clean the object and JFS file producers:
         clean();
         JFSFileProducerManager.getInstance().resetProducers();
@@ -365,7 +368,8 @@ public class JFSTable implements JFSConfigObserver {
      * @see JFSConfigObserver#updateServer(JFSConfig)
      */
     @Override
-    public final void updateServer(JFSConfig config) {
+    public void updateServer(JFSConfig config) {
         updateComparison(config);
     }
+    
 }

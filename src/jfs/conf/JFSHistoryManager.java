@@ -20,14 +20,16 @@
 package jfs.conf;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
-
 import jfs.sync.JFSElement;
+import jfs.sync.JFSElement.ElementState;
 import jfs.sync.JFSRootElement;
 import jfs.sync.JFSTable;
-import jfs.sync.JFSElement.ElementState;
 
 /**
  * Manager all histories of synchronized directory pairs.
@@ -36,11 +38,12 @@ import jfs.sync.JFSElement.ElementState;
  * @version $Id: JFSHistoryManager.java,v 1.8 2007/07/20 15:59:30 heidrich Exp $
  */
 public class JFSHistoryManager {
+    
     /** Stores the only instance of the class. */
     private static JFSHistoryManager instance = null;
 
     /** The stored histories. */
-    private Vector<JFSHistory> histories = new Vector<JFSHistory>();
+    private List<JFSHistory> histories = new ArrayList<JFSHistory>();
 
 
     /**
@@ -76,7 +79,7 @@ public class JFSHistoryManager {
      * 
      * @return The histories.
      */
-    public final Vector<JFSHistory> getHistories() {
+    public final List<JFSHistory> getHistories() {
         return histories;
     }
 
@@ -90,9 +93,11 @@ public class JFSHistoryManager {
      * @return The history.
      */
     public final JFSHistory getHistory(JFSDirectoryPair pair) {
-        for (JFSHistory h : histories)
-            if (h.getPair().equals(pair))
+        for (JFSHistory h : histories) {
+            if (h.getPair().equals(pair)) {
                 return h;
+            }
+        }
         JFSHistory h = new JFSHistoryXML();
         h.setPair(pair);
         histories.add(h);
@@ -145,10 +150,11 @@ public class JFSHistoryManager {
      * @param history
      *            The history to delete the corresponding file for.
      */
-    private final void deleteHistoryFile(JFSHistory history) {
+    private void deleteHistoryFile(JFSHistory history) {
         File file = new File(JFSConst.HOME_DIR+File.separatorChar+history.getFileName());
-        if (file.exists())
+        if (file.exists()) {
             file.delete();
+        }
     }
 
 
@@ -157,7 +163,7 @@ public class JFSHistoryManager {
      * manager.
      */
     public final void cleanHistories() {
-        Vector<String> historyFiles = new Vector<String>();
+        List<String> historyFiles = new ArrayList<>();
         for (JFSHistory h : getHistories()) {
             historyFiles.add(h.getFileName());
         }
@@ -185,17 +191,18 @@ public class JFSHistoryManager {
 
         JFSHistory h = null;
         JFSRootElement root = null;
-        Vector<JFSHistoryItem> newHistory = null;
-        HashMap<String, JFSHistoryItem> newDirectories = null;
-        HashMap<String, JFSHistoryItem> newFiles = null;
+        List<JFSHistoryItem> newHistory = null;
+        Map<String, JFSHistoryItem> newDirectories = null;
+        Map<String, JFSHistoryItem> newFiles = null;
 
         for (int i = 0; i<table.getTableSize(); i++ ) {
             JFSElement element = table.getTableElement(i);
 
             // If root is found, update previous history and get new one:
             if (element.getState()==ElementState.IS_ROOT) {
-                if (root!=null&&h!=null)
+                if (root!=null&&h!=null) {
                     h.update(root, newHistory, newDirectories, newFiles);
+                }
 
                 root = (JFSRootElement)element;
                 h = root.getHistory();

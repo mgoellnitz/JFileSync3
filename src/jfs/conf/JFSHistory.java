@@ -21,10 +21,11 @@ package jfs.conf;
 
 import java.io.File;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Vector;
-
+import java.util.List;
+import java.util.Map;
 import jfs.sync.JFSElement;
 import jfs.sync.JFSRootElement;
 
@@ -35,6 +36,7 @@ import jfs.sync.JFSRootElement;
  * @version $Id: JFSHistory.java,v 1.12 2007/07/20 15:59:30 heidrich Exp $
  */
 public abstract class JFSHistory implements Comparable<JFSHistory> {
+    
     /** The directory pair the history is created for. */
     private JFSDirectoryPair pair = null;
 
@@ -42,13 +44,13 @@ public abstract class JFSHistory implements Comparable<JFSHistory> {
     private long date = -1;
 
     /** The items of the history. */
-    protected Vector<JFSHistoryItem> history = new Vector<JFSHistoryItem>();
+    protected List<JFSHistoryItem> history = new ArrayList<>();
 
     /** The directory items of the history for fast access. */
-    protected HashMap<String, JFSHistoryItem> directories = new HashMap<String, JFSHistoryItem>();
+    protected Map<String, JFSHistoryItem> directories = new HashMap<>();
 
     /** The file items of the history for fast access. */
-    protected HashMap<String, JFSHistoryItem> files = new HashMap<String, JFSHistoryItem>();
+    protected Map<String, JFSHistoryItem> files = new HashMap<>();
 
     /** The assigned file name the history is stored in and loaded from. */
     private String fileName = null;
@@ -76,12 +78,14 @@ public abstract class JFSHistory implements Comparable<JFSHistory> {
      * @return True if and only if loading was successful.
      */
     public boolean load() {
-        if (isLoaded)
+        if (isLoaded) {
             return true;
+        }
 
         // Return false, if no pair or no file was assigned:
-        if (pair==null||fileName==null)
+        if (pair==null||fileName==null) {
             return false;
+        }
 
         File file = new File(JFSConst.HOME_DIR+File.separatorChar+fileName);
         isLoaded = load(file);
@@ -108,8 +112,9 @@ public abstract class JFSHistory implements Comparable<JFSHistory> {
      */
     public boolean store() {
         // Return false, if no pair is assigned:
-        if (pair==null)
+        if (pair==null) {
             return false;
+        }
 
         // Create new unique file name, if no file is assigned:
         File file = null;
@@ -126,15 +131,17 @@ public abstract class JFSHistory implements Comparable<JFSHistory> {
 
         // Check that history is in manager:
         JFSHistoryManager hm = JFSHistoryManager.getInstance();
-        if ( !hm.getHistories().contains(this))
+        if ( !hm.getHistories().contains(this)) {
             hm.addHistory(this);
+        }
         hm.sortHistories();
 
         boolean success = store(file);
 
         // Store settings when history is saved successfully:
-        if (success)
+        if (success) {
             JFSSettings.getInstance().store();
+        }
 
         return success;
     }
@@ -270,8 +277,7 @@ public abstract class JFSHistory implements Comparable<JFSHistory> {
      * @param newFiles
      *            The new files hash map.
      */
-    public void update(JFSRootElement root, Vector<JFSHistoryItem> newHistory,
-            HashMap<String, JFSHistoryItem> newDirectories, HashMap<String, JFSHistoryItem> newFiles) {
+    public void update(JFSRootElement root, List<JFSHistoryItem> newHistory, Map<String, JFSHistoryItem> newDirectories, Map<String, JFSHistoryItem> newFiles) {
         if (root.isActive()) {
             // Replace old history:
             history = newHistory;
@@ -282,4 +288,5 @@ public abstract class JFSHistory implements Comparable<JFSHistory> {
             store();
         }
     }
+    
 }

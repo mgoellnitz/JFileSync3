@@ -20,12 +20,10 @@
 package jfs.sync;
 
 import java.util.Arrays;
-import java.util.Vector;
-
+import java.util.List;
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSDirectoryPair;
 import jfs.sync.JFSProgress.ProgressActivity;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -35,9 +33,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Jens Heidrich
  * @version $Id: JFSComparison.java,v 1.31 2007/07/18 16:20:49 heidrich Exp $
  */
-public class JFSComparison {
+public final class JFSComparison {
 
-    private static Log log = LogFactory.getLog(JFSComparison.class);
+    private static final Log LOG = LogFactory.getLog(JFSComparison.class);
 
     /** Stores the only instance of the class. */
     private static JFSComparison instance = null;
@@ -55,9 +53,10 @@ public class JFSComparison {
      * 
      * @return The only instance.
      */
-    public final static JFSComparison getInstance() {
-        if (instance==null)
+    public static JFSComparison getInstance() {
+        if (instance==null) {
             instance = new JFSComparison();
+        }
 
         return instance;
     }
@@ -76,29 +75,33 @@ public class JFSComparison {
      * @param isDirectory
      *            Determines whether the files are directories.
      */
-    private final void add(JFSFile srcFile, JFSFile tgtFile, JFSElement parent, boolean isDirectory) {
+    private void add(JFSFile srcFile, JFSFile tgtFile, JFSElement parent, boolean isDirectory) {
         assert srcFile!=null||tgtFile!=null;
 
         // Determine whether the comparison should be performed:
         JFSConfig config = JFSConfig.getInstance();
         if ( !config.getIncludes().isEmpty()) {
-            if (srcFile!=null&& !config.matchesIncludes(srcFile))
+            if (srcFile!=null&& !config.matchesIncludes(srcFile)) {
                 return;
-            if (tgtFile!=null&& !config.matchesIncludes(tgtFile))
+            }
+            if (tgtFile!=null&& !config.matchesIncludes(tgtFile)) {
                 return;
+            }
         }
         if ( !config.getExcludes().isEmpty()) {
-            if (srcFile!=null&&config.matchesExcludes(srcFile))
+            if (srcFile!=null&&config.matchesExcludes(srcFile)) {
                 return;
-            if (tgtFile!=null&&config.matchesExcludes(tgtFile))
+            }
+            if (tgtFile!=null&&config.matchesExcludes(tgtFile)) {
                 return;
+            }
         }
 
         // Add an element to the comparison table:
         JFSElement element = new JFSElement(srcFile, tgtFile, parent, isDirectory);
         if (isDirectory) {
-            if (log.isInfoEnabled()) {
-                log.info("add() comparison table "+srcFile+" "+tgtFile+" "+isDirectory+" : "+element.getAction());
+            if (LOG.isInfoEnabled()) {
+                LOG.info("add() comparison table "+srcFile+" "+tgtFile+" "+isDirectory+" : "+element.getAction());
             } // if
         } // if
         JFSTable.getInstance().addElement(element);
@@ -123,7 +126,7 @@ public class JFSComparison {
      * @param isDirectory
      *            Determines whether the files are directories.
      */
-    private final void compareFiles(JFSFile[] srcFiles, JFSFile[] tgtFiles, JFSElement parent, boolean isDirectory) {
+    private void compareFiles(JFSFile[] srcFiles, JFSFile[] tgtFiles, JFSElement parent, boolean isDirectory) {
         assert srcFiles!=null&&tgtFiles!=null;
 
         // First, sort the input arrays:
@@ -139,8 +142,8 @@ public class JFSComparison {
         while (srcIndex<srcFiles.length&&tgtIndex<tgtFiles.length) {
             int comp = srcFiles[srcIndex].compareTo(tgtFiles[tgtIndex]);
 
-            if (log.isDebugEnabled()) {
-                log.debug("compareFiles()   I - srx "+srcIndex+" tgx "+tgtIndex+" comp "+comp+" "+srcFiles[srcIndex]+" "
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("compareFiles()   I - srx "+srcIndex+" tgx "+tgtIndex+" comp "+comp+" "+srcFiles[srcIndex]+" "
                         +tgtFiles[tgtIndex]);
             } // if
             if (comp==0) {
@@ -168,8 +171,8 @@ public class JFSComparison {
         // Case 4: All source files were already handled. In this case we have
         // to write the rest of the target files into the table:
         while (tgtIndex<tgtFiles.length) {
-            if (log.isDebugEnabled()) {
-                log.debug("compareFiles()  II - srx "+srcIndex+" tgx "+tgtIndex+" "+tgtFiles[tgtIndex]);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("compareFiles()  II - srx "+srcIndex+" tgx "+tgtIndex+" "+tgtFiles[tgtIndex]);
             } // if
             add(null, tgtFiles[tgtIndex], parent, isDirectory);
             tgtIndex++ ;
@@ -178,8 +181,8 @@ public class JFSComparison {
         // Case 5: All target files were already handled. In this case we have
         // to write the rest of the source files into the table:
         while (srcIndex<srcFiles.length) {
-            if (log.isDebugEnabled()) {
-                log.debug("compareFiles() III - srx "+srcIndex+" tgx "+tgtIndex+" "+srcFiles[srcIndex]);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("compareFiles() III - srx "+srcIndex+" tgx "+tgtIndex+" "+srcFiles[srcIndex]);
             } // if
             add(srcFiles[srcIndex], null, parent, isDirectory);
             srcIndex++ ;
@@ -200,7 +203,7 @@ public class JFSComparison {
      * @param parent
      *            The parent element.
      */
-    private final void compareDirectories(JFSFile srcDir, JFSFile tgtDir, JFSElement parent) {
+    private void compareDirectories(JFSFile srcDir, JFSFile tgtDir, JFSElement parent) {
         assert srcDir!=null||tgtDir!=null;
 
         JFSProgress progress = JFSProgress.getInstance();
@@ -242,9 +245,9 @@ public class JFSComparison {
      * Starts comparison for all directory pairs, computes the actions that have to be taken according to the chosen
      * synchronization mode.
      */
-    public final void compare() {
+    public void compare() {
         // Get all directory pairs:
-        Vector<JFSDirectoryPair> pairs = JFSConfig.getInstance().getDirectoryList();
+        List<JFSDirectoryPair> pairs = JFSConfig.getInstance().getDirectoryList();
 
         // Prepare the progress computation:
         JFSProgress progress = JFSProgress.getInstance();
@@ -285,4 +288,5 @@ public class JFSComparison {
         monitor.setRootUriSrc("");
         monitor.setRootUriTgt("");
     }
+    
 }

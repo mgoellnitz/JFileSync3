@@ -21,7 +21,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
@@ -29,18 +28,21 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
-public class SecurityUtils {
+public final class SecurityUtils {
 
-    private static BouncyCastleProvider provider = new BouncyCastleProvider();
+    private static final BouncyCastleProvider PROVIDER = new BouncyCastleProvider();
+
+
+    private SecurityUtils() {
+    }
 
 
     public static Cipher getCipher(String cipherName, int cipherMode, byte[] credentials) throws NoSuchAlgorithmException,
             NoSuchPaddingException, InvalidKeyException {
         SecretKeySpec keySpec = new SecretKeySpec(credentials, cipherName);
-        Cipher cipher = Cipher.getInstance(cipherName, provider);
+        Cipher cipher = Cipher.getInstance(cipherName, PROVIDER);
         cipher.init(cipherMode, keySpec);
         return cipher;
     } // getCipher()
@@ -53,7 +55,7 @@ public class SecurityUtils {
         PBEParameterSpec paramSpec = new PBEParameterSpec(salt.getBytes(), password.length());
         SecretKeyFactory keyFac = SecretKeyFactory.getInstance(cipherName);
         SecretKey pbeKey = keyFac.generateSecret(keySpec);
-        Cipher cipher = Cipher.getInstance(cipherName, provider);
+        Cipher cipher = Cipher.getInstance(cipherName, PROVIDER);
         cipher.init(cipherMode, pbeKey, paramSpec);
         return cipher;
     } // getPasswordCipher()

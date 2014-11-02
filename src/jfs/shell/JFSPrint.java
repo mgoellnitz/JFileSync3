@@ -20,8 +20,7 @@
 package jfs.shell;
 
 import java.io.PrintStream;
-import java.util.Vector;
-
+import java.util.List;
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSDirectoryPair;
 import jfs.conf.JFSFilter;
@@ -43,11 +42,11 @@ import jfs.sync.JFSTable;
  * @author Jens Heidrich
  * @version $Id: JFSPrint.java,v 1.9 2007/02/26 18:49:11 heidrich Exp $
  */
-public class JFSPrint {
+public final class JFSPrint {
 	/**
 	 * Prints the whole configuration to standard out.
 	 */
-	public static final void simplePrint() {
+	public static void simplePrint() {
 		JFSConfig config = JFSConfig.getInstance();
 
 		// Get translation object:
@@ -89,10 +88,11 @@ public class JFSPrint {
 
 			for (JFSFilter f : config.getIncludes()) {
 				p.print("    [");
-				if (f.isActive())
+				if (f.isActive()) {
 					p.print("X");
-				else
+                                } else {
 					p.print(" ");
+                                }
 				p.println("] '" + f.getFilter());
 			}
 		}
@@ -101,10 +101,11 @@ public class JFSPrint {
 
 			for (JFSFilter f : config.getExcludes()) {
 				p.print("    [");
-				if (f.isActive())
+				if (f.isActive()) {
 					p.print("X");
-				else
+                                } else {
 					p.print(" ");
+                                }
 				p.println("] '" + f.getFilter());
 			}
 		}
@@ -123,7 +124,7 @@ public class JFSPrint {
 	/**
 	 * Prints the comparison table.
 	 */
-	public static final void printComparisonTable() {
+	public static void printComparisonTable() {
 		JFSText t = JFSText.getInstance();
 		JFSTable table = JFSTable.getInstance();
 
@@ -138,22 +139,24 @@ public class JFSPrint {
 			// Compute source string:
 			String srcString = null;
 
-			if (src != null)
-				if (element.isDirectory())
+			if (src != null) {
+				if (element.isDirectory()) {
 					srcString = src.getPath();
-				else
+                                } else {
 					srcString = src.getName();
+                                }
+                        }
 
-			if (element.isDirectory())
+			if (element.isDirectory()) {
 				srcString = JFSFormatter.adapt(srcString, 32);
-			else
+                        } else {
 				srcString = "  " + JFSFormatter.adapt(srcString, 30);
+                        }
 
 			// Compute action string:
 			String actionString;
 
-			if (element.getAction() == SyncAction.NOP_ROOT
-					|| element.getAction() == SyncAction.NOP)
+			if (element.getAction() == SyncAction.NOP_ROOT || element.getAction() == SyncAction.NOP)
 				actionString = "   ";
 			else if (element.getAction() == SyncAction.COPY_SRC)
 				actionString = " > ";
@@ -163,22 +166,26 @@ public class JFSPrint {
 					|| element.getAction() == SyncAction.DELETE_TGT
 					|| element.getAction() == SyncAction.DELETE_SRC_AND_TGT)
 				actionString = " - ";
-			else
+                        else {
 				actionString = " ? ";
+                        }
 
 			// Compute target string:
 			String tgtString = null;
 
-			if (tgt != null)
-				if (element.isDirectory())
+			if (tgt != null) {
+				if (element.isDirectory()) {
 					tgtString = tgt.getPath();
-				else
+                                } else {
 					tgtString = tgt.getName();
+                                }
+                        }
 
-			if (element.isDirectory())
+			if (element.isDirectory()) {
 				tgtString = JFSFormatter.adapt(tgtString, 32);
-			else
+                        } else {
 				tgtString = "  " + JFSFormatter.adapt(tgtString, 30);
+                        }
 
 			// Print row:
 			out.println(srcString + actionString + tgtString);
@@ -195,8 +202,7 @@ public class JFSPrint {
 	 * @param copyStatements
 	 *            The copy statements to be printed.
 	 */
-	public static final void printCopyStatements(
-			Vector<JFSCopyStatement> copyStatements) {
+	public static void printCopyStatements(List<JFSCopyStatement> copyStatements) {
 		// Get translation object:
 		JFSText t = JFSText.getInstance();
 
@@ -210,10 +216,11 @@ public class JFSPrint {
 			String tgtString = JFSFormatter.adapt(cs.getTgt().getPath(), 27);
 			String copyFlag;
 
-			if (cs.getCopyFlag())
+			if (cs.getCopyFlag()) {
 				copyFlag = "X";
-			else
+                        } else {
 				copyFlag = " ";
+                        }
 
 			out.println("[" + copyFlag + "] "
 					+ t.get("cmd.print.copyFile.command") + " " + srcString
@@ -233,8 +240,7 @@ public class JFSPrint {
 	 * @param deleteStatements
 	 *            The delete statements to be printed.
 	 */
-	public static final void printDeleteStatements(
-			Vector<JFSDeleteStatement> deleteStatements) {
+	public static void printDeleteStatements(List<JFSDeleteStatement> deleteStatements) {
 		// Get translation object:
 		JFSText t = JFSText.getInstance();
 
@@ -247,10 +253,11 @@ public class JFSPrint {
 			String fileString = JFSFormatter.adapt(ds.getFile().getPath(), 56);
 			String deleteFlag;
 
-			if (ds.getDeleteFlag())
+			if (ds.getDeleteFlag()) {
 				deleteFlag = "X";
-			else
+                        } else {
 				deleteFlag = " ";
+                        }
 
 			out.println("[" + deleteFlag + "] "
 					+ t.get("cmd.print.deleteFile.command") + " " + fileString
@@ -270,10 +277,10 @@ public class JFSPrint {
 	 * @param copyStatements
 	 *            The vector to be printed.
 	 */
-	public static final void printFailedCopyStatements(
-			Vector<JFSCopyStatement> copyStatements) {
-		if (copyStatements.isEmpty())
+	public static void printFailedCopyStatements(List<JFSCopyStatement> copyStatements) {
+		if (copyStatements.isEmpty()) {
 			return;
+                }
 
 		// Get translation object:
 		JFSText t = JFSText.getInstance();
@@ -302,10 +309,10 @@ public class JFSPrint {
 	 * @param deleteStatements
 	 *            The vector to be printed.
 	 */
-	public static final void printFailedDeleteStatements(
-			Vector<JFSDeleteStatement> deleteStatements) {
-		if (deleteStatements.isEmpty())
+	public static void printFailedDeleteStatements(List<JFSDeleteStatement> deleteStatements) {
+		if (deleteStatements.isEmpty()) {
 			return;
+                }
 
 		// Get translation object:
 		JFSText t = JFSText.getInstance();
@@ -316,11 +323,11 @@ public class JFSPrint {
 		// Print information about not deleted files:
 		for (JFSDeleteStatement ds : deleteStatements) {
 			String fileString = JFSFormatter.adapt(ds.getFile().getPath(), 56);
-			out.println(t.get("cmd.print.deleteFile.command") + " "
-					+ fileString);
+			out.println(t.get("cmd.print.deleteFile.command") + " " + fileString);
 		}
 
 		out.println(t.get("cmd.print.count") + " " + deleteStatements.size());
 		out.println();
 	}
+        
 }

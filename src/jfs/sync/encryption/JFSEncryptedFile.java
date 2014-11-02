@@ -24,17 +24,14 @@ import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
-
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
-
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSLog;
 import jfs.conf.JFSText;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSProgress;
 import jfs.sync.util.SecurityUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -119,11 +116,7 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     public final String getPath() {
-        /*
-         * if (log.isDebugEnabled()) { log.debug("getPath('"+getRelativePath()+"') "+fileInfo.getPath()); } // if
-         */
         return fileProducer.getRootPath()+getRelativePath();
-        // return fileInfo.getPath();
     }
 
 

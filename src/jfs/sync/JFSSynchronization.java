@@ -19,8 +19,7 @@
 
 package jfs.sync;
 
-import java.util.Vector;
-
+import java.util.List;
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSHistoryManager;
 import jfs.conf.JFSSyncMode.SyncAction;
@@ -86,8 +85,8 @@ public class JFSSynchronization {
     public final void computeSynchronizationLists() {
         // Get table and reset copy and delete statements:
         JFSTable table = JFSTable.getInstance();
-        Vector<JFSCopyStatement> copyStatements = table.getCopyStatements();
-        Vector<JFSDeleteStatement> deleteStatements = table.getDeleteStatements();
+        List<JFSCopyStatement> copyStatements = table.getCopyStatements();
+        List<JFSDeleteStatement> deleteStatements = table.getDeleteStatements();
         copyStatements.clear();
         deleteStatements.clear();
         boolean skipAll = false;
@@ -155,8 +154,8 @@ public class JFSSynchronization {
         JFSProgress progress = JFSProgress.getInstance();
         JFSConfig config = JFSConfig.getInstance();
         JFSTable table = JFSTable.getInstance();
-        Vector<JFSCopyStatement> copyStatements = table.getCopyStatements();
-        Vector<JFSDeleteStatement> deleteStatements = table.getDeleteStatements();
+        List<JFSCopyStatement> copyStatements = table.getCopyStatements();
+        List<JFSDeleteStatement> deleteStatements = table.getDeleteStatements();
 
         // Handle all files to delete first:
         // (This is important for DOS and Windows Operating Systems.
@@ -179,7 +178,7 @@ public class JFSSynchronization {
         int i = 0;
 
         while (i<deleteStatements.size()&& !progress.isCanceled()) {
-            JFSDeleteStatement ds = deleteStatements.elementAt(i);
+            JFSDeleteStatement ds = deleteStatements.get(i);
             dm.setCurrentFile(ds.getFile());
 
             // Delete only if the delete flag is set and the success flag is
@@ -212,7 +211,7 @@ public class JFSSynchronization {
         i = 0;
 
         while (i<copyStatements.size()&& !progress.isCanceled()) {
-            JFSCopyStatement cs = copyStatements.elementAt(i);
+            JFSCopyStatement cs = copyStatements.get(i);
             cm.setCurrentSrc(cs.getSrc());
             cm.setCurrentTgt(cs.getTgt());
             cm.setBytesTransferedCurrentFile(0);
@@ -273,7 +272,7 @@ public class JFSSynchronization {
      * @param v
      *            The vector to be inverted.
      */
-    private static <T> void invert(Vector<T> v) {
+    private static <T> void invert(List<T> v) {
         T temp;
         int size = v.size();
 

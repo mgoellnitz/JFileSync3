@@ -26,8 +26,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Vector;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -41,12 +41,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSFilter;
-import jfs.conf.JFSText;
 import jfs.conf.JFSFilter.FilterRange;
 import jfs.conf.JFSFilter.FilterType;
+import jfs.conf.JFSText;
 
 /**
  * This dialog manages filter settings.
@@ -100,7 +99,7 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
 
         // Create the modal dialog:
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        Vector<JFSFilter> filters;
+        List<JFSFilter> filters;
         if (isIncludeFilter) {
             setTitle(t.get("profile.filter.includes.title"));
             filters = config.getIncludes();
