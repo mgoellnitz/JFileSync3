@@ -21,7 +21,6 @@ package jfs.conf;
 
 import java.io.File;
 import java.util.ArrayList;
-
 import javax.swing.UIManager;
 
 /**
@@ -95,8 +94,9 @@ public abstract class JFSSettings {
 	 * @return The only instance.
 	 */
 	public final static JFSSettings getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new JFSSettingsXML();
+                }
 
 		return instance;
 	}
@@ -315,11 +315,13 @@ public abstract class JFSSettings {
 	 */
 	public void setLastProfileDir(File file) {
 		if (file != null) {
-			if (file.isFile())
+			if (file.isFile()) {
 				file = file.getParentFile();
+                        }
 
-			if (file != null)
+			if (file != null) {
 				lastProfileDir = file;
+                        }
 		}
 	}
 
@@ -342,11 +344,13 @@ public abstract class JFSSettings {
 	 */
 	public void setLastSrcPairDir(File file) {
 		if (file != null) {
-			if (file.isFile())
+			if (file.isFile()) {
 				file = file.getParentFile();
+                        }
 
-			if (file != null)
+			if (file != null) {
 				lastSrcPairDir = file;
+                        }
 		}
 	}
 
@@ -369,11 +373,13 @@ public abstract class JFSSettings {
 	 */
 	public void setLastTgtPairDir(File file) {
 		if (file != null) {
-			if (file.isFile())
+			if (file.isFile()) {
 				file = file.getParentFile();
+                        }
 
-			if (file != null)
+			if (file != null) {
 				lastTgtPairDir = file;
+                        }
 		}
 	}
 
@@ -432,13 +438,15 @@ public abstract class JFSSettings {
 	 *            The profile to add.
 	 */
 	public void addLastOpenedProfile(File profile) {
-		if (lastOpenedProfiles.contains(profile))
+		if (lastOpenedProfiles.contains(profile)) {
 			lastOpenedProfiles.remove(profile);
+                }
 
 		lastOpenedProfiles.add(0, profile);
 
-		if (lastOpenedProfiles.size() > JFSConst.LAST_OPENED_PROFILES_SIZE)
+		if (lastOpenedProfiles.size() > JFSConst.LAST_OPENED_PROFILES_SIZE) {
 			lastOpenedProfiles.remove(JFSConst.LAST_OPENED_PROFILES_SIZE);
+                }
 	}
 
 	/**

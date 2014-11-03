@@ -21,13 +21,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import jfs.conf.JFSConfig;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 import jfs.sync.base.AbstractJFSFileProducerFactory;
 import jfs.sync.encryption.FileInfo;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mrpdaemon.sec.encfs.EncFSFile;
@@ -400,8 +398,9 @@ public class JFSEncfsFile extends JFSFile {
         // Set last modified and read-only only when file is no directory:
         if ( !srcFile.isDirectory()) {
             info.setSize(srcFile.getLength());
-            if ( !srcFile.canWrite())
+            if ( !srcFile.canWrite()) {
                 info.setCanWrite(false);
+            }
         } // if
 
         return true;

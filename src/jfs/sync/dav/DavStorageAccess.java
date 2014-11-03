@@ -174,7 +174,9 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
                     String modifiedDateString = resource.getCustomProps().get(PROP_LAST_MODIFIED_TIME);
                     if (modifiedDateString!=null) {
                         try {
-                            modificationDate = DATE_FORMAT.parse(modifiedDateString);
+                            synchronized (DATE_FORMAT) {
+                                modificationDate = DATE_FORMAT.parse(modifiedDateString);
+                            }
                             if (log.isDebugEnabled()) {
                                 log.debug("createFileInfo() "+modificationDate+" ["+modificationDate.getTime()+";"
                                         +resource.getModified().getTime()+"]");
@@ -383,13 +385,13 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         OutputStream result = new com.gc.iotools.stream.os.OutputStreamToInputStream<String>() {
 
             @Override
-            protected String doRead(InputStream in) throws Exception {
+            protected String doRead(InputStream input) throws Exception {
                 System.out.println("doRead("+forPayload+") "+url);
                 try {
-                    getSardine().put(url, in);
+                    getSardine().put(url, input);
                 } catch (SardineException se) {
                     if ((!forPayload)&&(se.getStatusCode()==403))  {
-                        getSardine().put(url, in);
+                        getSardine().put(url, input);
                     } else {
                         throw se;
                     } // if

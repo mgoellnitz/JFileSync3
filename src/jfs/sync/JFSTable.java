@@ -164,8 +164,9 @@ public final class JFSTable implements JFSConfigObserver {
      */
     private void addElementToView(JFSElement element) {
         JFSViewMode mode = JFSViewModes.getInstance().getCurrentMode();
-        if ( !mode.isViewed(element.getAction())||element.isViewed())
+        if ( !mode.isViewed(element.getAction())||element.isViewed()) {
             return;
+        }
 
         if (view.size()>0&& !element.isDirectory()) {
             JFSElement last = view.get(view.size()-1);

@@ -123,8 +123,9 @@ public abstract class JFSFileProducer {
      */
     private final String getPath() {
         // Return URI as path if no scheme is specified:
-        if ( !uri.startsWith(scheme+":"))
+        if ( !uri.startsWith(scheme+":")) {
             return uri;
+        }
 
         int schemeIndex = scheme.length();
 

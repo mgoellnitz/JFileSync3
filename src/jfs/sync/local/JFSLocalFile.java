@@ -209,8 +209,9 @@ public class JFSLocalFile extends JFSFile {
             if (files!=null) {
                 list = new JFSFile[files.length];
 
-                for (int i = 0; i<files.length; i++ )
+                for (int i = 0; i<files.length; i++ ) {
                     list[i] = new JFSLocalFile(fileProducer, getRelativePath()+File.separatorChar+files[i]);
+                }
             } else {
                 list = new JFSLocalFile[0];
             }
@@ -240,8 +241,9 @@ public class JFSLocalFile extends JFSFile {
     public final boolean mkdir() {
         boolean success = file.mkdir();
 
-        if (success)
+        if (success) {
             isDirectory = true;
+        }
 
         return success;
     }
@@ -254,8 +256,9 @@ public class JFSLocalFile extends JFSFile {
     public final boolean setLastModified(long time) {
         boolean success = file.setLastModified(time);
 
-        if (success)
+        if (success) {
             lastModified = time;
+        }
 
         return success;
     }
@@ -272,8 +275,9 @@ public class JFSLocalFile extends JFSFile {
 
         boolean success = file.setReadOnly();
 
-        if (success)
+        if (success) {
             canWrite = false;
+        }
 
         return success;
     }
@@ -380,8 +384,9 @@ public class JFSLocalFile extends JFSFile {
             exists = true;
             length = srcFile.getLength();
             success = success&&setLastModified(srcFile.getLastModified());
-            if ( !srcFile.canWrite())
+            if ( !srcFile.canWrite()) {
                 success = success&&setReadOnly();
+            }
         }
 
         return success;

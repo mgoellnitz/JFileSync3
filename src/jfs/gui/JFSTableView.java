@@ -20,13 +20,11 @@
 package jfs.gui;
 
 import java.awt.Frame;
-
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-
 import jfs.conf.JFSText;
 import jfs.sync.JFSElement;
 import jfs.sync.JFSFile;
@@ -132,19 +130,23 @@ public class JFSTableView extends AbstractTableModel {
      */
     @Override
     public final Object getValueAt(int row, int column) {
-        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount())
+        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount()) {
             return null;
+        }
 
         String entry = "";
         JFSElement element = JFSTable.getInstance().getViewElement(row);
         JFSFile file = null;
 
-        if (column>=0&&column<=2)
+        if (column>=0&&column<=2) {
             file = element.getSrcFile();
-        else if (column>=4&&column<=6)
-            file = element.getTgtFile();
+        } else {
+            if (column>=4&&column<=6) {
+                file = element.getTgtFile();
+            }
+        }
 
-        if (file!=null)
+        if (file!=null) {
             switch (column) {
             case 0:
             case 4:
@@ -163,9 +165,11 @@ public class JFSTableView extends AbstractTableModel {
                 entry = JFSFormatter.getLength(file);
                 break;
             }
+        }
 
-        if (column==3)
+        if (column==3) {
             entry = String.valueOf(element.getAction());
+        }
 
         return entry;
     }

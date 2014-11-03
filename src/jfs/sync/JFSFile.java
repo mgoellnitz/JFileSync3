@@ -345,13 +345,13 @@ public abstract class JFSFile implements Comparable<JFSFile> {
      * method just copies the contents from this file to the target file, no attributes, like the last modified date or
      * the can attribute are adopted.
      *
-     * @param in
+     * @param input
      * The input stream of the source file.
-     * @param out
+     * @param output
      * The output stream of the target file.
      * @return True if and only if the file is not a directory and was successfully copied; false otherwise.
      */
-    private final boolean copy(InputStream in, OutputStream out) {
+    private final boolean copy(InputStream input, OutputStream output) {
         JFSText t = JFSText.getInstance();
         JFSProgress progress = JFSProgress.getInstance();
         JFSCopyMonitor monitor = JFSCopyMonitor.getInstance();
@@ -361,7 +361,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
         }
 
         try {
-            if ((in==null)||(out==null)) {
+            if ((input==null)||(output==null)) {
                 // System.out.println("copy("+this.getPath()+this.getName()+") 2 "+in+" "+out);
                 return false;
             }
@@ -376,8 +376,8 @@ public abstract class JFSFile implements Comparable<JFSFile> {
                 maxLen = (int) length;
             }
 
-            while (transferedBytes<length&&(len = in.read(buf, 0, maxLen))>0&&!progress.isCanceled()) {
-                out.write(buf, 0, len);
+            while (transferedBytes<length&&(len = input.read(buf, 0, maxLen))>0&&!progress.isCanceled()) {
+                output.write(buf, 0, len);
                 transferedBytes += len;
 
                 long r = length-transferedBytes;

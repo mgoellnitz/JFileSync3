@@ -25,7 +25,6 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,7 +33,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
-
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSText;
 
@@ -53,19 +51,19 @@ public class JFSConfigServerView extends JDialog implements ActionListener {
 	private final JFSConfig config;
 
 	/** The base directory. */
-	private JTextField user;
+	private final JTextField user;
 
 	/** The server passphrase. */
-	private JPasswordField passphrase;
+	private final JPasswordField passphrase;
 
 	/** The encryption passphrase. */
-	private JPasswordField encphrase;
+	private final JPasswordField encphrase;
 
 	/** The base directory. */
-	private JTextField cipher;
+	private final JTextField cipher;
 
 	/** The server timeout. */
-	private SpinnerNumberModel timeout;
+	private final SpinnerNumberModel timeout;
 
 	/**
 	 * Initializes the config view.

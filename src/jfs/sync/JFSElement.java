@@ -19,13 +19,12 @@
 
 package jfs.sync;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
-import java.util.Vector;
-
 import jfs.conf.JFSConfig;
-import jfs.conf.JFSSyncModes;
 import jfs.conf.JFSSyncMode.SyncAction;
-
+import jfs.conf.JFSSyncModes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -38,12 +37,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JFSElement implements Comparable<JFSElement> {
 
-    private static Log log = LogFactory.getLog(JFSElement.class);
-
-    /** The states of the element. */
-    public enum ElementState {
-        IS_ROOT, NOT_DETERMINED, EQUAL, SRC_IS_NULL, TGT_IS_NULL, SRC_GT_TGT, TGT_GT_SRC, LENGTH_INCONSISTENT
-    }
+    private static final Log LOG = LogFactory.getLog(JFSElement.class);
 
     /** The root element to which the element belongs to. */
     protected JFSRootElement root;
@@ -58,10 +52,10 @@ public class JFSElement implements Comparable<JFSElement> {
     protected JFSElement parent = null;
 
     /** The children of the current element. */
-    protected Vector<JFSElement> children = null;
+    protected List<JFSElement> children = null;
 
     /** Determines whether the File objects are directories. */
-    protected boolean isDirectory;
+    protected boolean directory;
 
     /** Determines the state of the element. */
     protected ElementState state = ElementState.NOT_DETERMINED;
@@ -77,11 +71,16 @@ public class JFSElement implements Comparable<JFSElement> {
     protected SyncAction action = SyncAction.NOP;
 
     /** Determines whether the action is active or should be skipped. */
-    protected boolean isActive = true;
+    protected boolean active = true;
 
     /** Determines whether the element is currently viewed. */
-    protected boolean isViewed = false;
+    protected boolean viewed = false;
 
+
+    /** The states of the element. */
+    public enum ElementState {
+        IS_ROOT, NOT_DETERMINED, EQUAL, SRC_IS_NULL, TGT_IS_NULL, SRC_GT_TGT, TGT_GT_SRC, LENGTH_INCONSISTENT
+    }
 
     /** Constructor for derived classes. */
     protected JFSElement() {
@@ -109,7 +108,7 @@ public class JFSElement implements Comparable<JFSElement> {
         this.srcFile = srcFile;
         this.tgtFile = tgtFile;
         this.parent = parent;
-        this.isDirectory = isDirectory;
+        this.directory = isDirectory;
         parent.addChild(this);
 
         revalidate();
@@ -120,8 +119,9 @@ public class JFSElement implements Comparable<JFSElement> {
      * Revalidates the comparison table element; that is checks which file is newer, etc.
      */
     public final void revalidate() {
-        if (state==ElementState.IS_ROOT)
+        if (state==ElementState.IS_ROOT) {
             return;
+        }
 
         // Reset attributes:
         state = ElementState.NOT_DETERMINED;
@@ -130,11 +130,13 @@ public class JFSElement implements Comparable<JFSElement> {
         long srcLastModified = 0;
         long tgtLastModified = 0;
 
-        if ( !isDirectory) {
-            if (srcFile!=null)
+        if ( !directory) {
+            if (srcFile!=null) {
                 srcLastModified = srcFile.getLastModified();
-            if (tgtFile!=null)
+            }
+            if (tgtFile!=null) {
                 tgtLastModified = tgtFile.getLastModified();
+            }
         }
 
         // Comparison:
@@ -142,15 +144,15 @@ public class JFSElement implements Comparable<JFSElement> {
         // time resolution is two seconds. So we have a maximum tolerance range
         // of 2000ms for each comparison:
         long diffTime = compareToTime(srcLastModified, tgtLastModified);
-        if (log.isDebugEnabled()) {
-            log.debug("revalidate() diffTime="+diffTime);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("revalidate() diffTime="+diffTime);
         } // if
 
         if (srcFile==null)
             state = ElementState.SRC_IS_NULL;
         else if (tgtFile==null)
             state = ElementState.TGT_IS_NULL;
-        else if ( !isDirectory)
+        else if ( !directory)
             if (diffTime==0)
                 state = ElementState.EQUAL;
             else if (diffTime>0)
@@ -161,12 +163,14 @@ public class JFSElement implements Comparable<JFSElement> {
             state = ElementState.EQUAL;
 
         // Check length:
-        if (state==ElementState.EQUAL&&srcFile.getLength()!=tgtFile.getLength())
+        if (state==ElementState.EQUAL&&srcFile.getLength()!=tgtFile.getLength()) {
             state = ElementState.LENGTH_INCONSISTENT;
+        }
 
         // Set action to NOP if isEqual is true:
-        if (state==ElementState.EQUAL)
+        if (state==ElementState.EQUAL) {
             action = SyncAction.NOP;
+        }
     }
 
 
@@ -229,7 +233,7 @@ public class JFSElement implements Comparable<JFSElement> {
      * @return Returns the children of the current element which reflects the file system structure. The children are
      *         null, if the current element is not a directory or the directory it represents is empty.
      */
-    public final Vector<JFSElement> getChildren() {
+    public final List<JFSElement> getChildren() {
         return children;
     }
 
@@ -241,8 +245,9 @@ public class JFSElement implements Comparable<JFSElement> {
      *            The child to add.
      */
     public final void addChild(JFSElement child) {
-        if (children==null)
-            children = new Vector<JFSElement>();
+        if (children==null) {
+            children = new ArrayList<>();
+        }
 
         children.add(child);
     }
@@ -252,7 +257,7 @@ public class JFSElement implements Comparable<JFSElement> {
      * @return Computes whether source and target files are directories.
      */
     public final boolean isDirectory() {
-        return isDirectory;
+        return directory;
     }
 
 
@@ -307,7 +312,7 @@ public class JFSElement implements Comparable<JFSElement> {
      * @return Returns whether the action of the JFS element is active.
      */
     public final boolean isActive() {
-        return isActive;
+        return active;
     }
 
 
@@ -318,7 +323,7 @@ public class JFSElement implements Comparable<JFSElement> {
      *            True, if the action is active.
      */
     public void setActive(boolean isActive) {
-        this.isActive = isActive;
+        this.active = isActive;
     }
 
 
@@ -326,7 +331,7 @@ public class JFSElement implements Comparable<JFSElement> {
      * @return Returns whether the element is viewed.
      */
     public final boolean isViewed() {
-        return isViewed;
+        return viewed;
     }
 
 
@@ -337,7 +342,7 @@ public class JFSElement implements Comparable<JFSElement> {
      *            True, if the element is viewed.
      */
     public final void setViewed(boolean isViewed) {
-        this.isViewed = isViewed;
+        this.viewed = isViewed;
     }
 
 
@@ -396,7 +401,6 @@ public class JFSElement implements Comparable<JFSElement> {
      */
     public static long compareToTime(long time1, long time2) {
         return (time1-time2)/JFSConfig.getInstance().getGranularity();
-
     }
 
 
@@ -406,10 +410,11 @@ public class JFSElement implements Comparable<JFSElement> {
      * @return A vector of valid synchronization actions.
      */
     public TreeSet<SyncAction> getValidActions() {
-        TreeSet<SyncAction> validActions = new TreeSet<SyncAction>();
+        TreeSet<SyncAction> validActions = new TreeSet<>();
 
-        if (state==ElementState.IS_ROOT)
+        if (state==ElementState.IS_ROOT) {
             return validActions;
+        }
 
         validActions.add(SyncAction.NOP);
 
@@ -431,4 +436,5 @@ public class JFSElement implements Comparable<JFSElement> {
 
         return validActions;
     }
+    
 }

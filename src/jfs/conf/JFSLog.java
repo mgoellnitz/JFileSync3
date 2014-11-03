@@ -25,10 +25,11 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class handles log messages (including error messages). Log messages can
+ * This class handles log messages (including ERRor messages). Log messages can
  * be send to a log file (e.g., when JFS is started with its GUI) or to any
  * print stream.
  * 
@@ -36,30 +37,30 @@ import java.util.Vector;
  * @version $Id: JFSLog.java,v 1.7 2007/02/26 18:50:12 heidrich Exp $
  */
 public class JFSLog {
-	/** The error message log. */
-	private static JFSLog err = new JFSLog(System.err, JFSConst.ERR_LOG_FILE);
+    
+	/** The ERRor message log. */
+	private static final JFSLog ERR = new JFSLog(System.err, JFSConst.ERR_LOG_FILE);
 
-	/** The standard output message log. */
-	private static JFSLog out = new JFSLog(System.out, JFSConst.OUT_LOG_FILE);
+	/** The standard OUTput message log. */
+	private static final JFSLog OUT = new JFSLog(System.out, JFSConst.OUT_LOG_FILE);
 
 	/** The log message stream to use. */
-	private PrintStream printStream;
+	private final PrintStream printStream;
 
 	/** The file containing all log messages. */
-	private File logFile;
+	private final File logFile;
 
-	/** The print stream to use for outputting log messages. */
+	/** The print stream to use for OUTputting log messages. */
 	private PrintStream currentStream;
 
 	/** Determines whether unread log messages are available. */
 	private boolean unreadLogMessages = false;
 
 	/** Vector with all oberservers of the configuration object. */
-	private Vector<JFSLogObserver> observers = new Vector<JFSLogObserver>();
+	private final List<JFSLogObserver> observers = new ArrayList<>();
 
 	/**
-	 * Creates a new log. Per default the log messages are outputed to the log
-	 * stream.
+	 * Creates a new log. Per default the log messages are OUTputed to the log stream.
 	 * 
 	 * @param printStream
 	 *            The print stream to use.
@@ -74,10 +75,9 @@ public class JFSLog {
 	}
 
 	/**
-	 * Determines whether the log file should be used for outputting log
-	 * messages or the print stream. The log file is located in the JFS settings
-	 * directory of the users home directory (usually '~/.jfs'). The log file
-	 * and the settings directory are created if they don't exist .
+	 * Determines whether the log file should be used for OUTputting log messages or the print stream. 
+         * The log file is located in the JFS settings directory of the users home directory (usually '~/.jfs'). 
+         * The log file and the settings directory are created if they don't exist .
 	 * 
 	 * @param useLogFile
 	 *            True if and only if the log file should be used.
@@ -87,12 +87,14 @@ public class JFSLog {
 			// Redirect error stream to file:
 			File home = new File(JFSConst.HOME_DIR);
 
-			if (!home.exists())
+			if (!home.exists()) {
 				home.mkdir();
+                        }
 
 			try {
-				if (!logFile.exists())
+				if (!logFile.exists()) {
 					logFile.createNewFile();
+                                }
 				currentStream = new PrintStream(new FileOutputStream(logFile));
 			} catch (IOException e) {
 				System.err.println(e);
@@ -112,8 +114,9 @@ public class JFSLog {
 		unreadLogMessages = false;
 
 		// Delete previous log file and create new one:
-		if (logFile.exists())
+		if (logFile.exists()) {
 			logFile.delete();
+                }
 
 		useLogFile(true);
 	}
@@ -130,7 +133,7 @@ public class JFSLog {
 	}
 
 	/**
-	 * Returns the current log stream to output log messages to. If the stream
+	 * Returns the current log stream to OUTput log messages to. If the stream
 	 * is requested, it is assumed that new log messages are written to the
 	 * stream, so that the log object has unread log messages.
 	 * 
@@ -190,20 +193,20 @@ public class JFSLog {
 	}
 
 	/**
-	 * Returns the error message log.
+	 * Returns the ERRor message log.
 	 * 
 	 * @return The log object.
 	 */
 	public static JFSLog getErr() {
-		return err;
+		return ERR;
 	}
 
 	/**
-	 * Returns the standard output message log.
+	 * Returns the standard OUTput message log.
 	 * 
 	 * @return The log object.
 	 */
 	public static JFSLog getOut() {
-		return out;
+		return OUT;
 	}
 }

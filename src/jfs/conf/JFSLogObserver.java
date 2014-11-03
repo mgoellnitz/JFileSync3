@@ -33,5 +33,6 @@ public interface JFSLogObserver {
 	 * @param log
 	 *            The log object.
 	 */
-	public void update(JFSLog log);
+	void update(JFSLog log);
+        
 }

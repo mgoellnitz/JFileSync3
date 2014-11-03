@@ -67,8 +67,9 @@ public class JFSComparisonMonitor {
      * @return The only instance.
      */
     public final static JFSComparisonMonitor getInstance() {
-        if (instance==null)
+        if (instance==null) {
             instance = new JFSComparisonMonitor();
+        }
 
         return instance;
     }
@@ -142,8 +143,9 @@ public class JFSComparisonMonitor {
             int handled = itemsHandled.get(i);
             int weight = itemsWeight.get(i);
 
-            if (started!=0)
+            if (started!=0) {
                 ratio = (weight*(handled+ratio))/started;
+            }
         }
 
         return Math.round(ratio*100);

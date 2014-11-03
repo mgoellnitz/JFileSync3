@@ -27,13 +27,13 @@ package jfs.sync;
  */
 public interface JFSFileProducerFactory {
 
-    public String getName();
+    String getName();
 
 
     /**
      * Resets all producers of the factory.
      */
-    public void resetProducers();
+    void resetProducers();
 
 
     /**
@@ -43,7 +43,7 @@ public interface JFSFileProducerFactory {
      *            The URI to create the producer for.
      * @return The created producer.
      */
-    public JFSFileProducer createProducer(String uri);
+    JFSFileProducer createProducer(String uri);
 
 
     /**
@@ -52,7 +52,7 @@ public interface JFSFileProducerFactory {
      * @param uri
      *            The URI to distroy the producer for.
      */
-    public void shutDownProducer(String uri);
+    void shutDownProducer(String uri);
 
 
     /**
@@ -61,6 +61,6 @@ public interface JFSFileProducerFactory {
      * @param uri
      *            The URI to distroy the producer for.
      */
-    public void cancelProducer(String uri);
+    void cancelProducer(String uri);
 
 }

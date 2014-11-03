@@ -26,7 +26,6 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -39,7 +38,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import jfs.conf.JFSText;
 import jfs.sync.JFSCopyStatement;
 import jfs.sync.JFSDeleteStatement;
@@ -53,29 +51,30 @@ import jfs.sync.JFSTable;
  * @version $Id: JFSConfirmationView.java,v 1.10 2005/05/13 15:03:20 heidrich Exp $
  */
 public class JFSConfirmationView extends JDialog implements ActionListener, ListSelectionListener {
+    
     /** The UID. */
     private static final long serialVersionUID = 51L;
 
     /** The table of files that have to be copied. */
-    private JTable copyTable;
+    private final JTable copyTable;
 
     /** The table of files that have to be deleted. */
-    private JTable deleteTable;
+    private final JTable deleteTable;
 
     /** Number of files that have to be copied. */
-    private JLabel copyLabel;
+    private final JLabel copyLabel;
 
     /** Number of files that have to be deleted. */
-    private JLabel deleteLabel;
+    private final JLabel deleteLabel;
 
     /** Result of the dialog. */
     private int result = JOptionPane.CANCEL_OPTION;
 
     /** The detailed view on copy and delete statements. */
-    private JPanel statementsPanel;
+    private final JPanel statementsPanel;
 
     /** Shows and hides synchronization details. */
-    private JButton toggleDetailsButton;
+    private final JButton toggleDetailsButton;
 
 
     /**
@@ -201,7 +200,7 @@ public class JFSConfirmationView extends JDialog implements ActionListener, List
         String cmd = event.getActionCommand();
         JFSTable table = JFSTable.getInstance();
 
-        if (cmd.equals("TOGGLE_DETAILS")) {
+        if ("TOGGLE_DETAILS".equals(cmd)) {
             JFSText t = JFSText.getInstance();
 
             if (statementsPanel.isVisible()) {
@@ -216,47 +215,54 @@ public class JFSConfirmationView extends JDialog implements ActionListener, List
             JFSSupport.center(this.getParent(), this);
         }
 
-        if (cmd.equals("SELECT_ALL_COPY"))
+        if ("SELECT_ALL_COPY".equals(cmd)) {
             copyTable.selectAll();
+        }
 
-        if (cmd.equals("DESELECT_ALL_COPY"))
+        if ("DESELECT_ALL_COPY".equals(cmd)) {
             copyTable.clearSelection();
+        }
 
-        if (cmd.equals("SELECT_ALL_DELETE"))
+        if ("SELECT_ALL_DELETE".equals(cmd)) {
             deleteTable.selectAll();
+        }
 
-        if (cmd.equals("DESELECT_ALL_DELETE"))
+        if ("DESELECT_ALL_DELETE".equals(cmd)) {
             deleteTable.clearSelection();
+        }
 
-        if (cmd.equals("button.ok")) {
+        if ("button.ok".equals(cmd)) {
             // Set result:
             result = JOptionPane.OK_OPTION;
 
             // Update copy file list:
             int i = 0;
             for (JFSCopyStatement cs : table.getCopyStatements()) {
-                if (copyTable.isRowSelected(i))
+                if (copyTable.isRowSelected(i)) {
                     cs.setCopyFlag(true);
-                else
+                } else {
                     cs.setCopyFlag(false);
+                }
                 i++ ;
             }
 
             // Update delete file list:
             int j = 0;
             for (JFSDeleteStatement ds : table.getDeleteStatements()) {
-                if (deleteTable.isRowSelected(j))
+                if (deleteTable.isRowSelected(j)) {
                     ds.setDeleteFlag(true);
-                else
+                } else {
                     ds.setDeleteFlag(false);
+                }
                 j++ ;
             }
         }
 
-        if (cmd.equals("button.cancel"))
+        if ("button.cancel".equals(cmd)) {
             result = JOptionPane.CANCEL_OPTION;
+        }
 
-        if (cmd.equals("button.cancel")||cmd.equals("button.ok")) {
+        if ("button.cancel".equals(cmd)||"button.ok".equals(cmd)) {
             setVisible(false);
             dispose();
         }

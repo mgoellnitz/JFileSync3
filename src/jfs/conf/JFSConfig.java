@@ -22,7 +22,6 @@ package jfs.conf;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import jfs.sync.JFSFile;
 
 /**
@@ -91,7 +90,7 @@ public abstract class JFSConfig implements Cloneable {
     protected boolean currentProfileStored;
 
     /** Vector with all oberservers of the configuration object. */
-    protected Vector<JFSConfigObserver> observers = new Vector<>();
+    protected List<JFSConfigObserver> observers = new ArrayList<>();
 
     /** tell if the user wants safety questions before actions */
     protected boolean dontAskQuestions = true;
@@ -548,7 +547,7 @@ public abstract class JFSConfig implements Cloneable {
      * @param filters
      *            The include filters to use.
      */
-    public final void replaceIncludes(Vector<JFSFilter> filters) {
+    public final void replaceIncludes(List<JFSFilter> filters) {
         includes.clear();
         includes.addAll(filters);
         setCurrentProfileStored(false);
@@ -601,7 +600,7 @@ public abstract class JFSConfig implements Cloneable {
      * @param filters
      *            The exclude filters to use.
      */
-    public final void replaceExcludes(Vector<JFSFilter> filters) {
+    public final void replaceExcludes(List<JFSFilter> filters) {
         excludes.clear();
         excludes.addAll(filters);
         setCurrentProfileStored(false);

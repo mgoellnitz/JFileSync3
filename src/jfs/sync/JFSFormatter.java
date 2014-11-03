@@ -39,8 +39,9 @@ public class JFSFormatter {
      * @return Length of the file as a string.
      */
     public static String getLength(JFSFile file) {
-        if (file.isDirectory())
+        if (file.isDirectory()) {
             return "";
+        }
 
         return getLength(file.getLength());
     }
@@ -70,8 +71,9 @@ public class JFSFormatter {
      * @return Time of last modification of the file as a date string.
      */
     public static String getLastModified(JFSFile file) {
-        if (file.isDirectory())
+        if (file.isDirectory()) {
             return "";
+        }
 
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         return df.format(new Date(file.getLastModified()));
@@ -97,28 +99,31 @@ public class JFSFormatter {
      * Cuts the head of a string if its length exceeds the specified maximum length. If the input string has be cut,
      * "..." is added to its head. However, its length never exceeds the maximum length.
      * 
-     * @param in
+     * @param input
      *            The input string. If the is is equal to null, an empty string is returned instead.
      * @param max
      *            The maximum length.
      * @return The modified string.
      */
-    public static String cutHead(String in, int max) {
-        if (in==null||max==0)
+    public static String cutHead(String input, int max) {
+        if (input==null||max==0) {
             return "";
-        if (max==1)
+        }
+        if (max==1) {
             return ".";
-        if (max==2)
+        }
+        if (max==2) {
             return "..";
-
-        // At this point max is >= 3:
-        int start = in.length()-(max-3);
-
-        if (start>0) {
-            in = "..."+in.substring(start);
         }
 
-        return in;
+        // At this point max is >= 3:
+        int start = input.length()-(max-3);
+
+        if (start>0) {
+            input = "..."+input.substring(start);
+        }
+
+        return input;
     }
 
 
@@ -127,15 +132,15 @@ public class JFSFormatter {
      * string containing spaces is returned.
      * 
      * @see #adapt(String, int)
-     * @param in
+     * @param input
      *            The input JFS file.
      * @param max
      *            The maximum length.
      * @return The modified string of length max.
      */
-    public static final String adaptPath(JFSFile in, int max) {
-        if (in!=null) {
-            return adapt(in.getPath(), max);
+    public static final String adaptPath(JFSFile input, int max) {
+        if (input!=null) {
+            return adapt(input.getPath(), max);
         }
         return adapt(null, max);
     }
@@ -146,34 +151,36 @@ public class JFSFormatter {
      * chars, the trailing chars are cut, if it has to few chars, spaces are added. Finally the output string is set in
      * quotations. If the input string is null, a string of spaces is returned.
      * 
-     * @param in
+     * @param input
      *            The input string.
      * @param max
      *            The maximum length.
      * @return The modified string of length max.
      */
-    public static final String adapt(String in, int max) {
-        if (in==null) {
+    public static final String adapt(String input, int max) {
+        if (input==null) {
             char[] spaces = new char[max];
-            for (int i = 0; i<max; i++ )
+            for (int i = 0; i<max; i++ ) {
                 spaces[i] = ' ';
+            }
             return new String(spaces);
         }
 
-        int length = in.length();
+        int length = input.length();
         String out;
 
         if (length<max-2) {
             char[] spaces = new char[max-2-length];
 
-            for (int i = 0; i<max-2-length; i++ )
+            for (int i = 0; i<max-2-length; i++ ) {
                 spaces[i] = ' ';
+            }
 
-            out = "'"+in+"'"+new String(spaces);
+            out = "'"+input+"'"+new String(spaces);
         } else if (length>max-2) {
-            out = "'"+in.substring(length-max+2)+"'";
+            out = "'"+input.substring(length-max+2)+"'";
         } else {
-            out = "'"+in+"'";
+            out = "'"+input+"'";
         }
 
         return out;

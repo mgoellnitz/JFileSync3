@@ -19,8 +19,8 @@
 
 package jfs.sync;
 
-import jfs.conf.JFSText;
 import jfs.conf.JFSSyncMode.SyncAction;
+import jfs.conf.JFSText;
 
 /**
  * Represents a question the synchronization algorithm must ask the user.
@@ -67,16 +67,18 @@ public class JFSQuestion {
 	 * @return The text as a string.
 	 */
 	public String getQuestionText() {
-		if (jfsElement == null)
+		if (jfsElement == null) {
 			return "";
+                }
 
 		JFSText t = JFSText.getInstance();
 		if (jfsElement.getAction() == SyncAction.ASK_LENGTH_INCONSISTENT)
 			return t.get("syncQuestion.lengthInconsistent");
 		else if (jfsElement.getAction() == SyncAction.ASK_FILES_GT_HISTORY)
 			return t.get("syncQuestion.filesGtHistory");
-		else if (jfsElement.getAction() == SyncAction.ASK_FILES_NOT_IN_HISTORY)
+		else if (jfsElement.getAction() == SyncAction.ASK_FILES_NOT_IN_HISTORY) {
 			return t.get("syncQuestion.filesNotInHistory");
+                }
 
 		return "";
 	}
@@ -112,8 +114,9 @@ public class JFSQuestion {
 	 * @return The given answer by the oracle.
 	 */
 	final QuestionAnswer answer(JFSElement element) {
-		if (oracle == null)
+		if (oracle == null) {
 			return QuestionAnswer.SKIP;
+                }
 
 		jfsElement = element;
 		action = element.getAction();

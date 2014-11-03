@@ -35,5 +35,6 @@ public interface JFSProgressObserver {
 	 * @param progress
 	 *            The progress object of the algorithm.
 	 */
-	public void update(JFSProgress progress);
+	void update(JFSProgress progress);
+        
 }

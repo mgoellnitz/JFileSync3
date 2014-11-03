@@ -112,32 +112,32 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
     /**
      * Stores the overall size state (displayed at the bottom of the frame).
      */
-    private JLabel stateViewSize;
+    private final JLabel stateViewSize;
 
     /**
      * Stores the overall size state (displayed at the bottom of the frame).
      */
-    private JLabel stateDuration;
+    private final JLabel stateDuration;
 
     /**
      * Stores the overall synchronization mode (displayed at the bottom of the frame).
      */
-    private JLabel stateSyncMode;
+    private final JLabel stateSyncMode;
 
     /**
      * The last opened profiles.
      */
-    private JMenuItem[] lastOpenedProfiles = new JMenuItem[JFSConst.LAST_OPENED_PROFILES_SIZE];
+    private JMenuItem[] lastOpenedProfiles;
 
     /**
      * Shown if an unread error is available in the error log.
      */
-    private JPanel errorLog;
+    private final JPanel errorLog;
 
     /**
      * The progress view.
      */
-    private JFSProgressView progressView;
+    private final JFSProgressView progressView;
 
     /**
      * The used help view.
@@ -188,9 +188,9 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
 
         private JFSMainView me;
 
-        private String action;
+        private final String action;
 
-        private int keyCode;
+        private final int keyCode;
 
 
         public CommandAction(JFSMainView me, String action, int keyCode) {
@@ -254,6 +254,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
      * Determine whether the last loaded configuration should be loaded at GUI startup.
      */
     public JFSMainView(boolean loadDefaults) {
+        this.lastOpenedProfiles = new JMenuItem[JFSConst.LAST_OPENED_PROFILES_SIZE];
         JFSConfig config = JFSConfig.getInstance();
 
         // Load default configuration if option is specified:
@@ -456,7 +457,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         JFSConfig config = JFSConfig.getInstance();
         JFSSettings s = JFSSettings.getInstance();
 
-        if (cmd.equals("NEW")||cmd.equals("OPEN")||cmd.startsWith("OPEN_")) {
+        if ("NEW".equals(cmd)||"OPEN".equals(cmd)||cmd.startsWith("OPEN_")) {
             int result = JOptionPane.OK_OPTION;
 
             // Check whether changes need to be stored:
@@ -468,7 +469,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
 
             if (result==JOptionPane.OK_OPTION) {
 
-                if (cmd.equals("NEW")) {
+                if ("NEW".equals(cmd)) {
                     // Clean the configuration settings and update the
                     // observers:
                     s.setCurrentProfile(null);
@@ -477,7 +478,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
                     new JFSConfigView(frame);
                 }
 
-                if (cmd.equals("OPEN")) {
+                if ("OPEN".equals(cmd)) {
                     File last = s.getLastProfileDir();
                     JFileChooser chooser = new JFileChooser(last);
                     JFSConfigFileFilter filter = new JFSConfigFileFilter();
@@ -511,12 +512,12 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             }
         }
 
-        if (cmd.equals("SAVE")||cmd.equals("SAVE_AS")) {
+        if ("SAVE".equals(cmd)||"SAVE_AS".equals(cmd)) {
             boolean success = true;
 
             // Store the configuration at once only if an appropriate
             // configuration file exists and the command equals 'SAVE':
-            if (cmd.equals("SAVE")&&(s.getCurrentProfile()!=null)) {
+            if ("SAVE".equals(cmd)&&(s.getCurrentProfile()!=null)) {
                 success = config.store(s.getCurrentProfile());
             } else {
                 File last = s.getLastProfileDir();
@@ -557,7 +558,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             updateLastOpenedProfiles();
         }
 
-        if (cmd.equals("OPTIONS")) {
+        if ("OPTIONS".equals(cmd)) {
             new JFSConfigView(frame);
         }
 
@@ -575,7 +576,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             config.fireConfigUpdate();
         }
 
-        if (cmd.equals("SYNCHRONIZE")) {
+        if ("SYNCHRONIZE".equals(cmd)) {
             // Compute synchronization list:
             JFSSynchronization.getInstance().computeSynchronizationLists();
 
@@ -592,20 +593,20 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             }
         }
 
-        if (cmd.equals("COMPARE")) {
+        if ("COMPARE".equals(cmd)) {
             // Start comparison as new thread:
             progressView.compareInThread();
         }
 
-        if (cmd.equals("error.log")) {
+        if ("error.log".equals(cmd)) {
             new JFSLogView(frame, JFSLogView.ERR);
         }
 
-        if (cmd.equals("OUTPUT_LOG")) {
+        if ("OUTPUT_LOG".equals(cmd)) {
             new JFSLogView(frame, JFSLogView.OUT);
         }
 
-        if (cmd.equals("general.reset")) {
+        if ("general.reset".equals(cmd)) {
             JLabel msg = new JLabel(t.get("message.reset"));
             int result = JOptionPane.showConfirmDialog(frame, msg, t.get("general.warning"), JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.WARNING_MESSAGE);
@@ -621,7 +622,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             }
         }
 
-        if (cmd.equals("EXIT")) {
+        if ("EXIT".equals(cmd)) {
             // Ask for exiting the program:
             JLabel msg = new JLabel(t.get("message.exit"));
 
@@ -644,11 +645,11 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             }
         }
 
-        if (cmd.equals("INFO")) {
+        if ("INFO".equals(cmd)) {
             new JFSInfoView(this);
         }
 
-        if (cmd.equals("jfs.help.topics")) {
+        if ("jfs.help.topics".equals(cmd)) {
             if (helpView==null) {
                 helpView = new JFSHelpView(frame);
             } else {
@@ -656,7 +657,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             }
         }
 
-        if (cmd.equals("ASSISTANT")) {
+        if ("ASSISTANT".equals(cmd)) {
             if (assistantView==null) {
                 assistantView = new JFSAssistantView(this);
             } else {
@@ -664,7 +665,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             }
         }
 
-        if (cmd.equals("HISTORY")) {
+        if ("HISTORY".equals(cmd)) {
             new JFSHistoryManagerView(this.getFrame());
         }
     }

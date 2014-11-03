@@ -22,7 +22,6 @@ package jfs.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.HashMap;
-
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -30,14 +29,13 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
-
 import jfs.conf.JFSConst;
-import jfs.conf.JFSText;
 import jfs.conf.JFSSyncMode.SyncAction;
+import jfs.conf.JFSText;
 import jfs.sync.JFSElement;
+import jfs.sync.JFSElement.ElementState;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSTable;
-import jfs.sync.JFSElement.ElementState;
 
 /**
  * This class is responsible for rendering the synchronization table.
@@ -147,8 +145,9 @@ public class JFSTableRenderer implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
             int row, int column) {
-        if (row>=JFSTable.getInstance().getViewSize()||row<0)
+        if (row>=JFSTable.getInstance().getViewSize()||row<0) {
             return null;
+        }
 
         // Determine corresponding element of the comparison table:
         JFSElement element = JFSTable.getInstance().getViewElement(row);
@@ -163,8 +162,9 @@ public class JFSTableRenderer implements TableCellRenderer {
         JComponent component;
         if (column==3) {
             component = actionIcons.get(element.getAction());
-            if (component==null)
+            if (component==null) {
                 component = actionIcons.get(SyncAction.NOP);
+            }
         } else {
             component = cell;
 
@@ -179,8 +179,7 @@ public class JFSTableRenderer implements TableCellRenderer {
             if (column==0||column==4) {
                 if (jfsFile!=null&&jfsFile.exists()) {
                     try {
-                        Icon icon = UIManager.getIcon(jfsFile.isDirectory() ? "FileView.directoryIcon"
-                                : "FileView.fileIcon");
+                        Icon icon = UIManager.getIcon(jfsFile.isDirectory() ? "FileView.directoryIcon" : "FileView.fileIcon");
                         cell.setIcon(icon);
                     } catch (Exception e) {
                         cell.setIcon(null);

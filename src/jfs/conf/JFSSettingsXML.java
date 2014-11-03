@@ -20,7 +20,6 @@
 package jfs.conf;
 
 import java.io.File;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -41,8 +40,9 @@ class JFSSettingsXML extends JFSSettings {
      */
     @Override
     public final void load() {
-        if ( !file.exists())
+        if ( !file.exists()) {
             return;
+        }
 
         clean();
 
@@ -52,8 +52,9 @@ class JFSSettingsXML extends JFSSettings {
         try {
             // Compute root:
             Element root = XMLSupport.getDocumentElement(file);
-            if (root==null)
+            if (root==null) {
                 return;
+            }
 
             // Test root element:
             if ( !root.getNodeName().equals("jFileSync")) {
@@ -88,14 +89,17 @@ class JFSSettingsXML extends JFSSettings {
 
                 if (child.getNodeName().equals("directories")) {
                     attr = ((Element)child).getAttributeNode("profile");
-                    if (attr!=null)
+                    if (attr!=null) {
                         lastProfileDir = new File(attr.getValue());
+                    }
                     attr = ((Element)child).getAttributeNode("srcPair");
-                    if (attr!=null)
+                    if (attr!=null) {
                         lastSrcPairDir = new File(attr.getValue());
+                    }
                     attr = ((Element)child).getAttributeNode("tgtPair");
-                    if (attr!=null)
+                    if (attr!=null) {
                         lastTgtPairDir = new File(attr.getValue());
+                    }
                 }
 
                 if (child.getNodeName().equals("laf")) {
@@ -105,18 +109,21 @@ class JFSSettingsXML extends JFSSettings {
 
                 if (child.getNodeName().equals("currentProfile")) {
                     attr = ((Element)child).getAttributeNode("path");
-                    if (attr!=null)
+                    if (attr!=null) {
                         currentProfile = new File(attr.getValue());
+                    }
                     attr = ((Element)child).getAttributeNode("isStored");
-                    if (attr!=null)
+                    if (attr!=null) {
                         JFSConfig.getInstance().setCurrentProfileStored(Boolean.valueOf(attr.getValue()));
+                    }
                 }
 
                 if (child.getNodeName().equals("profile")) {
                     attr = ((Element)child).getAttributeNode("path");
 
-                    if (lastOpenedProfiles.size()<=JFSConst.LAST_OPENED_PROFILES_SIZE)
+                    if (lastOpenedProfiles.size()<=JFSConst.LAST_OPENED_PROFILES_SIZE) {
                         lastOpenedProfiles.add(new File(attr.getValue()));
+                    }
                 }
 
                 if (child.getNodeName().equals("history")) {
@@ -153,8 +160,9 @@ class JFSSettingsXML extends JFSSettings {
     public final void store() {
         // Create home if it does not exists:
         File home = new File(JFSConst.HOME_DIR);
-        if ( !home.exists())
+        if ( !home.exists()) {
             home.mkdir();
+        }
 
         // Clean history files:
         JFSHistoryManager.getInstance().cleanHistories();
@@ -163,8 +171,9 @@ class JFSSettingsXML extends JFSSettings {
         JFSText t = JFSText.getInstance();
         try {
             Document doc = XMLSupport.newDocument();
-            if (doc==null)
+            if (doc==null) {
                 return;
+            }
 
             Element root = doc.createElement("jFileSync");
             root.setAttribute("version", JFSConst.getInstance().getString("jfs.version"));
@@ -194,8 +203,9 @@ class JFSSettingsXML extends JFSSettings {
             root.appendChild(element);
 
             element = doc.createElement("currentProfile");
-            if (currentProfile!=null)
+            if (currentProfile!=null) {
                 element.setAttribute("path", currentProfile.getPath());
+            }
             element.setAttribute("isStored", String.valueOf(JFSConfig.getInstance().isCurrentProfileStored()));
             root.appendChild(doc.createTextNode("\n  "));
             root.appendChild(element);

@@ -26,8 +26,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -113,9 +113,10 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
         cp.setLayout(new BorderLayout());
 
         // Create table:
-        Vector<JFSFilter> filtersClone = new Vector<JFSFilter>();
-        for (JFSFilter f : filters)
+        List<JFSFilter> filtersClone = new ArrayList<>();
+        for (JFSFilter f : filters) {
             filtersClone.add(f.clone());
+        }
         filterTable = new JFSFilterTable(filtersClone);
         filterTable.getJTable().getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         filterTable.getJTable().getSelectionModel().addListSelectionListener(this);
@@ -183,13 +184,13 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
             // move it one position upwards:
             if (row>0) {
                 JFSFilter f = filterTable.getFilters().remove(row);
-                filterTable.getFilters().insertElementAt(f, row-1);
+                filterTable.getFilters().add(row-1, f);
                 filterTable.getJTable().setRowSelectionInterval(row-1, row-1);
                 update();
             }
         }
 
-        if (cmd.equals("button.down")) {
+        if ("button.down".equals(cmd)) {
             int row = filterTable.getJTable().getSelectedRow();
 
             // If a row is selected and it is not the last one then
@@ -199,10 +200,11 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
 
                 // If 'row' is the last element just add a new
                 // last element, otherwise insert 'pair' at 'row+1':
-                if (row==(filterTable.getJTable().getRowCount()-1))
+                if (row==(filterTable.getJTable().getRowCount()-1)) {
                     filterTable.getFilters().add(f);
-                else
-                    filterTable.getFilters().insertElementAt(f, row+1);
+                } else {
+                    filterTable.getFilters().add(row+1, f);
+                }
 
                 filterTable.getJTable().setRowSelectionInterval(row+1, row+1);
                 update();
@@ -269,31 +271,34 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
             if ( !model.isSelectionEmpty()) {
                 int row = model.getLeadSelectionIndex();
 
-                filterTable.getFilters().removeElementAt(row);
+                filterTable.getFilters().remove(row);
 
                 if (row>0)
                     model.setLeadSelectionIndex(row-1);
                 else if ((row==0)&&(filterTable.getJTable().getRowCount()>0))
                     model.setLeadSelectionIndex(0);
-                else
+                else {
                     model.clearSelection();
+                }
 
                 update();
             }
         }
 
-        if (cmd.equals("button.cancel")||cmd.equals("button.ok")) {
+        if ("button.cancel".equals(cmd)||"button.ok".equals(cmd)) {
             setVisible(false);
             dispose();
         }
 
-        if (cmd.equals("button.ok")) {
+        if ("button.ok".equals(cmd)) {
             if (isIncludeFilter) {
-                if ( !filterTable.getFilters().equals(config.getIncludes()))
+                if ( !filterTable.getFilters().equals(config.getIncludes())) {
                     config.replaceIncludes(filterTable.getFilters());
+                }
             } else {
-                if ( !filterTable.getFilters().equals(config.getExcludes()))
+                if ( !filterTable.getFilters().equals(config.getExcludes())) {
                     config.replaceExcludes(filterTable.getFilters());
+                }
             }
         }
 
@@ -348,4 +353,5 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
     public void valueChanged(ListSelectionEvent e) {
         checkButtons();
     }
+    
 }

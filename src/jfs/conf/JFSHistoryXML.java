@@ -20,7 +20,6 @@
 package jfs.conf;
 
 import java.io.File;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -46,8 +45,9 @@ class JFSHistoryXML extends JFSHistory {
         try {
             // Compute root:
             Element root = XMLSupport.getDocumentElement(file);
-            if (root==null)
+            if (root==null) {
                 return false;
+            }
 
             // Test root element:
             if ( !root.getNodeName().equals("history")) {
@@ -62,8 +62,9 @@ class JFSHistoryXML extends JFSHistory {
                 Attr tgt = root.getAttributeNode("tgt");
                 Attr date = root.getAttributeNode("date");
 
-                if (src==null||tgt==null||date==null)
+                if (src==null||tgt==null||date==null) {
                     return false;
+                }
 
                 // Check consistency:
                 JFSDirectoryPair pair = getPair();
@@ -127,8 +128,9 @@ class JFSHistoryXML extends JFSHistory {
         JFSText t = JFSText.getInstance();
         try {
             Document doc = XMLSupport.newDocument();
-            if (doc==null)
+            if (doc==null) {
                 return false;
+            }
 
             Element root = doc.createElement("history");
 

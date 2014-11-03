@@ -58,8 +58,9 @@ public class JFSSynchronization {
      * @return The only instance.
      */
     public final static JFSSynchronization getInstance() {
-        if (instance==null)
+        if (instance==null) {
             instance = new JFSSynchronization();
+        }
 
         return instance;
     }
@@ -102,8 +103,9 @@ public class JFSSynchronization {
             tgtProducer = element.getRoot().getTgtProducer();
 
             // Check whether element and corresponding action is active:
-            if ( !element.isActive())
+            if ( !element.isActive()) {
                 continue;
+            }
 
             JFSFile srcFile = element.getSrcFile();
             JFSFile tgtFile = element.getTgtFile();
@@ -113,8 +115,9 @@ public class JFSSynchronization {
                     &&(element.getAction()==SyncAction.ASK_LENGTH_INCONSISTENT
                             ||element.getAction()==SyncAction.ASK_FILES_GT_HISTORY||element.getAction()==SyncAction.ASK_FILES_NOT_IN_HISTORY)) {
                 QuestionAnswer a = question.answer(element);
-                if (a==QuestionAnswer.SKIP_ALL)
+                if (a==QuestionAnswer.SKIP_ALL) {
                     skipAll = true;
+                }
             }
 
             // Case 1: Copy the file on source side to the target side:

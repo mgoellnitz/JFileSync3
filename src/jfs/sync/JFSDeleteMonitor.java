@@ -53,8 +53,9 @@ public class JFSDeleteMonitor {
      * @return The only instance.
      */
     public final static JFSDeleteMonitor getInstance() {
-        if (instance==null)
+        if (instance==null) {
             instance = new JFSDeleteMonitor();
+        }
 
         return instance;
     }

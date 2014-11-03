@@ -24,14 +24,12 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
-
 import jfs.conf.JFSConst;
 import jfs.conf.JFSText;
 
@@ -42,20 +40,21 @@ import jfs.conf.JFSText;
  * @version $Id: JFSAssistantView.java,v 1.9 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSAssistantView extends JDialog implements ActionListener {
+    
     /** The UID. */
     private static final long serialVersionUID = 200L;
 
     /** The main view. */
-    private JFSMainView mainView;
+    private final JFSMainView mainView;
 
     /** The button for step 1. */
-    private JButton step1Button;
+    private final JButton step1Button;
 
     /** The button for step 2. */
-    private JButton step2Button;
+    private final JButton step2Button;
 
     /** The button for step 3. */
-    private JButton step3Button;
+    private final JButton step3Button;
 
 
     /**
@@ -141,22 +140,23 @@ public class JFSAssistantView extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         String cmd = event.getActionCommand();
 
-        if (cmd.equals("OPTIONS")) {
+        if ("OPTIONS".equals(cmd)) {
             mainView.actionPerformed("OPTIONS");
             step2Button.setEnabled(true);
         }
 
-        if (cmd.equals("COMPARE")) {
+        if ("COMPARE".equals(cmd)) {
             mainView.actionPerformed("COMPARE");
             step3Button.setEnabled(true);
         }
 
-        if (cmd.equals("SYNCHRONIZE")) {
+        if ("SYNCHRONIZE".equals(cmd)) {
             mainView.actionPerformed("SYNCHRONIZE");
         }
 
-        if (cmd.equals("button.close")) {
+        if ("button.close".equals(cmd)) {
             setVisible(false);
         }
     }
+    
 }

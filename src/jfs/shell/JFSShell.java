@@ -144,8 +144,9 @@ public class JFSShell {
 		JFSProgress.getInstance().attach(new JFSProgressPrint());
 
 		// Set question oracle if not quiet:
-		if (!quiet)
+		if (!quiet) {
 			synchronization.getQuestion().setOracle(new JFSQuestionPrint());
+                }
 
 		p.println(t.get("cmd.startComp"));
 		p.println();

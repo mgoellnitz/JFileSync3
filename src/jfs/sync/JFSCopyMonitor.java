@@ -70,8 +70,9 @@ public class JFSCopyMonitor {
      * @return The only instance.
      */
     public final static JFSCopyMonitor getInstance() {
-        if (instance==null)
+        if (instance==null) {
             instance = new JFSCopyMonitor();
+        }
 
         return instance;
     }

@@ -34,7 +34,7 @@ public interface JFSConfigObserver {
 	 * @param config
 	 *            The configuration object.
 	 */
-	public void updateConfig(JFSConfig config);
+	void updateConfig(JFSConfig config);
 
 	/**
 	 * Called when the computed comparison has to be updated.
@@ -42,7 +42,7 @@ public interface JFSConfigObserver {
 	 * @param config
 	 *            The configuration object.
 	 */
-	public void updateComparison(JFSConfig config);
+	void updateComparison(JFSConfig config);
 
 	/**
 	 * Called when the JFS server has to be updated.
@@ -50,5 +50,6 @@ public interface JFSConfigObserver {
 	 * @param config
 	 *            The configuration object.
 	 */
-	public void updateServer(JFSConfig config);
+	void updateServer(JFSConfig config);
+        
 }

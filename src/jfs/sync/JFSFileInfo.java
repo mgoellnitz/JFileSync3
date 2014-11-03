@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Arrays;
-
 import jfs.conf.JFSLog;
 
 /**
@@ -162,11 +161,13 @@ public class JFSFileInfo implements Serializable {
 
         File file = new File(path);
 
-        if ( !isDirectory)
+        if ( !isDirectory) {
             success = success&&file.setLastModified(lastModified);
+        }
 
-        if ( !canWrite)
+        if ( !canWrite) {
             success = success&&file.setReadOnly();
+        }
 
         if (isDirectory&&list!=null) {
             for (JFSFileInfo fi : list) {

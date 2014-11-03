@@ -30,6 +30,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -66,32 +67,32 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
     private final JFSConfig configNew;
 
     /** The title text field. */
-    private JTextField title;
+    private final JTextField title;
 
     /** The synchronization mode box. */
     @SuppressWarnings("rawtypes")
-    private JComboBox syncMode;
+    private final JComboBox syncMode;
 
     /** The synchronization modes. */
-    private Vector<JFSSyncMode> syncModeList;
+    private final List<JFSSyncMode> syncModeList;
 
     /** The table of directory pairs. */
-    private JTable directoryTable;
+    private final JTable directoryTable;
 
     /** Number of directory pairs. */
-    private JLabel directoryLabel;
+    private final JLabel directoryLabel;
 
     /** The up button. */
-    private JButton upButton;
+    private final JButton upButton;
 
     /** The down button. */
-    private JButton downButton;
+    private final JButton downButton;
 
     /** The change button. */
-    private JButton changeButton;
+    private final JButton changeButton;
 
     /** The remove button. */
-    private JButton removeButton;
+    private final JButton removeButton;
 
 
     /**
@@ -239,7 +240,7 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
     public void actionPerformed(ActionEvent event) {
         String cmd = event.getActionCommand();
 
-        if (cmd.equals("button.up")) {
+        if ("button.up".equals(cmd)) {
             int row = directoryTable.getSelectedRow();
 
             // If a row is selected and it is not the first one then
@@ -252,7 +253,7 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
             }
         }
 
-        if (cmd.equals("button.down")) {
+        if ("button.down".equals(cmd)) {
             int row = directoryTable.getSelectedRow();
 
             // If a row is selected and it is not the last one then
@@ -262,29 +263,30 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
 
                 // If 'row' is the last element just add a new
                 // last element, otherwise insert 'pair' at 'row+1':
-                if (row==(directoryTable.getRowCount()-1))
+                if (row==(directoryTable.getRowCount()-1)) {
                     configNew.addDirectoryPair(pair);
-                else
+                } else {
                     configNew.insertDirectoryPair(pair, row+1);
+                }
 
                 directoryTable.setRowSelectionInterval(row+1, row+1);
                 update();
             }
         }
 
-        if (cmd.equals("button.add")) {
+        if ("button.add".equals(cmd)) {
             new JFSConfigDirectoryView(this, configNew, new JFSDirectoryPair("", ""));
             update();
             checkButtons();
         }
 
-        if (cmd.equals("button.change")&& !directoryTable.getSelectionModel().isSelectionEmpty()) {
+        if ("button.change".equals(cmd)&& !directoryTable.getSelectionModel().isSelectionEmpty()) {
             JFSDirectoryPair pair = configNew.getDirectoryList().get(directoryTable.getSelectedRow());
             new JFSConfigDirectoryView(this, configNew, pair);
             update();
         }
 
-        if (cmd.equals("button.remove")) {
+        if ("button.remove".equals(cmd)) {
             ListSelectionModel model = directoryTable.getSelectionModel();
 
             // If a row is selected remove it from the table:
@@ -304,12 +306,12 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
             }
         }
 
-        if (cmd.equals("button.cancel")||cmd.equals("button.ok")) {
+        if ("button.cancel".equals(cmd)||"button.ok".equals(cmd)) {
             setVisible(false);
             dispose();
         }
 
-        if (cmd.equals("button.ok")) {
+        if ("button.ok".equals(cmd)) {
             // Update the new configuration object:
             configNew.setTitle(title.getText());
             JFSSyncMode mode = syncModeList.get(syncMode.getSelectedIndex());
@@ -321,19 +323,19 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
             configNew.transferContentTo(config);
         }
 
-        if (cmd.equals("ADVANCED")) {
+        if ("ADVANCED".equals(cmd)) {
             new JFSConfigAdvancedView(this, configNew);
         }
 
-        if (cmd.equals("INCLUDES")) {
+        if ("INCLUDES".equals(cmd)) {
             new JFSConfigFilterView(this, configNew, true);
         }
 
-        if (cmd.equals("EXCLUDES")) {
+        if ("EXCLUDES".equals(cmd)) {
             new JFSConfigFilterView(this, configNew, false);
         }
 
-        if (cmd.equals("server.title")) {
+        if ("server.title".equals(cmd)) {
             new JFSConfigServerView(this, configNew);
         }
     }

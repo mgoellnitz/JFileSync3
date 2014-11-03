@@ -89,8 +89,9 @@ public class JFSFileProducerManager {
      * @return The only instance.
      */
     public static JFSFileProducerManager getInstance() {
-        if (instance==null)
+        if (instance==null) {
             instance = new JFSFileProducerManager();
+        }
 
         return instance;
     }
@@ -149,8 +150,9 @@ public class JFSFileProducerManager {
      */
     private final JFSFileProducerFactory getFactory(String uri) {
         for (String scheme : factories.keySet()) {
-            if (uri.startsWith(scheme+":"))
+            if (uri.startsWith(scheme+":")) {
                 return factories.get(scheme);
+            }
         } // if
 
         return defaultFactory;

@@ -20,7 +20,6 @@
 package jfs.gui;
 
 import java.net.URL;
-
 import jfs.conf.JFSConst;
 import jfs.conf.JFSText;
 
@@ -103,8 +102,9 @@ public class JFSHelpTopic implements Comparable<JFSHelpTopic> {
             return this.getTitle().compareTo(topic.getTitle());
         else if (isThisStart)
             return -1;
-        else if (isTopicStart)
+        else if (isTopicStart) {
             return 1;
+        }
 
         return 0;
     }

@@ -25,20 +25,18 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
-
-import jfs.conf.JFSText;
 import jfs.conf.JFSSyncMode.SyncAction;
+import jfs.conf.JFSText;
 import jfs.sync.JFSElement;
 import jfs.sync.JFSFormatter;
 import jfs.sync.JFSQuestion;
-import jfs.sync.JFSQuestionOracle;
 import jfs.sync.JFSQuestion.QuestionAnswer;
+import jfs.sync.JFSQuestionOracle;
 
 /**
  * A JFS questions oracle which asks the user on the command line to determine an action for a JFS element.
@@ -47,32 +45,33 @@ import jfs.sync.JFSQuestion.QuestionAnswer;
  * @version $Id: JFSQuestionView.java,v 1.10 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSQuestionView implements JFSQuestionOracle, ActionListener {
+    
     /** The main view. */
-    private JFSMainView mainView;
+    private final JFSMainView mainView;
 
     /** The progress dialog. */
-    private JDialog dialog;
+    private final JDialog dialog;
 
     /** The question label. */
-    private JLabel questionText = new JLabel();
+    private final JLabel questionText = new JLabel();
 
     /** The source file. */
-    private JTextField srcFile = new JTextField();
+    private final JTextField srcFile = new JTextField();
 
     /** The target file. */
-    private JTextField tgtFile = new JTextField();
+    private final JTextField tgtFile = new JTextField();
 
     /** The source last modified date label. */
-    private JLabel srcLastModified = new JLabel();
+    private final JLabel srcLastModified = new JLabel();
 
     /** The target last modified date label. */
-    private JLabel tgtLastModified = new JLabel();
+    private final JLabel tgtLastModified = new JLabel();
 
     /** The source size label. */
-    private JLabel srcSize = new JLabel();
+    private final JLabel srcSize = new JLabel();
 
     /** The target size label. */
-    private JLabel tgtSize = new JLabel();
+    private final JLabel tgtSize = new JLabel();
 
     /** The question to answer. */
     private JFSQuestion jfsQuestion;
@@ -182,25 +181,25 @@ public class JFSQuestionView implements JFSQuestionOracle, ActionListener {
     public void actionPerformed(ActionEvent event) {
         String cmd = event.getActionCommand();
 
-        if (cmd.equals("syncAction.copySrc")) {
+        if ("syncAction.copySrc".equals(cmd)) {
             jfsQuestion.setAction(SyncAction.COPY_SRC);
             answer = QuestionAnswer.DO;
         }
 
-        if (cmd.equals("syncAction.copyTgt")) {
+        if ("syncAction.copyTgt".equals(cmd)) {
             jfsQuestion.setAction(SyncAction.COPY_TGT);
             answer = QuestionAnswer.DO;
         }
 
-        if (cmd.equals("SKIP")) {
+        if ("SKIP".equals(cmd)) {
             answer = QuestionAnswer.SKIP;
         }
 
-        if (cmd.equals("SKIP_ALL")) {
+        if ("SKIP_ALL".equals(cmd)) {
             answer = QuestionAnswer.SKIP_ALL;
         }
 
-        if ( !cmd.equals("")) {
+        if ( !"".equals(cmd)) {
             dialog.setVisible(false);
             mainView.update();
         }

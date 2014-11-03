@@ -73,15 +73,15 @@ public class JFSRootElement extends JFSElement {
             p.println(t.get("error.validDirectoryPair"));
             p.println("  '"+srcProducer.getRootPath()+"', ");
             p.println("  '"+tgtProducer.getRootPath()+"'");
-            isActive = false;
+            active = false;
         } else {
-            isActive = true;
+            active = true;
         }
 
         // Set root standard characteristics:
         root = this;
         parent = this;
-        isDirectory = true;
+        directory = true;
         state = ElementState.IS_ROOT;
         action = SyncAction.NOP_ROOT;
 

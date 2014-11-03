@@ -33,7 +33,7 @@ import javax.swing.JFrame;
  * @author Jens Heidrich
  * @version $Id: JFSConst.java,v 1.28 2007/07/20 14:19:20 heidrich Exp $
  */
-public class JFSConst {
+public final class JFSConst {
 
     /**
      * Stores the only instance of the class.
@@ -213,7 +213,7 @@ public class JFSConst {
      * The key.
      * @return The assigned string.
      */
-    public final String getString(String key) {
+    public String getString(String key) {
         return bundle.getString(key);
     }
 
@@ -225,7 +225,7 @@ public class JFSConst {
      * The key.
      * @return The assigned string array.
      */
-    public final String[] getStringArray(String key) {
+    public String[] getStringArray(String key) {
         String array = bundle.getString(key);
 
         return array.split(",\\s*");
@@ -240,7 +240,7 @@ public class JFSConst {
      * The key.
      * @return A valid URL.
      */
-    public final URL getResourceUrl(String key) {
+    public URL getResourceUrl(String key) {
         return getUrl(JFSConst.getInstance().getString("jfs.resource.base")+"/"+bundle.getString(key));
     }
 
@@ -253,7 +253,7 @@ public class JFSConst {
      * The key.
      * @return A valid URL.
      */
-    public final URL getIconUrl(String key) {
+    public URL getIconUrl(String key) {
         return getUrl(JFSConst.getInstance().getString("jfs.icon.base")+"/"+bundle.getString(key));
     }
 
@@ -265,7 +265,7 @@ public class JFSConst {
      * The file name.
      * @return A valid URL.
      */
-    public final URL getUrl(String fileName) {
+    public URL getUrl(String fileName) {
         URL fileUrl = null;
 
         try {
@@ -276,4 +276,5 @@ public class JFSConst {
 
         return fileUrl;
     }
+    
 }

@@ -26,13 +26,11 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
 import jfs.conf.JFSLog;
 import jfs.conf.JFSText;
 
@@ -43,6 +41,7 @@ import jfs.conf.JFSText;
  * @version $Id: JFSLogView.java,v 1.12 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSLogView extends JDialog implements ActionListener {
+    
     /** The UID. */
     private static final long serialVersionUID = 53L;
 
@@ -53,10 +52,10 @@ public class JFSLogView extends JDialog implements ActionListener {
     public final static byte OUT = 1;
 
     /** The scroll pane containing the log messages. */
-    private JScrollPane logPanel;
+    private final JScrollPane logPanel;
 
     /** The type of the log view. */
-    private byte type;
+    private final byte type;
 
 
     /**
@@ -78,10 +77,13 @@ public class JFSLogView extends JDialog implements ActionListener {
         if (type==ERR) {
             setTitle(t.get("log.err.title"));
             JFSLog.getErr().setLogMessagesRead();
-        } else if (type==OUT) {
-            setTitle(t.get("log.out.title"));
-            JFSLog.getOut().setLogMessagesRead();
+        } else {
+            if (type==OUT) {
+                setTitle(t.get("log.out.title"));
+                JFSLog.getOut().setLogMessagesRead();
+            }
         }
+            
         JFSSupport.center(frame, this);
 
         Container cp = getContentPane();
@@ -113,10 +115,13 @@ public class JFSLogView extends JDialog implements ActionListener {
         JFSText t = JFSText.getInstance();
         URL url = null;
         try {
-            if (type==ERR)
+            if (type==ERR) {
                 url = JFSLog.getErr().getLogURL();
-            else if (type==OUT)
-                url = JFSLog.getOut().getLogURL();
+            } else {
+                if (type==OUT) {
+                    url = JFSLog.getOut().getLogURL();
+                }
+            }
 
             try {
                 JEditorPane log = new JEditorPane();
@@ -139,22 +144,26 @@ public class JFSLogView extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         String cmd = event.getActionCommand();
 
-        if (cmd.equals("button.close")) {
+        if ("button.close".equals(cmd)) {
             setVisible(false);
             dispose();
         }
 
-        if (cmd.equals("UPDATE")) {
+        if ("UPDATE".equals(cmd)) {
             setContents();
         }
 
-        if (cmd.equals("CLEAR")) {
+        if ("CLEAR".equals(cmd)) {
             // Clean log text area and reset log file:
-            if (type==ERR)
+            if (type==ERR) {
                 JFSLog.getErr().resetLogFile();
-            else if (type==OUT)
-                JFSLog.getOut().resetLogFile();
+            } else { 
+                if (type==OUT) {
+                    JFSLog.getOut().resetLogFile();
+                }
+            }
             setContents();
         }
     }
+    
 }

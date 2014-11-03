@@ -25,19 +25,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
-import java.util.Map.Entry;
-
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-
-import jfs.conf.JFSSyncModes;
 import jfs.conf.JFSSyncMode.SyncAction;
+import jfs.conf.JFSSyncModes;
 import jfs.sync.JFSElement;
-import jfs.sync.JFSTable;
 import jfs.sync.JFSElement.ElementState;
+import jfs.sync.JFSTable;
 
 /**
  * This class is responsible for handling actions of the synchronization table.
@@ -184,22 +182,23 @@ public class JFSTableListener implements MouseListener, ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (table.getSelectionModel().isSelectionEmpty())
+        if (table.getSelectionModel().isSelectionEmpty()) {
             return;
+        }
 
         String cmd = e.getActionCommand();
 
         for (JFSElement element : currentSelection) {
             // Set whether the action of the element is active:
-            if (cmd.equals("ACTIVATE")) {
+            if ("ACTIVATE".equals(cmd)) {
                 element.setActive(true);
             }
-            if (cmd.equals("DEACTIVATE")) {
+            if ("DEACTIVATE".equals(cmd)) {
                 element.setActive(false);
             }
 
             // Change action based on command string:
-            if (cmd.equals("general.reset")) {
+            if ("general.reset".equals(cmd)) {
                 element.setActive(true);
                 element.setManuallySetAction(false);
                 JFSSyncModes.getInstance().getCurrentMode().computeAction(element);
@@ -212,7 +211,7 @@ public class JFSTableListener implements MouseListener, ActionListener {
             }
 
             // Show properties for selected element:
-            if (cmd.equals("PROPERTIES")) {
+            if ("PROPERTIES".equals(cmd)) {
                 new JFSPropertiesView(parent, element);
             }
         }

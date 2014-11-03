@@ -19,8 +19,7 @@
 
 package jfs.gui;
 
-import java.util.Vector;
-
+import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -31,11 +30,10 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-
 import jfs.conf.JFSFilter;
-import jfs.conf.JFSText;
 import jfs.conf.JFSFilter.FilterRange;
 import jfs.conf.JFSFilter.FilterType;
+import jfs.conf.JFSText;
 
 /**
  * A table displaying filters (to include/exclude files).
@@ -44,11 +42,12 @@ import jfs.conf.JFSFilter.FilterType;
  * @version $Id: JFSFilterTable.java,v 1.6 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSFilterTable extends AbstractTableModel {
+    
     /** The UID. */
     private static final long serialVersionUID = 100L;
 
     /** The object with information that should be displayed by the table. */
-    private final Vector<JFSFilter> filters;
+    private final List<JFSFilter> filters;
 
     /** The corresponding JTable. */
     private final JTable table;
@@ -61,7 +60,7 @@ public class JFSFilterTable extends AbstractTableModel {
      *            The filters to display.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public JFSFilterTable(Vector<JFSFilter> filters) {
+    public JFSFilterTable(List<JFSFilter> filters) {
         this.filters = filters;
 
         // Create column model:
@@ -139,8 +138,9 @@ public class JFSFilterTable extends AbstractTableModel {
      */
     @Override
     public final Object getValueAt(int row, int column) {
-        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount())
+        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount()) {
             return null;
+        }
 
         JFSText t = JFSText.getInstance();
         switch (column) {
@@ -179,8 +179,9 @@ public class JFSFilterTable extends AbstractTableModel {
      */
     @Override
     public final void setValueAt(Object value, int row, int column) {
-        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount())
+        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount()) {
             return;
+        }
 
         JFSText t = JFSText.getInstance();
         switch (column) {
@@ -213,7 +214,7 @@ public class JFSFilterTable extends AbstractTableModel {
     /**
      * @return Returns the filters.
      */
-    public final Vector<JFSFilter> getFilters() {
+    public final List<JFSFilter> getFilters() {
         return filters;
     }
 

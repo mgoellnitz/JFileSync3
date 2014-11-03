@@ -49,22 +49,23 @@ import jfs.sync.JFSFileProducerManager;
  */
 @SuppressWarnings("rawtypes")
 public class JFSConfigDirectoryView extends JDialog implements ActionListener {
+    
     /** The UID. */
     private static final long serialVersionUID = 564L;
 
     public static final String[] OTHER_PRODUCER_CODES = { "slowenc", "secure", "encrypted", "enc", "meta" };
 
     /** The source element. */
-    private JTextField srcElement;
+    private final JTextField srcElement;
 
     /** The target element. */
-    private JTextField tgtElement;
+    private final JTextField tgtElement;
 
     /** The source type combo box. */
-    private JComboBox srcTypeCombo;
+    private final JComboBox srcTypeCombo;
 
     /** The target type combo box. */
-    private JComboBox tgtTypeCombo;
+    private final JComboBox tgtTypeCombo;
 
     /** The configuration object to modify. */
     private final JFSConfig config;
@@ -184,12 +185,12 @@ public class JFSConfigDirectoryView extends JDialog implements ActionListener {
         JFSText t = JFSText.getInstance();
         String cmd = event.getActionCommand();
 
-        if (cmd.equals("button.cancel")||cmd.equals("button.ok")) {
+        if ("button.cancel".equals(cmd)||"button.ok".equals(cmd)) {
             setVisible(false);
             dispose();
         }
 
-        if (cmd.equals("button.ok")) {
+        if ("button.ok".equals(cmd)) {
             pair.setSrc(srcElement.getText());
             pair.setTgt(tgtElement.getText());
             if ( !config.hasDirectoryPair(pair)) {
@@ -201,11 +202,11 @@ public class JFSConfigDirectoryView extends JDialog implements ActionListener {
             JFSConfigView.createDirectoryDialog(this, pair.getTgt());
         }
 
-        if (cmd.equals("button.change.src")||cmd.equals("button.change.tgt")) {
+        if ("button.change.src".equals(cmd)||"button.change.tgt".equals(cmd)) {
             boolean isSource = true;
             String type = (String)srcTypeCombo.getSelectedItem();
 
-            if (cmd.equals("button.change.tgt")) {
+            if ("button.change.tgt".equals(cmd)) {
                 isSource = false;
                 type = (String)tgtTypeCombo.getSelectedItem();
             }
@@ -296,4 +297,5 @@ public class JFSConfigDirectoryView extends JDialog implements ActionListener {
             } // for
         }
     }
+    
 }

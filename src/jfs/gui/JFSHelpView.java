@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.TreeSet;
 import java.util.Vector;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -43,7 +42,6 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import jfs.conf.JFSConst;
 import jfs.conf.JFSLog;
 import jfs.conf.JFSText;
@@ -167,8 +165,9 @@ public class JFSHelpView extends JDialog implements ActionListener, HyperlinkLis
             topicsList.removeListSelectionListener(this);
             topicsList.clearSelection();
             for (JFSHelpTopic top : topics) {
-                if (top.getUrl().equals(url))
+                if (top.getUrl().equals(url)) {
                     topicsList.setSelectedValue(top, true);
+                }
             }
             topicsList.addListSelectionListener(this);
         } catch (IOException e) {
@@ -188,13 +187,15 @@ public class JFSHelpView extends JDialog implements ActionListener, HyperlinkLis
      */
     private final static void addUrl(Vector<URL> v, URL url) {
         // If URL is already first stop:
-        if (v.size()>0&&v.lastElement().equals(url))
+        if (v.size()>0&&v.lastElement().equals(url)) {
             return;
+        }
 
         // Add new URL and cut vector:
         v.add(url);
-        if (v.size()>JFSConst.HELP_HISTORY_SIZE)
+        if (v.size()>JFSConst.HELP_HISTORY_SIZE) {
             v.remove(0);
+        }
     }
 
 

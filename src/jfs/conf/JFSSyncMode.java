@@ -20,11 +20,9 @@
 package jfs.conf;
 
 import java.util.HashMap;
-
 import jfs.sync.JFSElement;
-import jfs.sync.JFSFile;
 import jfs.sync.JFSElement.ElementState;
-
+import jfs.sync.JFSFile;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -166,8 +164,9 @@ public class JFSSyncMode {
      *            The element to compute the action for.
      */
     public final void computeAction(JFSElement element) {
-        if (element.isManuallySetAction()&&JFSConfig.getInstance().isKeepUserActions())
+        if (element.isManuallySetAction()&&JFSConfig.getInstance().isKeepUserActions()) {
             return;
+        }
 
         if ( !isAutomatic()) {
             // Add actions to comparison tables according to the chosen

@@ -37,5 +37,6 @@ public interface JFSQuestionOracle {
 	 * @param question
 	 *            The question to ask.
 	 */
-	public QuestionAnswer ask(JFSQuestion question);
+	QuestionAnswer ask(JFSQuestion question);
+        
 }

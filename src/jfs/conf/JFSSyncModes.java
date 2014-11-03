@@ -21,7 +21,6 @@ package jfs.conf;
 
 import java.util.Collection;
 import java.util.TreeMap;
-
 import jfs.conf.JFSSyncMode.SyncAction;
 import jfs.sync.JFSElement.ElementState;
 
@@ -154,8 +153,9 @@ public class JFSSyncModes {
 	 * @return The only instance.
 	 */
 	public static JFSSyncModes getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new JFSSyncModes();
+                }
 
 		return instance;
 	}
@@ -184,8 +184,9 @@ public class JFSSyncModes {
 	public JFSSyncMode getCurrentMode() {
 		JFSSyncMode mode = modes.get((int) JFSConfig.getInstance()
 				.getSyncMode());
-		if (mode == null)
+		if (mode == null) {
 			mode = modes.get(getDefaultMode());
+                }
 
 		assert mode != null;
 

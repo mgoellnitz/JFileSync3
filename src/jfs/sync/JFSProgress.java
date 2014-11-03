@@ -20,7 +20,6 @@
 package jfs.sync;
 
 import java.util.Vector;
-
 import jfs.JFileSync;
 import jfs.conf.JFSConst;
 import jfs.conf.JFSSettings;
@@ -34,28 +33,6 @@ import jfs.conf.JFSText;
  * @version $Id: JFSProgress.java,v 1.24 2007/07/20 12:27:52 heidrich Exp $
  */
 public class JFSProgress {
-
-    /** The different activities performed by the synchronization algorithm. */
-    public enum ProgressActivity {
-        INITIALIZATION("progress.init.title"), COMPARISON("progress.comparison.title"), SYNCHRONIZATION_DELETE(
-                "progress.delete.title"), SYNCHRONIZATION_COPY("progress.copy.title");
-        private String name;
-
-
-        ProgressActivity(String name) {
-            this.name = name;
-        }
-
-
-        public String getName() {
-            return name;
-        }
-    }
-
-    /** The states of the progress object. */
-    public enum ProgressState {
-        PREPARATION, ACTIVE, DONE
-    }
 
     /** Stores the only instance of the class. */
     private static JFSProgress instance = null;
@@ -82,6 +59,28 @@ public class JFSProgress {
     private long updateTime = 0;
 
 
+    /** The different activities performed by the synchronization algorithm. */
+    public enum ProgressActivity {
+        INITIALIZATION("progress.init.title"), COMPARISON("progress.comparison.title"), SYNCHRONIZATION_DELETE(
+                "progress.delete.title"), SYNCHRONIZATION_COPY("progress.copy.title");
+        private String name;
+
+
+        ProgressActivity(String name) {
+            this.name = name;
+        }
+
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    /** The states of the progress object. */
+    public enum ProgressState {
+        PREPARATION, ACTIVE, DONE
+    }
+
     /**
      * Creates a new progress object.
      */
@@ -95,8 +94,9 @@ public class JFSProgress {
      * @return The only instance.
      */
     public final static JFSProgress getInstance() {
-        if (instance==null)
+        if (instance==null) {
             instance = new JFSProgress();
+        }
 
         return instance;
     }
@@ -308,14 +308,18 @@ public class JFSProgress {
         long minutes = (time/60000)%60;
         long hours = time/3600000;
 
-        if (millis>=500)
+        if (millis>=500) {
             seconds++ ;
-        if (hours>0)
+        }
+        if (hours>0) {
             s += hours+t.get("general.hours");
-        if (minutes>0)
+        }
+        if (minutes>0) {
             s += minutes+t.get("general.minutes");
+        }
         s += seconds+t.get("general.seconds");
 
         return s;
     }
+    
 }
