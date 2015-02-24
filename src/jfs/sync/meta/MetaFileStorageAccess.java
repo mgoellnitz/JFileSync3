@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ import jfs.sync.encryption.JFSEncryptedStream;
 import jfs.sync.util.SecurityUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 
 public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
 
@@ -145,7 +146,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
             log.debug("delete() "+relativePath);
             log.debug("delete() listing="+listing);
         } // if
-          // remove named item
+        // remove named item
         File file = getFile(rootPath, relativePath);
         if (listing.containsKey(pathAndName[1])) {
             listing.remove(pathAndName[1]);
@@ -175,7 +176,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         if (log.isDebugEnabled()) {
             log.debug("getInputStream() getting input stream for "+file.getPath());
         } // if
-        inputStreams++ ;
+        inputStreams++;
         if (log.isDebugEnabled()) {
             log.debug("getInputStream("+relativePath+") inputStreams="+inputStreams);
         } // if
@@ -186,10 +187,10 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
     @Override
     protected OutputStream getOutputStream(String rootPath, String relativePath, boolean forPayload) throws IOException {
         File file = getFile(rootPath, relativePath);
-        String[] pathAndName = getPathAndName(relativePath);
-        if (forPayload&&( !file.exists())) {
+        String[] pathAndName = getPathAndName(relativePath);        
+        Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
+        if (forPayload&&(listing.get(pathAndName[1])==null||!file.exists())) {
             FileInfo info = createFileInfo(file, pathAndName);
-            Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
             listing.put(info.getName(), info);
             if (log.isInfoEnabled()) {
                 log.info("getOutputStream() flushing "+pathAndName[0]+"/"+pathAndName[1]);
@@ -202,7 +203,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         if (log.isDebugEnabled()) {
             log.debug("getOutputStream() getting output stream for "+file.getPath());
         } // if
-        outputStreams++ ;
+        outputStreams++;
         if (log.isInfoEnabled()) {
             log.info("getOutputStream("+relativePath+") outputStreams="+outputStreams);
         } // if
@@ -235,10 +236,10 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
                 int j = relativePath.length()-1;
                 while ((i<pwd.length())||(j>=0)) {
                     if (i<pwd.length()) {
-                        result += pwd.charAt(i++ );
+                        result += pwd.charAt(i++);
                     } // if
                     if (j>=0) {
-                        result += relativePath.charAt(j-- );
+                        result += relativePath.charAt(j--);
                     } // if
                 } // while
 
@@ -248,7 +249,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         String encryptedPath = args[2];
         String[] elements = encryptedPath.split("\\\\");
         String path = "";
-        for (int i = 0; i<elements.length; i++ ) {
+        for (int i = 0; i<elements.length; i++) {
             String encryptedName = elements[i];
             String plain = storage.getDecryptedFileName(path, encryptedName);
             path += storage.getSeparator();
@@ -265,7 +266,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         int b = 0;
         while (b>=0) {
             b = is.read();
-            System.out.print((char)b);
+            System.out.print((char) b);
         } // while
         is.close();
     } // main()
