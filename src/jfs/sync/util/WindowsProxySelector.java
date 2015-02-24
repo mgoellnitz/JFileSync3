@@ -23,15 +23,14 @@ import java.net.ProxySelector;
 import java.net.SocketAddress;
 import java.net.URI;
 import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class WindowsProxySelector extends ProxySelector {
+public final class WindowsProxySelector extends ProxySelector {
 
-    private static Log log = LogFactory.getLog(WindowsProxySelector.class);
+    private static final Log LOG = LogFactory.getLog(WindowsProxySelector.class);
 
-    private ProxySelector root;
+    private final ProxySelector root;
 
     private static ProxySelector instance = null;
 
@@ -39,8 +38,8 @@ public class WindowsProxySelector extends ProxySelector {
     private WindowsProxySelector() {
         root = ProxySelector.getDefault();
         ProxySelector.setDefault(null);
-        if (log.isDebugEnabled()) {
-            log.debug("select() root "+root);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("select() root "+root);
         } // if
     } // WindowsProxySelector()
 
@@ -59,10 +58,10 @@ public class WindowsProxySelector extends ProxySelector {
 
         URI url = URI.create(uri.toString().replace("https://", "http://"));
         result = root.select(url);
-        if (log.isDebugEnabled()) {
-            log.debug("select() uri "+uri);
-            log.debug("select() url "+url);
-            log.debug("select() proxies "+result);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("select() uri "+uri);
+            LOG.debug("select() url "+url);
+            LOG.debug("select() proxies "+result);
         } // if
         return result;
     }// select()

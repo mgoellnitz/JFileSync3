@@ -22,7 +22,6 @@ package jfs.conf;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,7 +32,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -45,7 +43,10 @@ import org.xml.sax.SAXParseException;
  * @author Jens Heidrich
  * @version $Id: XMLSupport.java,v 1.5 2007/02/26 18:49:11 heidrich Exp $
  */
-class XMLSupport {
+public final class XMLSupport {
+
+    private XMLSupport() {
+    }
 
 	/**
 	 * Returns the document element (root tag) of a given XML file. If no file

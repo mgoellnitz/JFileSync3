@@ -25,7 +25,7 @@ package jfs.sync;
  * @author Jens Heidrich
  * @version $Id: JFSDeleteMonitor.java,v 1.2 2007/02/26 18:49:09 heidrich Exp $
  */
-public class JFSDeleteMonitor {
+public final class JFSDeleteMonitor {
 
     /** Stores the only instance of the class. */
     private static JFSDeleteMonitor instance = null;

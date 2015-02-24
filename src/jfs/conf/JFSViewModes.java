@@ -21,7 +21,6 @@ package jfs.conf;
 
 import java.util.Collection;
 import java.util.TreeMap;
-
 import jfs.conf.JFSSyncMode.SyncAction;
 
 /**
@@ -30,7 +29,7 @@ import jfs.conf.JFSSyncMode.SyncAction;
  * @author Jens Heidrich
  * @version $Id: JFSViewModes.java,v 1.11 2007/02/26 18:49:11 heidrich Exp $
  */
-public class JFSViewModes {
+public final class JFSViewModes {
 
 	/** Stores the only instance of the class. */
 	private static JFSViewModes instance = null;

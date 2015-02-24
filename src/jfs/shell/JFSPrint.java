@@ -43,6 +43,12 @@ import jfs.sync.JFSTable;
  * @version $Id: JFSPrint.java,v 1.9 2007/02/26 18:49:11 heidrich Exp $
  */
 public final class JFSPrint {
+
+
+    private JFSPrint() {
+    }
+    
+    
 	/**
 	 * Prints the whole configuration to standard out.
 	 */

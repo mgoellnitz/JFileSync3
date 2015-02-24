@@ -22,9 +22,7 @@ package jfs;
 import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
-
 import javax.swing.UIManager;
-
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSConst;
 import jfs.conf.JFSDirectoryPair;
@@ -47,7 +45,11 @@ import jfs.sync.JFSTable;
  * @author Jens Heidrich
  * @version $Id: JFileSync.java,v 1.40 2007/07/20 15:24:22 heidrich Exp $
  */
-public class JFileSync {
+public final class JFileSync {
+
+
+    private JFileSync() {
+    }
 
     /**
      * Determines the home directory, where the JAR file respectively the class files are located.

@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Stack;
 import java.util.StringTokenizer;
-
 import org.mrpdaemon.sec.encfs.EncFSConfig;
 import org.mrpdaemon.sec.encfs.EncFSConfigFactory;
 import org.mrpdaemon.sec.encfs.EncFSException;
@@ -132,7 +131,7 @@ public class EncFSShell {
             return false;
         }
 
-        if (response.toLowerCase().equals("yes")||response.toLowerCase().equals("y")) {
+        if (response.equalsIgnoreCase("yes")||response.equalsIgnoreCase("y")) {
 
             // If the directory doesn't exist create it first
             File inputDir = new File(path);

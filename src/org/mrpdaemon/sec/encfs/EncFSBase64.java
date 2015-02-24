@@ -500,7 +500,7 @@ public final class EncFSBase64 {
 	private static byte[] encode3to4(byte[] source, int srcOffset,
 			int numSigBytes, byte[] destination, int destOffset, int options) {
 
-		byte[] ALPHABET = getAlphabet(options);
+		byte[] alphabet = getAlphabet(options);
 
 		// 1 2 3
 		// 01234567890123456789012345678901 Bit position
@@ -520,22 +520,22 @@ public final class EncFSBase64 {
 
 		switch (numSigBytes) {
 		case 3:
-			destination[destOffset] = ALPHABET[(inBuff >>> 18)];
-			destination[destOffset + 1] = ALPHABET[(inBuff >>> 12) & 0x3f];
-			destination[destOffset + 2] = ALPHABET[(inBuff >>> 6) & 0x3f];
-			destination[destOffset + 3] = ALPHABET[(inBuff) & 0x3f];
+			destination[destOffset] = alphabet[(inBuff >>> 18)];
+			destination[destOffset + 1] = alphabet[(inBuff >>> 12) & 0x3f];
+			destination[destOffset + 2] = alphabet[(inBuff >>> 6) & 0x3f];
+			destination[destOffset + 3] = alphabet[(inBuff) & 0x3f];
 			return destination;
 
 		case 2:
-			destination[destOffset] = ALPHABET[(inBuff >>> 18)];
-			destination[destOffset + 1] = ALPHABET[(inBuff >>> 12) & 0x3f];
-			destination[destOffset + 2] = ALPHABET[(inBuff >>> 6) & 0x3f];
+			destination[destOffset] = alphabet[(inBuff >>> 18)];
+			destination[destOffset + 1] = alphabet[(inBuff >>> 12) & 0x3f];
+			destination[destOffset + 2] = alphabet[(inBuff >>> 6) & 0x3f];
 			destination[destOffset + 3] = EQUALS_SIGN;
 			return destination;
 
 		case 1:
-			destination[destOffset] = ALPHABET[(inBuff >>> 18)];
-			destination[destOffset + 1] = ALPHABET[(inBuff >>> 12) & 0x3f];
+			destination[destOffset] = alphabet[(inBuff >>> 18)];
+			destination[destOffset + 1] = alphabet[(inBuff >>> 12) & 0x3f];
 			destination[destOffset + 2] = EQUALS_SIGN;
 			destination[destOffset + 3] = EQUALS_SIGN;
 			return destination;
@@ -808,7 +808,7 @@ public final class EncFSBase64 {
 							destination.length, destOffset));
 		}
 
-		byte[] DECODABET = getDecodabet(options);
+		byte[] decodabet = getDecodabet(options);
 
 		// Example: Dk==
 		if (source[2] == EQUALS_SIGN) {
@@ -816,8 +816,8 @@ public final class EncFSBase64 {
 			// int outBuff = ( ( DECODABET[ source[ srcOffset ] ] << 24 ) >>> 6
 			// )
 			// | ( ( DECODABET[ source[ srcOffset + 1] ] << 24 ) >>> 12 );
-			int outBuff = ((DECODABET[source[0]] & 0xFF) << 18)
-					| ((DECODABET[source[1]] & 0xFF) << 12);
+			int outBuff = ((decodabet[source[0]] & 0xFF) << 18)
+					| ((decodabet[source[1]] & 0xFF) << 12);
 
 			destination[destOffset] = (byte) (outBuff >>> 16);
 			return 1;
@@ -830,9 +830,9 @@ public final class EncFSBase64 {
 			// )
 			// | ( ( DECODABET[ source[ srcOffset + 1 ] ] << 24 ) >>> 12 )
 			// | ( ( DECODABET[ source[ srcOffset + 2 ] ] << 24 ) >>> 18 );
-			int outBuff = ((DECODABET[source[0]] & 0xFF) << 18)
-					| ((DECODABET[source[1]] & 0xFF) << 12)
-					| ((DECODABET[source[2]] & 0xFF) << 6);
+			int outBuff = ((decodabet[source[0]] & 0xFF) << 18)
+					| ((decodabet[source[1]] & 0xFF) << 12)
+					| ((decodabet[source[2]] & 0xFF) << 6);
 
 			destination[destOffset] = (byte) (outBuff >>> 16);
 			destination[destOffset + 1] = (byte) (outBuff >>> 8);
@@ -847,10 +847,10 @@ public final class EncFSBase64 {
 			// | ( ( DECODABET[ source[ srcOffset + 1 ] ] << 24 ) >>> 12 )
 			// | ( ( DECODABET[ source[ srcOffset + 2 ] ] << 24 ) >>> 18 )
 			// | ( ( DECODABET[ source[ srcOffset + 3 ] ] << 24 ) >>> 24 );
-			int outBuff = ((DECODABET[source[0]] & 0xFF) << 18)
-					| ((DECODABET[source[1]] & 0xFF) << 12)
-					| ((DECODABET[source[2]] & 0xFF) << 6)
-					| ((DECODABET[source[3]] & 0xFF));
+			int outBuff = ((decodabet[source[0]] & 0xFF) << 18)
+					| ((decodabet[source[1]] & 0xFF) << 12)
+					| ((decodabet[source[2]] & 0xFF) << 6)
+					| ((decodabet[source[3]] & 0xFF));
 
 			destination[destOffset] = (byte) (outBuff >> 16);
 			destination[destOffset + 1] = (byte) (outBuff >> 8);
@@ -916,7 +916,7 @@ public final class EncFSBase64 {
 							+ len);
 		}
 
-		byte[] DECODABET = getDecodabet(options);
+		byte[] decodabet = getDecodabet(options);
 
 		int len34 = len * 3 / 4; // Estimate on array size
 		byte[] outBuff = new byte[len34]; // Upper limit on size of output
@@ -928,7 +928,7 @@ public final class EncFSBase64 {
 
 		for (int i = 0; i < len; i++) { // Loop through source
 			// Special value from DECODABET
-			byte sbiDecode = DECODABET[source[i] & 0xFF];
+			byte sbiDecode = decodabet[source[i] & 0xFF];
 
 			// White space, Equals sign, or legit Base64 character
 			// Note the values such as -5 and -9 in the
@@ -1109,7 +1109,7 @@ public final class EncFSBase64 {
 		return result;
 	}
 
-	private static final char[] B642AsciiTable = ",-0123456789".toCharArray();
+	private static final char[] B64_TO_ASCII_TABLE = ",-0123456789".toCharArray();
 
 	private static void B64ToAscii(byte[] in) {
 		int length = in.length;
@@ -1121,7 +1121,7 @@ public final class EncFSBase64 {
 				else
 					ch += 'A' - 12;
 			} else
-				ch = B642AsciiTable[ch];
+				ch = B64_TO_ASCII_TABLE[ch];
 
 			in[offset] = (byte) ch;
 		}

@@ -37,7 +37,7 @@ import jfs.sync.JFSTable;
  * @author Jens Heidrich
  * @version $Id: JFSHistoryManager.java,v 1.8 2007/07/20 15:59:30 heidrich Exp $
  */
-public class JFSHistoryManager {
+public final class JFSHistoryManager {
     
     /** Stores the only instance of the class. */
     private static JFSHistoryManager instance = null;

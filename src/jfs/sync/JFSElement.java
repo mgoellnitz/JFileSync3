@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync;
 
 import java.util.ArrayList;
@@ -28,10 +27,11 @@ import jfs.conf.JFSSyncModes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+
 /**
  * Represents a single pair of corresponding files or directories on the source and target side within the directory
  * structures that have to be compared.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSElement.java,v 1.22 2007/03/29 14:11:35 heidrich Exp $
  */
@@ -65,7 +65,7 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * The action that has to be performed for the JFS element.
-     * 
+     *
      * @see JFSSyncModes
      */
     protected SyncAction action = SyncAction.NOP;
@@ -79,8 +79,10 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /** The states of the element. */
     public enum ElementState {
+
         IS_ROOT, NOT_DETERMINED, EQUAL, SRC_IS_NULL, TGT_IS_NULL, SRC_GT_TGT, TGT_GT_SRC, LENGTH_INCONSISTENT
     }
+
 
     /** Constructor for derived classes. */
     protected JFSElement() {
@@ -91,15 +93,11 @@ public class JFSElement implements Comparable<JFSElement> {
      * Constructs an element that compares two File objects and determines whether one is newer than the other or
      * whether both files are equal. At least one file has to be not equal to null. If both files are equal, there
      * relative paths have to match. The parent must be a directory and must not be null.
-     * 
-     * @param srcFile
-     *            Source file.
-     * @param tgtFile
-     *            Target file.
-     * @param parent
-     *            The parent of the current element.
-     * @param isDirectory
-     *            Determines whether the File objects are directories.
+     *
+     * @param srcFile Source file.
+     * @param tgtFile Target file.
+     * @param parent The parent of the current element.
+     * @param isDirectory Determines whether the File objects are directories.
      */
     public JFSElement(JFSFile srcFile, JFSFile tgtFile, JFSElement parent, boolean isDirectory) {
         assert (srcFile!=null||tgtFile!=null)&&parent!=null&&parent.isDirectory();
@@ -130,7 +128,7 @@ public class JFSElement implements Comparable<JFSElement> {
         long srcLastModified = 0;
         long tgtLastModified = 0;
 
-        if ( !directory) {
+        if (!directory) {
             if (srcFile!=null) {
                 srcLastModified = srcFile.getLastModified();
             }
@@ -148,19 +146,25 @@ public class JFSElement implements Comparable<JFSElement> {
             LOG.debug("revalidate() diffTime="+diffTime);
         } // if
 
-        if (srcFile==null)
+        if (srcFile==null) {
             state = ElementState.SRC_IS_NULL;
-        else if (tgtFile==null)
+        } else if (tgtFile==null) {
             state = ElementState.TGT_IS_NULL;
-        else if ( !directory)
-            if (diffTime==0)
+        } else {
+            if (!directory) {
+                if (diffTime==0) {
+                    state = ElementState.EQUAL;
+                } else {
+                    if (diffTime>0) {
+                        state = ElementState.SRC_GT_TGT;
+                    } else {
+                        state = ElementState.TGT_GT_SRC;
+                    }
+                }
+            } else {
                 state = ElementState.EQUAL;
-            else if (diffTime>0)
-                state = ElementState.SRC_GT_TGT;
-            else
-                state = ElementState.TGT_GT_SRC;
-        else
-            state = ElementState.EQUAL;
+            }
+        }
 
         // Check length:
         if (state==ElementState.EQUAL&&srcFile.getLength()!=tgtFile.getLength()) {
@@ -192,9 +196,8 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * Sets the source file. Used when updating the synchronization table during the process.
-     * 
-     * @param file
-     *            The file to set as source.
+     *
+     * @param file The file to set as source.
      */
     public void setSrcFile(JFSFile file) {
         srcFile = file;
@@ -211,9 +214,8 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * Sets the traget file. Used when updating the synchronization table during the process.
-     * 
-     * @param file
-     *            The file to set as target.
+     *
+     * @param file The file to set as target.
      */
     public void setTgtFile(JFSFile file) {
         tgtFile = file;
@@ -222,7 +224,7 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * @return Returns the parent element of the current element which reflects the file system structure. The parent
-     *         element can only be null, if the current element is the root element.
+     * element can only be null, if the current element is the root element.
      */
     public final JFSElement getParent() {
         return parent;
@@ -231,7 +233,7 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * @return Returns the children of the current element which reflects the file system structure. The children are
-     *         null, if the current element is not a directory or the directory it represents is empty.
+     * null, if the current element is not a directory or the directory it represents is empty.
      */
     public final List<JFSElement> getChildren() {
         return children;
@@ -240,9 +242,9 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * Adds a child to the element.
-     * 
+     *
      * @param child
-     *            The child to add.
+     * The child to add.
      */
     public final void addChild(JFSElement child) {
         if (children==null) {
@@ -279,9 +281,8 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * Determines whether the action was manually set.
-     * 
-     * @param manuallySetAction
-     *            True, if it was manually set.
+     *
+     * @param manuallySetAction True, if it was manually set.
      */
     public void setManuallySetAction(boolean manuallySetAction) {
         this.manuallySetAction = manuallySetAction;
@@ -298,10 +299,9 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * Sets the action that has to be performed for the JFS element.
-     * 
+     *
      * @see JFSSyncModes
-     * @param action
-     *            The action to set.
+     * @param action The action to set.
      */
     public void setAction(SyncAction action) {
         this.action = action;
@@ -318,9 +318,8 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * Sets whether the action of the JFS element is active.
-     * 
-     * @param isActive
-     *            True, if the action is active.
+     *
+     * @param isActive True, if the action is active.
      */
     public void setActive(boolean isActive) {
         this.active = isActive;
@@ -337,9 +336,8 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * Sets whether the element is viewed.
-     * 
-     * @param isViewed
-     *            True, if the element is viewed.
+     *
+     * @param isViewed True, if the element is viewed.
      */
     public final void setViewed(boolean isViewed) {
         this.viewed = isViewed;
@@ -356,8 +354,8 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * @return Returns the name of the element, which has to be the same for source and target if both files are equal.
-     *         If the source is equal to null the relative path of the target is returned, and vice versa. According to
-     *         the constructor of this element, it is not allowed that both files are equal to null.
+     * If the source is equal to null the relative path of the target is returned, and vice versa. According to
+     * the constructor of this element, it is not allowed that both files are equal to null.
      */
     public String getName() {
         if (srcFile!=null) {
@@ -369,8 +367,8 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * @return Returns the relative path of the element, which has to be the same for source and target if both files
-     *         are equal. If the source is equal to null the relative path of the target is returned, and vice versa.
-     *         According to the constructor of this element, it is not allowed that both files are equal to null.
+     * are equal. If the source is equal to null the relative path of the target is returned, and vice versa.
+     * According to the constructor of this element, it is not allowed that both files are equal to null.
      */
     public String getRelativePath() {
         if (srcFile!=null) {
@@ -391,13 +389,11 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * Compares two time stamps taking into account the specified granularity of the configuration object.
-     * 
-     * @param time1
-     *            The first time stamp.
-     * @param time2
-     *            The second time stamp.
+     *
+     * @param time1 The first time stamp.
+     * @param time2 The second time stamp.
      * @return Returns a positive number if the first is newer than the second time stamp, 0 if both are equal, and a
-     *         negative number if the second time stamp is newer than the first one.
+     * negative number if the second time stamp is newer than the first one.
      */
     public static long compareToTime(long time1, long time2) {
         return (time1-time2)/JFSConfig.getInstance().getGranularity();
@@ -406,7 +402,7 @@ public class JFSElement implements Comparable<JFSElement> {
 
     /**
      * Returns the valid actions for the JFS element.
-     * 
+     *
      * @return A vector of valid synchronization actions.
      */
     public TreeSet<SyncAction> getValidActions() {
@@ -436,5 +432,5 @@ public class JFSElement implements Comparable<JFSElement> {
 
         return validActions;
     }
-    
+
 }

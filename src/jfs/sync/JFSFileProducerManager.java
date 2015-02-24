@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Jens Heidrich
  * @version $Id: JFSFileProducerManager.java,v 1.1 2005/05/06 11:06:57 heidrich Exp $
  */
-public class JFSFileProducerManager {
+public final class JFSFileProducerManager {
 
     private static Log log = LogFactory.getLog(JFSFileProducerManager.class);
 

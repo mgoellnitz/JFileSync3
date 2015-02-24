@@ -29,7 +29,10 @@ import java.util.Date;
  * @author Jens Heidrich
  * @version $Id: JFSFormatter.java,v 1.2 2007/02/26 18:49:09 heidrich Exp $
  */
-public class JFSFormatter {
+public final class JFSFormatter {
+
+    private JFSFormatter() {
+    }
 
     /**
      * Returns the length of the file as a string if the JFSFile is not a directory and empty string otherwise.

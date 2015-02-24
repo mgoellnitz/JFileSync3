@@ -49,7 +49,11 @@ import jfs.sync.JFSTable;
  * @author Jens Heidrich
  * @version $Id: JFSShell.java,v 1.11 2007/02/26 18:49:11 heidrich Exp $
  */
-public class JFSShell {
+public final class JFSShell {
+
+
+    private JFSShell() {
+    }
 
 	/**
 	 * Reads a positive number out of a string of the following form: "[command]

@@ -27,7 +27,7 @@ import java.util.Vector;
  * @author Jens Heidrich
  * @version $Id: JFSComparisonMonitor.java,v 1.1 2006/08/25 15:54:37 heidrich Exp $
  */
-public class JFSComparisonMonitor {
+public final class JFSComparisonMonitor {
 
     /** Stores the only instance of the class. */
     private static JFSComparisonMonitor instance = null;

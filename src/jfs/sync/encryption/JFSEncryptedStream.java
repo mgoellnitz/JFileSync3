@@ -17,6 +17,8 @@
  */
 package jfs.sync.encryption;
 
+import SevenZip.Compression.LZMA.Decoder;
+import SevenZip.Compression.LZMA.Encoder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,18 +30,13 @@ import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
-
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
-
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import SevenZip.Compression.LZMA.Decoder;
-import SevenZip.Compression.LZMA.Encoder;
 
 /**
  * 
@@ -52,7 +49,7 @@ public class JFSEncryptedStream extends OutputStream {
     public static final int DONT_CHECK_LENGTH = -2;
 
     // TODO: We'd like to have this true :-)
-    public static boolean CONCURRENCY = false;
+    public static final boolean CONCURRENCY = false;
 
     // Constant absolute maximum size to try bzip2 compression
     private static final int BZIP_MAX_LENGTH = 5190000;

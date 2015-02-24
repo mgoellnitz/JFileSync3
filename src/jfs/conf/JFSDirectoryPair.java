@@ -27,7 +27,7 @@ import java.io.File;
  * @author Jens Heidrich
  * @version $Id: JFSDirectoryPair.java,v 1.11 2007/02/26 18:49:11 heidrich Exp $
  */
-public class JFSDirectoryPair implements Cloneable {
+public final class JFSDirectoryPair implements Cloneable {
 
     /** The source directory. */
     private String srcDir;

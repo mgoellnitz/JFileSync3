@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
  * @author Jens Heidrich
  * @version $Id: JFSText.java,v 1.11 2007/02/26 18:49:11 heidrich Exp $
  */
-public class JFSText {
+public final class JFSText {
 
 	/** The system's line separator. */
 	public final static String LINE_SEPARATOR = System.getProperty(

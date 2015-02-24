@@ -36,7 +36,7 @@ import jfs.sync.JFSQuestion.QuestionAnswer;
  * @author Jens Heidrich
  * @version $Id: JFSSynchronization.java,v 1.33 2007/06/05 16:09:41 heidrich Exp $
  */
-public class JFSSynchronization {
+public final class JFSSynchronization {
 
     /** Stores the only instance of the class. */
     private static JFSSynchronization instance = null;

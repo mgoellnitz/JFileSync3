@@ -32,7 +32,7 @@ import jfs.conf.JFSText;
  * @author Jens Heidrich
  * @version $Id: JFSProgress.java,v 1.24 2007/07/20 12:27:52 heidrich Exp $
  */
-public class JFSProgress {
+public final class JFSProgress {
 
     /** Stores the only instance of the class. */
     private static JFSProgress instance = null;

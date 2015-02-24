@@ -30,7 +30,7 @@ import jfs.sync.JFSElement.ElementState;
  * @author Jens Heidrich
  * @version $Id: JFSSyncModes.java,v 1.10 2007/02/26 18:49:11 heidrich Exp $
  */
-public class JFSSyncModes {
+public final class JFSSyncModes {
 
 	/** Stores the only instance of the class. */
 	private static JFSSyncModes instance = null;
