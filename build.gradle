@@ -137,21 +137,28 @@ task(encryptionTest) << {
     // Extract test data
     println "Extracting test data"
     ant.unzip(src: "test/test-folders.zip", dest: "$buildDir/${project.name}")
+    
+    // TODO: OS-Switch
+    def prefix = ""; // "cmd /c " for windows
 
+    // Only for linux
+    String cmd = "chmod 755 bin${File.separator}${project.name}"
+    project.exec(cmd, "$buildDir/${project.name}")
+  
     println "Encrypting"
-    String cmd = "cmd /c bin${File.separator}${project.name} -config ..\\..\\test\\1-encrypt-with-metadata.xml -nogui -nohistory -quiet"
+    cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}1-encrypt-with-metadata.xml -nogui -nohistory -quiet"
     project.exec(cmd, "$buildDir/${project.name}")
 
-    println "Decrypting taking every folders metadata into account"
-    cmd = "cmd /c bin${File.separator}${project.name} -config ..\\..\\test\\2-decrypt-with-metadata.xml -nogui -nohistory -quiet"
+    println "Decrypting taking every folder metadata into account"
+    cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}2-decrypt-with-metadata.xml -nogui -nohistory -quiet"
     project.exec(cmd, "$buildDir/${project.name}")
 
-    println "Decrypting ignoring every folders metadata"
-    cmd = "cmd /c bin${File.separator}${project.name} -config ..\\..\\test\\3-decrypt-without-metadata.xml -nogui -nohistory -quiet"
+    println "Decrypting ignoring any folder's metadata"
+    cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}3-decrypt-without-metadata.xml -nogui -nohistory -quiet"
     project.exec(cmd, "$buildDir/${project.name}")
 
     println "And now please compare by hand"
-    cmd = "cmd /c bin${File.separator}${project.name} -config ..\\..\\test\\4-compare-resulting-folders.xml -nohistory"
+    cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}4-compare-resulting-folders.xml -nohistory"
     project.exec(cmd, "$buildDir/${project.name}")
 }
 
