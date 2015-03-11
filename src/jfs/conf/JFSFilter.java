@@ -21,7 +21,6 @@ package jfs.conf;
 
 import java.io.File;
 import java.util.regex.PatternSyntaxException;
-
 import jfs.sync.JFSFile;
 
 /**
@@ -32,6 +31,19 @@ import jfs.sync.JFSFile;
  * @version $Id: JFSFilter.java,v 1.8 2007/02/26 18:49:11 heidrich Exp $
  */
 public class JFSFilter implements Cloneable {
+
+    /** The filter type. */
+    private FilterType type = FilterType.NAME;
+
+    /** The filter range. */
+    private FilterRange range = FilterRange.ALL;
+
+    /** Determines whether the filter should be applied or not. */
+    private boolean isActive = true;
+
+    /** The regular expression representing the filter. */
+    private String filter;
+
 
     /** The filter type determines which part of the file should be checked. */
     public static enum FilterType {
@@ -66,19 +78,6 @@ public class JFSFilter implements Cloneable {
             return name;
         }
     }
-
-    /** The filter type. */
-    private FilterType type = FilterType.NAME;
-
-    /** The filter range. */
-    private FilterRange range = FilterRange.ALL;
-
-    /** Determines whether the filter should be applied or not. */
-    private boolean isActive = true;
-
-    /** The regular expression representing the filter. */
-    private String filter;
-
 
     /**
      * Creates a new filter.

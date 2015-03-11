@@ -24,7 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -51,10 +51,10 @@ public class JFSTableListener implements MouseListener, ActionListener {
     private final JTable table;
 
     /** Stores the names for the icons used for displaying actions. */
-    private HashMap<SyncAction, String> actionIconNames;
+    private final Map<SyncAction, String> actionIconNames;
 
     /** Stores the current selection of JFS elements in the table. */
-    private Vector<JFSElement> currentSelection = new Vector<JFSElement>();
+    private final Vector<JFSElement> currentSelection = new Vector<>();
 
 
     /**
@@ -67,7 +67,7 @@ public class JFSTableListener implements MouseListener, ActionListener {
      * @param actionIconNames
      *            The action icon names.
      */
-    public JFSTableListener(Frame parent, JTable table, HashMap<SyncAction, String> actionIconNames) {
+    public JFSTableListener(Frame parent, JTable table, Map<SyncAction, String> actionIconNames) {
         this.parent = parent;
         this.table = table;
         this.actionIconNames = actionIconNames;

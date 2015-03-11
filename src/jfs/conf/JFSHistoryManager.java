@@ -43,7 +43,7 @@ public final class JFSHistoryManager {
     private static JFSHistoryManager instance = null;
 
     /** The stored histories. */
-    private List<JFSHistory> histories = new ArrayList<JFSHistory>();
+    private List<JFSHistory> histories = new ArrayList<>();
 
 
     /**
@@ -58,9 +58,10 @@ public final class JFSHistoryManager {
      * 
      * @return The only instance.
      */
-    public final static JFSHistoryManager getInstance() {
-        if (instance==null)
+    public static JFSHistoryManager getInstance() {
+        if (instance==null) {
             instance = new JFSHistoryManager();
+        }
 
         return instance;
     }
@@ -69,7 +70,7 @@ public final class JFSHistoryManager {
     /**
      * Sorts all histories stored.
      */
-    public final void sortHistories() {
+    public void sortHistories() {
         Collections.sort(histories);
     }
 
@@ -79,7 +80,7 @@ public final class JFSHistoryManager {
      * 
      * @return The histories.
      */
-    public final List<JFSHistory> getHistories() {
+    public List<JFSHistory> getHistories() {
         return histories;
     }
 
@@ -92,7 +93,7 @@ public final class JFSHistoryManager {
      *            The directory pair to search the history for.
      * @return The history.
      */
-    public final JFSHistory getHistory(JFSDirectoryPair pair) {
+    public JFSHistory getHistory(JFSDirectoryPair pair) {
         for (JFSHistory h : histories) {
             if (h.getPair().equals(pair)) {
                 return h;
@@ -111,7 +112,7 @@ public final class JFSHistoryManager {
      * @param history
      *            The history to add.
      */
-    public final void addHistory(JFSHistory history) {
+    public void addHistory(JFSHistory history) {
         histories.add(history);
     }
 
@@ -123,7 +124,7 @@ public final class JFSHistoryManager {
      * @param history
      *            The history to delete.
      */
-    public final void deleteHistory(JFSHistory history) {
+    public void deleteHistory(JFSHistory history) {
         deleteHistoryFile(history);
         history.clear();
         histories.remove(history);
@@ -135,7 +136,7 @@ public final class JFSHistoryManager {
      * 
      * @see #deleteHistory(JFSHistory)
      */
-    public final void deleteAll() {
+    public void deleteAll() {
         for (JFSHistory h : histories) {
             deleteHistoryFile(h);
             h.clear();
@@ -162,7 +163,7 @@ public final class JFSHistoryManager {
      * Cleans the JFS configuration directory by cleaning all history files that are not referenced in the history
      * manager.
      */
-    public final void cleanHistories() {
+    public void cleanHistories() {
         List<String> historyFiles = new ArrayList<>();
         for (JFSHistory h : getHistories()) {
             historyFiles.add(h.getFileName());
@@ -207,9 +208,9 @@ public final class JFSHistoryManager {
                 root = (JFSRootElement)element;
                 h = root.getHistory();
                 h.setDate(System.currentTimeMillis());
-                newHistory = new Vector<JFSHistoryItem>();
-                newDirectories = new HashMap<String, JFSHistoryItem>();
-                newFiles = new HashMap<String, JFSHistoryItem>();
+                newHistory = new Vector<>();
+                newDirectories = new HashMap<>();
+                newFiles = new HashMap<>();
             }
 
             JFSHistoryItem item = h.getHistory(element);
@@ -240,7 +241,8 @@ public final class JFSHistoryManager {
         }
 
         // Update last history read:
-        if (root!=null&&h!=null)
+        if (root!=null&&h!=null) {
             h.update(root, newHistory, newDirectories, newFiles);
+        }
     }
 }

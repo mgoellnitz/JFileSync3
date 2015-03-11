@@ -226,15 +226,15 @@ public class JFSEncryptedStream extends OutputStream {
              * +"  -pb{N}: set number of pos bits - [0, 4], default: 2\n"
              * +"  -mf{MF_ID}: set Match Finder: [bt2, bt4], default: bt4\n"+"  -eos:   write End Of Stream marker\n");
              */
-            private int dictionarySize = 1<<23;
+            private static final int dictionarySize = 1<<23;
 
-            private int lc = 3;
+            private static final int lc = 3;
 
-            private int lp = 0;
+            private static final int lp = 0;
 
-            private int pb = 2;
+            private static final int pb = 2;
 
-            private int fb = 128;
+            private static final int fb = 128;
 
             public int algorithm = 2;
 
@@ -327,7 +327,7 @@ public class JFSEncryptedStream extends OutputStream {
 
     private class ClosingThread extends Thread {
 
-        private JFSEncryptedStream stream;
+        private final JFSEncryptedStream stream;
 
 
         public ClosingThread(JFSEncryptedStream stream) {

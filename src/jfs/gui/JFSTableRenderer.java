@@ -22,6 +22,7 @@ package jfs.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.HashMap;
+import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -75,13 +76,13 @@ public class JFSTableRenderer implements TableCellRenderer {
     protected JLabel cell;
 
     /** Stores the names for the icons used for displaying actions. */
-    private HashMap<SyncAction, String> actionIconNames = new HashMap<SyncAction, String>();
+    private final Map<SyncAction, String> actionIconNames = new HashMap<>();
 
     /** Stores the icons used for displaying the action for a JFS element. */
-    private HashMap<SyncAction, JLabel> actionIcons = new HashMap<SyncAction, JLabel>();
+    private final Map<SyncAction, JLabel> actionIcons = new HashMap<>();
 
     /** Stores the icons used for displaying the action for a JFS element. */
-    private HashMap<SyncAction, Color> actionBackgrounds = new HashMap<SyncAction, Color>();
+    private final Map<SyncAction, Color> actionBackgrounds = new HashMap<>();
 
 
     /**
@@ -134,7 +135,7 @@ public class JFSTableRenderer implements TableCellRenderer {
     /**
      * @return Returns the action icon names.
      */
-    public HashMap<SyncAction, String> getActionIconNames() {
+    public Map<SyncAction, String> getActionIconNames() {
         return actionIconNames;
     }
 

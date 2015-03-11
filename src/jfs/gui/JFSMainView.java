@@ -87,27 +87,27 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
     /**
      * Stores the corresponding frame.
      */
-    private JFrame frame = null;
+    private final JFrame frame;
 
     /**
      * The synchronization table itself in form of a JTable object.
      */
-    private JTable syncTable;
+    private final JTable syncTable;
 
     /**
      * Group with all possible views of the shown files.
      */
-    private ButtonGroup viewGroup;
+    private final ButtonGroup viewGroup;
 
     /**
      * Group with all possible synchronization modes.
      */
-    private ButtonGroup syncGroup;
+    private final ButtonGroup syncGroup;
 
     /**
      * Stores the overall size state (displayed at the bottom of the frame).
      */
-    private JLabel stateOverallSize;
+    private final JLabel stateOverallSize;
 
     /**
      * Stores the overall size state (displayed at the bottom of the frame).
@@ -127,7 +127,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
     /**
      * The last opened profiles.
      */
-    private JMenuItem[] lastOpenedProfiles;
+    private final JMenuItem[] lastOpenedProfiles;
 
     /**
      * Shown if an unread error is available in the error log.
