@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,17 +32,18 @@ import jfs.conf.JFSText;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSProgress;
 import jfs.sync.util.SecurityUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class JFSEncryptedFile extends JFSFile {
 
-    private static Log log = LogFactory.getLog(JFSEncryptedFile.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JFSEncryptedFile.class);
 
     /**
      * duplication to avoid constant casts
      */
-    private AbstractFileProducer fileProducer;
+    private final AbstractFileProducer fileProducer;
 
     private FileInfo fileInfo;
 
@@ -61,13 +62,10 @@ public class JFSEncryptedFile extends JFSFile {
 
     /**
      * Creates a new local JFS file object.
-     * 
-     * @param fileProducer
-     *            The assigned file producer.
-     * @param cipherSpec
-     *            JCE cipher specification.
-     * @param relativePath
-     *            The relative path of the JFS file starting from the root JFS file.
+     *
+     * @param fileProducer The assigned file producer.
+     * @param cipherSpec JCE cipher specification.
+     * @param relativePath The relative path of the JFS file starting from the root JFS file.
      */
     JFSEncryptedFile(AbstractFileProducer fileProducer, String relativePath) {
         super(fileProducer, relativePath);
@@ -77,23 +75,21 @@ public class JFSEncryptedFile extends JFSFile {
         this.fileProducer = fileProducer;
 
         fileInfo = fileProducer.getFileInfo(getRelativePath());
-        if (log.isDebugEnabled()) {
-            log.debug("('"+getRelativePath()+"') name="+fileInfo.getPath());
-        } // if
+        LOG.debug("('{}') name={}", getRelativePath(), fileInfo.getPath());
     }// JFSEncryptedFile()
 
 
     private Cipher getCipher(int cipherMode) {
         try {
-            String cipherSpec = ((AbstractFileProducer)getFileProducer()).storageAccess.getCipherSpec();
-            byte[] credentials = ((AbstractFileProducer)getFileProducer()).storageAccess.getFileCredentials(getRelativePath());
+            String cipherSpec = ((AbstractFileProducer) getFileProducer()).storageAccess.getCipherSpec();
+            byte[] credentials = ((AbstractFileProducer) getFileProducer()).storageAccess.getFileCredentials(getRelativePath());
             return SecurityUtils.getCipher(cipherSpec, cipherMode, credentials);
         } catch (NoSuchAlgorithmException nsae) {
-            log.error("getCipher() No Such Algorhithm");
+            LOG.error("getCipher() No Such Algorhithm");
         } catch (NoSuchPaddingException nspe) {
-            log.error("getCipher() No Such Padding");
+            LOG.error("getCipher() No Such Padding");
         } catch (InvalidKeyException ike) {
-            log.error("getCipher() Invalid Key "+ike.getLocalizedMessage());
+            LOG.error("getCipher() Invalid Key {}", ike.getLocalizedMessage());
         } // try/catch
         return null;
     } // getCipher()
@@ -104,9 +100,7 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     public final String getName() {
-        if (log.isDebugEnabled()) {
-            log.debug("getName('"+getRelativePath()+"') "+fileInfo.getName());
-        } // if
+        LOG.debug("getName('{}') {}", getRelativePath(), fileInfo.getName());
         return fileInfo.getName();
     }
 
@@ -143,6 +137,7 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     public final boolean canWrite() {
+        LOG.warn("canWrite() {}", fileInfo.isCanWrite());
         return fileInfo.isCanWrite();
     }
 
@@ -159,13 +154,11 @@ public class JFSEncryptedFile extends JFSFile {
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 JFSEncryptedStream.readMarker(ois);
                 fileInfo.setSize(JFSEncryptedStream.readLength(ois));
-                if (log.isDebugEnabled()) {
-                    log.debug("getLength("+getRelativePath()+") detected plain text length "+fileInfo.getSize());
-                } // if
+                LOG.debug("getLength({}) detected plain text length {}", getRelativePath(), fileInfo.getSize());
                 ois.close();
             } catch (Exception e) {
                 // TODO: what to do now?!?!?!
-                log.error("getLength() could not detect plain text length for "+getPath(), e);
+                LOG.error("getLength() could not detect plain text length for "+getPath(), e);
             } // try/catch
         } // if
         return fileInfo.getSize();
@@ -177,10 +170,8 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     public final long getLastModified() {
-        if (log.isDebugEnabled()) {
-            log.debug("lastModified('"+getRelativePath()+"') "+fileInfo.getModificationDate());
-        } // if
-          // strange enough, directories need to be 0 in all cases
+        LOG.debug("lastModified('{}') {}", getRelativePath(), fileInfo.getModificationDate());
+        // strange enough, directories need to be 0 in all cases
         return isDirectory() ? 0 : fileInfo.getModificationDate();
     }
 
@@ -196,11 +187,9 @@ public class JFSEncryptedFile extends JFSFile {
             if (files!=null) {
                 list = new JFSFile[files.length];
 
-                for (int i = 0; i<files.length; i++ ) {
+                for (int i = 0; i<files.length; i++) {
                     // asFolder parameter doesn't to anything
-                    if (log.isDebugEnabled()) {
-                        log.debug("getList() "+i+" "+files[i]);
-                    } // if
+                    LOG.debug("getList() {} {}", i, files[i]);
                     list[i] = fileProducer.getJfsFile(getRelativePath()+fileProducer.getSeparator()+files[i], false);
                 } // for
             } else {
@@ -208,9 +197,7 @@ public class JFSEncryptedFile extends JFSFile {
             }
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("getList() "+list.length);
-        } // if
+        LOG.debug("getList() {}", list.length);
         return list;
     }
 
@@ -220,9 +207,7 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     public final boolean exists() {
-        if (log.isDebugEnabled()) {
-            log.debug("exists('"+getRelativePath()+"') "+fileInfo.isExists());
-        } // if
+        LOG.debug("exists('{}') {}", getRelativePath(), fileInfo.isExists());
         return fileInfo.isExists();
     }
 
@@ -248,9 +233,7 @@ public class JFSEncryptedFile extends JFSFile {
     @Override
     public final boolean setLastModified(long time) {
         boolean success = fileProducer.setLastModified(getRelativePath(), time);
-        if (log.isDebugEnabled()) {
-            log.debug("setLastModified('"+getRelativePath()+"') setting modification date: "+success);
-        } // if
+        LOG.debug("setLastModified('{}') setting modification date: {}", getRelativePath(), success);
 
         if (success) {
             fileInfo.setModificationDate(time);
@@ -295,7 +278,7 @@ public class JFSEncryptedFile extends JFSFile {
             InputStream stream = fileProducer.getInputStream(getRelativePath());
             return JFSEncryptedStream.createInputStream(stream, getLength(), getCipher(Cipher.DECRYPT_MODE));
         } catch (IOException ioe) {
-            log.error("getInputStream() I/O Exception "+ioe.getLocalizedMessage());
+            LOG.error("getInputStream() I/O Exception "+ioe.getLocalizedMessage());
             return null;
         } // try/catch
     } // getInputStream()
@@ -309,27 +292,23 @@ public class JFSEncryptedFile extends JFSFile {
         String p = getRelativePath();
         out = null;
         long l = getLength();
-        if (log.isDebugEnabled()) {
-            log.debug("getOutputStream() opening '"+p+"' with length "+l);
-        } // if
+        LOG.debug("getOutputStream() opening '{}' with length {}", p, l);
         try {
             int idx = p.lastIndexOf('.');
             long compressionLimit = Long.MAX_VALUE;
             if (idx>0) {
-                idx++ ;
+                idx++;
                 String extension = p.substring(idx).toLowerCase();
-                Map<String, Long> compressedExtensions = ((JFSEncryptedFileProducer)fileProducer).getCompressionLevels();
+                Map<String, Long> compressedExtensions = ((JFSEncryptedFileProducer) fileProducer).getCompressionLevels();
                 if (compressedExtensions.containsKey(extension)) {
                     compressionLimit = compressedExtensions.get(extension);
-                    if (log.isInfoEnabled()) {
-                        log.info("getOutputStream() compression limit "+compressionLimit+" set for "+getName());
-                    } // if
+                    LOG.info("getOutputStream() compression limit {} set for {}", compressionLimit, getName());
                 } // if
             } // if
             out = JFSEncryptedStream.createOutputStream(compressionLimit, fileProducer.getOutputStream(p), l,
                     getCipher(Cipher.ENCRYPT_MODE));
         } catch (IOException e) {
-            log.error("getOutputStream()", e);
+            LOG.error("getOutputStream()", e);
         } // try/catch
         return out;
     } // getOutputStream()
@@ -360,9 +339,7 @@ public class JFSEncryptedFile extends JFSFile {
         JFSText t = JFSText.getInstance();
         try {
             if (out!=null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("closeOutputStream() closing "+getPath());
-                } // if
+                LOG.debug("closeOutputStream() closing {}", getPath());
                 out.flush();
                 out.close();
                 out = null;
@@ -400,17 +377,17 @@ public class JFSEncryptedFile extends JFSFile {
         boolean success = true;
 
         // Set last modified and read-only only when file is no directory:
-        if ( !JFSProgress.getInstance().isCanceled()&& !srcFile.isDirectory()) {
+        if (!JFSProgress.getInstance().isCanceled()&&!srcFile.isDirectory()) {
             // Just to work on the same file info
             fileInfo = fileProducer.getFileInfo(relativePath);
             fileInfo.setExists(true);
             fileInfo.setSize(srcFile.getLength());
             success = success&&setLastModified(srcFile.getLastModified());
             // set last modified has to implicitly
-            if ( !success) {
+            if (!success) {
                 fileProducer.flush(fileInfo);
             } // if
-            if ( !srcFile.canWrite()) {
+            if (!srcFile.canWrite()) {
                 success = success&&setReadOnly();
             } // if
         } // if
@@ -424,9 +401,7 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     protected boolean postCopySrc(JFSFile tgtFile) {
-        if (log.isInfoEnabled()) {
-            log.info("postCopySrc() free memory "+Runtime.getRuntime().freeMemory());
-        } // if
+        LOG.info("postCopySrc() free memory {}", Runtime.getRuntime().freeMemory());
         return true;
     } // postCopySrc()
 
@@ -442,10 +417,8 @@ public class JFSEncryptedFile extends JFSFile {
 
     @Override
     protected void finalize() throws Throwable {
+        LOG.info("finalize() free memory {}", Runtime.getRuntime().freeMemory());
         super.finalize();
-        if (log.isInfoEnabled()) {
-            log.info("finalize() free memory "+Runtime.getRuntime().freeMemory());
-        } // if
     } // finalize()
 
 } // JFSEncryptedFile()
