@@ -1,5 +1,5 @@
 Java based File Syncing Tool
-==================
+============================
 
 File Syncing with optional Compression and Encryption for Local and WebDAV Folders.
 
@@ -20,7 +20,7 @@ Other contributions - though not directly committed by him - are from https://gi
 
 Binary Distribution: 
 
-https://www.dropbox.com/s/3n4snlbw9tyjgec/JFileSync3.zip
+https://bintray.com/artifact/download/mgoellnitz/generic/JFileSync3.zip
 
 Scenario:
 
