@@ -25,6 +25,8 @@ import java.io.PrintStream;
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSLog;
 import jfs.conf.JFSText;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -34,6 +36,8 @@ import jfs.conf.JFSText;
  * @version $Id: JFSFile.java,v 1.33 2007/07/20 12:27:52 heidrich Exp $
  */
 public abstract class JFSFile implements Comparable<JFSFile> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(JFSFile.class);
 
     /**
      * The assigned file producer.
@@ -66,7 +70,6 @@ public abstract class JFSFile implements Comparable<JFSFile> {
      * @return File object.
      */
     // public abstract File getFile();
-
     /**
      * Returns the name of the file.
      *
@@ -235,8 +238,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
     /**
      * Sets the last-modified time of the file or directory named by this abstract pathname.
      *
-     * @param time
-     * The new last-modified time, measured in milliseconds since the epoch (00:00:00 GMT, January 1, 1970).
+     * @param time The new last-modified time, measured in milliseconds since the epoch (00:00:00 GMT, January 1, 1970).
      * @return True if and only if the operation succeeded; false otherwise.
      */
     public abstract boolean setLastModified(long time);
@@ -293,8 +295,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
      * Performs operation before the copy statement on target side, for instance, preparing setting of file attributes
      * like last modified and can write property.
      *
-     * @param srcFile
-     * The file to copy from.
+     * @param srcFile The file to copy from.
      * @return True if and only if the operation was successful.
      */
     protected abstract boolean preCopyTgt(JFSFile srcFile);
@@ -303,8 +304,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
     /**
      * Performs operation before the copy statement on source side.
      *
-     * @param tgtFile
-     * The file to copy to.
+     * @param tgtFile The file to copy to.
      * @return True if and only if the operation was successful.
      */
     protected abstract boolean preCopySrc(JFSFile tgtFile);
@@ -314,8 +314,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
      * Performs operation after the copy statement on target side, for instance, preparing setting of file attributes
      * like last modified and can write property.
      *
-     * @param srcFile
-     * The file to copy from.
+     * @param srcFile The file to copy from.
      * @return True if and only if the operation was successful.
      */
     protected abstract boolean postCopyTgt(JFSFile srcFile);
@@ -324,8 +323,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
     /**
      * Performs operation after the copy statement on source side.
      *
-     * @param tgtFile
-     * The file to copy to.
+     * @param tgtFile The file to copy to.
      * @return True if and only if the operation was successful.
      */
     protected abstract boolean postCopySrc(JFSFile tgtFile);
@@ -345,24 +343,23 @@ public abstract class JFSFile implements Comparable<JFSFile> {
      * method just copies the contents from this file to the target file, no attributes, like the last modified date or
      * the can attribute are adopted.
      *
-     * @param input
-     * The input stream of the source file.
-     * @param output
-     * The output stream of the target file.
+     * @param input The input stream of the source file.
+     * @param output The output stream of the target file.
      * @return True if and only if the file is not a directory and was successfully copied; false otherwise.
      */
     private final boolean copy(InputStream input, OutputStream output) {
+        if (isDirectory()) {
+            LOG.error("copy() directory involved");
+            return false;
+        }
+
         JFSText t = JFSText.getInstance();
         JFSProgress progress = JFSProgress.getInstance();
         JFSCopyMonitor monitor = JFSCopyMonitor.getInstance();
 
-        if (isDirectory()) {
-            return false;
-        }
-
         try {
             if ((input==null)||(output==null)) {
-                // System.out.println("copy("+this.getPath()+this.getName()+") 2 "+in+" "+out);
+                LOG.error("copy() one of the two files was null");
                 return false;
             }
 
@@ -390,9 +387,10 @@ public abstract class JFSFile implements Comparable<JFSFile> {
             }
 
             if (transferedBytes==length) {
+                LOG.error("copy() done");
                 return true;
             }
-            // System.out.println("copy() 3");
+            LOG.error("copy() could not copy all necessary bytes: "+transferedBytes+" of "+length);
             return false;
         } catch (IOException e) {
             e.printStackTrace(System.out);
@@ -400,7 +398,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
             p.println(t.get("error.io"));
             p.println("  '"+this.getPath()+"'");
 
-            // System.out.println("copy("+this.getPath()+this.getName()+") 4");
+            LOG.error("copy()", e);
             return false;
         }
     }
@@ -410,8 +408,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
      * Writes the content of the JFSFile to a new target file. If this JFSFile is a directory the target directory is
      * made.
      *
-     * @param tgtFile
-     * The Target File.
+     * @param tgtFile The Target File.
      * @return True if and only if the file is successfully copied; false otherwise.
      */
     public final boolean copy(JFSFile tgtFile) {
@@ -419,6 +416,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
         // and the target file (tgtFile) can be written to. If not, false is
         // returned:
         if (!canRead()||!tgtFile.canWrite()) {
+            LOG.error("copy() cannot read src or write target: "+canRead()+" / "+tgtFile.canWrite());
             return false;
         }
 
@@ -426,7 +424,6 @@ public abstract class JFSFile implements Comparable<JFSFile> {
         success = success&&preCopySrc(tgtFile);
 
         if (isDirectory()) {
-            // System.out.println("copy() "+tgtFile.getName());
             success = success&&tgtFile.mkdir();
         } else {
             success = success&&copy(getInputStream(), tgtFile.getOutputStream());
@@ -449,8 +446,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
     /**
      * Returns the result of the comparison of the names of two JFSFile objects.
      *
-     * @param jfsFile
-     * The file object to compare the current object with.
+     * @param jfsFile The file object to compare the current object with.
      * @return Result of the comparison.
      */
     @Override

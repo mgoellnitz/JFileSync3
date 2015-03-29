@@ -30,14 +30,14 @@ import javax.crypto.NoSuchPaddingException;
 import jfs.conf.JFSConfig;
 import jfs.sync.base.AbstractJFSFileProducerFactory;
 import jfs.sync.util.SecurityUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public abstract class AbstractEncryptedStorageAccess {
 
-    private static final Log LOG = LogFactory.getLog(AbstractEncryptedStorageAccess.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractEncryptedStorageAccess.class);
 
     /** 111 codes for now - so there's some room left */
     private static final char[] FILE_NAME_CHARACTERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
@@ -445,7 +445,7 @@ public abstract class AbstractEncryptedStorageAccess {
                 String checkBack = getDecryptedFileName(originalPath, encodedString);
                 // log.warn("getFile() "+pathElement+" == "+checkBack+"?");
                 if (!checkBack.equals(pathElement)) {
-                    LOG.fatal("getFileName("+originalPath+") "+pathElement+" != "+checkBack+" in "+relativePath);
+                    LOG.error("getFileName("+originalPath+") "+pathElement+" != "+checkBack+" in "+relativePath);
                     throw new RuntimeException("getFileName() "+pathElement+" != "+checkBack);
                 } // if
                 path += getSeparator()+encodedString;
