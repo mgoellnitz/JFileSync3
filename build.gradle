@@ -11,155 +11,153 @@ compileJava.options.encoding = 'UTF-8'
 compileJava.options.deprecation = true
 
 buildscript {
-    repositories {
-        mavenCentral()
-        maven { url "http://repo.smokejumperit.com" }
-    }
-    dependencies {
-        classpath 'com.smokejumperit:gradle-plugins:0.8.2'
-        classpath 'edu.sc.seis.gradle:launch4j:1.0.6'
-    }
+  repositories {
+    mavenCentral()
+    maven { url "http://repo.smokejumperit.com" }
+  }
+  dependencies {
+    classpath 'com.smokejumperit:gradle-plugins:0.8.2'
+    classpath 'edu.sc.seis.gradle:launch4j:1.0.6'
+  }
 }
 
 repositories {
-    mavenCentral()
-    maven { url "http://sardine.googlecode.com/svn/maven/" }
-    maven { url "http://repo2.maven.org/maven2/org/bouncycastle" }
+  mavenCentral()
 }
 
 sourceSets {
-    main {
-        java {
-            srcDir 'src'
-            exclude 'jfs/sync/fileencrypted/*.java'
-            exclude '**/HeapSort.java'
-        }
-        resources {
-            srcDir 'src'
-            exclude '**/*.7z'; // I tend to hide some experimental codes here
-            exclude '**/*.java'; // result of the exclusions above: this is necessary
-        }
+  main {
+    java {
+      srcDir 'src'
+      exclude 'jfs/sync/fileencrypted/*.java'
+      exclude '**/HeapSort.java'
     }
+    resources {
+      srcDir 'src'
+      exclude '**/*.7z'; // I tend to hide some experimental codes here
+      exclude '**/*.java'; // result of the exclusions above: this is necessary
+    }
+  }
 }
 
 dependencies {
-    // dropbox client
-    // compile files(fileTree(dir: 'lib', includes: ['*.jar']))
+  // dropbox client
+  // compile files(fileTree(dir: 'lib', includes: ['*.jar']))
 
-    // compile 'com.googlecode.sardine:sardine:314'
-    compile 'org.slf4j:slf4j-api:1.7.10'
-    compile 'org.slf4j:slf4j-log4j12:1.7.10'
-    compile 'org.apache.httpcomponents:httpclient:4.2.5'
+  // compile 'com.googlecode.sardine:sardine:314'
+  compile 'org.slf4j:slf4j-api:1.7.10'
+  compile 'org.slf4j:slf4j-log4j12:1.7.10'
+  compile 'org.apache.httpcomponents:httpclient:4.2.5'
 
-    // Cifs code looks good but I don't have shares to use so I skip this
-    // compile 'jcifs:jcifs:1.3.17'
-    compile 'commons-lang:commons-lang:2.6'
-    compile 'org.apache.commons:commons-compress:1.9'
-    compile 'net.sf.jsignature.io-tools:easystream:1.2.14'
+  // Cifs code looks good but I don't have shares to use so I skip this
+  // compile 'jcifs:jcifs:1.3.17'
+  compile 'org.apache.commons:commons-lang3:3.3.2'
+  compile 'org.apache.commons:commons-compress:1.9'
+  compile 'net.sf.jsignature.io-tools:easystream:1.2.14'
 
-    compile 'org.bouncycastle:bcprov-jdk16:1.46'
-    compile 'javax.servlet:servlet-api:2.5'
+  compile 'org.bouncycastle:bcprov-jdk16:1.46'
+  compile 'javax.servlet:javax.servlet-api:3.0.1'
 }
 
 mainClassName = 'jfs.JFileSync'
 // mainClass = 'jfs.JFileSync'
 
 launch4j {
-    mainClassName = project.mainClassName
-    version = '3.0.4'
-    copyright = '(C) 2002-2014, J. Heidrich, M. Goellnitz'
-    downloadUrl = 'https://www.dropbox.com/s/3n4snlbw9tyjgec/JFileSync3.zip'
-    supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
-    icon = "$project.projectDir/win/JFileSync3.ico"
-    dontWrapJar = true
-    xmlFileName = 'JFileSync3-launcher.xml'
-    initialHeapSize = 1024
-    maxHeapSize = 1536
+  mainClassName = project.mainClassName
+  version = '3.0.4'
+  copyright = '(C) 2002-2015, J. Heidrich, M. Goellnitz'
+  downloadUrl = 'https://www.dropbox.com/s/3n4snlbw9tyjgec/JFileSync3.zip'
+  supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
+  icon = "$project.projectDir/win/JFileSync3.ico"
+  dontWrapJar = true
+  xmlFileName = 'JFileSync3-launcher.xml'
+  initialHeapSize = 1024
+  maxHeapSize = 1536
 }
 
 startScripts {
-    doLast {
-        // Add some more reasonable memory settings to JFileSync3
-        unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-ms1280m -mx1536m -Xms1280m -Xmx1536m"')
-        windowsScript.text = windowsScript.text.replace('DEFAULT_JVM_OPTS=', 'DEFAULT_JVM_OPTS=-ms1280m -mx1536m -Xms1280m -Xmx1536m')
-        // Armor start script to use javaw and start when not used as a command line tool
-        windowsScript.text = windowsScript.text.replace('java.exe', '%JAVA_CMD%')
-        windowsScript.text = windowsScript.text.replace('@rem Find %JAVA_CMD%', 'set JAVA_PREFIX=start "JFileSync3 starting..."\nset JAVA_CMD=javaw.exe\nif "x%~1" == "x" goto noparams\nset JAVA_PREFIX=\nset JAVA_CMD=java.exe\n:noparams\n\n@rem Find java.exe')
-        windowsScript.text = windowsScript.text.replace('"%JAVA_EXE%" %DEFAULT_JVM_OPTS%', '%JAVA_PREFIX% "%JAVA_EXE%" %DEFAULT_JVM_OPTS%')
-    }
+  doLast {
+    // Add some more reasonable memory settings to JFileSync3
+    unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-ms1280m -mx1536m -Xms1280m -Xmx1536m"')
+    windowsScript.text = windowsScript.text.replace('DEFAULT_JVM_OPTS=', 'DEFAULT_JVM_OPTS=-ms1280m -mx1536m -Xms1280m -Xmx1536m')
+    // Armor start script to use javaw and start when not used as a command line tool
+    windowsScript.text = windowsScript.text.replace('java.exe', '%JAVA_CMD%')
+    windowsScript.text = windowsScript.text.replace('@rem Find %JAVA_CMD%', 'set JAVA_PREFIX=start "JFileSync3 starting..."\nset JAVA_CMD=javaw.exe\nif "x%~1" == "x" goto noparams\nset JAVA_PREFIX=\nset JAVA_CMD=java.exe\n:noparams\n\n@rem Find java.exe')
+    windowsScript.text = windowsScript.text.replace('"%JAVA_EXE%" %DEFAULT_JVM_OPTS%', '%JAVA_PREFIX% "%JAVA_EXE%" %DEFAULT_JVM_OPTS%')
+  }
 }
 
 distZip {
-    // TODO: later...
-    // into(project.name+"/bin") {
-    //	from 'bin'
-    //	include 'E*.bat'
-    //}
-    into(project.name) {
-        from "$buildDir/launch4j"
-        include '*.exe'
-        include '*.xml'
-    }
-    // Sometimes I want to have the icon file at hand
-    into("$project.name/bin") {
-        from 'win'
-        include '*.ico'
-    }
-    // For the Ubuntu Unity desktop integration this looks better
-    into("$project.name/bin") {
-        from 'ubuntu'
-        include '*.desktop'
-        include '*.png'
-    }
-    // legal stuff, examples, and documentation
-    into(project.name) {
-        from '.'
-        include 'legal/*.*'
-        include 'profiles/*.*'
-        include 'README.md'
-    }
-    // I personally have the JCE stuff prepared there
-    into(project.name) {
-        from '..'
-        include 'jce-jre-patches/**'
-    }
-    // You might package your personal profiles in here
-    into(project.name) {
-        from '..'
-        include 'profiles/**'
-    }
+  // TODO: later...
+  // into(project.name+"/bin") {
+  //	from 'bin'
+  //	include 'E*.bat'
+  //}
+  into(project.name) {
+    from "$buildDir/launch4j"
+    include '*.exe'
+    include '*.xml'
+  }
+  // Sometimes I want to have the icon file at hand
+  into("$project.name/bin") {
+    from 'win'
+    include '*.ico'
+  }
+  // For the Ubuntu Unity desktop integration this looks better
+  into("$project.name/bin") {
+    from 'ubuntu'
+    include '*.desktop'
+    include '*.png'
+  }
+  // legal stuff, examples, and documentation
+  into(project.name) {
+    from '.'
+    include 'legal/*.*'
+    include 'profiles/*.*'
+    include 'README.md'
+  }
+  // I personally have the JCE stuff prepared there
+  into(project.name) {
+    from '..'
+    include 'jce-jre-patches/**'
+  }
+  // You might package your personal profiles in here
+  into(project.name) {
+    from '..'
+    include 'profiles/**'
+  }
 }
 
 task(encryptionTest) << {
-    // Extract distribution
-    println "Extracting distribution"
-    ant.unzip(src: "$buildDir/distributions/${project.name}.zip", dest: "$buildDir")
-    // Extract test data
-    println "Extracting test data"
-    ant.unzip(src: "test/test-folders.zip", dest: "$buildDir/${project.name}")
+  // Extract distribution
+  println "Extracting distribution"
+  ant.unzip(src: "$buildDir/distributions/${project.name}.zip", dest: "$buildDir")
+  // Extract test data
+  println "Extracting test data"
+  ant.unzip(src: "test/test-folders.zip", dest: "$buildDir/${project.name}")
     
-    // TODO: OS-Switch
-    def prefix = ""; // "cmd /c " for windows
+  // TODO: OS-Switch
+  def prefix = ""; // "cmd /c " for windows
 
-    // Only for linux
-    String cmd = "chmod 755 bin${File.separator}${project.name}"
-    project.exec(cmd, "$buildDir/${project.name}")
+  // Only for linux
+  String cmd = "chmod 755 bin${File.separator}${project.name}"
+  project.exec(cmd, "$buildDir/${project.name}")
   
-    println "Encrypting"
-    cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}1-encrypt-with-metadata.xml -nogui -nohistory -quiet"
-    project.exec(cmd, "$buildDir/${project.name}")
+  println "Encrypting"
+  cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}1-encrypt-with-metadata.xml -nogui -nohistory -quiet"
+  project.exec(cmd, "$buildDir/${project.name}")
 
-    println "Decrypting taking every folder metadata into account"
-    cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}2-decrypt-with-metadata.xml -nogui -nohistory -quiet"
-    project.exec(cmd, "$buildDir/${project.name}")
+  println "Decrypting taking every folder metadata into account"
+  cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}2-decrypt-with-metadata.xml -nogui -nohistory -quiet"
+  project.exec(cmd, "$buildDir/${project.name}")
 
-    println "Decrypting ignoring any folder's metadata"
-    cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}3-decrypt-without-metadata.xml -nogui -nohistory -quiet"
-    project.exec(cmd, "$buildDir/${project.name}")
+  println "Decrypting ignoring any folder's metadata"
+  cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}3-decrypt-without-metadata.xml -nogui -nohistory -quiet"
+  project.exec(cmd, "$buildDir/${project.name}")
 
-    println "And now please compare by hand"
-    cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}4-compare-resulting-folders.xml -nohistory"
-    project.exec(cmd, "$buildDir/${project.name}")
+  println "And now please compare by hand"
+  cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}4-compare-resulting-folders.xml -nohistory"
+  project.exec(cmd, "$buildDir/${project.name}")
 }
 
 // Project specific default output directory for eclipse users
