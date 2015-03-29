@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync;
 
 import java.util.List;
@@ -27,12 +26,13 @@ import jfs.conf.JFSSyncModes;
 import jfs.sync.JFSProgress.ProgressActivity;
 import jfs.sync.JFSQuestion.QuestionAnswer;
 
+
 /**
  * This class is responsible for synchronizing a table of JFS elements. In order to perform a complete synchronization
  * cycle, the following actions have to be taken: (1) perform a comparison for each directory pair, (2) compute the
  * actions applied to the comparison table according to the chosen synchronization mode, (3) compute the lists of copy
  * and delete statements from the actions, and finally (4) perform a synchronization.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSSynchronization.java,v 1.33 2007/06/05 16:09:41 heidrich Exp $
  */
@@ -54,7 +54,7 @@ public final class JFSSynchronization {
 
     /**
      * Returns the reference of the only instance.
-     * 
+     *
      * @return The only instance.
      */
     public final static JFSSynchronization getInstance() {
@@ -68,10 +68,10 @@ public final class JFSSynchronization {
 
     /**
      * Returns the JFS question object (e.g., in order to set the oracle).
-     * 
+     *
      * @return The used JFS question object.
      */
-    public final JFSQuestion getQuestion() {
+    public JFSQuestion getQuestion() {
         return question;
     }
 
@@ -83,7 +83,7 @@ public final class JFSSynchronization {
      * lists are computed, the user is asked some questions regarding JFS elements for which no action could be computed
      * automatically.
      */
-    public final void computeSynchronizationLists() {
+    public void computeSynchronizationLists() {
         // Get table and reset copy and delete statements:
         JFSTable table = JFSTable.getInstance();
         List<JFSCopyStatement> copyStatements = table.getCopyStatements();
@@ -95,15 +95,15 @@ public final class JFSSynchronization {
         // Go through table and compute actions:
         JFSFileProducer srcProducer = null;
         JFSFileProducer tgtProducer = null;
-        for (int i = 0; i<table.getTableSize(); i++ ) {
+        for (int i = 0; i<table.getTableSize(); i++) {
             JFSElement element = table.getTableElement(i);
-            
+
             // Get producers for the current element:
             srcProducer = element.getRoot().getSrcProducer();
             tgtProducer = element.getRoot().getTgtProducer();
 
             // Check whether element and corresponding action is active:
-            if ( !element.isActive()) {
+            if (!element.isActive()) {
                 continue;
             }
 
@@ -111,9 +111,9 @@ public final class JFSSynchronization {
             JFSFile tgtFile = element.getTgtFile();
 
             // Ask the user first:
-            if ( !skipAll
+            if (!skipAll
                     &&(element.getAction()==SyncAction.ASK_LENGTH_INCONSISTENT
-                            ||element.getAction()==SyncAction.ASK_FILES_GT_HISTORY||element.getAction()==SyncAction.ASK_FILES_NOT_IN_HISTORY)) {
+                    ||element.getAction()==SyncAction.ASK_FILES_GT_HISTORY||element.getAction()==SyncAction.ASK_FILES_NOT_IN_HISTORY)) {
                 QuestionAnswer a = question.answer(element);
                 if (a==QuestionAnswer.SKIP_ALL) {
                     skipAll = true;
@@ -153,7 +153,7 @@ public final class JFSSynchronization {
      * Synchronizes the directory structures specified in the directory pair if and only if the test run flag is not
      * set.
      */
-    public final void synchronize() {
+    public void synchronize() {
         JFSProgress progress = JFSProgress.getInstance();
         JFSConfig config = JFSConfig.getInstance();
         JFSTable table = JFSTable.getInstance();
@@ -180,13 +180,13 @@ public final class JFSSynchronization {
         boolean success;
         int i = 0;
 
-        while (i<deleteStatements.size()&& !progress.isCanceled()) {
+        while (i<deleteStatements.size()&&!progress.isCanceled()) {
             JFSDeleteStatement ds = deleteStatements.get(i);
             dm.setCurrentFile(ds.getFile());
 
             // Delete only if the delete flag is set and the success flag is
             // false:
-            if (ds.getDeleteFlag()&& !ds.getSuccess()) {
+            if (ds.getDeleteFlag()&&!ds.getSuccess()) {
                 success = ds.getFile().delete();
                 ds.setSuccess(success);
 
@@ -198,7 +198,7 @@ public final class JFSSynchronization {
                 }
             }
 
-            i++ ;
+            i++;
             dm.setFilesDeleted(i);
             progress.fireUpdate();
         }
@@ -213,14 +213,14 @@ public final class JFSSynchronization {
         progress.start();
         i = 0;
 
-        while (i<copyStatements.size()&& !progress.isCanceled()) {
+        while (i<copyStatements.size()&&!progress.isCanceled()) {
             JFSCopyStatement cs = copyStatements.get(i);
             cm.setCurrentSrc(cs.getSrc());
             cm.setCurrentTgt(cs.getTgt());
             cm.setBytesTransferedCurrentFile(0);
 
             // Copy only if the copy flag is set and the success flag is false:
-            if (cs.getCopyFlag()&& !cs.getSuccess()) {
+            if (cs.getCopyFlag()&&!cs.getSuccess()) {
                 cm.setBytesToTransferCurrentFile(cs.getSrc().getLength());
                 success = cs.getSrc().copy(cs.getTgt());
                 cs.setSuccess(success);
@@ -241,7 +241,7 @@ public final class JFSSynchronization {
                 }
                 cm.setBytesTransfered(cm.getBytesTransfered()+cm.getBytesToTransferCurrentFile());
             }
-            i++ ;
+            i++;
             cm.setFilesCopied(i);
             progress.fireUpdate();
         }
@@ -249,7 +249,7 @@ public final class JFSSynchronization {
 
         // Shuts down file producers of previously created comparison
         // objects:
-        for (int j = 0; j<table.getRootsSize(); j++ ) {
+        for (int j = 0; j<table.getRootsSize(); j++) {
             JFSRootElement root = table.getRootElement(j);
             root.shutDownProducers();
         }
@@ -269,20 +269,21 @@ public final class JFSSynchronization {
 
     /**
      * Inverts all elements within a vector; i.e., the first element will become the last one and so on.
-     * 
+     *
      * @param <T>
-     *            The elements contained in the vector.
+     * The elements contained in the vector.
      * @param v
-     *            The vector to be inverted.
+     * The vector to be inverted.
      */
     private static <T> void invert(List<T> v) {
         T temp;
         int size = v.size();
 
-        for (int i = 0; i<size/2; i++ ) {
+        for (int i = 0; i<size/2; i++) {
             temp = v.get(i);
             v.set(i, v.get(size-1-i));
             v.set(size-1-i, temp);
         }
     }
+
 }
