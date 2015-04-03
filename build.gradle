@@ -45,8 +45,8 @@ dependencies {
   // compile files(fileTree(dir: 'lib', includes: ['*.jar']))
 
   // compile 'com.googlecode.sardine:sardine:314'
-  compile 'org.slf4j:slf4j-api:1.7.10+'
-  compile 'org.slf4j:slf4j-log4j12:1.7.10+'
+  compile 'org.slf4j:slf4j-api:[1.7.10,)'
+  compile 'org.slf4j:slf4j-log4j12:[1.7.10,)'
   compile 'org.apache.httpcomponents:httpclient:4.2.5'
 
   // Cifs code looks good but I don't have shares to use so I skip this
