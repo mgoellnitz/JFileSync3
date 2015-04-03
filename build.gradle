@@ -45,8 +45,8 @@ dependencies {
   // compile files(fileTree(dir: 'lib', includes: ['*.jar']))
 
   // compile 'com.googlecode.sardine:sardine:314'
-  compile 'org.slf4j:slf4j-api:1.7.10'
-  compile 'org.slf4j:slf4j-log4j12:1.7.10'
+  compile 'org.slf4j:slf4j-api:1.7.10+'
+  compile 'org.slf4j:slf4j-log4j12:1.7.10+'
   compile 'org.apache.httpcomponents:httpclient:4.2.5'
 
   // Cifs code looks good but I don't have shares to use so I skip this
@@ -135,14 +135,14 @@ task(encryptionTest) << {
   // Extract test data
   println "Extracting test data"
   ant.unzip(src: "test/test-folders.zip", dest: "$buildDir/${project.name}")
-    
+
   // TODO: OS-Switch
   def prefix = ""; // "cmd /c " for windows
 
   // Only for linux
   String cmd = "chmod 755 bin${File.separator}${project.name}"
   project.exec(cmd, "$buildDir/${project.name}")
-  
+
   println "Encrypting"
   cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}1-encrypt-with-metadata.xml -nogui -nohistory -quiet"
   project.exec(cmd, "$buildDir/${project.name}")
