@@ -1,4 +1,4 @@
-package SevenZip;
+package sevenzip;
 
 public interface ICodeProgress
 {

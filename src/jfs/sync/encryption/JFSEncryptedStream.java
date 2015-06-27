@@ -17,8 +17,8 @@
  */
 package jfs.sync.encryption;
 
-import SevenZip.Compression.LZMA.Decoder;
-import SevenZip.Compression.LZMA.Encoder;
+import sevenzip.compression.lzma.Decoder;
+import sevenzip.compression.lzma.Encoder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

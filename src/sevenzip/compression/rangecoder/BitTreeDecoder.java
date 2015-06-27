@@ -1,4 +1,4 @@
-package SevenZip.Compression.RangeCoder;
+package sevenzip.compression.rangecoder;
 
 public class BitTreeDecoder
 {

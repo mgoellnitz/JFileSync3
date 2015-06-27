@@ -1,8 +1,8 @@
-package SevenZip.Compression.LZMA;
+package sevenzip.compression.lzma;
 
-import SevenZip.Compression.RangeCoder.BitTreeDecoder;
-import SevenZip.Compression.LZMA.Base;
-import SevenZip.Compression.LZ.OutWindow;
+import sevenzip.compression.rangecoder.BitTreeDecoder;
+import sevenzip.compression.lzma.Base;
+import sevenzip.compression.lz.OutWindow;
 import java.io.IOException;
 
 public class Decoder {
@@ -27,7 +27,7 @@ public class Decoder {
 
 
         public void Init() {
-            SevenZip.Compression.RangeCoder.Decoder.InitBitModels(m_Choice);
+            sevenzip.compression.rangecoder.Decoder.InitBitModels(m_Choice);
             for (int posState = 0; posState<m_NumPosStates; posState++ ) {
                 m_LowCoder[posState].Init();
                 m_MidCoder[posState].Init();
@@ -36,7 +36,7 @@ public class Decoder {
         }
 
 
-        public int Decode(SevenZip.Compression.RangeCoder.Decoder rangeDecoder, int posState) throws IOException {
+        public int Decode(sevenzip.compression.rangecoder.Decoder rangeDecoder, int posState) throws IOException {
             if (rangeDecoder.DecodeBit(m_Choice, 0)==0)
                 return m_LowCoder[posState].Decode(rangeDecoder);
             int symbol = Base.kNumLowLenSymbols;
@@ -54,11 +54,11 @@ public class Decoder {
 
 
             public void Init() {
-                SevenZip.Compression.RangeCoder.Decoder.InitBitModels(m_Decoders);
+                sevenzip.compression.rangecoder.Decoder.InitBitModels(m_Decoders);
             }
 
 
-            public byte DecodeNormal(SevenZip.Compression.RangeCoder.Decoder rangeDecoder) throws IOException {
+            public byte DecodeNormal(sevenzip.compression.rangecoder.Decoder rangeDecoder) throws IOException {
                 int symbol = 1;
                 do
                     symbol = (symbol<<1)|rangeDecoder.DecodeBit(m_Decoders, symbol);
@@ -67,7 +67,7 @@ public class Decoder {
             }
 
 
-            public byte DecodeWithMatchByte(SevenZip.Compression.RangeCoder.Decoder rangeDecoder, byte matchByte)
+            public byte DecodeWithMatchByte(sevenzip.compression.rangecoder.Decoder rangeDecoder, byte matchByte)
                     throws IOException {
                 int symbol = 1;
                 do {
@@ -121,7 +121,7 @@ public class Decoder {
 
     OutWindow m_OutWindow = new OutWindow();
 
-    SevenZip.Compression.RangeCoder.Decoder m_RangeDecoder = new SevenZip.Compression.RangeCoder.Decoder();
+    sevenzip.compression.rangecoder.Decoder m_RangeDecoder = new sevenzip.compression.rangecoder.Decoder();
 
     short[] m_IsMatchDecoders = new short[Base.kNumStates<<Base.kNumPosStatesBitsMax];
 
@@ -187,13 +187,13 @@ public class Decoder {
     void Init() throws IOException {
         m_OutWindow.Init(false);
 
-        SevenZip.Compression.RangeCoder.Decoder.InitBitModels(m_IsMatchDecoders);
-        SevenZip.Compression.RangeCoder.Decoder.InitBitModels(m_IsRep0LongDecoders);
-        SevenZip.Compression.RangeCoder.Decoder.InitBitModels(m_IsRepDecoders);
-        SevenZip.Compression.RangeCoder.Decoder.InitBitModels(m_IsRepG0Decoders);
-        SevenZip.Compression.RangeCoder.Decoder.InitBitModels(m_IsRepG1Decoders);
-        SevenZip.Compression.RangeCoder.Decoder.InitBitModels(m_IsRepG2Decoders);
-        SevenZip.Compression.RangeCoder.Decoder.InitBitModels(m_PosDecoders);
+        sevenzip.compression.rangecoder.Decoder.InitBitModels(m_IsMatchDecoders);
+        sevenzip.compression.rangecoder.Decoder.InitBitModels(m_IsRep0LongDecoders);
+        sevenzip.compression.rangecoder.Decoder.InitBitModels(m_IsRepDecoders);
+        sevenzip.compression.rangecoder.Decoder.InitBitModels(m_IsRepG0Decoders);
+        sevenzip.compression.rangecoder.Decoder.InitBitModels(m_IsRepG1Decoders);
+        sevenzip.compression.rangecoder.Decoder.InitBitModels(m_IsRepG2Decoders);
+        sevenzip.compression.rangecoder.Decoder.InitBitModels(m_PosDecoders);
 
         m_LiteralDecoder.Init();
         int i;

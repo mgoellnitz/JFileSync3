@@ -1,6 +1,6 @@
 // LZ.InWindow
 
-package SevenZip.Compression.LZ;
+package sevenzip.compression.lz;
 
 import java.io.IOException;
 
