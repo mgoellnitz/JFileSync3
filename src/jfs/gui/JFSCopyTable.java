@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.util.List;
@@ -29,29 +28,36 @@ import jfs.conf.JFSText;
 import jfs.sync.JFSCopyStatement;
 import jfs.sync.JFSFile;
 
+
 /**
  * This class is responsible for displaying the comparison table.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSCopyTable.java,v 1.12 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSCopyTable extends AbstractTableModel {
-    
-    /** The UID. */
+
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = 46L;
 
-    /** The object with information that should be displayed by the table. */
+    /**
+     * The object with information that should be displayed by the table.
+     */
     private List<JFSCopyStatement> v;
 
-    /** The corresponding JTable. */
+    /**
+     * The corresponding JTable.
+     */
     private final JTable table;
 
 
     /**
      * The default constructor just performs some initialization work.
-     * 
+     *
      * @param v
-     *            The vector with all copy statements.
+     * The vector with all copy statements.
      */
     public JFSCopyTable(List<JFSCopyStatement> v) {
         this.v = v;
@@ -97,17 +103,18 @@ public class JFSCopyTable extends AbstractTableModel {
      */
     @Override
     public final Object getValueAt(int row, int column) {
-        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount())
+        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount()) {
             return null;
+        }
 
         JFSFile file;
         switch (column) {
-        case 0:
-            file = v.get(row).getSrc();
-            break;
-        default:
-            file = v.get(row).getTgt();
-            break;
+            case 0:
+                file = v.get(row).getSrc();
+                break;
+            default:
+                file = v.get(row).getTgt();
+                break;
         }
 
         if (file!=null) {
@@ -132,4 +139,5 @@ public class JFSCopyTable extends AbstractTableModel {
     public final JTable getJTable() {
         return table;
     }
+
 }

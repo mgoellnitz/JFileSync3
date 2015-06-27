@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.util.List;
@@ -29,20 +28,28 @@ import jfs.conf.JFSHistory;
 import jfs.conf.JFSHistoryManager;
 import jfs.conf.JFSText;
 
+
 /**
  * This class is responsible for displaying the stored histories.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSHistoryTable.java,v 1.6 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSHistoryTable extends AbstractTableModel {
-    /** The UID. */
+
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = 567343L;
 
-    /** The corresponding JTable. */
+    /**
+     * The corresponding JTable.
+     */
     private final JTable table;
 
-    /** The vector of history items to display. */
+    /**
+     * The vector of history items to display.
+     */
     private final List<JFSHistory> v = JFSHistoryManager.getInstance().getHistories();
 
 
@@ -99,20 +106,21 @@ public class JFSHistoryTable extends AbstractTableModel {
      */
     @Override
     public final Object getValueAt(int row, int column) {
-        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount())
+        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount()) {
             return null;
+        }
 
         JFSHistory h = v.get(row);
 
         switch (column) {
-        case 0:
-            return h.getPair().getSrc();
-        case 1:
-            return h.getPair().getTgt();
-        case 2:
-            return h.getDateAsString();
-        case 3:
-            return h.getFileName()!=null;
+            case 0:
+                return h.getPair().getSrc();
+            case 1:
+                return h.getPair().getTgt();
+            case 2:
+                return h.getDateAsString();
+            case 3:
+                return h.getFileName()!=null;
         }
 
         return "";
@@ -137,4 +145,5 @@ public class JFSHistoryTable extends AbstractTableModel {
     public final JTable getJTable() {
         return table;
     }
+
 }

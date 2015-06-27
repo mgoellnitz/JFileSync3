@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.awt.BorderLayout;
@@ -25,7 +24,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -38,39 +36,50 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSHistoryManager;
 import jfs.conf.JFSText;
 
+
 /**
  * This dialog manages all histories.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSHistoryManagerView.java,v 1.1 2005/05/17 07:37:51 heidrich Exp $
  */
 public class JFSHistoryManagerView extends JDialog implements ActionListener, ListSelectionListener {
-    /** The UID. */
+
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = 3467768L;
 
-    /** The table of histories. */
+    /**
+     * The table of histories.
+     */
     private JFSHistoryTable historyTable;
 
-    /** Number of histories. */
+    /**
+     * Number of histories.
+     */
     private JLabel historyLabel;
 
-    /** The clear button. */
+    /**
+     * The clear button.
+     */
     private JButton clearButton;
 
-    /** The clear all button. */
+    /**
+     * The clear all button.
+     */
     private JButton clearAllButton;
 
 
     /**
      * Initializes the history manager view.
-     * 
+     *
      * @param frame
-     *            The main frame.
+     * The main frame.
      */
     public JFSHistoryManagerView(JFrame frame) {
         super(frame, true);
@@ -155,18 +164,19 @@ public class JFSHistoryManagerView extends JDialog implements ActionListener, Li
             ListSelectionModel model = historyTable.getJTable().getSelectionModel();
 
             // If a row is selected remove it from the table:
-            if ( !model.isSelectionEmpty()) {
+            if (!model.isSelectionEmpty()) {
                 int row = model.getLeadSelectionIndex();
 
                 JFSHistoryManager hm = JFSHistoryManager.getInstance();
                 hm.deleteHistory(hm.getHistories().get(row));
 
-                if (row>0)
+                if (row>0) {
                     model.setLeadSelectionIndex(row-1);
-                else if (row==0&&historyTable.getJTable().getRowCount()>0)
+                } else if (row==0&&historyTable.getJTable().getRowCount()>0) {
                     model.setLeadSelectionIndex(0);
-                else
+                } else {
                     model.clearSelection();
+                }
 
                 update();
                 checkButtons();
@@ -222,4 +232,5 @@ public class JFSHistoryManagerView extends JDialog implements ActionListener, Li
     public void valueChanged(ListSelectionEvent e) {
         checkButtons();
     }
+
 }

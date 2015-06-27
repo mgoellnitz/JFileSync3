@@ -13,9 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.sardine.impl;
 
+import com.github.sardine.DavAce;
+import com.github.sardine.DavAcl;
+import com.github.sardine.DavPrincipal;
+import com.github.sardine.DavResource;
+import com.github.sardine.Sardine;
+import com.github.sardine.Version;
+import com.github.sardine.impl.handler.ExistsResponseHandler;
+import com.github.sardine.impl.handler.LockResponseHandler;
+import com.github.sardine.impl.handler.MultiStatusResponseHandler;
+import com.github.sardine.impl.handler.VoidResponseHandler;
+import com.github.sardine.impl.io.ConsumingInputStream;
+import com.github.sardine.impl.methods.HttpAcl;
+import com.github.sardine.impl.methods.HttpCopy;
+import com.github.sardine.impl.methods.HttpLock;
+import com.github.sardine.impl.methods.HttpMkCol;
+import com.github.sardine.impl.methods.HttpMove;
+import com.github.sardine.impl.methods.HttpPropFind;
+import com.github.sardine.impl.methods.HttpPropPatch;
+import com.github.sardine.impl.methods.HttpUnlock;
+import com.github.sardine.model.Ace;
+import com.github.sardine.model.Acl;
+import com.github.sardine.model.Allprop;
+import com.github.sardine.model.Displayname;
+import com.github.sardine.model.Exclusive;
+import com.github.sardine.model.Group;
+import com.github.sardine.model.Lockinfo;
+import com.github.sardine.model.Lockscope;
+import com.github.sardine.model.Locktype;
+import com.github.sardine.model.Multistatus;
+import com.github.sardine.model.Owner;
+import com.github.sardine.model.PrincipalCollectionSet;
+import com.github.sardine.model.PrincipalURL;
+import com.github.sardine.model.Prop;
+import com.github.sardine.model.Propertyupdate;
+import com.github.sardine.model.Propfind;
+import com.github.sardine.model.Propstat;
+import com.github.sardine.model.Remove;
+import com.github.sardine.model.Resourcetype;
+import com.github.sardine.model.Response;
+import com.github.sardine.model.Set;
+import com.github.sardine.model.Write;
+import com.github.sardine.util.SardineUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ProxySelector;
@@ -25,9 +66,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -81,57 +120,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import com.github.sardine.DavAce;
-import com.github.sardine.DavAcl;
-import com.github.sardine.DavPrincipal;
-import com.github.sardine.DavResource;
-import com.github.sardine.Sardine;
-import com.github.sardine.Version;
-import com.github.sardine.impl.handler.ExistsResponseHandler;
-import com.github.sardine.impl.handler.LockResponseHandler;
-import com.github.sardine.impl.handler.MultiStatusResponseHandler;
-import com.github.sardine.impl.handler.VoidResponseHandler;
-import com.github.sardine.impl.io.ConsumingInputStream;
-import com.github.sardine.impl.methods.HttpAcl;
-import com.github.sardine.impl.methods.HttpCopy;
-import com.github.sardine.impl.methods.HttpLock;
-import com.github.sardine.impl.methods.HttpMkCol;
-import com.github.sardine.impl.methods.HttpMove;
-import com.github.sardine.impl.methods.HttpPropFind;
-import com.github.sardine.impl.methods.HttpPropPatch;
-import com.github.sardine.impl.methods.HttpUnlock;
-import com.github.sardine.model.Ace;
-import com.github.sardine.model.Acl;
-import com.github.sardine.model.Allprop;
-import com.github.sardine.model.Displayname;
-import com.github.sardine.model.Exclusive;
-import com.github.sardine.model.Group;
-import com.github.sardine.model.Lockinfo;
-import com.github.sardine.model.Lockscope;
-import com.github.sardine.model.Locktype;
-import com.github.sardine.model.Multistatus;
-import com.github.sardine.model.Owner;
-import com.github.sardine.model.PrincipalCollectionSet;
-import com.github.sardine.model.PrincipalURL;
-import com.github.sardine.model.Prop;
-import com.github.sardine.model.Propertyupdate;
-import com.github.sardine.model.Propfind;
-import com.github.sardine.model.Propstat;
-import com.github.sardine.model.Remove;
-import com.github.sardine.model.Resourcetype;
-import com.github.sardine.model.Response;
-import com.github.sardine.model.Set;
-import com.github.sardine.model.Write;
-import com.github.sardine.util.SardineUtil;
 
 /**
  * Implementation of the Sardine interface. This is where the meat of the Sardine library lives.
- * 
+ *
  * @author jonstevens
  * @version $Id$
  */
 public class SardineImpl implements Sardine {
-    private static Logger log = LoggerFactory.getLogger(DavResource.class);
+
+    private static final Logger LOG = LoggerFactory.getLogger(DavResource.class);
 
     private static final String UTF_8 = "UTF-8";
 
@@ -157,11 +155,11 @@ public class SardineImpl implements Sardine {
 
     /**
      * Supports standard authentication mechanisms
-     * 
+     *
      * @param username
-     *            Use in authentication header credentials
+     * Use in authentication header credentials
      * @param password
-     *            Use in authentication header credentials
+     * Use in authentication header credentials
      */
     public SardineImpl(String username, String password) {
         this(username, password, null);
@@ -170,11 +168,11 @@ public class SardineImpl implements Sardine {
 
     /**
      * @param username
-     *            Use in authentication header credentials
+     * Use in authentication header credentials
      * @param password
-     *            Use in authentication header credentials
+     * Use in authentication header credentials
      * @param selector
-     *            Proxy configuration
+     * Proxy configuration
      */
     public SardineImpl(String username, String password, ProxySelector selector) {
         this.init(this.createDefaultClient(selector), username, password);
@@ -183,7 +181,7 @@ public class SardineImpl implements Sardine {
 
     /**
      * @param http
-     *            Custom client configuration
+     * Custom client configuration
      */
     public SardineImpl(AbstractHttpClient http) {
         this(http, null, null);
@@ -192,11 +190,11 @@ public class SardineImpl implements Sardine {
 
     /**
      * @param http
-     *            Custom client configuration
+     * Custom client configuration
      * @param username
-     *            Use in authentication header credentials
+     * Use in authentication header credentials
      * @param password
-     *            Use in authentication header credentials
+     * Use in authentication header credentials
      */
     public SardineImpl(AbstractHttpClient http, String username, String password) {
         this.init(http, username, password);
@@ -212,19 +210,19 @@ public class SardineImpl implements Sardine {
                 String method = request.getRequestLine().getMethod();
                 Header locationHeader = response.getFirstHeader("location");
                 switch (statusCode) {
-                case HttpStatus.SC_MOVED_TEMPORARILY:
-                    return (method.equalsIgnoreCase(HttpGet.METHOD_NAME)||method.equalsIgnoreCase(HttpHead.METHOD_NAME)
-                            ||method.equalsIgnoreCase(HttpLock.METHOD_NAME)||method.equalsIgnoreCase(HttpAcl.METHOD_NAME)||method
+                    case HttpStatus.SC_MOVED_TEMPORARILY:
+                        return (method.equalsIgnoreCase(HttpGet.METHOD_NAME)||method.equalsIgnoreCase(HttpHead.METHOD_NAME)
+                                ||method.equalsIgnoreCase(HttpLock.METHOD_NAME)||method.equalsIgnoreCase(HttpAcl.METHOD_NAME)||method
                                 .equalsIgnoreCase(HttpPropFind.METHOD_NAME))&&(locationHeader!=null);
-                case HttpStatus.SC_MOVED_PERMANENTLY:
-                case HttpStatus.SC_TEMPORARY_REDIRECT:
-                    return method.equalsIgnoreCase(HttpGet.METHOD_NAME)||method.equalsIgnoreCase(HttpHead.METHOD_NAME)
-                            ||method.equalsIgnoreCase(HttpLock.METHOD_NAME)||method.equalsIgnoreCase(HttpAcl.METHOD_NAME)
-                            ||method.equalsIgnoreCase(HttpPropFind.METHOD_NAME);
-                case HttpStatus.SC_SEE_OTHER:
-                    return true;
-                default:
-                    return false;
+                    case HttpStatus.SC_MOVED_PERMANENTLY:
+                    case HttpStatus.SC_TEMPORARY_REDIRECT:
+                        return method.equalsIgnoreCase(HttpGet.METHOD_NAME)||method.equalsIgnoreCase(HttpHead.METHOD_NAME)
+                                ||method.equalsIgnoreCase(HttpLock.METHOD_NAME)||method.equalsIgnoreCase(HttpAcl.METHOD_NAME)
+                                ||method.equalsIgnoreCase(HttpPropFind.METHOD_NAME);
+                    case HttpStatus.SC_SEE_OTHER:
+                        return true;
+                    default:
+                        return false;
                 }
             }
 
@@ -241,6 +239,7 @@ public class SardineImpl implements Sardine {
                 }
                 return super.getRedirect(request, response, context);
             }
+
         });
         this.setCredentials(username, password);
     }
@@ -248,11 +247,11 @@ public class SardineImpl implements Sardine {
 
     /**
      * Add credentials to any scope. Supports Basic, Digest and NTLM authentication methods.
-     * 
+     *
      * @param username
-     *            Use in authentication header credentials
+     * Use in authentication header credentials
      * @param password
-     *            Use in authentication header credentials
+     * Use in authentication header credentials
      */
     @Override
     public void setCredentials(String username, String password) {
@@ -262,13 +261,13 @@ public class SardineImpl implements Sardine {
 
     /**
      * @param username
-     *            Use in authentication header credentials
+     * Use in authentication header credentials
      * @param password
-     *            Use in authentication header credentialsn
+     * Use in authentication header credentialsn
      * @param domain
-     *            NTLM authentication
+     * NTLM authentication
      * @param workstation
-     *            NTLM authentication
+     * NTLM authentication
      */
     @Override
     public void setCredentials(String username, String password, String domain, String workstation) {
@@ -356,7 +355,7 @@ public class SardineImpl implements Sardine {
             try {
                 resources.add(new DavResource(response));
             } catch (URISyntaxException e) {
-                log.warn(String.format("Ignore resource with invalid URI %s", response.getHref().get(0)));
+                LOG.warn(String.format("Ignore resource with invalid URI %s", response.getHref().get(0)));
             }
         }
         return resources;
@@ -365,7 +364,7 @@ public class SardineImpl implements Sardine {
 
     @Override
     public List<DavResource> patch(String url, Map<QName, String> setProps) throws IOException {
-        return this.patch(url, setProps, Collections.<QName> emptyList());
+        return this.patch(url, setProps, Collections.<QName>emptyList());
     }
 
 
@@ -415,7 +414,7 @@ public class SardineImpl implements Sardine {
             try {
                 resources.add(new DavResource(response));
             } catch (URISyntaxException e) {
-                log.warn(String.format("Ignore resource with invalid URI %s", response.getHref().get(0)));
+                LOG.warn(String.format("Ignore resource with invalid URI %s", response.getHref().get(0)));
             }
         }
         return resources;
@@ -557,7 +556,7 @@ public class SardineImpl implements Sardine {
 
     @Override
     public InputStream get(String url) throws IOException {
-        return this.get(url, Collections.<String, String> emptyMap());
+        return this.get(url, Collections.<String, String>emptyMap());
     }
 
 
@@ -597,7 +596,7 @@ public class SardineImpl implements Sardine {
 
     @Override
     public void put(String url, InputStream dataStream) throws IOException {
-        this.put(url, dataStream, (String)null);
+        this.put(url, dataStream, (String) null);
     }
 
 
@@ -625,15 +624,15 @@ public class SardineImpl implements Sardine {
 
     /**
      * Upload the entity using <code>PUT</code>
-     * 
+     *
      * @param url
-     *            Resource
+     * Resource
      * @param entity
-     *            The entity to read from
+     * The entity to read from
      * @param contentType
-     *            Content Type header
+     * Content Type header
      * @param expectContinue
-     *            Add <code>Expect: continue</code> header
+     * Add <code>Expect: continue</code> header
      */
     public void put(String url, HttpEntity entity, String contentType, boolean expectContinue) throws IOException {
         Map<String, String> headers = new HashMap<String, String>();
@@ -649,13 +648,13 @@ public class SardineImpl implements Sardine {
 
     /**
      * Upload the entity using <code>PUT</code>
-     * 
+     *
      * @param url
-     *            Resource
+     * Resource
      * @param entity
-     *            The entity to read from
+     * The entity to read from
      * @param headers
-     *            Headers to add to request
+     * Headers to add to request
      */
     public void put(String url, HttpEntity entity, Map<String, String> headers) throws IOException {
         HttpPut put = new HttpPut(url);
@@ -663,7 +662,7 @@ public class SardineImpl implements Sardine {
         for (String header : headers.keySet()) {
             put.addHeader(header, headers.get(header));
         }
-        if (entity.getContentType()==null&& !put.containsHeader(HttpHeaders.CONTENT_TYPE)) {
+        if (entity.getContentType()==null&&!put.containsHeader(HttpHeaders.CONTENT_TYPE)) {
             put.addHeader(HttpHeaders.CONTENT_TYPE, HTTP.DEF_CONTENT_CHARSET.name());
         }
         try {
@@ -719,13 +718,13 @@ public class SardineImpl implements Sardine {
 
     /**
      * Validate the response using the response handler. Aborts the request if there is an exception.
-     * 
+     *
      * @param <T>
-     *            Return type
+     * Return type
      * @param request
-     *            Request to execute
+     * Request to execute
      * @param responseHandler
-     *            Determines the return type.
+     * Determines the return type.
      * @return parsed response
      */
     protected <T> T execute(HttpRequestBase request, ResponseHandler<T> responseHandler) throws IOException {
@@ -743,9 +742,9 @@ public class SardineImpl implements Sardine {
 
     /**
      * No validation of the response. Aborts the request if there is an exception.
-     * 
+     *
      * @param request
-     *            Request to execute
+     * Request to execute
      * @return The response to check the reply status code
      */
     protected HttpResponse execute(HttpRequestBase request) throws IOException {
@@ -782,7 +781,7 @@ public class SardineImpl implements Sardine {
 
     /**
      * Creates default params setting the user agent.
-     * 
+     *
      * @return Basic HTTP parameters with a custom user agent
      */
     protected HttpParams createDefaultHttpParams() {
@@ -806,7 +805,7 @@ public class SardineImpl implements Sardine {
 
     /**
      * Creates a new {@link org.apache.http.conn.scheme.SchemeRegistry} for default ports with socket factories.
-     * 
+     *
      * @return a new {@link org.apache.http.conn.scheme.SchemeRegistry}.
      */
     protected SchemeRegistry createDefaultSchemeRegistry() {
@@ -835,9 +834,9 @@ public class SardineImpl implements Sardine {
 
     /**
      * Use fail fast connection manager when connections are not released properly.
-     * 
+     *
      * @param schemeRegistry
-     *            Protocol registry
+     * Protocol registry
      * @return Default connection manager
      */
     protected ClientConnectionManager createDefaultConnectionManager(SchemeRegistry schemeRegistry) {
@@ -847,11 +846,11 @@ public class SardineImpl implements Sardine {
 
     /**
      * Override to provide proxy configuration
-     * 
+     *
      * @param schemeRegistry
-     *            Protocol registry
+     * Protocol registry
      * @param selector
-     *            Proxy configuration
+     * Proxy configuration
      * @return ProxySelectorRoutePlanner configured with schemeRegistry and selector
      */
     protected HttpRoutePlanner createDefaultRoutePlanner(SchemeRegistry schemeRegistry, ProxySelector selector) {

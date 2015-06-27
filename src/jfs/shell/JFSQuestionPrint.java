@@ -23,19 +23,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-
 import jfs.conf.JFSLog;
-import jfs.conf.JFSText;
 import jfs.conf.JFSSyncMode.SyncAction;
+import jfs.conf.JFSText;
 import jfs.sync.JFSElement;
 import jfs.sync.JFSFormatter;
 import jfs.sync.JFSQuestion;
-import jfs.sync.JFSQuestionOracle;
 import jfs.sync.JFSQuestion.QuestionAnswer;
+import jfs.sync.JFSQuestionOracle;
 
 /**
  * A JFS questions oracle which asks the user on the command line to determine an action for a JFS element.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSQuestionPrint.java,v 1.6 2007/02/26 18:49:11 heidrich Exp $
  */
@@ -63,17 +62,17 @@ public class JFSQuestionPrint implements JFSQuestionOracle {
         BufferedReader din = new BufferedReader(new InputStreamReader(System.in));
         try {
             String input = din.readLine().toLowerCase();
-            if (input.equals("1")) {
+            if ("1".equals(input)) {
                 p.println("  "+t.get("syncQuestion.print.action.copySrc"));
                 p.println();
                 question.setAction(SyncAction.COPY_SRC);
                 return QuestionAnswer.DO;
-            } else if (input.equals("2")) {
+            } else if ("2".equals(input)) {
                 p.println("  "+t.get("syncQuestion.print.action.copyTgt"));
                 p.println();
                 question.setAction(SyncAction.COPY_TGT);
                 return QuestionAnswer.DO;
-            } else if (input.equals("4")) {
+            } else if ("4".equals(input)) {
                 p.println("  "+t.get("syncQuestion.print.action.skipAll"));
                 p.println();
                 return QuestionAnswer.SKIP_ALL;

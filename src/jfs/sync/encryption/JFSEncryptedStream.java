@@ -17,8 +17,6 @@
  */
 package jfs.sync.encryption;
 
-import sevenzip.compression.lzma.Decoder;
-import sevenzip.compression.lzma.Encoder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,6 +35,9 @@ import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sevenzip.compression.lzma.Decoder;
+import sevenzip.compression.lzma.Encoder;
+
 
 /**
  *
@@ -68,7 +69,7 @@ public class JFSEncryptedStream extends OutputStream {
 
     private static final Logger LOG = LoggerFactory.getLogger(JFSEncryptedStream.class);
 
-    private Cipher cipher;
+    private final Cipher cipher;
 
     private ByteArrayOutputStream delegate;
 
@@ -152,6 +153,10 @@ public class JFSEncryptedStream extends OutputStream {
         delegate.flush();
     } // flush()
 
+
+    /**
+     * Thread implementation to de-couple compression and have it work concurrent.
+     */
     private class CompressionThread extends Thread {
 
         public byte[] compressedValue;
@@ -325,6 +330,10 @@ public class JFSEncryptedStream extends OutputStream {
         baseOutputStream = null;
     } // internalClose()
 
+
+    /**
+     * De-coupling of stream handling needs a thread which closes the stream at the end of the operation.
+     */
     private class ClosingThread extends Thread {
 
         private final JFSEncryptedStream stream;
@@ -344,6 +353,7 @@ public class JFSEncryptedStream extends OutputStream {
                 LOG.error("run()", ioe);
             } // try/catch
         } // run()
+
     } // ClosingThread
 
 
@@ -366,7 +376,7 @@ public class JFSEncryptedStream extends OutputStream {
      *
      * @param fis
      * @param expectedLength
-     *            length to be expected or -2 if you don't want the check
+     * length to be expected or -2 if you don't want the check
      * @param cipher
      * @return
      */

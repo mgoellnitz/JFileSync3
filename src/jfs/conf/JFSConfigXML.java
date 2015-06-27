@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.conf;
 
 import java.io.File;
@@ -25,6 +24,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
 
 /**
  * Loads and saves the configuration entries from or to an XML configuration file.
@@ -60,7 +60,7 @@ class JFSConfigXML extends JFSConfig {
             }
 
             // Test root element:
-            if ( !root.getNodeName().equals("jFileSync")) {
+            if (!root.getNodeName().equals("jFileSync")) {
                 JFSLog.getErr().getStream().println(t.get("error.xml"));
 
                 return false;
@@ -129,9 +129,9 @@ class JFSConfigXML extends JFSConfig {
                 String nodeName = child.getNodeName();
                 Attr attr;
 
-                if (nodeName.equals("server")) {
+                if ("server".equals(nodeName)) {
                     try {
-                        attr = ((Element)child).getAttributeNode("timeout");
+                        attr = ((Element) child).getAttributeNode("timeout");
 
                         if (attr!=null) {
                             serverTimeout = Integer.parseInt(attr.getValue());
@@ -142,48 +142,48 @@ class JFSConfigXML extends JFSConfig {
                         JFSLog.getErr().getStream().println(t.get("error.numberFormat"));
                     }
 
-                    attr = ((Element)child).getAttributeNode("user");
+                    attr = ((Element) child).getAttributeNode("user");
 
                     if (attr!=null) {
                         serverUserName = attr.getValue();
                     }
 
-                    attr = ((Element)child).getAttributeNode(ATTR_PASSPHRASE);
+                    attr = ((Element) child).getAttributeNode(ATTR_PASSPHRASE);
 
                     if (attr!=null) {
                         serverPassPhrase = attr.getValue();
                     } // if
                 }
 
-                if (nodeName.equals("encryption")) {
-                    attr = ((Element)child).getAttributeNode(ATTR_PASSPHRASE);
+                if ("encryption".equals(nodeName)) {
+                    attr = ((Element) child).getAttributeNode(ATTR_PASSPHRASE);
                     if (attr!=null) {
                         encryptionPassPhrase = attr.getValue();
                     } // if
-                    attr = ((Element)child).getAttributeNode(ATTR_CIPHER);
+                    attr = ((Element) child).getAttributeNode(ATTR_CIPHER);
                     if (attr!=null) {
                         encryptionCipher = attr.getValue();
                     } // if
-                    attr = ((Element)child).getAttributeNode(ATTR_SHORTEN);
+                    attr = ((Element) child).getAttributeNode(ATTR_SHORTEN);
                     if (attr!=null) {
                         shortenPaths = Boolean.valueOf(attr.getValue()).booleanValue();
                     } // if
                 } // if
 
-                if (nodeName.equals("directory")) {
-                    Attr src = ((Element)child).getAttributeNode("src");
-                    Attr tgt = ((Element)child).getAttributeNode("tgt");
+                if ("directory".equals(nodeName)) {
+                    Attr src = ((Element) child).getAttributeNode("src");
+                    Attr tgt = ((Element) child).getAttributeNode("tgt");
 
                     if (src!=null&&tgt!=null) {
                         directoryList.add(new JFSDirectoryPair(src.getValue(), tgt.getValue()));
                     }
                 }
 
-                if (nodeName.equals("include")||nodeName.equals("exclude")) {
-                    Attr active = ((Element)child).getAttributeNode("active");
-                    Attr filter = ((Element)child).getAttributeNode("filter");
-                    Attr type = ((Element)child).getAttributeNode("type");
-                    Attr range = ((Element)child).getAttributeNode("range");
+                if ("include".equals(nodeName)||"exclude".equals(nodeName)) {
+                    Attr active = ((Element) child).getAttributeNode("active");
+                    Attr filter = ((Element) child).getAttributeNode("filter");
+                    Attr type = ((Element) child).getAttributeNode("type");
+                    Attr range = ((Element) child).getAttributeNode("range");
 
                     if (filter!=null) {
                         JFSFilter f = new JFSFilter(filter.getValue());
@@ -198,7 +198,7 @@ class JFSConfigXML extends JFSConfig {
                         if (range!=null) {
                             f.setRange(range.getValue());
                         }
-                        if (nodeName.equals("include")) {
+                        if ("include".equals(nodeName)) {
                             includes.add(f);
                         } else {
                             excludes.add(f);
@@ -239,7 +239,7 @@ class JFSConfigXML extends JFSConfig {
 
             // Create and add attributes to root element if the value differs
             // from the default values:
-            if ( !getTitle().equals(JFSText.getInstance().get("profile.defaultTitle"))) {
+            if (!getTitle().equals(JFSText.getInstance().get("profile.defaultTitle"))) {
                 root.setAttribute("title", getTitle());
             }
 
@@ -273,15 +273,14 @@ class JFSConfigXML extends JFSConfig {
 
             // Add server settings if not equal to default:
             if (!serverUserName.equals(JFSConst.SERVER_USER_NAME)
-                    || !serverPassPhrase.equals(JFSConst.SERVER_PASS_PHRASE)||serverTimeout!=JFSConst.SERVER_TIMEOUT
-                    ) {
+                    ||!serverPassPhrase.equals(JFSConst.SERVER_PASS_PHRASE)||serverTimeout!=JFSConst.SERVER_TIMEOUT) {
                 Element element = doc.createElement("server");
 
-                if ( !serverUserName.equals(JFSConst.SERVER_USER_NAME)) {
+                if (!serverUserName.equals(JFSConst.SERVER_USER_NAME)) {
                     element.setAttribute("user", serverUserName);
                 }
 
-                if ( !serverPassPhrase.equals(JFSConst.SERVER_PASS_PHRASE)) {
+                if (!serverPassPhrase.equals(JFSConst.SERVER_PASS_PHRASE)) {
                     element.setAttribute(ATTR_PASSPHRASE, serverPassPhrase);
                 }
 
@@ -294,16 +293,16 @@ class JFSConfigXML extends JFSConfig {
             }
 
             // Add server settings if not equal to default:
-            if ( !encryptionPassPhrase.equals("")) {
+            if (!"".equals(encryptionPassPhrase)) {
                 Element element = doc.createElement("encryption");
 
-                if ( !encryptionPassPhrase.equals("")) {
+                if (!"".equals(encryptionPassPhrase)) {
                     element.setAttribute(ATTR_PASSPHRASE, encryptionPassPhrase);
                 }
-                if ( !encryptionCipher.equals("AES")) {
+                if (!"AES".equals(encryptionCipher)) {
                     element.setAttribute(ATTR_CIPHER, encryptionCipher);
                 }
-               if ( shortenPaths) {
+                if (shortenPaths) {
                     element.setAttribute(ATTR_SHORTEN, "true");
                 }
 
@@ -349,4 +348,5 @@ class JFSConfigXML extends JFSConfig {
 
         return false;
     }
+
 }

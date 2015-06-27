@@ -16,33 +16,37 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.net.URL;
 import jfs.conf.JFSConst;
 import jfs.conf.JFSText;
 
+
 /**
  * Represents a help topic.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSHelpTopic.java,v 1.13 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSHelpTopic implements Comparable<JFSHelpTopic> {
 
-    /** The ID of the help topic. */
+    /**
+     * The ID of the help topic.
+     */
     private String id;
 
-    /** The title of the topic id. */
+    /**
+     * The title of the topic id.
+     */
     private String title;
 
 
     /**
      * Creates a help topic object.
-     * 
+     *
      * @param id
-     *            The ID of the help topic.
+     * The ID of the help topic.
      */
     public JFSHelpTopic(String id) {
         this.id = id;
@@ -57,7 +61,7 @@ public class JFSHelpTopic implements Comparable<JFSHelpTopic> {
 
     /**
      * Returns the topic ID.
-     * 
+     *
      * @return Topic ID.
      */
     public final String getId() {
@@ -67,7 +71,7 @@ public class JFSHelpTopic implements Comparable<JFSHelpTopic> {
 
     /**
      * Returns the topic title.
-     * 
+     *
      * @return Topic title.
      */
     public final String getTitle() {
@@ -77,7 +81,7 @@ public class JFSHelpTopic implements Comparable<JFSHelpTopic> {
 
     /**
      * Returns the URL of the help topic.
-     * 
+     *
      * @return The URL.
      */
     public final URL getUrl() {
@@ -87,9 +91,9 @@ public class JFSHelpTopic implements Comparable<JFSHelpTopic> {
 
     /**
      * Returns the result of the comparison of the titles of two help topic objects.
-     * 
+     *
      * @param topic
-     *            The help topic object to compare the current object with.
+     * The help topic object to compare the current object with.
      * @return Result of the comparison.
      */
     @Override
@@ -98,11 +102,11 @@ public class JFSHelpTopic implements Comparable<JFSHelpTopic> {
         boolean isThisStart = this.getId().equals(startTopic);
         boolean isTopicStart = topic.getId().equals(startTopic);
 
-        if ( !isThisStart&& !isTopicStart)
+        if (!isThisStart&&!isTopicStart) {
             return this.getTitle().compareTo(topic.getTitle());
-        else if (isThisStart)
+        } else if (isThisStart) {
             return -1;
-        else if (isTopicStart) {
+        } else if (isTopicStart) {
             return 1;
         }
 
@@ -112,11 +116,12 @@ public class JFSHelpTopic implements Comparable<JFSHelpTopic> {
 
     /**
      * Returns the string representation of the object.
-     * 
+     *
      * @return The string representation.
      */
     @Override
     public final String toString() {
         return title;
     }
+
 }

@@ -16,51 +16,58 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.conf;
 
-import java.util.Vector;
-
+import java.util.ArrayList;
+import java.util.List;
 import jfs.conf.JFSSyncMode.SyncAction;
+
 
 /**
  * This class specifies a single view mode.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSViewMode.java,v 1.6 2007/02/26 18:49:11 heidrich Exp $
  */
 public class JFSViewMode {
 
-    /** The identifier of the mode. */
-    private int id;
+    /**
+     * The identifier of the mode.
+     */
+    private final int id;
 
-    /** The string alias of the mode. */
-    private String alias;
+    /**
+     * The string alias of the mode.
+     */
+    private final String alias;
 
-    /** Stores the actions for which the mode allows viewing. */
-    private Vector<SyncAction> allowedActions = new Vector<SyncAction>();
+    /**
+     * Stores the actions for which the mode allows viewing.
+     */
+    private final List<SyncAction> allowedActions;
 
 
     /**
      * Creates a new mode.
-     * 
+     *
      * @param id
-     *            The identifier to use.
+     * The identifier to use.
      * @param alias
-     *            The alias to use.
+     * The alias to use.
      */
     public JFSViewMode(int id, String alias) {
         this.id = id;
         this.alias = alias;
+        allowedActions = new ArrayList<>();
     }
 
 
     /**
      * Returns whether this mode allows viewing for a certain action. If nothing is specified regarding the given
      * action, no viewing is allowed.
-     * 
+     *
      * @param action
-     *            The action.
+     * The action.
      * @return True if and only if the mode allows viewing.
      */
     public boolean isViewed(SyncAction action) {
@@ -71,9 +78,9 @@ public class JFSViewMode {
     /**
      * Sets whether this mode allows viewing for a certain action. If nothing is specified regarding the given action,
      * no viewing is allowed.
-     * 
+     *
      * @param action
-     *            The action.
+     * The action.
      */
     public void setViewed(SyncAction action) {
         allowedActions.add(action);
@@ -103,4 +110,5 @@ public class JFSViewMode {
     public String toString() {
         return alias+" ["+id+"]";
     }
+
 }

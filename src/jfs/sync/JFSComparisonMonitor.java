@@ -18,7 +18,8 @@
  */
 package jfs.sync;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -37,17 +38,17 @@ public final class JFSComparisonMonitor {
     /**
      * The number items to handle on every level of the file hierarchy.
      */
-    private Vector<Integer> itemsStarted = new Vector<Integer>();
+    private final List<Integer> itemsStarted = new ArrayList<>();
 
     /**
      * The number items already handled on every level.
      */
-    private Vector<Integer> itemsHandled = new Vector<Integer>();
+    private final List<Integer> itemsHandled = new ArrayList<>();
 
     /**
      * The weigth of all currently handled items on every level.
      */
-    private Vector<Integer> itemsWeight = new Vector<Integer>();
+    private final List<Integer> itemsWeight = new ArrayList<>();
 
     /**
      * The current root URI for source files handled.

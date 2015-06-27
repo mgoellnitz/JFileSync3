@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.awt.BorderLayout;
@@ -25,7 +24,6 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -34,29 +32,34 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
-
 import jfs.conf.JFSText;
 import jfs.sync.JFSTable;
 
+
 /**
  * A dialog that is shown after the synchronization presenting all failed copy and delete statements deleted.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSReportView.java,v 1.16 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSReportView extends JDialog implements ActionListener {
-    /** The UID. */
+
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = 54L;
 
-    /** The main JFileSync frame. */
-    private JFrame frame;
+    /**
+     * The main JFileSync frame.
+     */
+    private final JFrame frame;
 
 
     /**
      * Initializes the report view.
-     * 
+     *
      * @param frame
-     *            The main frame.
+     * The main frame.
      */
     public JFSReportView(JFrame frame) {
         super(frame, true);
@@ -135,13 +138,14 @@ public class JFSReportView extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         String cmd = event.getActionCommand();
 
-        if (cmd.equals("button.ok")) {
+        if ("button.ok".equals(cmd)) {
             setVisible(false);
             dispose();
         }
 
-        if (cmd.equals("error.log")) {
+        if ("error.log".equals(cmd)) {
             new JFSLogView(frame, JFSLogView.ERR);
         }
     }
+
 }

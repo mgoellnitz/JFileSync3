@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.conf;
 
 import java.io.File;
@@ -25,45 +24,59 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import jfs.sync.JFSElement;
 import jfs.sync.JFSElement.ElementState;
 import jfs.sync.JFSRootElement;
 import jfs.sync.JFSTable;
 
+
 /**
  * Manager all histories of synchronized directory pairs.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSHistoryManager.java,v 1.8 2007/07/20 15:59:30 heidrich Exp $
  */
 public final class JFSHistoryManager {
-    
-    /** Stores the only instance of the class. */
+
+    /**
+     * Stores the only instance of the class.
+     */
     private static JFSHistoryManager instance = null;
 
-    /** The stored histories. */
-    private List<JFSHistory> histories = new ArrayList<>();
+
+    /**
+     * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSHistoryManager.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
+     */
+    private static class SingletonHolder {
+
+        public static final JFSHistoryManager INSTANCE = new JFSHistoryManager();
+
+    }
+
+    /**
+     * The stored histories.
+     */
+    private final List<JFSHistory> histories = new ArrayList<>();
 
 
     /**
      * Constructs a the only history manager.
      */
-    private JFSHistoryManager() {
+    protected JFSHistoryManager() {
+        // Avoid instanciation from outside
     }
 
 
     /**
      * Returns the reference of the only instance.
-     * 
+     *
      * @return The only instance.
      */
     public static JFSHistoryManager getInstance() {
-        if (instance==null) {
-            instance = new JFSHistoryManager();
-        }
-
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 
@@ -77,7 +90,7 @@ public final class JFSHistoryManager {
 
     /**
      * Returns the set of histories.
-     * 
+     *
      * @return The histories.
      */
     public List<JFSHistory> getHistories() {
@@ -88,9 +101,9 @@ public final class JFSHistoryManager {
     /**
      * Returns the history for a special directory pair. If no history is found, a new one is created and added to the
      * list of histories.
-     * 
+     *
      * @param pair
-     *            The directory pair to search the history for.
+     * The directory pair to search the history for.
      * @return The history.
      */
     public JFSHistory getHistory(JFSDirectoryPair pair) {
@@ -108,9 +121,9 @@ public final class JFSHistoryManager {
 
     /**
      * Adds a special history.
-     * 
+     *
      * @param history
-     *            The history to add.
+     * The history to add.
      */
     public void addHistory(JFSHistory history) {
         histories.add(history);
@@ -120,9 +133,9 @@ public final class JFSHistoryManager {
     /**
      * Deletes the history for a special history; that is, deletes the file, the history is stored to and removes the
      * history from the list of histories.
-     * 
+     *
      * @param history
-     *            The history to delete.
+     * The history to delete.
      */
     public void deleteHistory(JFSHistory history) {
         deleteHistoryFile(history);
@@ -133,7 +146,7 @@ public final class JFSHistoryManager {
 
     /**
      * Deletes all histories.
-     * 
+     *
      * @see #deleteHistory(JFSHistory)
      */
     public void deleteAll() {
@@ -147,9 +160,9 @@ public final class JFSHistoryManager {
 
     /**
      * Deletes the history file for a special history.
-     * 
+     *
      * @param history
-     *            The history to delete the corresponding file for.
+     * The history to delete the corresponding file for.
      */
     private void deleteHistoryFile(JFSHistory history) {
         File file = new File(JFSConst.HOME_DIR+File.separatorChar+history.getFileName());
@@ -172,7 +185,7 @@ public final class JFSHistoryManager {
         File jfsDir = new File(JFSConst.HOME_DIR);
         for (File f : jfsDir.listFiles()) {
             String name = f.getName();
-            if (name.startsWith(JFSConst.HISTORY_FILE_PREFIX)&&name.endsWith(".xml")&& !historyFiles.contains(name)) {
+            if (name.startsWith(JFSConst.HISTORY_FILE_PREFIX)&&name.endsWith(".xml")&&!historyFiles.contains(name)) {
                 f.delete();
             }
         }
@@ -196,7 +209,7 @@ public final class JFSHistoryManager {
         Map<String, JFSHistoryItem> newDirectories = null;
         Map<String, JFSHistoryItem> newFiles = null;
 
-        for (int i = 0; i<table.getTableSize(); i++ ) {
+        for (int i = 0; i<table.getTableSize(); i++) {
             JFSElement element = table.getTableElement(i);
 
             // If root is found, update previous history and get new one:
@@ -205,10 +218,10 @@ public final class JFSHistoryManager {
                     h.update(root, newHistory, newDirectories, newFiles);
                 }
 
-                root = (JFSRootElement)element;
+                root = (JFSRootElement) element;
                 h = root.getHistory();
                 h.setDate(System.currentTimeMillis());
-                newHistory = new Vector<>();
+                newHistory = new ArrayList<>();
                 newDirectories = new HashMap<>();
                 newFiles = new HashMap<>();
             }
@@ -245,4 +258,5 @@ public final class JFSHistoryManager {
             h.update(root, newHistory, newDirectories, newFiles);
         }
     }
+
 }

@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 public class JFSLocalFile extends JFSFile {
 
-    private static Logger LOG = LoggerFactory.getLogger(JFSLocalFile.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JFSLocalFile.class);
 
     /**
      * The corresponding file object.

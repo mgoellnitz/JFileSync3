@@ -18,7 +18,8 @@
  */
 package jfs.sync;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import jfs.JFileSync;
 import jfs.conf.JFSConst;
 import jfs.conf.JFSSettings;
@@ -36,8 +37,15 @@ public final class JFSProgress {
 
     /**
      * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSProgress.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
      */
-    private static JFSProgress instance = null;
+    private static class SingletonHolder {
+
+        public static final JFSProgress INSTANCE = new JFSProgress();
+
+    }
 
     /**
      * The current activity
@@ -62,12 +70,12 @@ public final class JFSProgress {
     /**
      * Determines whether the algorithm is canceled or not.
      */
-    private boolean isCanceled = false;
+    private boolean canceled = false;
 
     /**
      * Vector with all oberservers of the alogorithm's progress.
      */
-    private Vector<JFSProgressObserver> observers = new Vector<JFSProgressObserver>();
+    private final List<JFSProgressObserver> observers = new ArrayList<>();
 
     /**
      * The time when the observers were updated last.
@@ -80,10 +88,12 @@ public final class JFSProgress {
      */
     public enum ProgressActivity {
 
-        INITIALIZATION("progress.init.title"), COMPARISON("progress.comparison.title"), SYNCHRONIZATION_DELETE(
-                "progress.delete.title"), SYNCHRONIZATION_COPY("progress.copy.title");
+        INITIALIZATION("progress.init.title"),
+        COMPARISON("progress.comparison.title"),
+        SYNCHRONIZATION_DELETE("progress.delete.title"),
+        SYNCHRONIZATION_COPY("progress.copy.title");
 
-        private String name;
+        private final String name;
 
 
         ProgressActivity(String name) {
@@ -111,7 +121,8 @@ public final class JFSProgress {
     /**
      * Creates a new progress object.
      */
-    private JFSProgress() {
+    protected JFSProgress() {
+        // avoid instanciation from outside
     }
 
 
@@ -121,11 +132,7 @@ public final class JFSProgress {
      * @return The only instance.
      */
     public static JFSProgress getInstance() {
-        if (instance==null) {
-            instance = new JFSProgress();
-        }
-
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 
@@ -138,7 +145,7 @@ public final class JFSProgress {
     void prepare(ProgressActivity activity) {
         this.activity = activity;
         this.state = ProgressState.PREPARATION;
-        isCanceled = false;
+        canceled = false;
         updateTime = 0;
         duration = 0;
         update();
@@ -231,7 +238,7 @@ public final class JFSProgress {
      * as possible at predefined milestones.
      */
     public void cancel() {
-        isCanceled = true;
+        canceled = true;
 
         // Shut down producers at once in order to avoid waiting for time out:
         JFSFileProducerManager pm = JFSFileProducerManager.getInstance();
@@ -266,7 +273,7 @@ public final class JFSProgress {
      * @return True if and only if the algorithm was cancelled.
      */
     public boolean isCanceled() {
-        return isCanceled;
+        return canceled;
     }
 
 

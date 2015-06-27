@@ -45,6 +45,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * Storage access with encrypted files, separate meta data file for each directory and a WebDAV backend.
+ */
 public class DavStorageAccess extends AbstractMetaStorageAccess implements StorageAccess {
 
     private static final String PROP_LAST_MODIFIED_TIME = "Win32LastModifiedTime";
@@ -54,7 +57,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ROOT);
 
 
-    {
+    static {
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
@@ -106,7 +109,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
     } // getUrl()
 
 
-    List<DavResource> getListing(String rootPath, String url) throws IOException {
+    private List<DavResource> getListing(String rootPath, String url) throws IOException {
         if (directoryCache.containsKey(url)) {
             return directoryCache.get(url);
         } // if

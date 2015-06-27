@@ -21,17 +21,17 @@ public class CRC {
         }
     }
 
-    int _value = -1;
+    private int crcValue = -1;
 
 
     public void Init() {
-        _value = -1;
+        crcValue = -1;
     }
 
 
     public void Update(byte[] data, int offset, int size) {
         for (int i = 0; i<size; i++) {
-            _value = Table[(_value^data[offset+i])&0xFF]^(_value>>>8);
+            crcValue = Table[(crcValue^data[offset+i])&0xFF]^(crcValue>>>8);
         }
     }
 
@@ -39,18 +39,18 @@ public class CRC {
     public void Update(byte[] data) {
         int size = data.length;
         for (int i = 0; i<size; i++) {
-            _value = Table[(_value^data[i])&0xFF]^(_value>>>8);
+            crcValue = Table[(crcValue^data[i])&0xFF]^(crcValue>>>8);
         }
     }
 
 
     public void UpdateByte(int b) {
-        _value = Table[(_value^b)&0xFF]^(_value>>>8);
+        crcValue = Table[(crcValue^b)&0xFF]^(crcValue>>>8);
     }
 
 
     public int GetDigest() {
-        return _value^(-1);
+        return crcValue^(-1);
     }
 
 }

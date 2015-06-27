@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.awt.BorderLayout;
@@ -26,8 +25,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
-import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -46,44 +46,62 @@ import jfs.conf.JFSConst;
 import jfs.conf.JFSLog;
 import jfs.conf.JFSText;
 
+
 /**
  * This dialog is responsible for providing available help topics and their content.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSHelpView.java,v 1.17 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSHelpView extends JDialog implements ActionListener, HyperlinkListener, ListSelectionListener {
-    /** The UID. */
+
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = 52L;
 
-    /** The available help topics. */
+    /**
+     * The available help topics.
+     */
     @SuppressWarnings("rawtypes")
     private JList topicsList;
 
-    /** The available help topics. */
+    /**
+     * The available help topics.
+     */
     private TreeSet<JFSHelpTopic> topics = new TreeSet<JFSHelpTopic>();
 
-    /** The editor pane with the content on html file. */
+    /**
+     * The editor pane with the content on html file.
+     */
     private JEditorPane content;
 
-    /** The backward history of viewed files. */
-    private Vector<URL> bwdHistory = new Vector<URL>(JFSConst.HELP_HISTORY_SIZE);
+    /**
+     * The backward history of viewed files.
+     */
+    private List<URL> bwdHistory = new ArrayList<>(JFSConst.HELP_HISTORY_SIZE);
 
-    /** The forward history of viewed files. */
-    private Vector<URL> fwdHistory = new Vector<URL>(JFSConst.HELP_HISTORY_SIZE);
+    /**
+     * The forward history of viewed files.
+     */
+    private List<URL> fwdHistory = new ArrayList<>(JFSConst.HELP_HISTORY_SIZE);
 
-    /** The backward button. */
+    /**
+     * The backward button.
+     */
     private JButton bwdButton;
 
-    /** The forward button. */
+    /**
+     * The forward button.
+     */
     private JButton fwdButton;
 
 
     /**
      * Initializes the help view.
-     * 
+     *
      * @param frame
-     *            The main frame.
+     * The main frame.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public JFSHelpView(JFrame frame) {
@@ -118,8 +136,9 @@ public class JFSHelpView extends JDialog implements ActionListener, HyperlinkLis
         JPanel topicPanel = new JPanel(new GridLayout(1, 1));
         topicPanel.setBorder(new TitledBorder(t.get("help.topics.title")));
         String[] helpTopics = JFSConst.getInstance().getStringArray("jfs.help.topics");
-        for (int i = 0; i<helpTopics.length; i++ )
+        for (int i = 0; i<helpTopics.length; i++) {
             topics.add(new JFSHelpTopic(helpTopics[i]));
+        }
         topicsList = new JList(topics.toArray());
         topicsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         topicsList.addListSelectionListener(this);
@@ -151,9 +170,9 @@ public class JFSHelpView extends JDialog implements ActionListener, HyperlinkLis
 
     /**
      * Sets the content of the editor pane.
-     * 
+     *
      * @param url
-     *            The URL to view in the editor pane.
+     * The URL to view in the editor pane.
      */
     private final void setContent(URL url) {
         // Get the filename from the translation object:
@@ -179,15 +198,15 @@ public class JFSHelpView extends JDialog implements ActionListener, HyperlinkLis
     /**
      * Adds an URL to a history. If the URL to add is already the last element nothing is done, else the URL is added
      * and if the size of the history is greater than the maximum size, the first element is removed.
-     * 
+     *
      * @param v
-     *            The history to add to.
+     * The history to add to.
      * @param url
-     *            The URL to add.
+     * The URL to add.
      */
-    private final static void addUrl(Vector<URL> v, URL url) {
+    private final static void addUrl(List<URL> v, URL url) {
         // If URL is already first stop:
-        if (v.size()>0&&v.lastElement().equals(url)) {
+        if (v.size()>0&&v.get(v.size()-1).equals(url)) {
             return;
         }
 
@@ -203,42 +222,44 @@ public class JFSHelpView extends JDialog implements ActionListener, HyperlinkLis
      * Updates the contents of the help view by adding the old URL to the history and setting the contents of the help
      * view to the new URL if both URL differ. Furthermore, the buttons for moving forwards and backwards are disabled
      * and enabled accordingly.
-     * 
+     *
      * @param v
-     *            The history to which the old URL is added.
+     * The history to which the old URL is added.
      * @param newUrl
-     *            The new URL that is used to update the contents.
+     * The new URL that is used to update the contents.
      */
-    private final void update(Vector<URL> v, URL newUrl) {
+    private final void update(List<URL> v, URL newUrl) {
         // Update contents:
         URL oldUrl = content.getPage();
-        if ( !oldUrl.equals(newUrl)) {
+        if (!oldUrl.equals(newUrl)) {
             addUrl(v, content.getPage());
             setContent(newUrl);
         }
 
         // Update button state:
-        if (bwdHistory.isEmpty())
+        if (bwdHistory.isEmpty()) {
             bwdButton.setEnabled(false);
-        else
+        } else {
             bwdButton.setEnabled(true);
-        if (fwdHistory.isEmpty())
+        }
+        if (fwdHistory.isEmpty()) {
             fwdButton.setEnabled(false);
-        else
+        } else {
             fwdButton.setEnabled(true);
+        }
     }
 
 
     /**
      * Sets a new URL for the contents of the help view by updating the backward history and clearing the forward
      * history if the new and old URL of the contents are not the same.
-     * 
+     *
      * @param newUrl
-     *            The new URL that is used to update the contents.
+     * The new URL that is used to update the contents.
      */
     private final void setNewUrl(URL newUrl) {
         URL oldUrl = content.getPage();
-        if ( !oldUrl.equals(newUrl)) {
+        if (!oldUrl.equals(newUrl)) {
             fwdHistory.clear();
             update(bwdHistory, newUrl);
         }
@@ -258,14 +279,14 @@ public class JFSHelpView extends JDialog implements ActionListener, HyperlinkLis
         }
 
         if (cmd.equals("BWD")) {
-            if ( !bwdHistory.isEmpty()) {
+            if (!bwdHistory.isEmpty()) {
                 URL last = bwdHistory.remove(bwdHistory.size()-1);
                 update(fwdHistory, last);
             }
         }
 
         if (cmd.equals("FWD")) {
-            if ( !fwdHistory.isEmpty()) {
+            if (!fwdHistory.isEmpty()) {
                 URL last = fwdHistory.remove(fwdHistory.size()-1);
                 update(bwdHistory, last);
             }
@@ -293,12 +314,13 @@ public class JFSHelpView extends JDialog implements ActionListener, HyperlinkLis
      */
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (e.getFirstIndex()!= -1&&e.getLastIndex()!= -1&& !e.getValueIsAdjusting()) {
+        if (e.getFirstIndex()!=-1&&e.getLastIndex()!=-1&&!e.getValueIsAdjusting()) {
             // Display the content of the current topic:
-            JFSHelpTopic topic = (JFSHelpTopic)topicsList.getSelectedValue();
+            JFSHelpTopic topic = (JFSHelpTopic) topicsList.getSelectedValue();
             if (topic!=null) {
                 setNewUrl(topic.getUrl());
             }
         }
     }
+
 }

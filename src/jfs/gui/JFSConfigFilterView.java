@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.awt.BorderLayout;
@@ -47,47 +46,65 @@ import jfs.conf.JFSFilter.FilterRange;
 import jfs.conf.JFSFilter.FilterType;
 import jfs.conf.JFSText;
 
+
 /**
  * This dialog manages filter settings.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSConfigFilterView.java,v 1.10 2006/08/28 11:31:54 heidrich Exp $
  */
 public class JFSConfigFilterView extends JDialog implements ActionListener, ListSelectionListener {
-    /** The UID. */
+
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = 49L;
 
-    /** The configuration object to modify. */
+    /**
+     * The configuration object to modify.
+     */
     private final JFSConfig config;
 
-    /** Determines whether to handle include or exclude filters. */
+    /**
+     * Determines whether to handle include or exclude filters.
+     */
     private boolean isIncludeFilter;
 
-    /** The table of filters to change. */
+    /**
+     * The table of filters to change.
+     */
     private JFSFilterTable filterTable;
 
-    /** Number of filters. */
+    /**
+     * Number of filters.
+     */
     private JLabel filterLabel;
 
-    /** The up button. */
+    /**
+     * The up button.
+     */
     private JButton upButton;
 
-    /** The down button. */
+    /**
+     * The down button.
+     */
     private JButton downButton;
 
-    /** The remove button. */
+    /**
+     * The remove button.
+     */
     private JButton removeButton;
 
 
     /**
      * Initializes the config view.
-     * 
+     *
      * @param dialog
-     *            The main frame.
+     * The main frame.
      * @param config
-     *            The configuration to change.
+     * The configuration to change.
      * @param isIncludeFilter
-     *            Determines the type of the dialog.
+     * Determines the type of the dialog.
      */
     public JFSConfigFilterView(JDialog dialog, JFSConfig config, boolean isIncludeFilter) {
         super(dialog, true);
@@ -195,7 +212,7 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
 
             // If a row is selected and it is not the last one then
             // move it one position upwards:
-            if ((row> -1)&&(row<(filterTable.getJTable().getRowCount()-1))) {
+            if ((row>-1)&&(row<(filterTable.getJTable().getRowCount()-1))) {
                 JFSFilter f = filterTable.getFilters().remove(row);
 
                 // If 'row' is the last element just add a new
@@ -268,16 +285,16 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
             ListSelectionModel model = filterTable.getJTable().getSelectionModel();
 
             // If a row is selected remove it from the table:
-            if ( !model.isSelectionEmpty()) {
+            if (!model.isSelectionEmpty()) {
                 int row = model.getLeadSelectionIndex();
 
                 filterTable.getFilters().remove(row);
 
-                if (row>0)
+                if (row>0) {
                     model.setLeadSelectionIndex(row-1);
-                else if ((row==0)&&(filterTable.getJTable().getRowCount()>0))
+                } else if ((row==0)&&(filterTable.getJTable().getRowCount()>0)) {
                     model.setLeadSelectionIndex(0);
-                else {
+                } else {
                     model.clearSelection();
                 }
 
@@ -292,11 +309,11 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
 
         if ("button.ok".equals(cmd)) {
             if (isIncludeFilter) {
-                if ( !filterTable.getFilters().equals(config.getIncludes())) {
+                if (!filterTable.getFilters().equals(config.getIncludes())) {
                     config.replaceIncludes(filterTable.getFilters());
                 }
             } else {
-                if ( !filterTable.getFilters().equals(config.getExcludes())) {
+                if (!filterTable.getFilters().equals(config.getExcludes())) {
                     config.replaceExcludes(filterTable.getFilters());
                 }
             }
@@ -353,5 +370,5 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
     public void valueChanged(ListSelectionEvent e) {
         checkButtons();
     }
-    
+
 }

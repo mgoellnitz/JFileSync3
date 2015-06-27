@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.util.List;
@@ -29,29 +28,36 @@ import jfs.conf.JFSText;
 import jfs.sync.JFSDeleteStatement;
 import jfs.sync.JFSFile;
 
+
 /**
  * This class is responsible for displaying the comparison table.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSDeleteTable.java,v 1.11 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSDeleteTable extends AbstractTableModel {
-    
-    /** The UID. */
+
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = 47L;
 
-    /** The object with information that should be displayed by the table. */
+    /**
+     * The object with information that should be displayed by the table.
+     */
     private List<JFSDeleteStatement> v;
 
-    /** The corresponding JTable. */
+    /**
+     * The corresponding JTable.
+     */
     private final JTable table;
 
 
     /**
      * The default constructor just performs some initialization work.
-     * 
+     *
      * @param v
-     *            The vector with all delete statements.
+     * The vector with all delete statements.
      */
     public JFSDeleteTable(List<JFSDeleteStatement> v) {
         this.v = v;
@@ -93,8 +99,9 @@ public class JFSDeleteTable extends AbstractTableModel {
      */
     @Override
     public final Object getValueAt(int row, int column) {
-        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount())
+        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount()) {
             return null;
+        }
 
         JFSFile file = v.get(row).getFile();
 
@@ -120,4 +127,5 @@ public class JFSDeleteTable extends AbstractTableModel {
     public final JTable getJTable() {
         return table;
     }
+
 }

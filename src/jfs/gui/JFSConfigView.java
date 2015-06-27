@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.awt.BorderLayout;
@@ -52,6 +51,7 @@ import jfs.conf.JFSSyncMode;
 import jfs.conf.JFSSyncModes;
 import jfs.conf.JFSText;
 
+
 /**
  * This dialog is responsible for changing options within the configuration object (aka user's profile) currently used.
  *
@@ -60,38 +60,60 @@ import jfs.conf.JFSText;
  */
 public class JFSConfigView extends JDialog implements ActionListener, ListSelectionListener {
 
-    /** The UID. */
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = 50L;
 
-    /** The new configuration object. */
+    /**
+     * The new configuration object.
+     */
     private final JFSConfig configNew;
 
-    /** The title text field. */
+    /**
+     * The title text field.
+     */
     private final JTextField title;
 
-    /** The synchronization mode box. */
+    /**
+     * The synchronization mode box.
+     */
     @SuppressWarnings("rawtypes")
     private final JComboBox syncMode;
 
-    /** The synchronization modes. */
+    /**
+     * The synchronization modes.
+     */
     private final List<JFSSyncMode> syncModeList;
 
-    /** The table of directory pairs. */
+    /**
+     * The table of directory pairs.
+     */
     private final JTable directoryTable;
 
-    /** Number of directory pairs. */
+    /**
+     * Number of directory pairs.
+     */
     private final JLabel directoryLabel;
 
-    /** The up button. */
+    /**
+     * The up button.
+     */
     private final JButton upButton;
 
-    /** The down button. */
+    /**
+     * The down button.
+     */
     private final JButton downButton;
 
-    /** The change button. */
+    /**
+     * The change button.
+     */
     private final JButton changeButton;
 
-    /** The remove button. */
+    /**
+     * The remove button.
+     */
     private final JButton removeButton;
 
 
@@ -99,16 +121,16 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
      * Initializes the config view.
      *
      * @param frame
-     *            The main frame.
+     * The main frame.
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public JFSConfigView(JFrame frame) {
         super(frame, true);
 
         JFSConfig config = JFSConfig.getInstance();
 
         // Clone the existing configuration object:
-        configNew = (JFSConfig)config.clone();
+        configNew = (JFSConfig) config.clone();
 
         // Get the translation object:
         JFSText t = JFSText.getInstance();
@@ -142,6 +164,7 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
                     new JFSConfigDirectoryView(configView, configNew, pair);
                 }
             }
+
         });
 
         // Create directory panel:
@@ -187,8 +210,9 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
         JFSSyncMode currentMode = modes.getCurrentMode();
         int currentIndex = syncModeList.indexOf(currentMode);
 
-        if (currentIndex!= -1)
+        if (currentIndex!=-1) {
             syncMode.setSelectedIndex(currentIndex);
+        }
 
         // Set-up panels:
         JPanel row1Panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -258,7 +282,7 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
 
             // If a row is selected and it is not the last one then
             // move it one position upwards:
-            if ((row> -1)&&(row<(directoryTable.getRowCount()-1))) {
+            if ((row>-1)&&(row<(directoryTable.getRowCount()-1))) {
                 JFSDirectoryPair pair = configNew.removeDirectoryPair(row);
 
                 // If 'row' is the last element just add a new
@@ -280,7 +304,7 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
             checkButtons();
         }
 
-        if ("button.change".equals(cmd)&& !directoryTable.getSelectionModel().isSelectionEmpty()) {
+        if ("button.change".equals(cmd)&&!directoryTable.getSelectionModel().isSelectionEmpty()) {
             JFSDirectoryPair pair = configNew.getDirectoryList().get(directoryTable.getSelectedRow());
             new JFSConfigDirectoryView(this, configNew, pair);
             update();
@@ -290,17 +314,18 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
             ListSelectionModel model = directoryTable.getSelectionModel();
 
             // If a row is selected remove it from the table:
-            if ( !model.isSelectionEmpty()) {
+            if (!model.isSelectionEmpty()) {
                 int row = model.getLeadSelectionIndex();
 
                 configNew.removeDirectoryPair(row);
 
-                if (row>0)
+                if (row>0) {
                     model.setLeadSelectionIndex(row-1);
-                else if ((row==0)&&(directoryTable.getRowCount()>0))
+                } else if ((row==0)&&(directoryTable.getRowCount()>0)) {
                     model.setLeadSelectionIndex(0);
-                else
+                } else {
                     model.clearSelection();
+                }
 
                 update();
             }
@@ -315,7 +340,7 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
             // Update the new configuration object:
             configNew.setTitle(title.getText());
             JFSSyncMode mode = syncModeList.get(syncMode.getSelectedIndex());
-            configNew.setSyncMode((byte)mode.getId());
+            configNew.setSyncMode((byte) mode.getId());
 
             // Transfer the data to the current object and update all
             // configuration object observers:
@@ -345,9 +370,9 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
      * Launches a dialog to create a new directory if the specified one doesn't exist.
      *
      * @param component
-     *            The frame to attach the dialog.
+     * The frame to attach the dialog.
      * @param dir
-     *            The directory to create.
+     * The directory to create.
      */
     public static void createDirectoryDialog(Component component, String dir) {
         // Test for existence:
@@ -358,10 +383,10 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
         } // for
 
         // No URL given
-        if ( !dir.matches("[a-z][a-z][a-z]*://.*")) {
+        if (!dir.matches("[a-z][a-z][a-z]*://.*")) {
             File file = new File(dir);
 
-            if ( !file.exists()) {
+            if (!file.exists()) {
                 // Create dialog:
                 JFSText t = JFSText.getInstance();
                 JPanel panel = new JPanel(new GridLayout(3, 1));
@@ -376,7 +401,7 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 
                 if (result==JOptionPane.OK_OPTION) {
-                    if ( !file.mkdirs()) {
+                    if (!file.mkdirs()) {
                         JLabel failed = new JLabel(t.get("profile.dir.message.failed"));
                         JOptionPane.showMessageDialog(component, failed, t.get("profile.dir.create.title"),
                                 JOptionPane.WARNING_MESSAGE);
@@ -436,4 +461,5 @@ public class JFSConfigView extends JDialog implements ActionListener, ListSelect
     public void valueChanged(ListSelectionEvent e) {
         checkButtons();
     }
+
 }

@@ -23,10 +23,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.Vector;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -63,7 +64,7 @@ public class JFSTableListener implements MouseListener, ActionListener {
     /**
      * Stores the current selection of JFS elements in the table.
      */
-    private final Vector<JFSElement> currentSelection = new Vector<>();
+    private final List<JFSElement> currentSelection = new ArrayList<>();
 
 
     /**

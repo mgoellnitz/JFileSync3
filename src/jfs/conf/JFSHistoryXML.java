@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
 
 /**
  * Loads and saves the configuration entries from or to an XML configuration file.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSHistoryXML.java,v 1.7 2007/02/26 18:49:11 heidrich Exp $
  * @see jfs.conf.JFSConfig
@@ -85,7 +85,7 @@ class JFSHistoryXML extends JFSHistory {
             files.clear();
             while (child!=null) {
                 String nodeName = child.getNodeName();
-                if (nodeName.equals("item")) {
+                if ("item".equals(nodeName)) {
                     Element item = (Element)child;
                     try {
                         Attr path = item.getAttributeNode("path");

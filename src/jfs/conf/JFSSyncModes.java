@@ -35,24 +35,33 @@ public final class JFSSyncModes {
 
     /**
      * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSSyncModes.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
      */
-    private static JFSSyncModes instance = null;
+    private static class SingletonHolder {
+
+        public static final JFSSyncModes INSTANCE = new JFSSyncModes();
+
+    }
+
+
 
     /**
      * The default mode.
      */
-    private int defaultMode;
+    private final int defaultMode;
 
     /**
      * The map containing all available modes.
      */
-    private Map<Integer, JFSSyncMode> modes = new TreeMap<>();
+    private final Map<Integer, JFSSyncMode> modes = new TreeMap<>();
 
 
     /**
      * Creates a new table of sync modes.
      */
-    private JFSSyncModes() {
+    protected JFSSyncModes() {
         JFSSyncMode m;
 
 		// Synchronization Mode AUTOMATIC. The history is used to determine
@@ -162,11 +171,7 @@ public final class JFSSyncModes {
      * @return The only instance.
      */
     public static JFSSyncModes getInstance() {
-        if (instance==null) {
-            instance = new JFSSyncModes();
-        }
-
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 

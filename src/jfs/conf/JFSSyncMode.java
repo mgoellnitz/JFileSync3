@@ -16,15 +16,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.conf;
 
 import java.util.HashMap;
+import java.util.Map;
 import jfs.sync.JFSElement;
 import jfs.sync.JFSElement.ElementState;
 import jfs.sync.JFSFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * This class specifies a single synchronization mode.
@@ -36,12 +37,17 @@ public class JFSSyncMode {
 
     private static final Logger LOG = LoggerFactory.getLogger(JFSSyncMode.class);
 
-    /** Actions for used for all modes. */
+
+    /**
+     * Actions for used for all modes.
+     */
     public enum SyncAction {
+
         NOP_ROOT("syncAction.nopRoot"), NOP("syncAction.nop"), COPY_SRC("syncAction.copySrc"), COPY_TGT(
                 "syncAction.copyTgt"), DELETE_SRC("syncAction.deleteSrc"), DELETE_TGT("syncAction.deleteTgt"), DELETE_SRC_AND_TGT(
-                "syncAction.deleteSrcAndTgt"), ASK_LENGTH_INCONSISTENT("syncAction.askLengthInconsistent"), ASK_FILES_GT_HISTORY(
-                "syncAction.askFilesGtHistory"), ASK_FILES_NOT_IN_HISTORY("syncAction.askFilesNotInHistory");
+                        "syncAction.deleteSrcAndTgt"), ASK_LENGTH_INCONSISTENT("syncAction.askLengthInconsistent"), ASK_FILES_GT_HISTORY(
+                        "syncAction.askFilesGtHistory"), ASK_FILES_NOT_IN_HISTORY("syncAction.askFilesNotInHistory");
+
         private String name;
 
 
@@ -53,16 +59,23 @@ public class JFSSyncMode {
         public String getName() {
             return name;
         }
+
     }
 
-    /** The identifier of the mode. */
-    private int id;
+    /**
+     * The identifier of the mode.
+     */
+    private final int id;
 
-    /** The string alias of the mode. */
-    private String alias;
+    /**
+     * The string alias of the mode.
+     */
+    private final String alias;
 
-    /** Assigns actions to states of an element of the comparison table. */
-    private HashMap<ElementState, SyncAction> stateActions = new HashMap<ElementState, SyncAction>();
+    /**
+     * Assigns actions to states of an element of the comparison table.
+     */
+    private final Map<ElementState, SyncAction> stateActions = new HashMap<>();
 
     /**
      * Determines whether the actions of the mode should be automatically set based on the synchronization history.
@@ -74,9 +87,9 @@ public class JFSSyncMode {
      * Creates a new mode.
      *
      * @param id
-     *            The identifier to use.
+     * The identifier to use.
      * @param alias
-     *            The alias to use.
+     * The alias to use.
      */
     public JFSSyncMode(int id, String alias) {
         this.id = id;
@@ -89,7 +102,7 @@ public class JFSSyncMode {
      * the given state, the default action (no operation) is returned.
      *
      * @param state
-     *            The state of the element of the comparisn table.
+     * The state of the element of the comparisn table.
      * @return The corresponding action for the state.
      */
     public SyncAction getAction(ElementState state) {
@@ -104,9 +117,9 @@ public class JFSSyncMode {
      * Sets the action for a specific state of an element of the comparison table.
      *
      * @param state
-     *            The state of the element of the comparisn table.
+     * The state of the element of the comparisn table.
      * @param action
-     *            The corresponding action for the state.
+     * The corresponding action for the state.
      */
     public void setAction(ElementState state, SyncAction action) {
         stateActions.put(state, action);
@@ -123,8 +136,8 @@ public class JFSSyncMode {
 
     /**
      * @param automatic
-     *            Sets the automatic option. If this option is set, all other actions are ignorned and determined
-     *            automatically based on the synchronization history.
+     * Sets the automatic option. If this option is set, all other actions are ignorned and determined
+     * automatically based on the synchronization history.
      */
     public void setAutomatic(boolean automatic) {
         this.automatic = automatic;
@@ -161,14 +174,14 @@ public class JFSSyncMode {
      * mode and a file history.
      *
      * @param element
-     *            The element to compute the action for.
+     * The element to compute the action for.
      */
     public final void computeAction(JFSElement element) {
         if (element.isManuallySetAction()&&JFSConfig.getInstance().isKeepUserActions()) {
             return;
         }
 
-        if ( !isAutomatic()) {
+        if (!isAutomatic()) {
             // Add actions to comparison tables according to the chosen
             // mode:
             element.setAction(getAction(element.getState()));
@@ -199,7 +212,7 @@ public class JFSSyncMode {
      * mode and a history of former synchronized files and directories.
      *
      * @param element
-     *            The element to compute the basic action for.
+     * The element to compute the basic action for.
      */
     private final void computeBasicAction(JFSElement element) {
         // Analyze comparison table:
@@ -239,9 +252,9 @@ public class JFSSyncMode {
      * used in order to determine the correct actions.
      *
      * @param current
-     *            The element to analyze.
+     * The element to analyze.
      * @param h
-     *            The corresponding history element.
+     * The corresponding history element.
      */
     private void useHistory(JFSElement current, JFSHistoryItem h) {
         JFSFile src = current.getSrcFile();
@@ -291,7 +304,7 @@ public class JFSSyncMode {
      * and therefore perform a simple merge.
      *
      * @param current
-     *            The element to analyze.
+     * The element to analyze.
      */
     private void merge(JFSElement current) {
         JFSElement.ElementState s = current.getState();
@@ -309,4 +322,5 @@ public class JFSSyncMode {
             current.setAction(SyncAction.COPY_SRC);
         }
     }
+
 }

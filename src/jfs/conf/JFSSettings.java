@@ -35,8 +35,15 @@ public abstract class JFSSettings {
 
     /**
      * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSSettings.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
      */
-    private static JFSSettings instance = null;
+    private static class SingletonHolder {
+
+        public static final JFSSettings INSTANCE = new JFSSettingsXML();
+
+    }
 
     /**
      * The settings file containing all attribute values.
@@ -126,11 +133,7 @@ public abstract class JFSSettings {
      * @return The only instance.
      */
     public final static JFSSettings getInstance() {
-        if (instance==null) {
-            instance = new JFSSettingsXML();
-        }
-
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 

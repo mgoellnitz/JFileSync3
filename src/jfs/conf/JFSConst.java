@@ -37,8 +37,16 @@ public final class JFSConst {
 
     /**
      * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSConst.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
      */
-    private static JFSConst instance = null;
+    private static class SingletonHolder {
+
+        public static final JFSConst INSTANCE = new JFSConst();
+
+    }
+
 
     /**
      * Stores the class name of the used properties file.
@@ -181,13 +189,13 @@ public final class JFSConst {
     /**
      * The associated bundle to access the properties file.
      */
-    private ResourceBundle bundle;
+    private final ResourceBundle bundle;
 
 
     /**
      * Sets some default values for the object.
      */
-    private JFSConst() {
+    protected JFSConst() {
         bundle = ResourceBundle.getBundle(JFSConst.CONFIG_CLASS);
     }
 
@@ -198,11 +206,7 @@ public final class JFSConst {
      * @return The only JFSConst instance.
      */
     public static JFSConst getInstance() {
-        if (instance==null) {
-            instance = new JFSConst();
-        }
-
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 
@@ -276,5 +280,5 @@ public final class JFSConst {
 
         return fileUrl;
     }
-    
+
 }

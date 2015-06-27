@@ -40,11 +40,10 @@ import org.mrpdaemon.sec.encfs.EncFSVolume;
 import org.mrpdaemon.sec.encfs.EncFSVolumeBuilder;
 
 
-public class EncFSShell {
+public final class EncFSShell {
 
     // EncFSFile stack representing the current directory path
-
-    private static Stack<EncFSFile> dirStack = new Stack<EncFSFile>();
+    private static Stack<EncFSFile> dirStack = new Stack<>();
 
     // EncFSFile representing the current directory
     private static EncFSFile curDir;
@@ -54,6 +53,10 @@ public class EncFSShell {
 
     // Buffered reader for reading input stream
     private static BufferedReader br;
+
+
+    private EncFSShell() {
+    }
 
 
     // Search method that returns individual path elements for a given path
@@ -177,7 +180,6 @@ public class EncFSShell {
 
 
     public static void main(String[] args) {
-
         if (args.length!=1) {
             System.out.println("This application takes one argument:"+" path to an EncFS volume");
             System.exit(1);
@@ -250,7 +252,7 @@ public class EncFSShell {
 
                 // Command processing
                 String command = st.nextToken();
-                if (command.equals("ls")) { // list child directories
+                if ("ls".equals(command)) { // list child directories
 
                     // Options
                     class ListOptions {
@@ -386,7 +388,7 @@ public class EncFSShell {
                             }
                         }
                     }
-                } else if (command.equals("mkdir")||command.equals("mkdirs")) {
+                } else if ("mkdir".equals(command)||"mkdirs".equals(command)) {
                     String dirPath = (st.hasMoreTokens() ? readFileName(st) : null);
                     if (dirPath==null) {
                         System.out.println("mkdir {dirname}");
@@ -408,7 +410,7 @@ public class EncFSShell {
                     if (!result) {
                         System.out.println("Failed to create directory '"+dirPath+"'");
                     }
-                } else if (command.equals("rm")) { // remove
+                } else if ("rm".equals(command)) { // remove
                     String filePath = null;
                     boolean recursive = false;
 
@@ -442,7 +444,7 @@ public class EncFSShell {
                         System.out.println("Failed to delete path '"+filePath+"'");
                     }
 
-                } else if (command.equals("mv")) { // move / rename
+                } else if ("mv".equals(command)) { // move / rename
                     int pathCount = 0;
                     boolean force = false;
                     String pathArray[] = new String[2];
@@ -510,7 +512,7 @@ public class EncFSShell {
                     if (!result) {
                         System.out.println("Failed to move '"+srcPath+"' to '"+dstPath+"'");
                     }
-                } else if (command.equals("cp")) { // copy a file or directory
+                } else if ("cp".equals(command)) { // copy a file or directory
                     int pathCount = 0;
                     boolean recursive = false;
                     String pathArray[] = new String[2];
@@ -574,9 +576,9 @@ public class EncFSShell {
                     if (!result) {
                         System.out.println("Failed to copy '"+srcPath+"' to '"+dstPath+"'");
                     }
-                } else if (command.equals("exit")) { // bail out
+                } else if ("exit".equals(command)) { // bail out
                     System.exit(0);
-                } else if (command.equals("cd")) { // go into a child directory
+                } else if ("cd".equals(command)) { // go into a child directory
                     if (!st.hasMoreTokens()) {
                         System.out.println("No directory name specified");
                         continue;
@@ -584,7 +586,7 @@ public class EncFSShell {
                     String dirPath = readFileName(st);
 
                     // .. handling
-                    if (dirPath.equals("..")) {
+                    if ("..".equals(dirPath)) {
                         if (dirStack.empty()) {
                             System.out.println("Can't go above root directory");
                             continue;
@@ -637,7 +639,7 @@ public class EncFSShell {
                     }
 
                     curDir = lastPathElement;
-                } else if (command.equals("cat")) {
+                } else if ("cat".equals(command)) {
                     if (!st.hasMoreTokens()) {
                         System.out.println("No file name specified");
                         continue;
@@ -682,7 +684,7 @@ public class EncFSShell {
 
     static class EncFSShellProgressListener extends EncFSProgressListener {
 
-        int numProcessed = 0;
+        private int numProcessed = 0;
 
 
         @Override

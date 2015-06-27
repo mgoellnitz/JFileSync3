@@ -72,7 +72,7 @@ public class JFSDirectoryTable extends AbstractTableModel implements TableCellRe
     /**
      * The object with information that should be displayed by the table.
      */
-    private JFSConfig config;
+    private final JFSConfig config;
 
     /**
      * The corresponding JTable.

@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.awt.BorderLayout;
@@ -27,29 +26,36 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
-
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-
 import jfs.conf.JFSText;
 import jfs.sync.JFSElement;
 import jfs.sync.JFSFormatter;
 
+
 /**
  * This dialog views some file properties.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSPropertiesView.java,v 1.5 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSPropertiesView extends JDialog implements ActionListener {
-    /** The UID. */
+
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = 64564564L;
 
-    /** Determines the I18N keys for boolean values. */
+
+    /**
+     * Determines the I18N keys for boolean values.
+     */
     public enum BooleanText {
+
         TRUE("general.true"), FALSE("general.false");
+
         private String name;
 
 
@@ -69,16 +75,17 @@ public class JFSPropertiesView extends JDialog implements ActionListener {
             }
             return FALSE;
         }
+
     }
 
 
     /**
      * Shows properties of a JFS element.
-     * 
+     *
      * @param parent
-     *            The parent frame.
+     * The parent frame.
      * @param element
-     *            The element to view.
+     * The element to view.
      */
     public JFSPropertiesView(Frame parent, JFSElement element) {
         super(parent, true);
@@ -91,16 +98,16 @@ public class JFSPropertiesView extends JDialog implements ActionListener {
         Container cp = getContentPane();
         cp.setLayout(new BorderLayout());
 
-        Vector<String> header = new Vector<String>();
+        Vector<String> header = new Vector<>();
         header.add(t.get("fileProps.table.property"));
         header.add(t.get("fileProps.table.value"));
 
-        Vector<Vector<String>> data = new Vector<Vector<String>>();
+        Vector<Vector<String>> data = new Vector<>();
         addProperty(data, "fileProps.name", element.getName());
         addProperty(data, "fileProps.relativePath", element.getRelativePath());
         if (element.getSrcFile()!=null) {
             addProperty(data, "fileProps.src.path", element.getSrcFile().getPath());
-            if ( !element.isDirectory()) {
+            if (!element.isDirectory()) {
                 addProperty(data, "fileProps.src.lastModified", JFSFormatter.getLastModified(element.getSrcFile()));
                 addProperty(data, "fileProps.src.length", JFSFormatter.getLength(element.getSrcFile()));
                 addProperty(data, "fileProps.src.canRead", t.get(BooleanText.getBooleanText(
@@ -111,7 +118,7 @@ public class JFSPropertiesView extends JDialog implements ActionListener {
         }
         if (element.getTgtFile()!=null) {
             addProperty(data, "fileProps.tgt.path", element.getTgtFile().getPath());
-            if ( !element.isDirectory()) {
+            if (!element.isDirectory()) {
                 addProperty(data, "fileProps.tgt.lastModified", JFSFormatter.getLastModified(element.getTgtFile()));
                 addProperty(data, "fileProps.tgt.length", JFSFormatter.getLength(element.getTgtFile()));
                 addProperty(data, "fileProps.tgt.canRead", t.get(BooleanText.getBooleanText(
@@ -149,17 +156,17 @@ public class JFSPropertiesView extends JDialog implements ActionListener {
 
     /**
      * Adds a new property to the list of property data.
-     * 
+     *
      * @param data
-     *            The list to add to.
+     * The list to add to.
      * @param propertyId
-     *            The indetifier of the property.
+     * The indetifier of the property.
      * @param value
-     *            The value to add.
+     * The value to add.
      */
     private final void addProperty(Vector<Vector<String>> data, String propertyId, String value) {
         JFSText t = JFSText.getInstance();
-        Vector<String> row = new Vector<String>();
+        Vector<String> row = new Vector<>();
         data.add(row);
         row.add(t.get(propertyId));
         row.add(value);
@@ -173,9 +180,10 @@ public class JFSPropertiesView extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         String cmd = event.getActionCommand();
 
-        if (cmd.equals("button.close")) {
+        if ("button.close".equals(cmd)) {
             setVisible(false);
             dispose();
         }
     }
+
 }

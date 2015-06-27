@@ -46,7 +46,7 @@ public final class LzmaAlone {
         public String OutFile;
 
 
-        boolean ParseSwitch(String s) {
+        private boolean ParseSwitch(String s) {
             if (s.startsWith("d")) {
                 DictionarySize = 1<<Integer.parseInt(s.substring(1));
                 DictionarySizeIsDefined = true;

@@ -23,7 +23,7 @@ package jfs.sync.util;
  */
 public class SimplePatternSearcher {
 
-    private String text;
+    private final String text;
 
     private int currentIndex;
 
