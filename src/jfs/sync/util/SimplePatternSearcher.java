@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,20 @@
  */
 package jfs.sync.util;
 
+
+/**
+ * Simple pattern searcher to find start end end marker occurrences in a string.
+ */
 public class SimplePatternSearcher {
 
-    private String text = "";
+    private String text;
 
-    private int currentIndex = 0;
+    private int currentIndex;
 
 
     public SimplePatternSearcher(String text) {
         this.text = text;
+        this.currentIndex = 0;
     } // SimplePatternSearcher()
 
 

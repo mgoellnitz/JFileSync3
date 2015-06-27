@@ -41,8 +41,8 @@ import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.StorageAccess;
 import jfs.sync.meta.AbstractMetaStorageAccess;
 import jfs.sync.util.WindowsProxySelector;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class DavStorageAccess extends AbstractMetaStorageAccess implements StorageAccess {
@@ -58,7 +58,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
-    private static final Log LOG = LogFactory.getLog(DavStorageAccess.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DavStorageAccess.class);
 
     private Sardine sardine = null;
 

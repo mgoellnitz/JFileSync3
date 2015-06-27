@@ -91,7 +91,6 @@ public class EncFSOutputStream extends FilterOutputStream {
         super(out);
         this.volume = volume;
         this.config = volume.getConfig();
-        int blockSize = config.getEncryptedFileBlockSizeInBytes();
         this.blockHeaderSize = config.getNumberOfMACBytesForEachFileBlock()+config.getNumberOfRandomBytesInEachMACHeader();
         this.dataBytes = this.blockHeaderSize;
         this.blockMACLen = config.getNumberOfMACBytesForEachFileBlock();
@@ -129,8 +128,7 @@ public class EncFSOutputStream extends FilterOutputStream {
 
         Cipher blockCipher = BlockCrypto.newBlockCipher();
         try {
-            EncFSCrypto.cipherInit(volume, Cipher.ENCRYPT_MODE, blockCipher,
-                    fileIv);
+            EncFSCrypto.cipherInit(volume, Cipher.ENCRYPT_MODE, blockCipher, fileIv);
         } catch (InvalidAlgorithmParameterException e) {
             throw new EncFSCorruptDataException(e);
         }
@@ -141,6 +139,7 @@ public class EncFSOutputStream extends FilterOutputStream {
             throw new EncFSCorruptDataException(e);
         }
 
+        int blockSize = config.getEncryptedFileBlockSizeInBytes();
         // blockSize = blockHeaderSize + blockDataLen
         dataBuf = new byte[blockSize];
     }

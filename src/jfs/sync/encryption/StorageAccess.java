@@ -21,6 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+
+/**
+ * Abstraction interface for story access.
+ */
 public interface StorageAccess {
 
     FileInfo getFileInfo(String rootpath, String path);

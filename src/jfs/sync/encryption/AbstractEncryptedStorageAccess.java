@@ -35,6 +35,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * Abstract story access implementing encrypted files with encrypted file names.
+ */
 public abstract class AbstractEncryptedStorageAccess {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractEncryptedStorageAccess.class);

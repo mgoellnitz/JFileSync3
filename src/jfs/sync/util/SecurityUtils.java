@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,10 @@ import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+
+/**
+ * Basic security methods collected in a utility class.
+ */
 public final class SecurityUtils {
 
     private static final BouncyCastleProvider PROVIDER = new BouncyCastleProvider();
@@ -39,8 +43,8 @@ public final class SecurityUtils {
     }
 
 
-    public static Cipher getCipher(String cipherName, int cipherMode, byte[] credentials) throws NoSuchAlgorithmException,
-            NoSuchPaddingException, InvalidKeyException {
+    public static Cipher getCipher(String cipherName, int cipherMode, byte[] credentials)
+            throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
         SecretKeySpec keySpec = new SecretKeySpec(credentials, cipherName);
         Cipher cipher = Cipher.getInstance(cipherName, PROVIDER);
         cipher.init(cipherMode, keySpec);

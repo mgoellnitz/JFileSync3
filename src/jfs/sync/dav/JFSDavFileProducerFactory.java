@@ -18,12 +18,15 @@
 package jfs.sync.dav;
 
 import java.util.Map;
-
 import jfs.conf.JFSConfig;
 import jfs.sync.JFSFileProducer;
 import jfs.sync.encryption.AbstractEncryptedFileProducerFactory;
 import jfs.sync.encryption.JFSEncryptedFileProducer;
 
+
+/**
+ * File producer factory creating instances of WebDAV accessing file producsers.
+ */
 public class JFSDavFileProducerFactory extends AbstractEncryptedFileProducerFactory {
 
     public static final String SCHEME_NAME = "dav";
@@ -40,8 +43,7 @@ public class JFSDavFileProducerFactory extends AbstractEncryptedFileProducerFact
         DavStorageAccess storageAccess = new DavStorageAccess(JFSConfig.getInstance().getEncryptionCipher());
         Map<String, Long> levels = getCompressionsLevels();
         String shortenedUri = uri.substring(SCHEME_NAME.length()+3);
-        JFSEncryptedFileProducer producer = new JFSEncryptedFileProducer(storageAccess, levels, SCHEME_NAME, shortenedUri);
-        return producer;
+        return new JFSEncryptedFileProducer(storageAccess, levels, SCHEME_NAME, shortenedUri);
     } // createProducer()
 
 } // JFSDavdFileProducserFactory

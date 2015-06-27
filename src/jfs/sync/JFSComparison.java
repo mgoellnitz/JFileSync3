@@ -24,18 +24,18 @@ import java.util.List;
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSDirectoryPair;
 import jfs.sync.JFSProgress.ProgressActivity;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Compares all JFS directory pairs and adds the results to the table.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSComparison.java,v 1.31 2007/07/18 16:20:49 heidrich Exp $
  */
 public final class JFSComparison {
 
-    private static final Log LOG = LogFactory.getLog(JFSComparison.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JFSComparison.class);
 
     /** Stores the only instance of the class. */
     private static JFSComparison instance = null;
@@ -50,7 +50,7 @@ public final class JFSComparison {
 
     /**
      * Returns the reference of the only instance.
-     * 
+     *
      * @return The only instance.
      */
     public static JFSComparison getInstance() {
@@ -65,7 +65,7 @@ public final class JFSComparison {
     /**
      * Inserts an element to the comparison table and starts the comparison algorithm recursively, if and only if the
      * matched files are directories. At least one (source or target) file has to be not equal to null.
-     * 
+     *
      * @param srcFile
      *            A source file which may be null if no corresponding source file exists, but a target file.
      * @param tgtFile
@@ -116,7 +116,7 @@ public final class JFSComparison {
 
     /**
      * Compares two lists of files and writes the result to the comparison table. Both lists must be not equal to null.
-     * 
+     *
      * @param srcFiles
      *            The array of source files.
      * @param tgtFiles
@@ -193,7 +193,7 @@ public final class JFSComparison {
     /**
      * Compares two directories and writes the result to the comparison table. At least one (source or target) file has
      * to be not equal to null.
-     * 
+     *
      * @param srcDir
      *            A source directory which may be null if no corresponding source directory exists, but a target
      *            directory.
@@ -288,5 +288,5 @@ public final class JFSComparison {
         monitor.setRootUriSrc("");
         monitor.setRootUriTgt("");
     }
-    
+
 }

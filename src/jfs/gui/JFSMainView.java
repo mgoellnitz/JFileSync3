@@ -184,9 +184,12 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
     } // getAppTitle()
 
 
+    /**
+     * Keyboard command actions.
+     */
     private class CommandAction implements Action {
 
-        private JFSMainView me;
+        private final JFSMainView me;
 
         private final String action;
 
@@ -200,7 +203,6 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         }
 
 
-
         @Override
         public Object getValue(String key) {
             return null;
@@ -209,11 +211,13 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
 
         @Override
         public void putValue(String key, Object value) {
+            // empty default
         }
 
 
         @Override
         public void setEnabled(boolean b) {
+            // empty default
         }
 
 
@@ -225,11 +229,13 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
 
         @Override
         public void addPropertyChangeListener(PropertyChangeListener listener) {
+            // empty default
         }
 
 
         @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {
+            // empty default
         }
 
 
@@ -807,6 +813,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
      */
     @Override
     public void componentHidden(ComponentEvent arg0) {
+        // empty default
     }
 
 
@@ -845,6 +852,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
      */
     @Override
     public void componentShown(ComponentEvent arg0) {
+        // empty default
     }
 
 
@@ -855,4 +863,5 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
     public void update(JFSLog log) {
         errorLog.setVisible(log.hasUnreadLogMessages());
     }
+
 }

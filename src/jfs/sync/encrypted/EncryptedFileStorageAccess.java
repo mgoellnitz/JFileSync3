@@ -28,8 +28,8 @@ import java.util.HashSet;
 import jfs.sync.encryption.AbstractEncryptedStorageAccess;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.StorageAccess;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is a storage layer access which encryptes the filenames, compresses and encrytes contents and is aware of the
@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess implements StorageAccess {
 
-    private static final Log LOG = LogFactory.getLog(EncryptedFileStorageAccess.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EncryptedFileStorageAccess.class);
 
     private String cipherspec = "AES";
 

@@ -10,10 +10,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
+/**
+ *
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "content"
-})
+@XmlType(name = "", propOrder = {"content"})
 @XmlRootElement(name = "privilege")
 public class Privilege {
 
@@ -24,7 +25,7 @@ public class Privilege {
 
     public List<Object> getContent() {
         if (content==null) {
-            content = new ArrayList<Object>();
+            content = new ArrayList<>();
         }
         return content;
     }

@@ -14,22 +14,25 @@
  */
 package org.mrpdaemon.sec.encfs;
 
-// Class implementing the NULL decryption strategy
+
+/**
+ * Class implementing the NULL decryption strategy
+ */
 public class NullFilenameDecryptionStrategy extends FilenameDecryptionStrategy {
 
-	public NullFilenameDecryptionStrategy(EncFSVolume volume, String volumePath) {
-		super(volume, volumePath, EncFSFilenameEncryptionAlgorithm.NULL);
-	}
+    public NullFilenameDecryptionStrategy(EncFSVolume volume, String volumePath) {
+        super(volume, volumePath, EncFSFilenameEncryptionAlgorithm.NULL);
+    }
 
-	@Override
-	protected String decryptImpl(String fileName)
-			throws EncFSCorruptDataException, EncFSChecksumException {
-		EncFSFile rootDir = getVolume().getRootDir();
-		// Filter out config file
-		if (getVolumePath().equals(rootDir.getPath())
-				&& fileName.equals(EncFSVolume.CONFIG_FILE_NAME)) {
-			return null;
-		}
-		return fileName;
-	}
+
+    @Override
+    protected String decryptImpl(String fileName) throws EncFSCorruptDataException, EncFSChecksumException {
+        EncFSFile rootDir = getVolume().getRootDir();
+        // Filter out config file
+        if (getVolumePath().equals(rootDir.getPath())&&fileName.equals(EncFSVolume.CONFIG_FILE_NAME)) {
+            return null;
+        }
+        return fileName;
+    }
+
 }

@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync;
 
 import java.io.File;
@@ -25,20 +24,28 @@ import java.io.Serializable;
 import java.util.Arrays;
 import jfs.conf.JFSLog;
 
+
 /**
  * Stores information about a certain file to be transmitted between JFS server and client.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSFileInfo.java,v 1.22 2007/07/18 16:20:49 heidrich Exp $
  */
 public class JFSFileInfo implements Serializable {
-    /** The UID. */
+
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = 42L;
 
-    /** The name of the file. */
+    /**
+     * The name of the file.
+     */
     private String name = "";
 
-    /** The real path of the file on server side. */
+    /**
+     * The real path of the file on server side.
+     */
     private String path = "";
 
     /**
@@ -46,25 +53,39 @@ public class JFSFileInfo implements Serializable {
      */
     protected String rootPath = "";
 
-    /** The relative path of the JFS file starting from the root JFS file. */
+    /**
+     * The relative path of the JFS file starting from the root JFS file.
+     */
     protected String relativePath = "";
 
-    /** Determines whether the file is a directory. */
+    /**
+     * Determines whether the file is a directory.
+     */
     private boolean isDirectory = false;
 
-    /** Determines whether we can read the file. */
+    /**
+     * Determines whether we can read the file.
+     */
     private boolean canRead = true;
 
-    /** Determines whether we can write to the file. */
+    /**
+     * Determines whether we can write to the file.
+     */
     private boolean canWrite = true;
 
-    /** Determines whether the file exists. */
+    /**
+     * Determines whether the file exists.
+     */
     private boolean exists = false;
 
-    /** The length of the file. Zero for directories. */
+    /**
+     * The length of the file. Zero for directories.
+     */
     private long length = 0;
 
-    /** The time of last modification of the file. Zero for directories. */
+    /**
+     * The time of last modification of the file. Zero for directories.
+     */
     private long lastModified = 0;
 
     /**
@@ -75,19 +96,12 @@ public class JFSFileInfo implements Serializable {
 
 
     /**
-     * Creates a dummy file object with empty values.
-     */
-    public JFSFileInfo() {
-    }
-
-
-    /**
      * Creates a new file information object.
-     * 
+     *
      * @param rootPath
-     *            The path of the root JFS file (relative from the server's base directory).
+     * The path of the root JFS file (relative from the server's base directory).
      * @param relativePath
-     *            The relative path of the JFS file starting from the root JFS file.
+     * The relative path of the JFS file starting from the root JFS file.
      */
     public JFSFileInfo(String rootPath, String relativePath) {
         this.rootPath = rootPath;
@@ -98,7 +112,7 @@ public class JFSFileInfo implements Serializable {
     /**
      * Completes the information of the JFS file information object. This method is called on the server side in order
      * to set information about the path on the server.
-     * 
+     *
      * @return The file object used to extract the path information.
      */
     public final File complete() {
@@ -130,7 +144,7 @@ public class JFSFileInfo implements Serializable {
 
         if (exists) {
             isDirectory = file.isDirectory();
-            if ( !isDirectory) {
+            if (!isDirectory) {
                 length = file.length();
                 lastModified = file.lastModified();
             }
@@ -141,7 +155,7 @@ public class JFSFileInfo implements Serializable {
                 if (isDirectory&&(fileList!=null)) {
                     list = new JFSFileInfo[fileList.length];
 
-                    for (int i = 0; i<fileList.length; i++ ) {
+                    for (int i = 0; i<fileList.length; i++) {
                         list[i] = new JFSFileInfo(rootPath, relativePath+File.separator+fileList[i]);
                         list[i].update();
                     }
@@ -153,7 +167,7 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Updates the current file on the basis of this object.
-     * 
+     *
      * @return True if the update could be performed successfully.
      */
     public final boolean updateFileSystem() {
@@ -161,11 +175,11 @@ public class JFSFileInfo implements Serializable {
 
         File file = new File(path);
 
-        if ( !isDirectory) {
+        if (!isDirectory) {
             success = success&&file.setLastModified(lastModified);
         }
 
-        if ( !canWrite) {
+        if (!canWrite) {
             success = success&&file.setReadOnly();
         }
 
@@ -181,7 +195,7 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Returns the name of the file.
-     * 
+     *
      * @return Name of the file.
      */
     public final String getName() {
@@ -191,9 +205,9 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Sets the name of the file.
-     * 
+     *
      * @param name
-     *            Name of the file.
+     * Name of the file.
      */
     public final void setName(String name) {
         this.name = name;
@@ -202,7 +216,7 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Returns the path of the file.
-     * 
+     *
      * @return Path of the file.
      */
     public final String getPath() {
@@ -212,9 +226,9 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Sets the path of the file.
-     * 
+     *
      * @param path
-     *            Path of the file.
+     * Path of the file.
      */
     public final void setPath(String path) {
         this.path = path;
@@ -223,7 +237,7 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Returns the root JFS path of the file.
-     * 
+     *
      * @return Path of the root JFS file.
      */
     public final String getRootPath() {
@@ -233,9 +247,9 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Sets the root path of the file.
-     * 
+     *
      * @param rootPath
-     *            Path of the file.
+     * Path of the file.
      */
     public final void setRootPath(String rootPath) {
         this.rootPath = rootPath;
@@ -244,7 +258,7 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Returns the relative path of the file.
-     * 
+     *
      * @return Path of the file.
      */
     public final String getRelativePath() {
@@ -254,9 +268,9 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Sets the relative path of the file.
-     * 
+     *
      * @param relativePath
-     *            Path of the file.
+     * Path of the file.
      */
     public final void setRelativePath(String relativePath) {
         this.relativePath = relativePath;
@@ -265,7 +279,7 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Returns the virtual path of the file (the root path concattenated with the relative path of the file).
-     * 
+     *
      * @return Virtual path of the file.
      */
     public final String getVirtualPath() {
@@ -275,7 +289,7 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Returns whether the file is a directory.
-     * 
+     *
      * @return True if and only if the file is a directory.
      */
     public final boolean isDirectory() {
@@ -285,9 +299,9 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Sets whether the file on server side is a directory or not.
-     * 
+     *
      * @param b
-     *            True if and only if the file is a directory.
+     * True if and only if the file is a directory.
      */
     public void setDirectory(boolean b) {
         isDirectory = b;
@@ -296,7 +310,7 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Returns whether we can read the file.
-     * 
+     *
      * @return True if and only if we can read the file.
      */
     public final boolean canRead() {
@@ -306,7 +320,7 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Returns whether we can write to the file.
-     * 
+     *
      * @return True if and only if we can write to the file.
      */
     public final boolean canWrite() {
@@ -324,7 +338,7 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Returns the length of the file.
-     * 
+     *
      * @return Length of the file.
      */
     public final long getLength() {
@@ -334,9 +348,9 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Sets the length of the file.
-     * 
+     *
      * @param l
-     *            The length to set.
+     * The length to set.
      */
     public void setLength(long l) {
         length = l;
@@ -345,7 +359,7 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Returns the time of the last modification of the file.
-     * 
+     *
      * @return Time of last modification of the file.
      */
     public final long getLastModified() {
@@ -355,9 +369,9 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Sets the last-modified time of the file or directory named by this abstract pathname.
-     * 
+     *
      * @param time
-     *            The new last-modified time, measured in milliseconds since the epoch (00:00:00 GMT, January 1, 1970).
+     * The new last-modified time, measured in milliseconds since the epoch (00:00:00 GMT, January 1, 1970).
      */
     public final void setLastModified(long time) {
         lastModified = time;
@@ -366,7 +380,7 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Returns the included files.
-     * 
+     *
      * @return An array of JFSFile objects included in the directory.
      */
     public final JFSFileInfo[] getList() {
@@ -376,7 +390,7 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Tests whether the file denoted by this abstract pathname exists.
-     * 
+     *
      * @return True if and only if the file denoted by this abstract pathname exists; false otherwise.
      */
     public final boolean exists() {
@@ -386,9 +400,9 @@ public class JFSFileInfo implements Serializable {
 
     /**
      * Sets whether the file exists or not on server side.
-     * 
+     *
      * @param b
-     *            True if and only if the file exists.
+     * True if and only if the file exists.
      */
     public void setExists(boolean b) {
         exists = b;
@@ -419,4 +433,5 @@ public class JFSFileInfo implements Serializable {
     public String toString() {
         return getRelativePath()+":"+getName()+" ("+getRootPath()+")";
     }
+
 }

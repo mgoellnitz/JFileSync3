@@ -18,12 +18,16 @@
 package jfs.sync.base;
 
 import jfs.sync.JFSFileProducerFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+
+/**
+ * Generic abstract file producer factory base class.
+ */
 public abstract class AbstractJFSFileProducerFactory implements JFSFileProducerFactory {
 
-    private static final Log LOG = LogFactory.getLog(AbstractJFSFileProducerFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractJFSFileProducerFactory.class);
 
 
     public static final String[] getPathAndName(String relativePath, String separator) {
@@ -33,7 +37,7 @@ public abstract class AbstractJFSFileProducerFactory implements JFSFileProducerF
         String parentPath = "";
         if (idx>=0) {
             parentPath = name.substring(0, idx);
-            idx++ ;
+            idx++;
             name = name.substring(idx);
         } // if
         if (LOG.isDebugEnabled()) {
@@ -47,16 +51,19 @@ public abstract class AbstractJFSFileProducerFactory implements JFSFileProducerF
 
     @Override
     public void cancelProducer(String uri) {
+        // empty default
     }
 
 
     @Override
     public void resetProducers() {
+        // empty default
     }
 
 
     @Override
     public void shutDownProducer(String uri) {
+        // empty default
     }
 
 } // AbstractJFSFileProducerFactory

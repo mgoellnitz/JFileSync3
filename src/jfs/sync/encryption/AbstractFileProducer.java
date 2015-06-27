@@ -20,9 +20,12 @@ package jfs.sync.encryption;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import jfs.sync.JFSFileProducer;
 
+
+/**
+ * Abstract file producer base class for file producers dealing with story access implementations.
+ */
 public abstract class AbstractFileProducer extends JFSFileProducer {
 
     protected StorageAccess storageAccess;

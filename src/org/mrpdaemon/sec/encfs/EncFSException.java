@@ -12,18 +12,24 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package org.mrpdaemon.sec.encfs;
 
+
+/**
+ *
+ */
 public abstract class EncFSException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	EncFSException(String message) {
-		super(message);
-	}
 
-	EncFSException(Throwable cause) {
-		super(cause);
-	}
+    EncFSException(String message) {
+        super(message);
+    }
+
+
+    EncFSException(Throwable cause) {
+        super(cause);
+    }
+
 }

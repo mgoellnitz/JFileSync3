@@ -14,37 +14,42 @@
  */
 package org.mrpdaemon.sec.encfs;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
 import java.security.InvalidAlgorithmParameterException;
 import java.util.Arrays;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 
-// Implementation of block filename decryption strategy
+
+/**
+ * Implementation of block filename decryption strategy.
+ */
 class BlockFilenameDecryptionStrategy extends BasicFilenameDecryptionStrategy {
 
-	BlockFilenameDecryptionStrategy(EncFSVolume volume, String volumePath) {
-		super(volume, volumePath, EncFSFilenameEncryptionAlgorithm.BLOCK);
-	}
+    BlockFilenameDecryptionStrategy(EncFSVolume volume, String volumePath) {
+        super(volume, volumePath, EncFSFilenameEncryptionAlgorithm.BLOCK);
+    }
 
-	// Block decryption
-	protected byte[] decryptConcrete(EncFSVolume volume, byte[] encFileName,
-			byte[] fileIv) throws EncFSCorruptDataException {
-		try {
-			return BlockCrypto.blockDecrypt(volume, fileIv, encFileName);
-		} catch (InvalidAlgorithmParameterException e) {
-			throw new EncFSCorruptDataException(e);
-		} catch (IllegalBlockSizeException e) {
-			throw new EncFSCorruptDataException(e);
-		} catch (BadPaddingException e) {
-			throw new EncFSCorruptDataException(e);
-		}
-	}
 
-	// Remove padding after decryption
-	protected String decryptPost(byte[] fileName) {
-		int padLen = fileName[fileName.length - 1];
+    /**
+     * Block decryption.
+     */
+    protected byte[] decryptConcrete(EncFSVolume volume, byte[] encFileName, byte[] fileIv) throws EncFSCorruptDataException {
+        try {
+            return BlockCrypto.blockDecrypt(volume, fileIv, encFileName);
+        } catch (InvalidAlgorithmParameterException|IllegalBlockSizeException|BadPaddingException e) {
+            throw new EncFSCorruptDataException(e);
+        }
+    }
 
-		return new String(Arrays.copyOfRange(fileName, 0, fileName.length
-				- padLen));
-	}
+
+    /**
+     * Remove padding after decryption.
+     */
+    protected String decryptPost(byte[] fileName) {
+        int padLen = fileName[fileName.length-1];
+
+        return new String(Arrays.copyOfRange(fileName, 0, fileName.length
+                -padLen));
+    }
+
 }

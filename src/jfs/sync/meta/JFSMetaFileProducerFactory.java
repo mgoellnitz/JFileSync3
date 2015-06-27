@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,9 @@ import jfs.sync.encryption.AbstractEncryptedFileProducerFactory;
 import jfs.sync.encryption.JFSEncryptedFileProducer;
 
 
+/**
+ * File producer factory creating instances of MetaFileStoryAccess.
+ */
 public class JFSMetaFileProducerFactory extends AbstractEncryptedFileProducerFactory {
 
     public static final String SCHEME_NAME = "secure";

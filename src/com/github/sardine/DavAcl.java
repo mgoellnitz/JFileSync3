@@ -6,9 +6,9 @@ import com.github.sardine.model.Group;
 import com.github.sardine.model.Owner;
 import com.github.sardine.model.Propstat;
 import com.github.sardine.model.Response;
-
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Describe access rights on a remote server. An access control list (ACL)
@@ -18,113 +18,100 @@ import java.util.List;
  * @author David Delbecq
  * @version $Id$
  */
-public class DavAcl
-{
-	/**
-	 * The value of the DAV:owner property is a single DAV:href XML element
-	 * containing the URL of the principal that owns this resource.
-	 */
-	private final String owner;
+public class DavAcl {
 
-	/**
-	 * This property identifies a particular principal as being the "group"
-	 * of the resource.  This property is commonly found on repositories
-	 * that implement the Unix privileges model.
-	 */
-	private final String group;
+    /**
+     * The value of the DAV:owner property is a single DAV:href XML element
+     * containing the URL of the principal that owns this resource.
+     */
+    private final String owner;
 
-	/**
-	 *
-	 */
-	private List<DavAce> aces;
+    /**
+     * This property identifies a particular principal as being the "group"
+     * of the resource. This property is commonly found on repositories
+     * that implement the Unix privileges model.
+     */
+    private final String group;
 
-	public DavAcl(Response response)
-	{
-		this.owner = getOwner(response);
-		this.group = getGroup(response);
-		this.aces = getAces(response);
-	}
+    /**
+     *
+     */
+    private List<DavAce> aces;
 
-	public String getGroup()
-	{
-		return group;
-	}
 
-	public String getOwner()
-	{
-		return owner;
-	}
+    public DavAcl(Response response) {
+        this.owner = getOwner(response);
+        this.group = getGroup(response);
+        this.aces = getAces(response);
+    }
 
-	public List<DavAce> getAces()
-	{
-		return aces;
-	}
 
-	private String getOwner(Response response)
-	{
-		List<Propstat> list = response.getPropstat();
-		if (list.isEmpty())
-		{
-			return null;
-		}
-		for (Propstat propstat : list)
-		{
-			Owner o = propstat.getProp().getOwner();
-			if (o != null)
-			{
-				if (o.getUnauthenticated() != null)
-				{
-					return "unauthenticated";
-				}
-				else if (o.getHref() != null)
-				{
-					return o.getHref();
-				}
-			}
-		}
-		return null;
-	}
+    public String getGroup() {
+        return group;
+    }
 
-	private String getGroup(Response response)
-	{
-		List<Propstat> list = response.getPropstat();
-		if (list.isEmpty())
-		{
-			return null;
-		}
-		for (Propstat propstat : list)
-		{
-			Group o = propstat.getProp().getGroup();
-			if (o != null)
-			{
-				if (o.getHref() != null)
-				{
-					return o.getHref();
-				}
-			}
-		}
-		return null;
-	}
 
-	private List<DavAce> getAces(Response response)
-	{
-		ArrayList<DavAce> result = new ArrayList<DavAce>();
-		List<Propstat> list = response.getPropstat();
-		if (list.isEmpty())
-		{
-			return null;
-		}
-		for (Propstat propstat : list)
-		{
-			Acl a = propstat.getProp().getAcl();
-			if (a != null && a.getAce() != null)
-			{
-				for (Ace ace : a.getAce())
-				{
-					result.add(new DavAce(ace));
-				}
-			}
-		}
-		return result;
-	}
+    public String getOwner() {
+        return owner;
+    }
+
+
+    public List<DavAce> getAces() {
+        return aces;
+    }
+
+
+    private String getOwner(Response response) {
+        List<Propstat> list = response.getPropstat();
+        if (list.isEmpty()) {
+            return null;
+        }
+        for (Propstat propstat : list) {
+            Owner o = propstat.getProp().getOwner();
+            if (o!=null) {
+                if (o.getUnauthenticated()!=null) {
+                    return "unauthenticated";
+                } else if (o.getHref()!=null) {
+                    return o.getHref();
+                }
+            }
+        }
+        return null;
+    }
+
+
+    private String getGroup(Response response) {
+        List<Propstat> list = response.getPropstat();
+        if (list.isEmpty()) {
+            return null;
+        }
+        for (Propstat propstat : list) {
+            Group o = propstat.getProp().getGroup();
+            if (o!=null) {
+                if (o.getHref()!=null) {
+                    return o.getHref();
+                }
+            }
+        }
+        return null;
+    }
+
+
+    private List<DavAce> getAces(Response response) {
+        List<Propstat> list = response.getPropstat();
+        if (list.isEmpty()) {
+            return null;
+        }
+        List<DavAce> result = new ArrayList<>();
+        for (Propstat propstat : list) {
+            Acl a = propstat.getProp().getAcl();
+            if (a!=null&&a.getAce()!=null) {
+                for (Ace ace : a.getAce()) {
+                    result.add(new DavAce(ace));
+                }
+            }
+        }
+        return result;
+    }
+
 }

@@ -14,39 +14,50 @@
  */
 package org.mrpdaemon.sec.encfs;
 
+import java.security.InvalidAlgorithmParameterException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import java.security.InvalidAlgorithmParameterException;
 
-// Static methods for block cryptography
+
+/**
+ * Static methods for block cryptography.
+ */
 class BlockCrypto {
 
-	// Returns a new block cipher object
-	protected static Cipher newBlockCipher() throws EncFSUnsupportedException {
-		return EncFSCrypto.getCipher(EncFSCrypto.BLOCK_CIPHER);
-	}
+    /**
+     * Returns a new block cipher object.
+     */
+    protected static Cipher newBlockCipher() throws EncFSUnsupportedException {
+        return EncFSCrypto.getCipher(EncFSCrypto.BLOCK_CIPHER);
+    }
 
-	// Common method to perform a block operation
-	private static byte[] blockOperation(EncFSVolume volume, byte[] ivSeed,
-			byte[] data, int opMode) throws InvalidAlgorithmParameterException,
-			IllegalBlockSizeException, BadPaddingException {
-		Cipher cipher = volume.getBlockCipher();
-		EncFSCrypto.cipherInit(volume, opMode, cipher, ivSeed);
-		return cipher.doFinal(data);
-	}
 
-	// Perform block encryption
-	protected static byte[] blockDecrypt(EncFSVolume volume, byte[] ivSeed,
-			byte[] data) throws InvalidAlgorithmParameterException,
-			IllegalBlockSizeException, BadPaddingException {
-		return blockOperation(volume, ivSeed, data, Cipher.DECRYPT_MODE);
-	}
+    /**
+     * Common method to perform a block operation.
+     */
+    private static byte[] blockOperation(EncFSVolume volume, byte[] ivSeed, byte[] data, int opMode) throws InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = volume.getBlockCipher();
+        EncFSCrypto.cipherInit(volume, opMode, cipher, ivSeed);
+        return cipher.doFinal(data);
+    }
 
-	// Perform block decryption
-	protected static byte[] blockEncrypt(EncFSVolume volume, byte[] ivSeed,
-			byte[] data) throws IllegalBlockSizeException,
-			InvalidAlgorithmParameterException, BadPaddingException {
-		return blockOperation(volume, ivSeed, data, Cipher.ENCRYPT_MODE);
-	}
+
+    /**
+     * Perform block encryption.
+     */
+    protected static byte[] blockDecrypt(EncFSVolume volume, byte[] ivSeed, byte[] data)
+            throws InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+        return blockOperation(volume, ivSeed, data, Cipher.DECRYPT_MODE);
+    }
+
+
+    /**
+     * Perform block decryption.
+     */
+    protected static byte[] blockEncrypt(EncFSVolume volume, byte[] ivSeed, byte[] data)
+            throws IllegalBlockSizeException, InvalidAlgorithmParameterException, BadPaddingException {
+        return blockOperation(volume, ivSeed, data, Cipher.ENCRYPT_MODE);
+    }
+
 }

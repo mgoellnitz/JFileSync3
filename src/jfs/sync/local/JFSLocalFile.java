@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync.local;
 
 import java.io.File;
@@ -32,44 +31,63 @@ import jfs.conf.JFSText;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 import jfs.sync.JFSProgress;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Represents a directory or a simple file. This object encapsulates the Java File object.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSLocalFile.java,v 1.13 2007/07/20 12:27:52 heidrich Exp $
  */
 public class JFSLocalFile extends JFSFile {
-    
-    private static Log log = LogFactory.getLog(JFSLocalFile.class);
 
-    /** The corresponding file object. */
+    private static Logger LOG = LoggerFactory.getLogger(JFSLocalFile.class);
+
+    /**
+     * The corresponding file object.
+     */
     private File file = null;
 
-    /** The name of the file. */
+    /**
+     * The name of the file.
+     */
     private String name = null;
 
-    /** The path of the file. */
+    /**
+     * The path of the file.
+     */
     private String path = null;
 
-    /** Tells whether the file is a directory. */
+    /**
+     * Tells whether the file is a directory.
+     */
     private boolean isDirectory = false;
 
-    /** Tells whether we can read the file. */
+    /**
+     * Tells whether we can read the file.
+     */
     private boolean canRead = true;
 
-    /** Tells whether we can write to the file. */
+    /**
+     * Tells whether we can write to the file.
+     */
     private boolean canWrite = true;
 
-    /** Determines whether the file exists. */
+    /**
+     * Determines whether the file exists.
+     */
     private boolean exists = false;
 
-    /** The length of the file. Zero for directories. */
+    /**
+     * The length of the file. Zero for directories.
+     */
     private long length = 0;
 
-    /** The time of last modification of the file. Zero for directories. */
+    /**
+     * The time of last modification of the file. Zero for directories.
+     */
     private long lastModified = 0;
 
     /**
@@ -78,20 +96,24 @@ public class JFSLocalFile extends JFSFile {
      */
     private JFSFile[] list = null;
 
-    /** The last input stream opened for this file. */
+    /**
+     * The last input stream opened for this file.
+     */
     private InputStream in = null;
 
-    /** The last output stream opened for this file. */
+    /**
+     * The last output stream opened for this file.
+     */
     private OutputStream out = null;
 
 
     /**
      * Creates a new local JFS file object.
-     * 
+     *
      * @param fileProducer
-     *            The assigned file producer.
+     * The assigned file producer.
      * @param relativePath
-     *            The relative path of the JFS file starting from the root JFS file.
+     * The relative path of the JFS file starting from the root JFS file.
      */
     public JFSLocalFile(JFSFileProducer fileProducer, String relativePath) {
         super(fileProducer, relativePath);
@@ -100,14 +122,14 @@ public class JFSLocalFile extends JFSFile {
         path = file.getPath();
         isDirectory = file.isDirectory();
         exists = file.exists();
-        if (log.isDebugEnabled()) {
-            log.debug("() "+getPath()+" e["+exists+"] d["+isDirectory+"]");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("() "+getPath()+" e["+exists+"] d["+isDirectory+"]");
         }
         if (exists) {
             canRead = file.canRead();
             canWrite = file.canWrite();
         }
-        if ( !isDirectory) {
+        if (!isDirectory) {
             lastModified = file.lastModified();
             length = file.length();
         }
@@ -119,8 +141,8 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final String getName() {
-        if (log.isDebugEnabled()) {
-            log.debug("getName() "+name);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getName() "+name);
         }
         return name;
     }
@@ -131,8 +153,8 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final String getPath() {
-        if (log.isDebugEnabled()) {
-            log.debug("getPath() "+path);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getPath() "+path);
         }
         return path;
     }
@@ -143,8 +165,8 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean isDirectory() {
-        if (log.isDebugEnabled()) {
-            log.debug("isDirectory() "+isDirectory);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("isDirectory() "+isDirectory);
         } // if
         return isDirectory;
     }
@@ -155,9 +177,9 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean canRead() {
-        if (log.isDebugEnabled()) {
-            log.debug("canRead() "+canRead);
-        } 
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("canRead() "+canRead);
+        }
         return canRead;
     }
 
@@ -167,8 +189,8 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean canWrite() {
-        if (log.isDebugEnabled()) {
-            log.debug("canWrite() "+canWrite);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("canWrite() "+canWrite);
         }
         return canWrite;
     }
@@ -179,8 +201,8 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final long getLength() {
-        if (log.isDebugEnabled()) {
-            log.debug("getLength() "+length);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getLength() "+length);
         }
         return length;
     }
@@ -191,8 +213,8 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final long getLastModified() {
-        if (log.isDebugEnabled()) {
-            log.debug("getLastModified() "+lastModified);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getLastModified() "+lastModified);
         } // if
         return lastModified;
     }
@@ -209,7 +231,7 @@ public class JFSLocalFile extends JFSFile {
             if (files!=null) {
                 list = new JFSFile[files.length];
 
-                for (int i = 0; i<files.length; i++ ) {
+                for (int i = 0; i<files.length; i++) {
                     list[i] = new JFSLocalFile(fileProducer, getRelativePath()+File.separatorChar+files[i]);
                 }
             } else {
@@ -217,8 +239,8 @@ public class JFSLocalFile extends JFSFile {
             }
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("getList() "+list);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getList() "+list);
         }
         return list;
     }
@@ -229,7 +251,7 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean exists() {
-        log.debug("JFSLocalFile.exists() "+exists);
+        LOG.debug("JFSLocalFile.exists() "+exists);
         return exists;
     }
 
@@ -269,7 +291,7 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean setReadOnly() {
-        if ( !JFSConfig.getInstance().isSetCanWrite()) {
+        if (!JFSConfig.getInstance().isSetCanWrite()) {
             return true;
         }
 
@@ -380,11 +402,11 @@ public class JFSLocalFile extends JFSFile {
         boolean success = true;
 
         // Set last modified and read-only only when file is no directory:
-        if ( !JFSProgress.getInstance().isCanceled()&& !srcFile.isDirectory()) {
+        if (!JFSProgress.getInstance().isCanceled()&&!srcFile.isDirectory()) {
             exists = true;
             length = srcFile.getLength();
             success = success&&setLastModified(srcFile.getLastModified());
-            if ( !srcFile.canWrite()) {
+            if (!srcFile.canWrite()) {
                 success = success&&setReadOnly();
             }
         }
@@ -409,4 +431,5 @@ public class JFSLocalFile extends JFSFile {
     public boolean flush() {
         return true;
     }
+
 }

@@ -28,12 +28,9 @@ import jfs.conf.JFSConfig;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.StorageAccess;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class PlainDirStorageAccess implements StorageAccess {
 
-    private static Log log = LogFactory.getLog(PlainDirStorageAccess.class);
+    private static Logger log = LoggerFactory.getLogger(PlainDirStorageAccess.class);
 
     /** padding for passwords */
     private static final String SALT = "aqiowuecqouceienq";

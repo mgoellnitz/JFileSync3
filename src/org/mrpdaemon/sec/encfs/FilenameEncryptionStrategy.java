@@ -14,39 +14,52 @@
  */
 package org.mrpdaemon.sec.encfs;
 
-// Common class for all filename encryption strategies
+
+/**
+ * Common class for all filename encryption strategies.
+ */
 abstract class FilenameEncryptionStrategy {
 
-	private final EncFSVolume volume;
-	private final String volumePath;
-	private final EncFSFilenameEncryptionAlgorithm algorithm;
+    private final EncFSVolume volume;
 
-	String getVolumePath() {
-		return volumePath;
-	}
+    private final String volumePath;
 
-	EncFSVolume getVolume() {
-		return volume;
-	}
+    private final EncFSFilenameEncryptionAlgorithm algorithm;
 
-	FilenameEncryptionStrategy(EncFSVolume volume, String volumePath,
-			EncFSFilenameEncryptionAlgorithm algorithm) {
-		this.volume = volume;
-		this.volumePath = volumePath;
-		this.algorithm = algorithm;
-	}
 
-	// Encryption implementation to be provided by subclass
-	protected abstract String encryptImpl(String fileName)
-			throws EncFSCorruptDataException;
+    String getVolumePath() {
+        return volumePath;
+    }
 
-	// Encrypt the given filename
-	public String encrypt(String filename) throws EncFSCorruptDataException {
-		if (volume.getConfig().getFilenameAlgorithm() != algorithm) {
-			throw new IllegalStateException(
-					"only accessable when algorithm is " + algorithm);
-		}
 
-		return encryptImpl(filename);
-	}
+    EncFSVolume getVolume() {
+        return volume;
+    }
+
+
+    FilenameEncryptionStrategy(EncFSVolume volume, String volumePath,
+            EncFSFilenameEncryptionAlgorithm algorithm) {
+        this.volume = volume;
+        this.volumePath = volumePath;
+        this.algorithm = algorithm;
+    }
+
+
+    // Encryption implementation to be provided by subclass
+
+    protected abstract String encryptImpl(String fileName)
+            throws EncFSCorruptDataException;
+
+
+    // Encrypt the given filename
+
+    public String encrypt(String filename) throws EncFSCorruptDataException {
+        if (volume.getConfig().getFilenameAlgorithm()!=algorithm) {
+            throw new IllegalStateException(
+                    "only accessable when algorithm is "+algorithm);
+        }
+
+        return encryptImpl(filename);
+    }
+
 }

@@ -16,42 +16,47 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync;
 
 import java.io.PrintStream;
-
 import jfs.conf.JFSDirectoryPair;
 import jfs.conf.JFSHistory;
 import jfs.conf.JFSHistoryManager;
 import jfs.conf.JFSLog;
-import jfs.conf.JFSText;
 import jfs.conf.JFSSyncMode.SyncAction;
+import jfs.conf.JFSText;
+
 
 /**
  * Represents a JFS root element. File factories are created for the source and target side, which may be accessed (and
  * shut down) via this object.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSRootElement.java,v 1.4 2007/07/20 16:35:36 heidrich Exp $
  */
 public class JFSRootElement extends JFSElement {
 
-    /** The used producer to create source JFS file objects. */
+    /**
+     * The used producer to create source JFS file objects.
+     */
     private JFSFileProducer srcProducer;
 
-    /** The used producer to create target JFS file objects. */
+    /**
+     * The used producer to create target JFS file objects.
+     */
     private JFSFileProducer tgtProducer;
 
-    /** The synchronization history. */
+    /**
+     * The synchronization history.
+     */
     private JFSHistory history;
 
 
     /**
      * Constructs a root element.
-     * 
+     *
      * @param pair
-     *            The directory pair to construct a root element for.
+     * The directory pair to construct a root element for.
      */
     public JFSRootElement(JFSDirectoryPair pair) {
         // Create file producers to use:
@@ -68,7 +73,7 @@ public class JFSRootElement extends JFSElement {
 
         // Test whether the file objects exists and are directories:
         JFSText t = JFSText.getInstance();
-        if ( !srcFile.exists()|| !tgtFile.exists()|| !srcFile.isDirectory()|| !tgtFile.isDirectory()) {
+        if (!srcFile.exists()||!tgtFile.exists()||!srcFile.isDirectory()||!tgtFile.isDirectory()) {
             PrintStream p = JFSLog.getErr().getStream();
             p.println(t.get("error.validDirectoryPair"));
             p.println("  '"+srcProducer.getRootPath()+"', ");
@@ -93,7 +98,7 @@ public class JFSRootElement extends JFSElement {
 
     /**
      * Returns the assigned source JFS file producer.
-     * 
+     *
      * @return The source producer.
      */
     public JFSFileProducer getSrcProducer() {
@@ -103,7 +108,7 @@ public class JFSRootElement extends JFSElement {
 
     /**
      * Returns the assigned target JFS file producer.
-     * 
+     *
      * @return The target producer.
      */
     public JFSFileProducer getTgtProducer() {
@@ -113,7 +118,7 @@ public class JFSRootElement extends JFSElement {
 
     /**
      * Returns the history.
-     * 
+     *
      * @return The history.
      */
     public JFSHistory getHistory() {
@@ -137,6 +142,7 @@ public class JFSRootElement extends JFSElement {
      */
     @Override
     public final void setSrcFile(JFSFile file) {
+        // empty default
     }
 
 
@@ -145,6 +151,7 @@ public class JFSRootElement extends JFSElement {
      */
     @Override
     public final void setTgtFile(JFSFile file) {
+        // empty default
     }
 
 
@@ -153,6 +160,7 @@ public class JFSRootElement extends JFSElement {
      */
     @Override
     public final void setAction(SyncAction action) {
+        // empty default
     }
 
 
@@ -161,5 +169,7 @@ public class JFSRootElement extends JFSElement {
      */
     @Override
     public void setActive(boolean isActive) {
+        // empty default
     }
+
 }

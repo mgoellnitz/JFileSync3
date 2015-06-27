@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,10 +19,13 @@ package jfs.sync.encryption;
 
 import java.io.Serializable;
 
+/**
+ * File information holder class.
+ */
 public class FileInfo implements Serializable {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 261020090742L;
 

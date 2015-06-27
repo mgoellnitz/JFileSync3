@@ -21,12 +21,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import jfs.sync.base.AbstractJFSFileProducerFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+
+/**
+ * Abstract file producer factory dealing with encrypted files.
+ */
 public abstract class AbstractEncryptedFileProducerFactory extends AbstractJFSFileProducerFactory {
 
-    private static final Log LOG = LogFactory.getLog(AbstractEncryptedFileProducerFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractEncryptedFileProducerFactory.class);
 
     /*
      * Map mapping extensions of file types which are usually compressed to the maximum number of megabytes to which
@@ -47,7 +51,7 @@ public abstract class AbstractEncryptedFileProducerFactory extends AbstractJFSFi
         } // try/catch
         for (Object property : p.keySet()) {
             String extension = ""+property;
-            if ( !"null".equals(extension)) {
+            if (!"null".equals(extension)) {
                 String limitString = p.getProperty(extension);
                 try {
                     long limit = Long.parseLong(limitString);

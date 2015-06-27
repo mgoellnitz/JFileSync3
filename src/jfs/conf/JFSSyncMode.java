@@ -23,8 +23,8 @@ import java.util.HashMap;
 import jfs.sync.JFSElement;
 import jfs.sync.JFSElement.ElementState;
 import jfs.sync.JFSFile;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class specifies a single synchronization mode.
@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JFSSyncMode {
 
-    private static final Log LOG = LogFactory.getLog(JFSSyncMode.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JFSSyncMode.class);
 
     /** Actions for used for all modes. */
     public enum SyncAction {

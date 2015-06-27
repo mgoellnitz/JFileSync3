@@ -3,6 +3,9 @@ package SevenZip.Compression.RangeCoder;
 import java.io.IOException;
 
 
+/**
+ * Range decoder.
+ */
 public class Decoder {
 
     static final int kTopMask = ~((1<<24)-1);

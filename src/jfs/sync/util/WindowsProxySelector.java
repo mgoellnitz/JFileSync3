@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,12 +23,15 @@ import java.net.ProxySelector;
 import java.net.SocketAddress;
 import java.net.URI;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * Utility class to automatically detect windows http proxy settings.
+ */
 public final class WindowsProxySelector extends ProxySelector {
 
-    private static final Log LOG = LogFactory.getLog(WindowsProxySelector.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WindowsProxySelector.class);
 
     private final ProxySelector root;
 

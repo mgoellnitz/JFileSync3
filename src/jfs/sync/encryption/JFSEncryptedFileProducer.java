@@ -18,17 +18,20 @@
 package jfs.sync.encryption;
 
 import java.util.Map;
-
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 
+
+/**
+ * File producer dealing with encrypted files.
+ */
 public class JFSEncryptedFileProducer extends AbstractFileProducer {
 
     /*
      * Collection with extensions of file types which are usually compressed. large files with these extensions should
      * not be tried to compress again (even if it may help in many cases - it's far too slow)
      */
-    private Map<String, Long> compressionLevels;
+    private final Map<String, Long> compressionLevels;
 
 
     public JFSEncryptedFileProducer(StorageAccess storageAccess, Map<String, Long> levels, String scheme, String uri) {
@@ -60,7 +63,7 @@ public class JFSEncryptedFileProducer extends AbstractFileProducer {
     /**
      * returns a map object mapping file name extensions without leading '.' to the amount in megabytes to which files
      * of the type should be compressed.
-     * 
+     *
      * @return
      */
     public Map<String, Long> getCompressionLevels() {

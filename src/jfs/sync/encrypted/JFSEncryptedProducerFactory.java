@@ -23,6 +23,9 @@ import jfs.sync.encryption.AbstractEncryptedFileProducerFactory;
 import jfs.sync.encryption.JFSEncryptedFileProducer;
 
 
+/**
+ * File producer factory creating instances of EncryptedFileStorageAccess.
+ */
 public class JFSEncryptedProducerFactory extends AbstractEncryptedFileProducerFactory {
 
     public static final String SCHEME_NAME = "encrypted";

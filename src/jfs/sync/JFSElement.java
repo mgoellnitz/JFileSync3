@@ -25,8 +25,8 @@ import java.util.TreeSet;
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSSyncMode.SyncAction;
 import jfs.conf.JFSSyncModes;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,30 +38,46 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JFSElement implements Comparable<JFSElement> {
 
-    private static final Log LOG = LogFactory.getLog(JFSElement.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JFSElement.class);
 
-    /** The root element to which the element belongs to. */
+    /**
+     * The root element to which the element belongs to.
+     */
     protected JFSRootElement root;
 
-    /** Source file. */
+    /**
+     * Source file.
+     */
     protected JFSFile srcFile;
 
-    /** Target file. */
+    /**
+     * Target file.
+     */
     protected JFSFile tgtFile;
 
-    /** The parent of the current element. */
+    /**
+     * The parent of the current element.
+     */
     protected JFSElement parent = null;
 
-    /** The children of the current element. */
+    /**
+     * The children of the current element.
+     */
     protected List<JFSElement> children = null;
 
-    /** Determines whether the File objects are directories. */
+    /**
+     * Determines whether the File objects are directories.
+     */
     protected boolean directory;
 
-    /** Determines the state of the element. */
+    /**
+     * Determines the state of the element.
+     */
     protected ElementState state = ElementState.NOT_DETERMINED;
 
-    /** Determines whether the action was manually set. */
+    /**
+     * Determines whether the action was manually set.
+     */
     protected boolean manuallySetAction = false;
 
     /**
@@ -71,22 +87,32 @@ public class JFSElement implements Comparable<JFSElement> {
      */
     protected SyncAction action = SyncAction.NOP;
 
-    /** Determines whether the action is active or should be skipped. */
+    /**
+     * Determines whether the action is active or should be skipped.
+     */
     protected boolean active = true;
 
-    /** Determines whether the element is currently viewed. */
+    /**
+     * Determines whether the element is currently viewed.
+     */
     protected boolean viewed = false;
 
 
-    /** The states of the element. */
+    /**
+     * The states of the element.
+     */
     public enum ElementState {
 
         IS_ROOT, NOT_DETERMINED, EQUAL, SRC_IS_NULL, TGT_IS_NULL, SRC_GT_TGT, TGT_GT_SRC, LENGTH_INCONSISTENT
+
     }
 
 
-    /** Constructor for derived classes. */
+    /**
+     * Constructor for derived classes.
+     */
     protected JFSElement() {
+        // just here to modify visibility.
     }
 
 

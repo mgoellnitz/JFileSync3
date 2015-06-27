@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync;
 
 import java.util.ArrayList;
@@ -28,12 +27,13 @@ import jfs.conf.JFSSyncModes;
 import jfs.conf.JFSViewMode;
 import jfs.conf.JFSViewModes;
 
+
 /**
  * The JFS table object administrates a flat table of all compared JFS elements and deals with the current view on this
  * table as well corresponding copy and delete statements neccessary in order to synchronize all table elements. During
  * comparison, the table is filled automatically. Before synchronization, the corresponding copy and delete statements
  * are computed. The class observes the configuration object. In case of changes, the object is updated accordingly.
- * 
+ *
  * @see jfs.conf.JFSConfig
  * @see jfs.sync.JFSComparison
  * @see jfs.sync.JFSSynchronization
@@ -42,22 +42,34 @@ import jfs.conf.JFSViewModes;
  */
 public final class JFSTable implements JFSConfigObserver {
 
-    /** Stores the only instance of the class. */
+    /**
+     * Stores the only instance of the class.
+     */
     private static JFSTable instance = null;
 
-    /** The JFS root elements corresponding to the directory pairs. */
+    /**
+     * The JFS root elements corresponding to the directory pairs.
+     */
     private final List<JFSRootElement> roots = new ArrayList<>();
 
-    /** The table containing all compared elements in the right sequence. */
+    /**
+     * The table containing all compared elements in the right sequence.
+     */
     private final List<JFSElement> table = new ArrayList<>();
 
-    /** The current view on the table. */
+    /**
+     * The current view on the table.
+     */
     private final List<JFSElement> view = new ArrayList<>();
 
-    /** The list of copy statements. */
+    /**
+     * The list of copy statements.
+     */
     private final List<JFSCopyStatement> copyStatements = new ArrayList<>();
 
-    /** The list of delete statements. */
+    /**
+     * The list of delete statements.
+     */
     private final List<JFSDeleteStatement> deleteStatements = new ArrayList<>();
 
 
@@ -72,7 +84,7 @@ public final class JFSTable implements JFSConfigObserver {
 
     /**
      * Returns the reference of the only instance.
-     * 
+     *
      * @return The only instance.
      */
     public static JFSTable getInstance() {
@@ -98,9 +110,9 @@ public final class JFSTable implements JFSConfigObserver {
 
     /**
      * Returns the JFS root element at a given index.
-     * 
+     *
      * @param index
-     *            The index to return.
+     * The index to return.
      * @return The element for the index.
      */
     public JFSRootElement getRootElement(int index) {
@@ -110,9 +122,9 @@ public final class JFSTable implements JFSConfigObserver {
 
     /**
      * Returns the JFS element for the overall table at a given index.
-     * 
+     *
      * @param index
-     *            The index to return.
+     * The index to return.
      * @return The element for the index.
      */
     public JFSElement getTableElement(int index) {
@@ -122,9 +134,9 @@ public final class JFSTable implements JFSConfigObserver {
 
     /**
      * Returns the JFS element for the current view at a given index.
-     * 
+     *
      * @param index
-     *            The index to return.
+     * The index to return.
      * @return The element for the index.
      */
     public JFSElement getViewElement(int index) {
@@ -151,24 +163,24 @@ public final class JFSTable implements JFSConfigObserver {
     /**
      * @return Returns the size of the current view.
      */
-    public final int getViewSize() {
+    public int getViewSize() {
         return view.size();
     }
 
 
     /**
      * Adds a certain JFS element and its parent to the current view if it needs to be viewed and is not already viewed.
-     * 
+     *
      * @param element
-     *            The element to add.
+     * The element to add.
      */
     private void addElementToView(JFSElement element) {
         JFSViewMode mode = JFSViewModes.getInstance().getCurrentMode();
-        if ( !mode.isViewed(element.getAction())||element.isViewed()) {
+        if (!mode.isViewed(element.getAction())||element.isViewed()) {
             return;
         }
 
-        if (view.size()>0&& !element.isDirectory()) {
+        if (view.size()>0&&!element.isDirectory()) {
             JFSElement last = view.get(view.size()-1);
             if (last.getParent()!=element.getParent()&&last!=element.getParent()) {
                 view.add(element.getParent());
@@ -186,9 +198,9 @@ public final class JFSTable implements JFSConfigObserver {
      * the current synchronization mode, and adds it to the current view if it needs to be viewed according to the
      * current view. The table needs to be filled top town; that is, first a folder and then a contained elements (files
      * or more folders).
-     * 
+     *
      * @param element
-     *            The element to add.
+     * The element to add.
      */
     public void addElement(JFSElement element) {
         JFSSyncModes.getInstance().getCurrentMode().computeAction(element);
@@ -199,9 +211,9 @@ public final class JFSTable implements JFSConfigObserver {
 
     /**
      * Adds a JFS root element.
-     * 
+     *
      * @param element
-     *            The element to add.
+     * The element to add.
      */
     public void addRoot(JFSRootElement element) {
         roots.add(element);
@@ -212,18 +224,18 @@ public final class JFSTable implements JFSConfigObserver {
 
     /**
      * Removes a certain JFS element and its parent from the current view.
-     * 
+     *
      * @param element
-     *            The element to remove.
+     * The element to remove.
      */
     private void removeElementFromView(JFSElement element) {
         JFSViewMode mode = JFSViewModes.getInstance().getCurrentMode();
 
         // Remove only, if no children are viewed any more:
-        if (element.isViewed()&& !mode.isViewed(element.getAction())) {
+        if (element.isViewed()&&!mode.isViewed(element.getAction())) {
             if (element.getChildren()!=null) {
                 for (JFSElement child : element.getChildren()) {
-                    if (child.isViewed()&& !child.isDirectory()) {
+                    if (child.isViewed()&&!child.isDirectory()) {
                         return;
                     }
                 }
@@ -234,7 +246,7 @@ public final class JFSTable implements JFSConfigObserver {
 
         // Check whether parent can be removed, if no children are viewed:
         JFSElement parent = element.getParent();
-        if ( !parent.isRoot()) {
+        if (!parent.isRoot()) {
             removeElementFromView(parent);
         }
     }
@@ -242,9 +254,9 @@ public final class JFSTable implements JFSConfigObserver {
 
     /**
      * Removes a certain JFS element and its parent from the table and the current view.
-     * 
+     *
      * @param element
-     *            The element to remove.
+     * The element to remove.
      */
     public void removeElement(JFSElement element) {
         table.remove(element);
@@ -256,13 +268,13 @@ public final class JFSTable implements JFSConfigObserver {
      * Updates a certain JFS element and its parent in the current view. If the element was part of the current view and
      * should not be viewed any more, it is removed from the view. Note, that if it was not viewed before and should be
      * viewed now, the view is not changed. You have to re-compute the whole view again in this case.
-     * 
+     *
      * @param element
-     *            The element to update.
+     * The element to update.
      */
     public void updateElement(JFSElement element) {
         JFSViewMode mode = JFSViewModes.getInstance().getCurrentMode();
-        if ( !mode.isViewed(element.getAction())) {
+        if (!mode.isViewed(element.getAction())) {
             removeElementFromView(element);
         }
     }
@@ -291,7 +303,7 @@ public final class JFSTable implements JFSConfigObserver {
         List<JFSCopyStatement> v = new ArrayList<>();
 
         for (JFSCopyStatement cs : copyStatements) {
-            if ( !cs.getSuccess()&&cs.getCopyFlag()) {
+            if (!cs.getSuccess()&&cs.getCopyFlag()) {
                 v.add(cs);
             }
         }
@@ -307,7 +319,7 @@ public final class JFSTable implements JFSConfigObserver {
         List<JFSDeleteStatement> v = new ArrayList<>();
 
         for (JFSDeleteStatement ds : deleteStatements) {
-            if ( !ds.getSuccess()&&ds.getDeleteFlag()) {
+            if (!ds.getSuccess()&&ds.getDeleteFlag()) {
                 v.add(ds);
             }
         }
@@ -372,5 +384,5 @@ public final class JFSTable implements JFSConfigObserver {
     public void updateServer(JFSConfig config) {
         updateComparison(config);
     }
-    
+
 }

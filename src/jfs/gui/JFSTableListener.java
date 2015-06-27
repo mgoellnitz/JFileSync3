@@ -97,6 +97,7 @@ public class JFSTableListener implements MouseListener, ActionListener {
      */
     @Override
     public void mouseEntered(MouseEvent e) {
+        // empty default
     }
 
 
@@ -105,6 +106,7 @@ public class JFSTableListener implements MouseListener, ActionListener {
      */
     @Override
     public void mouseExited(MouseEvent e) {
+        // empty default
     }
 
 

@@ -40,8 +40,8 @@ import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 import jfs.sync.base.AbstractJFSFileProducerFactory;
 import jfs.sync.encryption.FileInfo;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -58,7 +58,7 @@ public class JFSWebDavFile extends JFSFile {
 
     private static final DateFormat DATE_FORMAT;
 
-    private static final Log LOG = LogFactory.getLog(JFSWebDavFile.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JFSWebDavFile.class);
 
     /**
      * The retrieved file information object from the server.
@@ -84,6 +84,7 @@ public class JFSWebDavFile extends JFSFile {
         DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ROOT);
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
+
 
     private FileInfo createFileInfo(String folder, DavResource resource) {
         if (LOG.isDebugEnabled()) {
@@ -438,7 +439,10 @@ public class JFSWebDavFile extends JFSFile {
         info.setModificationDate(time);
 
         String url = getUrl(info.getPath()+"/"+info.getName())+(isDirectory() ? "/" : "");
-        String modificationDate = DATE_FORMAT.format(new Date(time));
+        String modificationDate;
+        synchronized (DATE_FORMAT) {
+            modificationDate = DATE_FORMAT.format(new Date(time));
+        }
 
         if (LOG.isInfoEnabled()) {
             LOG.info("setLastModified() setting time for "+url+" to "+modificationDate);

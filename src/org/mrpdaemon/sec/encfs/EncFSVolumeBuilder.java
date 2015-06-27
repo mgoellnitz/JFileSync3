@@ -38,6 +38,9 @@ import java.security.SecureRandom;
  */
 public final class EncFSVolumeBuilder {
 
+    /**
+     * 
+     */
     public static class FileProviderBuilder {
 
         private final EncFSVolume volume;
@@ -86,6 +89,9 @@ public final class EncFSVolumeBuilder {
     }
 
 
+    /**
+     *
+     */
     public static class ConfigBuilder {
 
         private final EncFSVolume volume;
@@ -132,6 +138,9 @@ public final class EncFSVolumeBuilder {
     }
 
 
+    /**
+     *
+     */
     public static class Pbkdf2ProviderBuilder {
 
         private final EncFSVolume volume;
@@ -158,6 +167,9 @@ public final class EncFSVolumeBuilder {
     }
 
 
+    /**
+     *
+     */
     public static class PasswordBuilder {
 
         private final EncFSVolume volume;

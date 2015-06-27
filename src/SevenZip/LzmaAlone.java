@@ -1,8 +1,14 @@
 package SevenZip;
 
 
-public class LzmaAlone {
+/**
+ *
+ */
+public final class LzmaAlone {
 
+    /**
+     * Class describing the available command line options.
+     */
     public static final class CommandLine {
 
         public static final int kEncode = 0;
@@ -140,7 +146,11 @@ public class LzmaAlone {
     }
 
 
-    static void PrintHelp() {
+    private LzmaAlone() {
+    }
+
+
+    private static void printHelp() {
         System.out.println("\nUsage:  LZMA <e|d> [<switches>...] inputFile outputFile\n"
                 +"  e: encode file\n"
                 +"  d: decode file\n"
@@ -160,7 +170,7 @@ public class LzmaAlone {
         System.out.println("\nLZMA (Java) 4.61  2008-11-23\n");
 
         if (args.length<1) {
-            PrintHelp();
+            printHelp();
             return;
         }
 

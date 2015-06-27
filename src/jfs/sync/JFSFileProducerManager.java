@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import jfs.sync.local.JFSLocalFileProducerFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class JFSFileProducerManager {
 
-    private static final Log LOG = LogFactory.getLog(JFSFileProducerManager.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JFSFileProducerManager.class);
 
     /**
      * Stores the only instance of the class.

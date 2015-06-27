@@ -20,21 +20,20 @@ package jfs.sync.encfs;
 import jfs.conf.JFSConfig;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mrpdaemon.sec.encfs.EncFSVolume;
 import org.mrpdaemon.sec.encfs.EncFSVolumeBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class produces webdav JFS files to be handled by the algorithm.
- * 
+ *
  * @author Martin Goellnitz
- * 
+ *
  */
 public class JFSEncfsProducer extends JFSFileProducer {
 
-    private static Log log = LogFactory.getLog(JFSEncfsProducer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JFSEncfsProducer.class);
 
     private EncFSVolume volume;
 
@@ -48,12 +47,12 @@ public class JFSEncfsProducer extends JFSFileProducer {
         if (volume==null) {
             String passphrase = JFSConfig.getInstance().getEncryptionPassPhrase();
             try {
-                if (log.isInfoEnabled()) {
-                    log.info("("+uri+") opening volume");
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("("+uri+") opening volume");
                 } // if
                 volume = new EncFSVolumeBuilder().withRootPath(uri).withPassword(passphrase).buildVolume();
             } catch (Exception e) {
-                log.error("()", e);
+                LOG.error("()", e);
             } // try/catch
         } // if
     } // JFSEncfsProducer()

@@ -38,10 +38,14 @@ import jfs.sync.JFSQuestion.QuestionAnswer;
  */
 public final class JFSSynchronization {
 
-    /** Stores the only instance of the class. */
+    /**
+     * Stores the only instance of the class.
+     */
     private static JFSSynchronization instance = null;
 
-    /** Answers questions during before the algorithm is performed. */
+    /**
+     * Answers questions during before the algorithm is performed.
+     */
     private JFSQuestion question = new JFSQuestion();
 
 
@@ -57,7 +61,7 @@ public final class JFSSynchronization {
      *
      * @return The only instance.
      */
-    public final static JFSSynchronization getInstance() {
+    public static JFSSynchronization getInstance() {
         if (instance==null) {
             instance = new JFSSynchronization();
         }

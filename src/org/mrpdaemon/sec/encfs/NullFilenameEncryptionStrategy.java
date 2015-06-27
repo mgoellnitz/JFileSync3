@@ -14,15 +14,20 @@
  */
 package org.mrpdaemon.sec.encfs;
 
-// Class implementing the NULL encryption strategy
+
+/**
+ * Class implementing the NULL encryption strategy.
+ */
 public class NullFilenameEncryptionStrategy extends FilenameEncryptionStrategy {
 
-	public NullFilenameEncryptionStrategy(EncFSVolume volume, String volumePath) {
-		super(volume, volumePath, EncFSFilenameEncryptionAlgorithm.NULL);
-	}
+    public NullFilenameEncryptionStrategy(EncFSVolume volume, String volumePath) {
+        super(volume, volumePath, EncFSFilenameEncryptionAlgorithm.NULL);
+    }
 
-	@Override
-	protected String encryptImpl(String fileName) {
-		return fileName;
-	}
+
+    @Override
+    protected String encryptImpl(String fileName) {
+        return fileName;
+    }
+
 }

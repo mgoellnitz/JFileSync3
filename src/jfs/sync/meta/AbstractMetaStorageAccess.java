@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,13 +38,18 @@ import javax.crypto.NoSuchPaddingException;
 import jfs.sync.encrypted.EncryptedFileStorageAccess;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.util.SecurityUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
+/**
+ * Abstract storage implementation dealing with storag using separate file mata data elements.
+ *
+ * Plain text meta data for a directory is stored in a separate file which is ignored for all other actions.
+ */
 public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAccess {
 
-    private static final Log LOG = LogFactory.getLog(AbstractMetaStorageAccess.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractMetaStorageAccess.class);
 
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.MEDIUM, SimpleDateFormat.MEDIUM);
 

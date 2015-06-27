@@ -12,14 +12,19 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package org.mrpdaemon.sec.encfs;
 
+
+/**
+ *
+ */
 public class EncFSChecksumException extends EncFSException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public EncFSChecksumException(String message) {
-		super(message);
-	}
+
+    public EncFSChecksumException(String message) {
+        super(message);
+    }
+
 }

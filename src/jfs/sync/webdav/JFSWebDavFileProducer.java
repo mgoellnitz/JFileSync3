@@ -17,48 +17,46 @@
  */
 package jfs.sync.webdav;
 
+import com.github.sardine.DavResource;
+import com.github.sardine.Sardine;
+import com.github.sardine.SardineFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import jfs.conf.JFSConfig;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 import jfs.sync.util.WindowsProxySelector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.github.sardine.DavResource;
-import com.github.sardine.Sardine;
-import com.github.sardine.SardineFactory;
 
 /**
  * This class produces webdav JFS files to be handled by the algorithm.
- * 
+ *
  * @author Martin Goellnitz
- * 
+ *
  */
 public class JFSWebDavFileProducer extends JFSFileProducer {
 
-    private static Log log = LogFactory.getLog(JFSWebDavFileProducer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JFSWebDavFileProducer.class);
 
     private Sardine sardine;
 
-    private Map<String, List<DavResource>> directoryCache = new HashMap<String, List<DavResource>>();
+    private Map<String, List<DavResource>> directoryCache = new HashMap<>();
 
 
     List<DavResource> getListing(String url) throws IOException {
         if (directoryCache.containsKey(url)) {
             return directoryCache.get(url);
         } // if
-        if (log.isDebugEnabled()) {
-            log.debug("getListing() listing "+url);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getListing() listing "+url);
         } // if
         List<DavResource> listing = sardine.list(url);
-        if (log.isInfoEnabled()) {
-            log.info("getListing("+listing.size()+") listing "+url);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("getListing("+listing.size()+") listing "+url);
         } // if
         directoryCache.put(url, listing);
         return listing;
@@ -75,14 +73,14 @@ public class JFSWebDavFileProducer extends JFSFileProducer {
             String username = JFSConfig.getInstance().getServerUserName();
             String passphrase = JFSConfig.getInstance().getServerPassPhrase();
             sardine = SardineFactory.begin(username, passphrase, WindowsProxySelector.getInstance());
-            if (log.isDebugEnabled()) {
-                log.debug("getSardine() webdav client "+sardine);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("getSardine() webdav client "+sardine);
             } // if
         } // if
         try {
             Thread.sleep(500);
         } catch (InterruptedException ie) {
-            log.error("getSardine()", ie);
+            LOG.error("getSardine()", ie);
         } // try/catch
     } // JFSWebDavFileProducer()
 

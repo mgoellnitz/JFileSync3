@@ -63,10 +63,6 @@ public class EncFSConfig {
     private boolean supportedExternalIVChaining;
 
 
-    public EncFSConfig() {
-    }
-
-
     public int getVolumeKeySizeInBits() {
         return volumeKeySizeInBits;
     }
