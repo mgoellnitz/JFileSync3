@@ -29,7 +29,8 @@ public final class Version
 	}
 
 	/**
-	 * A simple main method that prints the version and exits
+	 * A simple main method that prints the version and exits.
+         * @param args command line arguments
 	 */
 	public static void main(String[] args)
 	{

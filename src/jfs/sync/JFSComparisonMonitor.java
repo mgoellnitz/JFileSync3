@@ -16,41 +16,57 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync;
 
 import java.util.Vector;
 
+
 /**
  * Monitors the detailed state of the currently performed comparison.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSComparisonMonitor.java,v 1.1 2006/08/25 15:54:37 heidrich Exp $
  */
 public final class JFSComparisonMonitor {
 
-    /** Stores the only instance of the class. */
+    /**
+     * Stores the only instance of the class.
+     */
     private static JFSComparisonMonitor instance = null;
 
-    /** The number items to handle on every level of the file hierarchy. */
+    /**
+     * The number items to handle on every level of the file hierarchy.
+     */
     private Vector<Integer> itemsStarted = new Vector<Integer>();
 
-    /** The number items already handled on every level. */
+    /**
+     * The number items already handled on every level.
+     */
     private Vector<Integer> itemsHandled = new Vector<Integer>();
 
-    /** The weigth of all currently handled items on every level. */
+    /**
+     * The weigth of all currently handled items on every level.
+     */
     private Vector<Integer> itemsWeight = new Vector<Integer>();
 
-    /** The current root URI for source files handled. */
+    /**
+     * The current root URI for source files handled.
+     */
     private String rootUriSrc = "";
 
-    /** The current root URI for target files handled. */
+    /**
+     * The current root URI for target files handled.
+     */
     private String rootUriTgt = "";
 
-    /** The current source file handled. */
+    /**
+     * The current source file handled.
+     */
     private JFSFile currentSrc = null;
 
-    /** The current target file handled. */
+    /**
+     * The current target file handled.
+     */
     private JFSFile currentTgt = null;
 
 
@@ -63,10 +79,10 @@ public final class JFSComparisonMonitor {
 
     /**
      * Returns the reference of the only instance.
-     * 
+     *
      * @return The only instance.
      */
-    public final static JFSComparisonMonitor getInstance() {
+    public  static JFSComparisonMonitor getInstance() {
         if (instance==null) {
             instance = new JFSComparisonMonitor();
         }
@@ -78,7 +94,7 @@ public final class JFSComparisonMonitor {
     /**
      * Restores the default values.
      */
-    public final void clean() {
+    public void clean() {
         currentSrc = null;
         currentTgt = null;
         itemsStarted.clear();
@@ -90,14 +106,14 @@ public final class JFSComparisonMonitor {
     /**
      * Increases the progress depth by adding new elements for (1) number of started items, (2) number of handled items,
      * and finally (3) the weight for the currently handeled items. Always used in combination with decrease().
-     * 
+     *
      * @param containedItems
-     *            The number of contained sub items in the currently handled item.
+     * The number of contained sub items in the currently handled item.
      * @param weight
-     *            The weigth of the currently handled item; i.e., the delta by which the number of handled items is
-     *            increased if this item is completely handled.
+     * The weigth of the currently handled item; i.e., the delta by which the number of handled items is
+     * increased if this item is completely handled.
      */
-    final void increase(int containedItems, int weight) {
+    void increase(int containedItems, int weight) {
         itemsStarted.add(containedItems);
         itemsHandled.add(0);
         itemsWeight.add(weight);
@@ -107,7 +123,7 @@ public final class JFSComparisonMonitor {
     /**
      * Decreases the depth for the started and handled items. Always used in combination with increase().
      */
-    final void decrease() {
+    void decrease() {
         // All vector (should ;-) have the same size, so we just
         // use the size of itemsStarted to remove the last elements:
         int size = itemsStarted.size();
@@ -136,9 +152,9 @@ public final class JFSComparisonMonitor {
     /**
      * @return Returns the ratio of the items already handled in percent.
      */
-    public final int getRatio() {
+     int getRatio() {
         float ratio = 0;
-        for (int i = itemsStarted.size()-1; i>=0; i-- ) {
+        for (int i = itemsStarted.size()-1; i>=0; i--) {
             int started = itemsStarted.get(i);
             int handled = itemsHandled.get(i);
             int weight = itemsWeight.get(i);
@@ -162,9 +178,9 @@ public final class JFSComparisonMonitor {
 
     /**
      * Sets the root URI for all source files handeled.
-     * 
+     *
      * @param rootUriSrc
-     *            The URI to set.
+     * The URI to set.
      */
     public void setRootUriSrc(String rootUriSrc) {
         this.rootUriSrc = rootUriSrc;
@@ -181,9 +197,9 @@ public final class JFSComparisonMonitor {
 
     /**
      * Sets the root URI for all target files handeled.
-     * 
+     *
      * @param rootUriTgt
-     *            The URI to set.
+     * The URI to set.
      */
     public void setRootUriTgt(String rootUriTgt) {
         this.rootUriTgt = rootUriTgt;
@@ -193,18 +209,18 @@ public final class JFSComparisonMonitor {
     /**
      * @return Returns the currently handeled source directory.
      */
-    public final JFSFile getCurrentSrc() {
+    public JFSFile getCurrentSrc() {
         return currentSrc;
     }
 
 
     /**
      * Sets the currently handeled source directory.
-     * 
+     *
      * @param currentSrc
-     *            The current source to set.
+     * The current source to set.
      */
-    final void setCurrentSrc(JFSFile currentSrc) {
+    void setCurrentSrc(JFSFile currentSrc) {
         this.currentSrc = currentSrc;
     }
 
@@ -212,30 +228,31 @@ public final class JFSComparisonMonitor {
     /**
      * @return Returns the currently handeled target directory.
      */
-    public final JFSFile getCurrentTgt() {
+    public  JFSFile getCurrentTgt() {
         return currentTgt;
     }
 
 
     /**
      * Sets the currently handeled target directory.
-     * 
+     *
      * @param currentTgt
-     *            The current target to set.
+     * The current target to set.
      */
-    final void setCurrentTgt(JFSFile currentTgt) {
+    void setCurrentTgt(JFSFile currentTgt) {
         this.currentTgt = currentTgt;
     }
 
 
     /**
      * @return Returns the currently handeled directory (which equals the source directory, if the source directory is
-     *         not null and the target directory otherwise). If the monitor was not initialized null is returned.
+     * not null and the target directory otherwise). If the monitor was not initialized null is returned.
      */
-    public final JFSFile getCurrentDir() {
+    public JFSFile getCurrentDir() {
         if (currentSrc!=null) {
             return currentSrc;
         }
         return currentTgt;
     }
+
 }

@@ -38,9 +38,9 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
@@ -698,7 +698,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
      */
     public final void updateLastOpenedProfiles() {
         JFSSettings s = JFSSettings.getInstance();
-        ArrayList<File> profiles = s.getLastOpenedProfiles();
+        List<File> profiles = s.getLastOpenedProfiles();
         for (int i = 0; i<profiles.size(); i++) {
             String name = profiles.get(i).getName();
             if (name.length()>30) {

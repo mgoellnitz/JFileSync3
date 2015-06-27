@@ -12,18 +12,20 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package org.mrpdaemon.sec.encfs;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * FilterOutputStream extension that allows encrypted data to be written to a
@@ -31,259 +33,263 @@ import java.util.Arrays;
  */
 public class EncFSOutputStream extends FilterOutputStream {
 
-	// SecureRandom instance for random data generation
-	private static final SecureRandom secureRandom = new SecureRandom();
+    private static final Logger LOG = LoggerFactory.getLogger(EncFSOutputStream.class);
 
-	// Underlying volume
-	private final EncFSVolume volume;
+    // SecureRandom instance for random data generation
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
-	// Volume configuration
-	private final EncFSConfig config;
+    // Underlying volume
+    private final EncFSVolume volume;
 
-	// IV used for this file
-	private byte[] fileIv;
+    // Volume configuration
+    private final EncFSConfig config;
 
-	// Buffer to hold file header contents (uniqueIV)
-	private byte[] fileHeader;
+    // IV used for this file
+    private byte[] fileIv;
 
-	// Buffer to hold the currently cached data contents to be written
-	private final byte dataBuf[];
+    // Buffer to hold file header contents (uniqueIV)
+    private byte[] fileHeader;
 
-	// Count of the cached data bytes about to be written
-	private int dataBytes;
+    // Buffer to hold the currently cached data contents to be written
+    private final byte dataBuf[];
 
-	// Size of the block header for this file
-	private int blockHeaderSize;
+    // Count of the cached data bytes about to be written
+    private int dataBytes;
 
-	// Number of random bytes per block header
-	private int blockMACRandLen;
+    // Size of the block header for this file
+    private int blockHeaderSize;
 
-	// Number of MAC bytes per block header
-	private int blockMACLen;
+    // Number of random bytes per block header
+    private int blockMACRandLen;
 
-	// Index of the current block to be written
-	private int curBlockIndex;
+    // Number of MAC bytes per block header
+    private int blockMACLen;
 
-	/**
-	 * Create a new EncFSOutputStream for writing encrypted data to a file on an
-	 * EncFS volume
-	 * 
-	 * @param volume
-	 *            Volume hosting the file to write
-	 * @param out
-	 *            Output stream for writing the encrypted (raw) data
-	 * @param volumePath
-	 *            Volume path of the file being encrypted (needed for
-	 *            externalIVChaining)
-	 *            <p/>
-	 *            <p/>
-	 *            File data is corrupt
-	 *            <p/>
-	 *            Unsupported EncFS configuration
-	 */
-	public EncFSOutputStream(EncFSVolume volume, OutputStream out,
-			String volumePath) throws EncFSUnsupportedException,
-			EncFSCorruptDataException {
-		super(out);
-		this.volume = volume;
-		this.config = volume.getConfig();
-		int blockSize = config.getEncryptedFileBlockSizeInBytes();
-		this.blockHeaderSize = config.getNumberOfMACBytesForEachFileBlock()
-				+ config.getNumberOfRandomBytesInEachMACHeader();
-		this.dataBytes = this.blockHeaderSize;
-		this.blockMACLen = config.getNumberOfMACBytesForEachFileBlock();
-		this.blockMACRandLen = config.getNumberOfRandomBytesInEachMACHeader();
+    // Index of the current block to be written
+    private int curBlockIndex;
 
-		if (config.isUseUniqueIV()) {
-			// Compute file IV
-			this.fileHeader = new byte[8];
 
-			secureRandom.nextBytes(fileHeader);
+    /**
+     * Create a new EncFSOutputStream for writing encrypted data to a file on an
+     * EncFS volume
+     *
+     * @param volume
+     * Volume hosting the file to write
+     * @param out
+     * Output stream for writing the encrypted (raw) data
+     * @param volumePath
+     * Volume path of the file being encrypted (needed for
+     * externalIVChaining)
+     * <p/>
+     * <p/>
+     * File data is corrupt
+     * <p/>
+     * Unsupported EncFS configuration
+     */
+    public EncFSOutputStream(EncFSVolume volume, OutputStream out, String volumePath)
+            throws EncFSUnsupportedException, EncFSCorruptDataException {
+        super(out);
+        this.volume = volume;
+        this.config = volume.getConfig();
+        int blockSize = config.getEncryptedFileBlockSizeInBytes();
+        this.blockHeaderSize = config.getNumberOfMACBytesForEachFileBlock()+config.getNumberOfRandomBytesInEachMACHeader();
+        this.dataBytes = this.blockHeaderSize;
+        this.blockMACLen = config.getNumberOfMACBytesForEachFileBlock();
+        this.blockMACRandLen = config.getNumberOfRandomBytesInEachMACHeader();
 
-			byte[] initIv;
-			if (config.isSupportedExternalIVChaining()) {
-				/*
-				 * When using external IV chaining we compute initIv based on
-				 * the file path.
-				 */
-				initIv = StreamCrypto.computeChainIv(volume, volumePath);
-			} else {
-				// When not using external IV chaining initIv is just zero's.
-				initIv = new byte[8];
-			}
+        if (config.isUseUniqueIV()) {
+            // Compute file IV
+            this.fileHeader = new byte[8];
 
-			try {
-				this.fileIv = StreamCrypto.streamDecrypt(volume, initIv,
-						Arrays.copyOf(fileHeader, fileHeader.length));
-			} catch (InvalidAlgorithmParameterException e) {
-				e.printStackTrace();
-			} catch (IllegalBlockSizeException e) {
-				throw new EncFSCorruptDataException(e);
-			} catch (BadPaddingException e) {
-				throw new EncFSCorruptDataException(e);
-			}
-		} else {
-			// No unique IV per file, just use 0
-			this.fileIv = new byte[8];
-		}
+            SECURE_RANDOM.nextBytes(fileHeader);
 
-		Cipher blockCipher = BlockCrypto.newBlockCipher();
-		try {
-			EncFSCrypto.cipherInit(volume, Cipher.ENCRYPT_MODE, blockCipher,
-					fileIv);
-		} catch (InvalidAlgorithmParameterException e) {
-			throw new EncFSCorruptDataException(e);
-		}
-		Cipher streamCipher = StreamCrypto.newStreamCipher();
-		try {
-			EncFSCrypto.cipherInit(volume, Cipher.ENCRYPT_MODE, streamCipher,
-					fileIv);
-		} catch (InvalidAlgorithmParameterException e) {
-			throw new EncFSCorruptDataException(e);
-		}
+            byte[] initIv;
+            if (config.isSupportedExternalIVChaining()) {
+                /*
+                 * When using external IV chaining we compute initIv based on
+                 * the file path.
+                 */
+                initIv = StreamCrypto.computeChainIv(volume, volumePath);
+            } else {
+                // When not using external IV chaining initIv is just zero's.
+                initIv = new byte[8];
+            }
 
-		// blockSize = blockHeaderSize + blockDataLen
-		dataBuf = new byte[blockSize];
-	}
+            try {
+                this.fileIv = StreamCrypto.streamDecrypt(volume, initIv, Arrays.copyOf(fileHeader, fileHeader.length));
+            } catch (InvalidAlgorithmParameterException e) {
+                LOG.error("()", e);
+            } catch (IllegalBlockSizeException|BadPaddingException e) {
+                throw new EncFSCorruptDataException(e);
+            }
+        } else {
+            // No unique IV per file, just use 0
+            this.fileIv = new byte[8];
+        }
 
-	// Flush the internal buffer
-	private void writeBuffer(boolean isFinal) throws IOException {
+        Cipher blockCipher = BlockCrypto.newBlockCipher();
+        try {
+            EncFSCrypto.cipherInit(volume, Cipher.ENCRYPT_MODE, blockCipher,
+                    fileIv);
+        } catch (InvalidAlgorithmParameterException e) {
+            throw new EncFSCorruptDataException(e);
+        }
+        Cipher streamCipher = StreamCrypto.newStreamCipher();
+        try {
+            EncFSCrypto.cipherInit(volume, Cipher.ENCRYPT_MODE, streamCipher, fileIv);
+        } catch (InvalidAlgorithmParameterException e) {
+            throw new EncFSCorruptDataException(e);
+        }
 
-		if (!isFinal && dataBytes != dataBuf.length) {
-			throw new IllegalStateException("Buffer not full");
-		}
+        // blockSize = blockHeaderSize + blockDataLen
+        dataBuf = new byte[blockSize];
+    }
 
-		if (curBlockIndex == 0 && config.isUseUniqueIV()) {
-			out.write(this.fileHeader);
-		}
 
-		// Fill in the block header
-		if (blockHeaderSize > 0) {
+    // Flush the internal buffer
+    private void writeBuffer(boolean isFinal) throws IOException {
 
-			// Add random bytes to the buffer
-			if (blockMACRandLen > 0) {
-				byte randomBytes[] = new byte[blockMACRandLen];
-				secureRandom.nextBytes(randomBytes);
-				System.arraycopy(randomBytes, 0, dataBuf, blockMACLen,
-						blockMACRandLen);
-			}
+        if (!isFinal&&dataBytes!=dataBuf.length) {
+            throw new IllegalStateException("Buffer not full");
+        }
 
-			// Compute MAC bytes and add them to the buffer
-			byte mac[] = EncFSCrypto.mac64(volume.getMAC(), dataBuf,
-					blockMACLen, dataBytes - blockMACLen);
-			for (int i = 0; i < blockMACLen; i++) {
-				dataBuf[i] = mac[7 - i];
-			}
-		}
+        if (curBlockIndex==0&&config.isUseUniqueIV()) {
+            out.write(this.fileHeader);
+        }
 
-		byte[] encBuffer;
-		try {
-			if (dataBytes == dataBuf.length) {
-				/*
-				 * If allowHoles is configured, we scan the buffer to determine
-				 * whether we should pass this block through as a zero block.
-				 * Note that it is intended for the presence of a MAC header to
-				 * cause this check to fail.
-				 */
-				boolean zeroBlock = false;
-				if (config.isHolesAllowedInFiles()) {
-					zeroBlock = true;
-					for (byte aDataBuf : dataBuf) {
-						if (aDataBuf != 0) {
-							zeroBlock = false;
-							break;
-						}
-					}
-				}
+        // Fill in the block header
+        if (blockHeaderSize>0) {
 
-				if (zeroBlock) {
-					encBuffer = dataBuf;
-				} else {
-					encBuffer = BlockCrypto.blockEncrypt(volume,
-							getBlockIV(), dataBuf);
-				}
-			} else {
-				encBuffer = StreamCrypto.streamEncrypt(volume,
-						getBlockIV(), dataBuf, 0, dataBytes);
-			}
-		} catch (IllegalBlockSizeException e) {
-			throw new IOException(e);
-		} catch (BadPaddingException e) {
-			throw new IOException(e);
-		} catch (InvalidAlgorithmParameterException e) {
-			throw new IOException(e);
-		} catch (EncFSUnsupportedException e) {
-			throw new IOException(e);
-		}
+            // Add random bytes to the buffer
+            if (blockMACRandLen>0) {
+                byte randomBytes[] = new byte[blockMACRandLen];
+                SECURE_RANDOM.nextBytes(randomBytes);
+                System.arraycopy(randomBytes, 0, dataBuf, blockMACLen,
+                        blockMACRandLen);
+            }
 
-		out.write(encBuffer);
-		dataBytes = blockHeaderSize;
-		curBlockIndex++;
-	}
+            // Compute MAC bytes and add them to the buffer
+            byte mac[] = EncFSCrypto.mac64(volume.getMAC(), dataBuf,
+                    blockMACLen, dataBytes-blockMACLen);
+            for (int i = 0; i<blockMACLen; i++) {
+                dataBuf[i] = mac[7-i];
+            }
+        }
 
-	// Return the block IV for the current block
-	private byte[] getBlockIV() {
-		long fileIvLong = EncFSUtil.convertByteArrayToLong(fileIv);
-		return EncFSUtil.convertLongToByteArrayBigEndian(curBlockIndex
-				^ fileIvLong);
-	}
+        byte[] encBuffer;
+        try {
+            if (dataBytes==dataBuf.length) {
+                /*
+                 * If allowHoles is configured, we scan the buffer to determine
+                 * whether we should pass this block through as a zero block.
+                 * Note that it is intended for the presence of a MAC header to
+                 * cause this check to fail.
+                 */
+                boolean zeroBlock = false;
+                if (config.isHolesAllowedInFiles()) {
+                    zeroBlock = true;
+                    for (byte aDataBuf : dataBuf) {
+                        if (aDataBuf!=0) {
+                            zeroBlock = false;
+                            break;
+                        }
+                    }
+                }
 
-	// Flush the internal buffer
-	private void writeBuffer() throws IOException {
-		writeBuffer(false);
-	}
+                if (zeroBlock) {
+                    encBuffer = dataBuf;
+                } else {
+                    encBuffer = BlockCrypto.blockEncrypt(volume,
+                            getBlockIV(), dataBuf);
+                }
+            } else {
+                encBuffer = StreamCrypto.streamEncrypt(volume,
+                        getBlockIV(), dataBuf, 0, dataBytes);
+            }
+        } catch (IllegalBlockSizeException e) {
+            throw new IOException(e);
+        } catch (BadPaddingException e) {
+            throw new IOException(e);
+        } catch (InvalidAlgorithmParameterException e) {
+            throw new IOException(e);
+        } catch (EncFSUnsupportedException e) {
+            throw new IOException(e);
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.io.FilterOutputStream#write(int)
-	 */
-	@Override
-	public synchronized void write(int b) throws IOException {
-		dataBuf[dataBytes++] = (byte) b;
+        out.write(encBuffer);
+        dataBytes = blockHeaderSize;
+        curBlockIndex++;
+    }
 
-		if (dataBytes == dataBuf.length) {
-			writeBuffer();
-		}
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.io.FilterOutputStream#write(int)
-	 */
-	@Override
-	public synchronized void write(byte b[], int off, int len)
-			throws IOException {
-		if (dataBytes + len <= dataBuf.length) {
-			System.arraycopy(b, off, dataBuf, dataBytes, len);
-			dataBytes += len;
+    // Return the block IV for the current block
+    private byte[] getBlockIV() {
+        long fileIvLong = EncFSUtil.convertByteArrayToLong(fileIv);
+        return EncFSUtil.convertLongToByteArrayBigEndian(curBlockIndex
+                ^fileIvLong);
+    }
 
-			if (dataBytes == dataBuf.length) {
-				writeBuffer();
-			}
-		} else {
-			int tmpOff = off;
-			int remaining = len;
-			while (remaining > 0) {
-				int chunk = Math.min(remaining, dataBuf.length - dataBytes);
 
-				write(b, tmpOff, chunk);
+    // Flush the internal buffer
+    private void writeBuffer() throws IOException {
+        writeBuffer(false);
+    }
 
-				remaining -= chunk;
-				tmpOff += chunk;
-			}
-		}
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.io.FilterOutputStream#write(int)
+     */
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.io.FilterOutputStream#write(int)
-	 */
-	@Override
-	public void close() throws IOException {
-		writeBuffer(true);
-		super.close();
-	}
+    @Override
+    public synchronized void write(int b) throws IOException {
+        dataBuf[dataBytes++] = (byte) b;
+
+        if (dataBytes==dataBuf.length) {
+            writeBuffer();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.io.FilterOutputStream#write(int)
+     */
+
+    @Override
+    public synchronized void write(byte b[], int off, int len)
+            throws IOException {
+        if (dataBytes+len<=dataBuf.length) {
+            System.arraycopy(b, off, dataBuf, dataBytes, len);
+            dataBytes += len;
+
+            if (dataBytes==dataBuf.length) {
+                writeBuffer();
+            }
+        } else {
+            int tmpOff = off;
+            int remaining = len;
+            while (remaining>0) {
+                int chunk = Math.min(remaining, dataBuf.length-dataBytes);
+
+                write(b, tmpOff, chunk);
+
+                remaining -= chunk;
+                tmpOff += chunk;
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.io.FilterOutputStream#write(int)
+     */
+
+    @Override
+    public void close() throws IOException {
+        writeBuffer(true);
+        super.close();
+    }
+
 }

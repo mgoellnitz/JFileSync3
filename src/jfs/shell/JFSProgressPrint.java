@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.shell;
 
 import java.io.BufferedReader;
@@ -33,15 +32,18 @@ import jfs.sync.JFSProgress;
 import jfs.sync.JFSProgress.ProgressActivity;
 import jfs.sync.JFSProgressObserver;
 
+
 /**
  * A simple observer of the algorithm's progress that prints the state to standard out.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSProgressPrint.java,v 1.9 2007/07/20 14:07:10 heidrich Exp $
  */
 public class JFSProgressPrint implements JFSProgressObserver {
 
-    /** The stream for controling cancel operations. */
+    /**
+     * The stream for controling cancel operations.
+     */
     private BufferedReader din = new BufferedReader(new InputStreamReader(System.in));
 
 
@@ -85,7 +87,7 @@ public class JFSProgressPrint implements JFSProgressObserver {
 
         PrintStream out = JFSLog.getOut().getStream();
 
-        if ( !nothingToDisplay) {
+        if (!nothingToDisplay) {
             int percentageValue = progress.getCompletionRatio();
             String percentage = String.valueOf(percentageValue);
 
@@ -112,7 +114,7 @@ public class JFSProgressPrint implements JFSProgressObserver {
                 String yes = t.get("cmd.progress.cancel.yes");
                 String no = t.get("cmd.progress.cancel.no");
 
-                while ( !input.equals(yes)&& !input.equals(no)) {
+                while (!input.equals(yes)&&!input.equals(no)) {
                     out.println(t.get("cmd.progress.cancel"));
                     out.print(t.get("cmd.progress.cancel.input")+" ");
                     input = din.readLine().toLowerCase();
@@ -122,11 +124,13 @@ public class JFSProgressPrint implements JFSProgressObserver {
                     out.println(t.get("cmd.progress.cancel.request"));
                     out.println();
                     progress.cancel();
-                } else
+                } else {
                     out.println();
+                }
             }
         } catch (IOException e) {
             // Just continue...
         }
     }
+
 }

@@ -16,13 +16,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.io.File;
-
 import javax.swing.DefaultCellEditor;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -33,48 +31,65 @@ import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSText;
 import jfs.sync.JFSFileProducerManager;
 
+
 /**
  * This class is responsible for displaying the directory pairs of a configuration object.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSDirectoryTable.java,v 1.15 2007/06/06 19:51:33 heidrich Exp $
  */
 public class JFSDirectoryTable extends AbstractTableModel implements TableCellRenderer {
-    /** The UID. */
+
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = 48L;
 
-    /** Color definition for an invalid directory file. */
+    /**
+     * Color definition for an invalid directory file.
+     */
     private static final Color INVALID_DIR = new Color(255, 0, 0);
 
-    /** Color definition for a selected invalid directory file. */
+    /**
+     * Color definition for a selected invalid directory file.
+     */
     private static final Color INVALID_DIR_SELECTED = new Color(255, 220, 220);
 
-    /** Color definition for a external files. */
+    /**
+     * Color definition for a external files.
+     */
     private static final Color EXTERNAL = new Color(0, 0, 255);
 
-    /** Color definition for a selected external files. */
+    /**
+     * Color definition for a selected external files.
+     */
     private static final Color EXTERNAL_SELECTED = new Color(220, 220, 255);
 
-    /** The object with information that should be displayed by the table. */
+    /**
+     * The object with information that should be displayed by the table.
+     */
     private JFSConfig config;
 
-    /** The corresponding JTable. */
+    /**
+     * The corresponding JTable.
+     */
     private final JTable localTable;
 
-    /** An adapted JLabel object for our cell renderer component. */
+    /**
+     * An adapted JLabel object for our cell renderer component.
+     */
     protected JLabel cell;
 
 
     /**
      * The default constructor just performs some initialization work.
-     * 
+     *
      * @param config
-     *            The configuration object to display.
+     * The configuration object to display.
      */
     public JFSDirectoryTable(final JFSConfig config) {
         this.config = config;
@@ -139,14 +154,15 @@ public class JFSDirectoryTable extends AbstractTableModel implements TableCellRe
      */
     @Override
     public final Object getValueAt(int row, int column) {
-        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount())
+        if (row<0||row>=getRowCount()||column<0||column>=getColumnCount()) {
             return null;
+        }
 
         switch (column) {
-        case 0:
-            return config.getDirectoryList().get(row).getSrc();
-        default:
-            return config.getDirectoryList().get(row).getTgt();
+            case 0:
+                return config.getDirectoryList().get(row).getSrc();
+            default:
+                return config.getDirectoryList().get(row).getTgt();
         }
     }
 
@@ -176,13 +192,13 @@ public class JFSDirectoryTable extends AbstractTableModel implements TableCellRe
             int column) {
         JFSText t = JFSText.getInstance();
 
-        String path = (String)value;
-        
+        String path = (String) value;
+
         // Adapt cell label individualy:
         int idx = path.indexOf(':');
         String prefix = (idx>1) ? path.substring(0, idx) : "xyz";
         String dir = (idx>1) ? path.substring(idx+3) : path;
-        
+
         File file = new File(dir);
         cell.setText(path);
         cell.setToolTipText(null);
@@ -195,7 +211,7 @@ public class JFSDirectoryTable extends AbstractTableModel implements TableCellRe
             cell.setBackground(table.getBackground());
         }
 
-        if (JFSFileProducerManager.getInstance().getSchemes().contains(prefix)&& dir.matches("[a-z][a-z][a-z]*://.*")) {
+        if (JFSFileProducerManager.getInstance().getSchemes().contains(prefix)&&dir.matches("[a-z][a-z][a-z]*://.*")) {
             if (isSelected) {
                 cell.setForeground(EXTERNAL_SELECTED);
             } else {
@@ -203,14 +219,16 @@ public class JFSDirectoryTable extends AbstractTableModel implements TableCellRe
             } // if
             cell.setText(path.substring(prefix.length()+3));
             cell.setToolTipText(t.get("profile.dir.message.external"));
-        } else if ( !file.exists()|| !file.isDirectory()) {
-            if (isSelected)
+        } else if (!file.exists()||!file.isDirectory()) {
+            if (isSelected) {
                 cell.setForeground(INVALID_DIR_SELECTED);
-            else
+            } else {
                 cell.setForeground(INVALID_DIR);
+            }
             cell.setToolTipText(t.get("profile.dir.message.invalid"));
         }
 
         return cell;
     }
+
 }

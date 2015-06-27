@@ -16,33 +16,37 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.conf;
 
 import java.io.File;
 
+
 /**
  * Represents two directories that have to be compared against each other.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSDirectoryPair.java,v 1.11 2007/02/26 18:49:11 heidrich Exp $
  */
 public final class JFSDirectoryPair implements Cloneable {
 
-    /** The source directory. */
+    /**
+     * The source directory.
+     */
     private String srcDir;
 
-    /** The target directory. */
+    /**
+     * The target directory.
+     */
     private String tgtDir;
 
 
     /**
      * Creates objects out of corresponding strings.
-     * 
+     *
      * @param srcDir
-     *            String of the source directory.
+     * String of the source directory.
      * @param tgtDir
-     *            String of the target directory.
+     * String of the target directory.
      */
     public JFSDirectoryPair(String srcDir, String tgtDir) {
         this.srcDir = srcDir;
@@ -52,64 +56,64 @@ public final class JFSDirectoryPair implements Cloneable {
 
     /**
      * Returns the source directory.
-     * 
+     *
      * @return Source Directory.
      */
-    public final String getSrc() {
+    public String getSrc() {
         return srcDir;
     }
 
 
     /**
      * Sets the source directory.
-     * 
+     *
      * @param srcDir
-     *            Source Directory.
+     * Source Directory.
      */
-    public final void setSrc(String srcDir) {
+    public void setSrc(String srcDir) {
         this.srcDir = srcDir;
     }
 
 
     /**
      * Sets the source directory.
-     * 
+     *
      * @param srcDir
-     *            Source Directory.
+     * Source Directory.
      */
-    public final void setSrc(File srcDir) {
+    public void setSrc(File srcDir) {
         this.srcDir = srcDir.getPath();
     }
 
 
     /**
      * Returns the target directory.
-     * 
+     *
      * @return Target Directory.
      */
-    public final String getTgt() {
+    public String getTgt() {
         return tgtDir;
     }
 
 
     /**
      * Sets the target directory.
-     * 
+     *
      * @param tgtDir
-     *            Target Directory.
+     * Target Directory.
      */
-    public final void setTgt(String tgtDir) {
+    public void setTgt(String tgtDir) {
         this.tgtDir = tgtDir;
     }
 
 
     /**
      * Sets the target directory.
-     * 
+     *
      * @param tgtDir
-     *            Target Directory.
+     * Target Directory.
      */
-    public final void setTgt(File tgtDir) {
+    public void setTgt(File tgtDir) {
         this.tgtDir = tgtDir.getPath();
     }
 
@@ -131,8 +135,9 @@ public final class JFSDirectoryPair implements Cloneable {
         if (object.getClass()!=getClass()) {
             return false;
         }
-        JFSDirectoryPair pair = (JFSDirectoryPair)object;
+        JFSDirectoryPair pair = (JFSDirectoryPair) object;
 
         return getSrc().equals(pair.getSrc())&&getTgt().equals(pair.getTgt());
     }
+
 }

@@ -28,13 +28,13 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * This class specifies a single synchronization mode.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSSyncMode.java,v 1.12 2007/03/29 13:20:54 heidrich Exp $
  */
 public class JFSSyncMode {
-    
-    private static Log log = LogFactory.getLog(JFSSyncMode.class);
+
+    private static final Log LOG = LogFactory.getLog(JFSSyncMode.class);
 
     /** Actions for used for all modes. */
     public enum SyncAction {
@@ -72,7 +72,7 @@ public class JFSSyncMode {
 
     /**
      * Creates a new mode.
-     * 
+     *
      * @param id
      *            The identifier to use.
      * @param alias
@@ -87,7 +87,7 @@ public class JFSSyncMode {
     /**
      * Returns the action for a specific state of an element of the comparison table. If nothing is specified regarding
      * the given state, the default action (no operation) is returned.
-     * 
+     *
      * @param state
      *            The state of the element of the comparisn table.
      * @return The corresponding action for the state.
@@ -102,7 +102,7 @@ public class JFSSyncMode {
 
     /**
      * Sets the action for a specific state of an element of the comparison table.
-     * 
+     *
      * @param state
      *            The state of the element of the comparisn table.
      * @param action
@@ -159,7 +159,7 @@ public class JFSSyncMode {
     /**
      * Computes the action that has to performed for an entry of the comparison table according to this synchronization
      * mode and a file history.
-     * 
+     *
      * @param element
      *            The element to compute the action for.
      */
@@ -175,8 +175,8 @@ public class JFSSyncMode {
         } else {
             // Add basic actions based on the stored history:
             computeBasicAction(element);
-            if (log.isInfoEnabled()) {
-                log.info("computeAction() isAutomatic "+element.getAction());
+            if (LOG.isInfoEnabled()) {
+                LOG.info("computeAction() isAutomatic "+element.getAction());
             } // if
 
             // Check whether the parent is also copied if the children are
@@ -197,7 +197,7 @@ public class JFSSyncMode {
     /**
      * Computes the action that has to performed for an entry of the comparison table according to this synchronization
      * mode and a history of former synchronized files and directories.
-     * 
+     *
      * @param element
      *            The element to compute the basic action for.
      */
@@ -215,15 +215,15 @@ public class JFSSyncMode {
         // Use history, if a corresponding history item is available, and
         // else, merge the structures:
         JFSHistory history = element.getRoot().getHistory();
-        if (log.isInfoEnabled()) {
-            log.info("computeBasicAction() history="+history);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("computeBasicAction() history="+history);
         } // fi
         if (history==null) {
             merge(element);
         } else {
             JFSHistoryItem h = history.getHistory(element);
-            if (log.isInfoEnabled()) {
-                log.info("computeBasicAction("+element.getRelativePath()+") historyItem="+h);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("computeBasicAction("+element.getRelativePath()+") historyItem="+h);
             } // if
             if (h!=null) {
                 useHistory(element, h);
@@ -237,7 +237,7 @@ public class JFSSyncMode {
     /**
      * The current analyzed element is part of the history and matches a history item. In this case, the history can be
      * used in order to determine the correct actions.
-     * 
+     *
      * @param current
      *            The element to analyze.
      * @param h
@@ -264,8 +264,8 @@ public class JFSSyncMode {
                 current.setAction(SyncAction.COPY_TGT);
             }
         } else if (s==ElementState.SRC_IS_NULL) {
-            if (log.isDebugEnabled()) {
-                log.debug("useHistory() "+s+" "+h.getLastModified()+" / "+tgt.getLastModified());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("useHistory() "+s+" "+h.getLastModified()+" / "+tgt.getLastModified());
             } // if
             if (JFSElement.compareToTime(tgt.getLastModified(), h.getLastModified())>0) {
                 // The target file is newer than the history:
@@ -289,7 +289,7 @@ public class JFSSyncMode {
     /**
      * A new element is found, which was not in the history before. In this case, we have no history information at all
      * and therefore perform a simple merge.
-     * 
+     *
      * @param current
      *            The element to analyze.
      */

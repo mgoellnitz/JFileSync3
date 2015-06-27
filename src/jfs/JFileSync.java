@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs;
 
 import java.io.File;
@@ -34,11 +33,12 @@ import jfs.gui.JFSMainView;
 import jfs.shell.JFSShell;
 import jfs.sync.JFSTable;
 
+
 /**
  * JFileSync is an application for synchronizing pairs of directories. This class is the main class of the application.
  * It processes all command line options and starts (1) a JFS server, (2) the Java Swing-based graphical user interface,
  * or (3) a command line shell.
- * 
+ *
  * @see JFSServerFactory#startCmdLineServer()
  * @see jfs.gui.JFSMainView
  * @see JFSShell#startShell(boolean)
@@ -47,9 +47,9 @@ import jfs.sync.JFSTable;
  */
 public final class JFileSync {
 
-
     private JFileSync() {
     }
+
 
     /**
      * Determines the home directory, where the JAR file respectively the class files are located.
@@ -81,9 +81,9 @@ public final class JFileSync {
 
     /**
      * Start of the application.
-     * 
+     *
      * @param args
-     *            Command line arguments.
+     * Command line arguments.
      */
     public static void main(String[] args) {
         // Get settings for the first time in order to load stored
@@ -109,28 +109,28 @@ public final class JFileSync {
                 if (args[i].equals("-debug")) {
                     s.setDebug(true);
                 } else if (args[i].equals("-config")) {
-                    i++ ;
+                    i++;
                     config.load(new File(args[i]));
                     loadDefaultFile = false;
                 } else if (args[i].equals("-sync")) {
-                    i++ ;
+                    i++;
                     config.setSyncMode(Byte.parseByte(args[i]));
                     loadDefaultFile = false;
                 } else if (args[i].equals("-view")) {
-                    i++ ;
+                    i++;
                     config.setView(Byte.parseByte(args[i]));
                     loadDefaultFile = false;
                 } else if (args[i].equals("-dir")) {
-                    i++ ;
+                    i++;
                     config.addDirectoryPair(new JFSDirectoryPair(args[i], args[i+1]));
-                    i++ ;
+                    i++;
                     loadDefaultFile = false;
                 } else if (args[i].equals("-granularity")) {
-                    i++ ;
+                    i++;
                     config.setGranularity(Integer.parseInt(args[i]));
                     loadDefaultFile = false;
                 } else if (args[i].equals("-buffersize")) {
-                    i++ ;
+                    i++;
                     config.setBufferSize(Integer.parseInt(args[i]));
                     loadDefaultFile = false;
                 } else if (args[i].equals("-overwriteuseractions")) {
@@ -143,32 +143,32 @@ public final class JFileSync {
                     config.setCanWrite(false);
                     loadDefaultFile = false;
                 } else if (args[i].equals("-include")||args[i].equals("-exclude")) {
-                    i++ ;
+                    i++;
                     JFSFilter filter = new JFSFilter(args[i]);
                     if (args[i-1].equals("-include")) {
                         config.addInclude(filter);
                     } else {
                         config.addExclude(filter);
                     }
-                    if (((i+1)<args.length)&& !args[i+1].startsWith("-")) {
-                        i++ ;
+                    if (((i+1)<args.length)&&!args[i+1].startsWith("-")) {
+                        i++;
                         filter.setType(args[i]);
-                        if (((i+1)<args.length)&& !args[i+1].startsWith("-")) {
-                            i++ ;
+                        if (((i+1)<args.length)&&!args[i+1].startsWith("-")) {
+                            i++;
                             filter.setRange(args[i]);
                         }
                     }
                     loadDefaultFile = false;
                 } else if (args[i].equals("-username")) {
-                    i++ ;
+                    i++;
                     config.setServerUserName(args[i]);
                     loadDefaultFile = false;
                 } else if (args[i].equals("-passphrase")) {
-                    i++ ;
+                    i++;
                     config.setServerPassPhrase(args[i]);
                     loadDefaultFile = false;
                 } else if (args[i].equals("-timeout")) {
-                    i++ ;
+                    i++;
                     config.setServerTimeout(Integer.parseInt(args[i]));
                     loadDefaultFile = false;
                 } else if (args[i].equals("-nogui")) {
@@ -181,13 +181,13 @@ public final class JFileSync {
 
                         UIManager.LookAndFeelInfo[] laf = UIManager.getInstalledLookAndFeels();
 
-                        for (int j = 0; j<laf.length; j++ ) {
+                        for (int j = 0; j<laf.length; j++) {
                             p.println(j+1+". "+laf[j].getName()+" <"+laf[j].getClassName()+">");
                         }
 
                         System.exit(0);
                     } else {
-                        i++ ;
+                        i++;
                         s.setLaf(args[i]);
                     }
                 } else if (args[i].equals("-help")||args[i].equals("-?")) {
@@ -207,7 +207,7 @@ public final class JFileSync {
                     printCmdLineHelpAndExit();
                 }
 
-                i++ ;
+                i++;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             printCmdLineHelpAndExit();
@@ -220,7 +220,7 @@ public final class JFileSync {
         JFSTable table = JFSTable.getInstance();
         config.attach(table);
 
-        if ( !nogui) {
+        if (!nogui) {
             // Start GUI:
             p.println(t.get("cmd.startGui"));
 
@@ -237,11 +237,11 @@ public final class JFileSync {
 
     /**
      * Performs a busy wait.
-     * 
+     *
      * @param duration
-     *            The number of milli-seconds to wait.
+     * The number of milli-seconds to wait.
      */
-    public static final void busyWait(long duration) {
+    public static void busyWait(long duration) {
         long time = System.currentTimeMillis();
         long stop = time+duration;
         while (time<=stop) {
@@ -253,8 +253,9 @@ public final class JFileSync {
     /**
      * Prints the command line help file and exits.
      */
-    private static final void printCmdLineHelpAndExit() {
+    private static void printCmdLineHelpAndExit() {
         JFSShell.printURL(JFSConst.getInstance().getResourceUrl("jfs.help.topic.cmdLine"));
         System.exit(0);
     }
+
 }

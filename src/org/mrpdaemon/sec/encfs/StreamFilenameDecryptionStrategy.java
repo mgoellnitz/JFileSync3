@@ -14,36 +14,34 @@
  */
 package org.mrpdaemon.sec.encfs;
 
+import java.security.InvalidAlgorithmParameterException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
-import java.security.InvalidAlgorithmParameterException;
 
-// Class implementing stream filename decryption strategy
+
+/**
+ * Class implementing stream filename decryption strategy.
+ */
 public class StreamFilenameDecryptionStrategy extends
-		BasicFilenameDecryptionStrategy {
+        BasicFilenameDecryptionStrategy {
 
-	public StreamFilenameDecryptionStrategy(EncFSVolume volume,
-			String volumePath) {
-		super(volume, volumePath, EncFSFilenameEncryptionAlgorithm.STREAM);
-	}
+    public StreamFilenameDecryptionStrategy(EncFSVolume volume, String volumePath) {
+        super(volume, volumePath, EncFSFilenameEncryptionAlgorithm.STREAM);
+    }
 
-	// Stream decryption
-	protected byte[] decryptConcrete(EncFSVolume volume, byte[] encFileName,
-			byte[] fileIv) throws EncFSCorruptDataException {
-		try {
-			return StreamCrypto.streamDecrypt(volume, fileIv, encFileName);
-		} catch (InvalidAlgorithmParameterException e) {
-			throw new EncFSCorruptDataException(e);
-		} catch (IllegalBlockSizeException e) {
-			throw new EncFSCorruptDataException(e);
-		} catch (BadPaddingException e) {
-			throw new EncFSCorruptDataException(e);
-		} catch (EncFSUnsupportedException e) {
-			throw new EncFSCorruptDataException(e);
-		}
-	}
 
-	public String decryptPost(byte[] fileName) {
-		return new String(fileName);
-	}
+    // Stream decryption
+    protected byte[] decryptConcrete(EncFSVolume volume, byte[] encFileName, byte[] fileIv) throws EncFSCorruptDataException {
+        try {
+            return StreamCrypto.streamDecrypt(volume, fileIv, encFileName);
+        } catch (InvalidAlgorithmParameterException|IllegalBlockSizeException|BadPaddingException|EncFSUnsupportedException e) {
+            throw new EncFSCorruptDataException(e);
+        }
+    }
+
+
+    public String decryptPost(byte[] fileName) {
+        return new String(fileName);
+    }
+
 }

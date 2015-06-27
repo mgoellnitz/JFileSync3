@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync;
 
 import java.util.Vector;
@@ -25,44 +24,65 @@ import jfs.conf.JFSConst;
 import jfs.conf.JFSSettings;
 import jfs.conf.JFSText;
 
+
 /**
  * Visits selected steps of the file comparison and synchronization algorithm in order to compute the state of the
  * progression.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSProgress.java,v 1.24 2007/07/20 12:27:52 heidrich Exp $
  */
 public final class JFSProgress {
 
-    /** Stores the only instance of the class. */
+    /**
+     * Stores the only instance of the class.
+     */
     private static JFSProgress instance = null;
 
-    /** The current activity */
+    /**
+     * The current activity
+     */
     private ProgressActivity activity = ProgressActivity.INITIALIZATION;
 
-    /** The current state */
+    /**
+     * The current state
+     */
     private ProgressState state = ProgressState.ACTIVE;
 
-    /** Duration to compute the table. */
+    /**
+     * Duration to compute the table.
+     */
     private long duration = 0;
 
-    /** Starting time. */
+    /**
+     * Starting time.
+     */
     private long startTime = 0;
 
-    /** Determines whether the algorithm is canceled or not. */
+    /**
+     * Determines whether the algorithm is canceled or not.
+     */
     private boolean isCanceled = false;
 
-    /** Vector with all oberservers of the alogorithm's progress. */
+    /**
+     * Vector with all oberservers of the alogorithm's progress.
+     */
     private Vector<JFSProgressObserver> observers = new Vector<JFSProgressObserver>();
 
-    /** The time when the observers were updated last. */
+    /**
+     * The time when the observers were updated last.
+     */
     private long updateTime = 0;
 
 
-    /** The different activities performed by the synchronization algorithm. */
+    /**
+     * The different activities performed by the synchronization algorithm.
+     */
     public enum ProgressActivity {
+
         INITIALIZATION("progress.init.title"), COMPARISON("progress.comparison.title"), SYNCHRONIZATION_DELETE(
                 "progress.delete.title"), SYNCHRONIZATION_COPY("progress.copy.title");
+
         private String name;
 
 
@@ -74,12 +94,19 @@ public final class JFSProgress {
         public String getName() {
             return name;
         }
+
     }
 
-    /** The states of the progress object. */
+
+    /**
+     * The states of the progress object.
+     */
     public enum ProgressState {
+
         PREPARATION, ACTIVE, DONE
+
     }
+
 
     /**
      * Creates a new progress object.
@@ -90,10 +117,10 @@ public final class JFSProgress {
 
     /**
      * Returns the reference of the only instance.
-     * 
+     *
      * @return The only instance.
      */
-    public final static JFSProgress getInstance() {
+    public static JFSProgress getInstance() {
         if (instance==null) {
             instance = new JFSProgress();
         }
@@ -104,11 +131,11 @@ public final class JFSProgress {
 
     /**
      * Prepares starting a progress computation for a certain type of activity.
-     * 
+     *
      * @param activity
-     *            The type of activity to start.
+     * The type of activity to start.
      */
-    final void prepare(ProgressActivity activity) {
+    void prepare(ProgressActivity activity) {
         this.activity = activity;
         this.state = ProgressState.PREPARATION;
         isCanceled = false;
@@ -121,7 +148,7 @@ public final class JFSProgress {
     /**
      * Starts a progress computation.
      */
-    final void start() {
+    void start() {
         state = ProgressState.ACTIVE;
         startTime = System.currentTimeMillis();
         update();
@@ -131,7 +158,7 @@ public final class JFSProgress {
     /**
      * Ends a progress computation.
      */
-    final void end() {
+    void end() {
         state = ProgressState.DONE;
         duration = System.currentTimeMillis()-startTime;
         update();
@@ -144,7 +171,7 @@ public final class JFSProgress {
     /**
      * @return Returns the current activity.
      */
-    public final ProgressActivity getActivity() {
+    public ProgressActivity getActivity() {
         return activity;
     }
 
@@ -152,7 +179,7 @@ public final class JFSProgress {
     /**
      * @return Returns the current state of the current activity.
      */
-    public final ProgressState getState() {
+    public ProgressState getState() {
         return state;
     }
 
@@ -160,7 +187,7 @@ public final class JFSProgress {
     /**
      * @return Returns duration for the last performed activity.
      */
-    public final String getDuration() {
+    public String getDuration() {
         return getTime(duration);
     }
 
@@ -168,7 +195,7 @@ public final class JFSProgress {
     /**
      * @return Returns the predicted remaining time for completing the currently performed algorithm.
      */
-    public final String getRemainingTime() {
+    public String getRemainingTime() {
         int ratio = getCompletionRatio();
 
         if (ratio>0) {
@@ -182,7 +209,7 @@ public final class JFSProgress {
     /**
      * @return Returns the completion ratio in percent between 0% and 100%.
      */
-    public final int getCompletionRatio() {
+    public int getCompletionRatio() {
         JFSComparisonMonitor comparison = JFSComparisonMonitor.getInstance();
         JFSDeleteMonitor delete = JFSDeleteMonitor.getInstance();
         JFSCopyMonitor copy = JFSCopyMonitor.getInstance();
@@ -203,7 +230,7 @@ public final class JFSProgress {
      * This method is called if an object wants to cancel the algorithm. After this request the algorithm stops as soon
      * as possible at predefined milestones.
      */
-    public final void cancel() {
+    public void cancel() {
         isCanceled = true;
 
         // Shut down producers at once in order to avoid waiting for time out:
@@ -235,32 +262,32 @@ public final class JFSProgress {
     /**
      * Determines whether the algorithm is canceled or not. If so, the algorithm stops as soon as possible at the next
      * predefined milestone.
-     * 
+     *
      * @return True if and only if the algorithm was cancelled.
      */
-    public final boolean isCanceled() {
+    public boolean isCanceled() {
         return isCanceled;
     }
 
 
     /**
      * Attaches an additional observer.
-     * 
+     *
      * @param observer
-     *            The new observer.
+     * The new observer.
      */
-    public final void attach(JFSProgressObserver observer) {
+    public void attach(JFSProgressObserver observer) {
         observers.add(observer);
     }
 
 
     /**
      * Detaches an existing observer.
-     * 
+     *
      * @param observer
-     *            An old observer.
+     * An old observer.
      */
-    public final void detach(JFSProgressObserver observer) {
+    public void detach(JFSProgressObserver observer) {
         observers.remove(observer);
     }
 
@@ -269,7 +296,7 @@ public final class JFSProgress {
      * Sends a message to all existing observers that the algorithm's state was updated, if and only if a minimum time
      * period between two subsequent updates is gone.
      */
-    final void fireUpdate() {
+    void fireUpdate() {
         if ((System.currentTimeMillis()-updateTime)>=JFSConst.PROGRESS_UPDATE) {
             updateTime = System.currentTimeMillis();
             update();
@@ -280,7 +307,7 @@ public final class JFSProgress {
     /**
      * Updates the current state of the algorithm for all existing observers.
      */
-    private final void update() {
+    private void update() {
         // Wait if debugging is enabled and output progress information:
         if (JFSSettings.getInstance().isDebug()) {
             JFileSync.busyWait(1000);
@@ -295,12 +322,12 @@ public final class JFSProgress {
 
     /**
      * Returns the formatted time in hours, minutes, and seconds for a given time distance.
-     * 
+     *
      * @param time
-     *            The time in ms to format.
+     * The time in ms to format.
      * @return The formatted time.
      */
-    private final String getTime(long time) {
+    private String getTime(long time) {
         JFSText t = JFSText.getInstance();
         String s = "";
         long millis = time%1000;
@@ -309,7 +336,7 @@ public final class JFSProgress {
         long hours = time/3600000;
 
         if (millis>=500) {
-            seconds++ ;
+            seconds++;
         }
         if (hours>0) {
             s += hours+t.get("general.hours");
@@ -321,5 +348,5 @@ public final class JFSProgress {
 
         return s;
     }
-    
+
 }

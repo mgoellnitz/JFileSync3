@@ -20,6 +20,7 @@ package jfs.sync;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSSyncMode.SyncAction;
@@ -405,8 +406,8 @@ public class JFSElement implements Comparable<JFSElement> {
      *
      * @return A vector of valid synchronization actions.
      */
-    public TreeSet<SyncAction> getValidActions() {
-        TreeSet<SyncAction> validActions = new TreeSet<>();
+    public Set<SyncAction> getValidActions() {
+        Set<SyncAction> validActions = new TreeSet<>();
 
         if (state==ElementState.IS_ROOT) {
             return validActions;

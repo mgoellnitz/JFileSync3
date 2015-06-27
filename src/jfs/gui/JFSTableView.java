@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.awt.Frame;
@@ -31,25 +30,31 @@ import jfs.sync.JFSFile;
 import jfs.sync.JFSFormatter;
 import jfs.sync.JFSTable;
 
+
 /**
  * This class is responsible for displaying the synchronization table.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSTableView.java,v 1.3 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSTableView extends AbstractTableModel {
-    /** The UID. */
+
+    /**
+     * The UID.
+     */
     private static final long serialVersionUID = 45L;
 
-    /** The corresponding JTable. */
+    /**
+     * The corresponding JTable.
+     */
     private final JTable table;
 
 
     /**
      * The default constructor just performs some initialization work.
-     * 
+     *
      * @param parent
-     *            The parent frame.
+     * The parent frame.
      */
     public JFSTableView(Frame parent) {
         // Create column model:
@@ -148,22 +153,23 @@ public class JFSTableView extends AbstractTableModel {
 
         if (file!=null) {
             switch (column) {
-            case 0:
-            case 4:
-                if (element.isDirectory())
-                    entry = file.getPath();
-                else
-                    entry = file.getName();
+                case 0:
+                case 4:
+                    if (element.isDirectory()) {
+                        entry = file.getPath();
+                    } else {
+                        entry = file.getName();
+                    }
 
-                break;
-            case 1:
-            case 5:
-                entry = JFSFormatter.getLastModified(file);
-                break;
-            case 2:
-            case 6:
-                entry = JFSFormatter.getLength(file);
-                break;
+                    break;
+                case 1:
+                case 5:
+                    entry = JFSFormatter.getLastModified(file);
+                    break;
+                case 2:
+                case 6:
+                    entry = JFSFormatter.getLength(file);
+                    break;
             }
         }
 
@@ -190,4 +196,5 @@ public class JFSTableView extends AbstractTableModel {
     public final JTable getJTable() {
         return table;
     }
+
 }

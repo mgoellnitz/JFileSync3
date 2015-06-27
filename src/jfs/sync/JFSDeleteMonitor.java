@@ -16,27 +16,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync;
+
 
 /**
  * Monitors the detailed state of the currently performed delete operations.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSDeleteMonitor.java,v 1.2 2007/02/26 18:49:09 heidrich Exp $
  */
 public final class JFSDeleteMonitor {
 
-    /** Stores the only instance of the class. */
+    /**
+     * Stores the only instance of the class.
+     */
     private static JFSDeleteMonitor instance = null;
 
-    /** The number of files to delete. */
+    /**
+     * The number of files to delete.
+     */
     private int filesToDelete = 0;
 
-    /** The number of files deleted. */
+    /**
+     * The number of files deleted.
+     */
     private int filesDeleted = 0;
 
-    /** The currently deleted file. */
+    /**
+     * The currently deleted file.
+     */
     private JFSFile currentFile = null;
 
 
@@ -49,10 +57,10 @@ public final class JFSDeleteMonitor {
 
     /**
      * Returns the reference of the only instance.
-     * 
+     *
      * @return The only instance.
      */
-    public final static JFSDeleteMonitor getInstance() {
+    public static JFSDeleteMonitor getInstance() {
         if (instance==null) {
             instance = new JFSDeleteMonitor();
         }
@@ -64,7 +72,7 @@ public final class JFSDeleteMonitor {
     /**
      * Restores the default values.
      */
-    public final void clean() {
+    public void clean() {
         filesToDelete = 0;
         filesDeleted = 0;
         currentFile = null;
@@ -74,9 +82,9 @@ public final class JFSDeleteMonitor {
     /**
      * @return Returns the ratio of files already deleted in percent.
      */
-    public final int getRatio() {
+    public int getRatio() {
         if (filesToDelete>0) {
-            return Math.round((float)filesDeleted/(float)filesToDelete*100);
+            return Math.round((float) filesDeleted/(float) filesToDelete*100);
         }
         return 100;
     }
@@ -85,18 +93,18 @@ public final class JFSDeleteMonitor {
     /**
      * @return Returns the current file.
      */
-    public final JFSFile getCurrentFile() {
+    public JFSFile getCurrentFile() {
         return currentFile;
     }
 
 
     /**
      * Sets the current file.
-     * 
+     *
      * @param currentFile
-     *            The current file to set.
+     * The current file to set.
      */
-    final void setCurrentFile(JFSFile currentFile) {
+    void setCurrentFile(JFSFile currentFile) {
         this.currentFile = currentFile;
     }
 
@@ -104,18 +112,18 @@ public final class JFSDeleteMonitor {
     /**
      * @return Returns the number of files to delete.
      */
-    public final int getFilesToDelete() {
+    public int getFilesToDelete() {
         return filesToDelete;
     }
 
 
     /**
      * Sets the number of files to delete.
-     * 
+     *
      * @param filesToDelete
-     *            The number of files to delete to set.
+     * The number of files to delete to set.
      */
-    final void setFilesToDelete(int filesToDelete) {
+    void setFilesToDelete(int filesToDelete) {
         this.filesToDelete = filesToDelete;
     }
 
@@ -123,18 +131,19 @@ public final class JFSDeleteMonitor {
     /**
      * @return Returns the number of files deleted.
      */
-    public final int getFilesDeleted() {
+    public int getFilesDeleted() {
         return filesDeleted;
     }
 
 
     /**
      * Sets the number of files deleted.
-     * 
+     *
      * @param filesDeleted
-     *            The number of files deleted to set.
+     * The number of files deleted to set.
      */
-    final void setFilesDeleted(int filesDeleted) {
+    void setFilesDeleted(int filesDeleted) {
         this.filesDeleted = filesDeleted;
     }
+
 }

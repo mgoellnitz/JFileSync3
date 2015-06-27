@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.gui;
 
 import java.awt.Frame;
@@ -37,35 +36,45 @@ import jfs.sync.JFSElement;
 import jfs.sync.JFSElement.ElementState;
 import jfs.sync.JFSTable;
 
+
 /**
  * This class is responsible for handling actions of the synchronization table.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSTableListener.java,v 1.4 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSTableListener implements MouseListener, ActionListener {
-    /** The parent frame. */
+
+    /**
+     * The parent frame.
+     */
     private final Frame parent;
 
-    /** The corresponding JTable. */
+    /**
+     * The corresponding JTable.
+     */
     private final JTable table;
 
-    /** Stores the names for the icons used for displaying actions. */
+    /**
+     * Stores the names for the icons used for displaying actions.
+     */
     private final Map<SyncAction, String> actionIconNames;
 
-    /** Stores the current selection of JFS elements in the table. */
+    /**
+     * Stores the current selection of JFS elements in the table.
+     */
     private final Vector<JFSElement> currentSelection = new Vector<>();
 
 
     /**
      * The default constructor just performs some initialization work.
-     * 
+     *
      * @param parent
-     *            The parent frame.
+     * The parent frame.
      * @param table
-     *            The table to listen to.
+     * The table to listen to.
      * @param actionIconNames
-     *            The action icon names.
+     * The action icon names.
      */
     public JFSTableListener(Frame parent, JTable table, Map<SyncAction, String> actionIconNames) {
         this.parent = parent;
@@ -119,12 +128,12 @@ public class JFSTableListener implements MouseListener, ActionListener {
 
     /**
      * Creates a popup menu for a certain mouse event on the table.
-     * 
+     *
      * @param e
-     *            The mouse event to deal with.
+     * The mouse event to deal with.
      */
     private void handlePopupMenu(MouseEvent e) {
-        if (e.isPopupTrigger()&& !table.getSelectionModel().isSelectionEmpty()) {
+        if (e.isPopupTrigger()&&!table.getSelectionModel().isSelectionEmpty()) {
             // Updates the selection of JFS elements:
             updateSelection();
 
@@ -133,8 +142,9 @@ public class JFSTableListener implements MouseListener, ActionListener {
             TreeMap<SyncAction, Integer> validActions = new TreeMap<SyncAction, Integer>();
             for (JFSElement element : currentSelection) {
                 // Skip pop-up if root element is part of selection:
-                if (element.getState()==ElementState.IS_ROOT)
+                if (element.getState()==ElementState.IS_ROOT) {
                     return;
+                }
 
                 for (SyncAction a : element.getValidActions()) {
                     Integer i = validActions.get(a);
@@ -226,10 +236,11 @@ public class JFSTableListener implements MouseListener, ActionListener {
     private void updateSelection() {
         ListSelectionModel sm = table.getSelectionModel();
         currentSelection.clear();
-        for (int i = sm.getMinSelectionIndex(); i<=sm.getMaxSelectionIndex(); i++ ) {
+        for (int i = sm.getMinSelectionIndex(); i<=sm.getMaxSelectionIndex(); i++) {
             if (sm.isSelectedIndex(i)) {
                 currentSelection.add(JFSTable.getInstance().getViewElement(i));
             }
         }
     }
+
 }

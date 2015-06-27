@@ -16,16 +16,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import jfs.sync.local.JFSLocalFileProducerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 
 /**
  * This class manages all JFS file producer factories that exist for the program. It is able to detect the right file
@@ -37,15 +38,21 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class JFSFileProducerManager {
 
-    private static Log log = LogFactory.getLog(JFSFileProducerManager.class);
+    private static final Log LOG = LogFactory.getLog(JFSFileProducerManager.class);
 
-    /** Stores the only instance of the class. */
+    /**
+     * Stores the only instance of the class.
+     */
     private static JFSFileProducerManager instance = null;
 
-    /** All registered factories for a certain URI scheme. */
-    private final HashMap<String, JFSFileProducerFactory> factories;
+    /**
+     * All registered factories for a certain URI scheme.
+     */
+    private final Map<String, JFSFileProducerFactory> factories;
 
-    /** The default factory. */
+    /**
+     * The default factory.
+     */
     private final JFSFileProducerFactory defaultFactory;
 
 
@@ -54,27 +61,27 @@ public final class JFSFileProducerManager {
      */
     @SuppressWarnings("unchecked")
     private JFSFileProducerManager() {
-        factories = new HashMap<String, JFSFileProducerFactory>();
+        factories = new HashMap<>();
         Properties p = new Properties();
         ClassLoader classLoader = this.getClass().getClassLoader();
         try {
             p.load(classLoader.getResourceAsStream("producers.properties"));
         } catch (Exception e) {
-            log.error("JFSFileProducerManager()", e);
+            LOG.error("JFSFileProducerManager()", e);
         } // try/catch
         for (Object property : p.keySet()) {
             String className = ""+property;
             if (className.startsWith("jfs.sync.")) {
                 if ("on".equals(p.getProperty(className))) {
                     try {
-                        Class<JFSFileProducerFactory> c = (Class<JFSFileProducerFactory>)classLoader
+                        Class<JFSFileProducerFactory> c = (Class<JFSFileProducerFactory>) classLoader
                                 .loadClass(className);
                         Constructor<JFSFileProducerFactory> constructor = c.getConstructor(new Class<?>[0]);
                         JFSFileProducerFactory factory = constructor.newInstance(new Object[0]);
                         String name = factory.getName();
                         factories.put(name, factory);
                     } catch (Exception e) {
-                        log.error("JFSFileProducerManager()", e);
+                        LOG.error("JFSFileProducerManager()", e);
                     } // try/catch
                 } // if
             } // if
@@ -100,7 +107,7 @@ public final class JFSFileProducerManager {
     /**
      * Resets all producers.
      */
-    public final void resetProducers() {
+    public void resetProducers() {
         for (JFSFileProducerFactory f : factories.values()) {
             f.resetProducers();
         }
@@ -111,10 +118,10 @@ public final class JFSFileProducerManager {
      * Returns a new procucer for a special URI.
      *
      * @param uri
-     *            The URI to create the producer for.
+     * The URI to create the producer for.
      * @return The created producer.
      */
-    public final JFSFileProducer createProducer(String uri) {
+    public JFSFileProducer createProducer(String uri) {
         return getFactory(uri).createProducer(uri);
     }
 
@@ -123,9 +130,9 @@ public final class JFSFileProducerManager {
      * Shuts down an existing producer for a special URI.
      *
      * @param uri
-     *            The URI to distroy the producer for.
+     * The URI to distroy the producer for.
      */
-    public final void shutDownProducer(String uri) {
+    public void shutDownProducer(String uri) {
         getFactory(uri).shutDownProducer(uri);
     }
 
@@ -134,9 +141,9 @@ public final class JFSFileProducerManager {
      * Cancels an existing producer for a special URI.
      *
      * @param uri
-     *            The URI to distroy the producer for.
+     * The URI to distroy the producer for.
      */
-    public final void cancelProducer(String uri) {
+    public void cancelProducer(String uri) {
         getFactory(uri).cancelProducer(uri);
     }
 
@@ -145,10 +152,10 @@ public final class JFSFileProducerManager {
      * Returns the factory for a special URI.
      *
      * @param uri
-     *            The URI to create the factory for.
+     * The URI to create the factory for.
      * @return The created factory.
      */
-    private final JFSFileProducerFactory getFactory(String uri) {
+    private JFSFileProducerFactory getFactory(String uri) {
         for (String scheme : factories.keySet()) {
             if (uri.startsWith(scheme+":")) {
                 return factories.get(scheme);
@@ -158,7 +165,9 @@ public final class JFSFileProducerManager {
         return defaultFactory;
     }
 
+
     public Set<String> getSchemes() {
         return factories.keySet();
     } // getSchemes()
+
 }

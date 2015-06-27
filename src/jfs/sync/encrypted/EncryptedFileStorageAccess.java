@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess implements StorageAccess {
 
-    private static final Log log = LogFactory.getLog(EncryptedFileStorageAccess.class);
+    private static final Log LOG = LogFactory.getLog(EncryptedFileStorageAccess.class);
 
     private String cipherspec = "AES";
 
@@ -96,8 +96,8 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
         for (String item : items) {
             String decryptedItem = getDecryptedFileName(relativePath, item);
             result[i++ ] = decryptedItem;
-            if (log.isInfoEnabled()) {
-                log.info("list() "+item+" -> "+decryptedItem);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("list() "+item+" -> "+decryptedItem);
             } // if
         } // for
 
@@ -130,8 +130,8 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
         result.setExists(file.exists());
         result.setCanRead(true);
         result.setCanWrite(true);
-        if (log.isDebugEnabled()) {
-            log.debug("getFileInfo() "+result.getPath()+" e["+result.isExists()+"] d["+result.isDirectory()
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getFileInfo() "+result.getPath()+" e["+result.isExists()+"] d["+result.isDirectory()
                     +"]");
         } // if
         if (result.isExists()) {
@@ -144,8 +144,8 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
                 result.setSize(0);
             } // if
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("getFileInfo() could not detect file for "+result.getPath());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("getFileInfo() could not detect file for "+result.getPath());
             } // if
         } // if
         return result;
@@ -154,8 +154,8 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
 
     @Override
     public boolean createDirectory(String rootPath, String relativePath) {
-        if (log.isDebugEnabled()) {
-            log.debug("createDirectory() "+relativePath);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("createDirectory() "+relativePath);
         } // if
         return getFile(rootPath, relativePath).mkdir();
     }
@@ -181,9 +181,9 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
     @Override
     public boolean delete(String rootPath, String relativePath) {
         File file = getFile(rootPath, relativePath);
-        if (log.isWarnEnabled()) {
-            log.warn("delete("+relativePath+") "+file.getAbsolutePath());
-            log.warn("delete("+relativePath+") file.exists(): "+file.exists()+" "
+        if (LOG.isWarnEnabled()) {
+            LOG.warn("delete("+relativePath+") "+file.getAbsolutePath());
+            LOG.warn("delete("+relativePath+") file.exists(): "+file.exists()+" "
                     +filePermissionsString(file));
         } // if
         if (file.isDirectory()) {
@@ -194,8 +194,8 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
             } // if
         } // if
         file.delete();
-        if (log.isWarnEnabled()) {
-            log.warn("delete("+relativePath+") file.exists(): "+file.exists());
+        if (LOG.isWarnEnabled()) {
+            LOG.warn("delete("+relativePath+") file.exists(): "+file.exists());
         } // if
         return !file.exists();
     } // delete()
@@ -204,8 +204,8 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
     @Override
     public InputStream getInputStream(String rootPath, String relativePath) throws IOException {
         File file = getFile(rootPath, relativePath);
-        if (log.isDebugEnabled()) {
-            log.debug("getInputStream() getting input stream for "+file.getPath());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getInputStream() getting input stream for "+file.getPath());
         } // if
         return new FileInputStream(file);
     }
@@ -214,8 +214,8 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
     @Override
     public OutputStream getOutputStream(String rootPath, String relativePath) throws IOException {
         File file = getFile(rootPath, relativePath);
-        if (log.isDebugEnabled()) {
-            log.debug("getOutputStream() getting output stream for "+file.getPath());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getOutputStream() getting output stream for "+file.getPath());
         } // if
         return new FileOutputStream(file);
     }

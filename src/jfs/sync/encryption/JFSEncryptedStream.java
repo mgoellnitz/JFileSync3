@@ -39,10 +39,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * 
+ *
  * Provide an encrypted stream where its contents are compressed with the most promising method according to a large set
  * of configuration options.
- * 
+ *
  */
 public class JFSEncryptedStream extends OutputStream {
 
@@ -54,13 +54,13 @@ public class JFSEncryptedStream extends OutputStream {
     // Constant absolute maximum size to try bzip2 compression
     private static final int BZIP_MAX_LENGTH = 5190000;
 
-    public static byte COMPRESSION_NONE = 1;
+    public static final byte COMPRESSION_NONE = 1;
 
-    public static byte COMPRESSION_BZIP2 = 2;
+    public static final byte COMPRESSION_BZIP2 = 2;
 
-    public static byte COMPRESSION_DEFLATE = 4;
+    public static final byte COMPRESSION_DEFLATE = 4;
 
-    public static byte COMPRESSION_LZMA = 8;
+    public static final byte COMPRESSION_LZMA = 8;
 
     public static final int COMPRESSION_BUFFER_SIZE = 10240;
 
@@ -363,7 +363,7 @@ public class JFSEncryptedStream extends OutputStream {
 
 
     /**
-     * 
+     *
      * @param fis
      * @param expectedLength
      *            length to be expected or -2 if you don't want the check
