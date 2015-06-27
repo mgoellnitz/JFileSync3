@@ -64,7 +64,7 @@ mainClassName = 'jfs.JFileSync'
 
 launch4j {
   mainClassName = project.mainClassName
-  version = '3.0.4'
+  version = '3.0.8'
   copyright = '(C) 2002-2015, J. Heidrich, M. Goellnitz'
   downloadUrl = 'https://www.dropbox.com/s/3n4snlbw9tyjgec/JFileSync3.zip'
   supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
