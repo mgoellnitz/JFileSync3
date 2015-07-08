@@ -31,8 +31,15 @@ public final class JFSCopyMonitor {
 
     /**
      * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSCopyMonitor.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
      */
-    private static JFSCopyMonitor instance = null;
+    private static class SingletonHolder {
+
+        public static final JFSCopyMonitor INSTANCE = new JFSCopyMonitor();
+
+    }
 
     /**
      * The number of files to copy.
@@ -78,7 +85,8 @@ public final class JFSCopyMonitor {
     /**
      * Creates a new synchronization object.
      */
-    private JFSCopyMonitor() {
+    protected JFSCopyMonitor() {
+        // avoid external instanciation.
     }
 
 
@@ -88,11 +96,7 @@ public final class JFSCopyMonitor {
      * @return The only instance.
      */
     public static JFSCopyMonitor getInstance() {
-        if (instance==null) {
-            instance = new JFSCopyMonitor();
-        }
-
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 

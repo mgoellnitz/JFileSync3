@@ -1,5 +1,5 @@
 /*
- ^ * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -144,9 +144,7 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     protected InputStream getInputStream() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getInputStream() file "+file.getPath());
-        } // if
+        LOG.debug("getInputStream() file {}", file.getPath());
         try {
             input = file.openInputStream();
         } catch (Exception e) {
@@ -161,9 +159,7 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     protected OutputStream getOutputStream() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getOutputStream()");
-        } // if
+        LOG.debug("getOutputStream()");
         try {
             if (!info.isExists()) {
                 file = access.createFile(getPath());
@@ -205,9 +201,7 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     protected void closeOutputStream() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getOutputStream()");
-        } // if
+        LOG.debug("getOutputStream()");
         if (output!=null) {
             try {
                 output.close();
@@ -224,9 +218,7 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     public boolean delete() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("delete() deleting "+file.getPath());
-        } // if
+        LOG.debug("delete() deleting {}", file.getPath());
         boolean result = false;
         try {
             result = file.delete();
@@ -269,9 +261,7 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     public JFSFile[] getList() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getList() listing "+file.getPath());
-        } // if
+        LOG.debug("getList() listing {}", file.getPath());
         if (list==null) {
             list = new JFSEncfsFile[0];
             if (isDirectory()) {
@@ -331,9 +321,7 @@ public class JFSEncfsFile extends JFSFile {
         boolean result = false;
         try {
             String path = info.getPath()+"/"+info.getName();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("mkdir() creating "+path);
-            } // if
+            LOG.debug("mkdir() creating {}", path);
             result = access.makeDir(path);
             if (result) {
                 file = access.getFile(path);
@@ -350,9 +338,7 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     public boolean setLastModified(long time) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("setLastModified() "+info.getPath()+"/"+info.getName());
-        } // if
+        LOG.debug("setLastModified() {}/{}", info.getPath(), info.getName());
         boolean success = false;
 
         info.setModificationDate(time);
@@ -365,9 +351,7 @@ public class JFSEncfsFile extends JFSFile {
         int idx = encryptedPath.startsWith("//") ? 1 : 0;
         String encPath = getFileProducer().getRootPath()+encryptedPath.substring(idx);
         File encFile = new File(encPath);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("setLastModified("+encPath+") "+encFile.exists());
-        } // if
+        LOG.debug("setLastModified({}) {}", encPath, encFile.exists());
         if (encFile.exists()) {
             encFile.setLastModified(info.getModificationDate());
         } // if
@@ -396,9 +380,7 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     protected boolean preCopyTgt(JFSFile srcFile) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("preCopyTgt() "+info.getPath()+"/"+info.getName());
-        } // if
+        LOG.debug("preCopyTgt() {}/{}", info.getPath(), info.getName());
         info.setModificationDate(srcFile.getLastModified());
         // Set last modified and read-only only when file is no directory:
         if (!srcFile.isDirectory()) {
@@ -426,9 +408,7 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     protected boolean postCopyTgt(JFSFile srcFile) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("postCopyTgt() "+srcFile.getPath());
-        } // if
+        LOG.debug("postCopyTgt() {}", srcFile.getPath());
         // Update information object after copy. This method is only
         // called if all operations were performed successfully:
         info.setDirectory(srcFile.isDirectory());

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,9 +23,9 @@ import jfs.sync.base.AbstractJFSFileProducerFactory;
 
 /**
  * This class produces factories for encfs JFS file producers.
- * 
+ *
  * @author Martin Goellnitz
- * 
+ *
  */
 public class JFSEncfsProducerFactory extends AbstractJFSFileProducerFactory {
 
@@ -44,8 +44,7 @@ public class JFSEncfsProducerFactory extends AbstractJFSFileProducerFactory {
      */
     @Override
     public final JFSFileProducer createProducer(String uri) {
-        JFSEncfsProducer p = new JFSEncfsProducer(uri.substring(SCHEME_NAME.length()+3));
-        return p;
+        return new JFSEncfsProducer(uri.substring(SCHEME_NAME.length()+3));
     }
 
 }

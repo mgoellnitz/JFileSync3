@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -82,9 +82,7 @@ public class JFSEncryptedStream extends OutputStream {
         Runtime runtime = Runtime.getRuntime();
         long freeMem = runtime.totalMemory()/SPACE_RESERVE;
         if (length>=freeMem) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("JFSEncryptedStream.createOutputStream() GC "+freeMem+"/"+runtime.maxMemory());
-            } // if
+            LOG.warn("JFSEncryptedStream.createOutputStream() GC {}/{}", freeMem, runtime.maxMemory());
             runtime.gc();
             freeMem = runtime.totalMemory()/SPACE_RESERVE;
         } // if
@@ -92,14 +90,9 @@ public class JFSEncryptedStream extends OutputStream {
             result = new JFSEncryptedStream(baseOutputStream, cipher);
         } else {
             if (length<freeMem) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("JFSEncryptedStream.createOutputStream() not compressing");
-                } // if
+                LOG.info("JFSEncryptedStream.createOutputStream() not compressing");
             } else {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("JFSEncryptedStream.createOutputStream() due to memory constraints ("+length+"/"+freeMem
-                            +") not compressing");
-                } // if
+                LOG.warn("JFSEncryptedStream.createOutputStream() due to memory constraints ({}/{}) not compressing", length, freeMem);
             } // if
             ObjectOutputStream oos = new ObjectOutputStream(baseOutputStream);
             oos.writeByte(COMPRESSION_NONE);
@@ -147,9 +140,7 @@ public class JFSEncryptedStream extends OutputStream {
 
     @Override
     public void flush() throws IOException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("flush()");
-        } // if
+        LOG.debug("flush()");
         delegate.flush();
     } // flush()
 
@@ -177,9 +168,7 @@ public class JFSEncryptedStream extends OutputStream {
 
         byte marker = COMPRESSION_NONE;
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("close() checking for compressions for");
-        } // if
+        LOG.debug("close() checking for compressions for");
 
         CompressionThread dt = new CompressionThread(originalBytes) {
 
@@ -305,14 +294,10 @@ public class JFSEncryptedStream extends OutputStream {
 
         if (LOG.isInfoEnabled()) {
             if (marker==COMPRESSION_NONE) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("close() using no compression");
-                } // if
+                LOG.info("close() using no compression");
             } // if
             if (marker==COMPRESSION_LZMA) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("close() using lzma");
-                } // if
+                LOG.info("close() using lzma");
             } // if
         } // if
 
@@ -396,7 +381,7 @@ public class JFSEncryptedStream extends OutputStream {
                 } // if
             } // if
             if (cipher==null) {
-                LOG.error("JFSEncryptedStream.createInputStream() no cipher for length "+expectedLength);
+                LOG.error("JFSEncryptedStream.createInputStream() no cipher for length {}", expectedLength);
             } else {
                 in = new CipherInputStream(in, cipher);
             } // if
@@ -414,17 +399,13 @@ public class JFSEncryptedStream extends OutputStream {
                 byte[] properties = new byte[5];
                 int readBytes = in.read(properties, 0, properties.length);
                 boolean result = decoder.SetDecoderProperties(properties);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("JFSEncryptedStream.createInputStream() readBytes="+readBytes);
-                    LOG.debug("JFSEncryptedStream.createInputStream() result="+result);
-                } // if
+                LOG.debug("JFSEncryptedStream.createInputStream() readBytes={}", readBytes);
+                LOG.debug("JFSEncryptedStream.createInputStream() result={}", result);
 
                 decoder.Code(in, outputStream, l);
                 in.close();
                 outputStream.close();
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("JFSEncryptedStream.createInputStream() "+outputStream.size());
-                } // if
+                LOG.debug("JFSEncryptedStream.createInputStream() {}", outputStream.size());
                 in = new ByteArrayInputStream(outputStream.toByteArray());
             } // if
             return in;
@@ -442,9 +423,7 @@ public class JFSEncryptedStream extends OutputStream {
 
     public static byte readMarker(ObjectInputStream ois) throws IOException {
         byte marker = ois.readByte();
-        if (LOG.isInfoEnabled()) {
-            LOG.info("JFSEncryptedStream.readMarker() marker "+marker+" for ");
-        } // if
+        LOG.info("JFSEncryptedStream.readMarker() marker {}", marker);
         return marker;
     } // readMarker()
 

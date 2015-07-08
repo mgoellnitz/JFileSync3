@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -190,8 +190,8 @@ public abstract class AbstractEncryptedStorageAccess {
 
 
     protected String getDecodedFileName(String relativePath, byte[] bytes) {
-        List<String> specialCodes = new ArrayList<String>();
-        List<Integer> specialLengthes = new ArrayList<Integer>();
+        List<String> specialCodes = new ArrayList<>();
+        List<Integer> specialLengthes = new ArrayList<>();
 
         generateSpecialCodes(relativePath, specialCodes, specialLengthes);
 
@@ -335,7 +335,7 @@ public abstract class AbstractEncryptedStorageAccess {
             return decryptionCache.get(relativePath+getSeparator()+name);
         } // if
         try {
-            List<Byte> resultList = new ArrayList<Byte>();
+            List<Byte> resultList = new ArrayList<>();
 
             // System.out.print("D: ");
             int bc = 0;
@@ -364,7 +364,6 @@ public abstract class AbstractEncryptedStorageAccess {
             } // for
 
             // System.out.println("");
-
             Cipher decrypter = SecurityUtils.getCipher(getCipherSpec(), Cipher.DECRYPT_MODE, getCredentials(relativePath));
             byte[] decryptedBytes = decrypter.doFinal(decodedBytes);
             // name = new String(decryptedBytes, "UTF-8");
@@ -455,13 +454,9 @@ public abstract class AbstractEncryptedStorageAccess {
                 originalPath += getSeparator()+pathElement;
             } // if
         } // for
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getFilename() "+relativePath+" -> "+path);
-        } // if
-        if (LOG.isWarnEnabled()) {
-            if (path.length()>245) {
-                LOG.warn("getFileName() long path "+path.length()+" for "+relativePath);
-            } // if
+        LOG.debug("getFilename() {} -> {}", relativePath, path);
+        if (path.length()>245) {
+            LOG.warn("getFileName() long path {} for {}", path.length(), relativePath);
         } // if
         return path;
     } // getFileName()

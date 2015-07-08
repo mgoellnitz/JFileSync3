@@ -347,9 +347,9 @@ public abstract class JFSFile implements Comparable<JFSFile> {
      * @param output The output stream of the target file.
      * @return True if and only if the file is not a directory and was successfully copied; false otherwise.
      */
-    private final boolean copy(InputStream input, OutputStream output) {
+    private boolean copy(InputStream input, OutputStream output) {
         if (isDirectory()) {
-            LOG.error("copy() directory involved");
+            LOG.warn("copy() directory involved");
             return false;
         }
 
@@ -359,7 +359,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
         try {
             if ((input==null)||(output==null)) {
-                LOG.error("copy() one of the two files was null");
+                LOG.warn("copy() one of the two files was null");
                 return false;
             }
 
@@ -387,7 +387,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
             }
 
             if (transferedBytes==length) {
-                LOG.error("copy() done");
+                LOG.info("copy() done");
                 return true;
             }
             LOG.error("copy() could not copy all necessary bytes: "+transferedBytes+" of "+length);

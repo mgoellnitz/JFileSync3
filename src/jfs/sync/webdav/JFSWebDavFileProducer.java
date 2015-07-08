@@ -51,13 +51,9 @@ public class JFSWebDavFileProducer extends JFSFileProducer {
         if (directoryCache.containsKey(url)) {
             return directoryCache.get(url);
         } // if
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getListing() listing "+url);
-        } // if
+        LOG.debug("getListing() listing {}", url);
         List<DavResource> listing = sardine.list(url);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("getListing("+listing.size()+") listing "+url);
-        } // if
+        LOG.info("getListing({}) listing {}", listing.size(), url);
         directoryCache.put(url, listing);
         return listing;
     } // getListing()
@@ -73,9 +69,7 @@ public class JFSWebDavFileProducer extends JFSFileProducer {
             String username = JFSConfig.getInstance().getServerUserName();
             String passphrase = JFSConfig.getInstance().getServerPassPhrase();
             sardine = SardineFactory.begin(username, passphrase, WindowsProxySelector.getInstance());
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("getSardine() webdav client "+sardine);
-            } // if
+            LOG.debug("getSardine() webdav client {}", sardine);
         } // if
         try {
             Thread.sleep(500);

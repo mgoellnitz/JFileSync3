@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -69,7 +70,7 @@ public class JFSHelpView extends JDialog implements ActionListener, HyperlinkLis
     /**
      * The available help topics.
      */
-    private TreeSet<JFSHelpTopic> topics = new TreeSet<JFSHelpTopic>();
+    private Set<JFSHelpTopic> topics = new TreeSet<>();
 
     /**
      * The editor pane with the content on html file.

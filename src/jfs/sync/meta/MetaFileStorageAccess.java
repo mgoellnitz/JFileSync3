@@ -91,23 +91,15 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         if (success) {
             String[] pathAndName = getPathAndName(relativePath);
             Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("createDirectory() "+relativePath);
-                LOG.debug("createDirectory() listing="+listing);
-            } // if
+            LOG.debug("createDirectory() {}", relativePath);
+            LOG.debug("createDirectory() listing={}", listing);
             FileInfo info = createFileInfo(file, pathAndName);
             listing.put(pathAndName[1], info);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("createDirectory() listing="+listing);
-            } // if
-            if (LOG.isInfoEnabled()) {
-                LOG.info("createDirectory() flushing "+pathAndName[0]+"/"+pathAndName[1]);
-            } // if
+            LOG.debug("createDirectory() listing={}", listing);
+            LOG.info("createDirectory() flushing {}/{}", pathAndName[0], pathAndName[1]);
             flushMetaData(rootPath, pathAndName, listing);
         } // if
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createDirectory() "+success);
-        } // if
+        LOG.debug("createDirectory() {}", success);
         return success;
     } // createDirectory()
 
@@ -119,9 +111,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
             String[] pathAndName = getPathAndName(relativePath);
             Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
             FileInfo info = listing.get(pathAndName[1]);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("setLastModified() flushing "+pathAndName[0]+"/"+pathAndName[1]);
-            } // if
+            LOG.info("setLastModified() flushing {}/{}", pathAndName[0], pathAndName[1]);
             info.setModificationDate(modificationDate);
             flushMetaData(rootPath, pathAndName, listing);
         } // if
@@ -131,9 +121,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
 
     @Override
     public boolean setReadOnly(String rootPath, String relativePath) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("setReadOnly() not flushing "+relativePath);
-        } // if
+        LOG.info("setReadOnly() not flushing {}", relativePath);
         return getFile(rootPath, relativePath).setReadOnly();
     } // setReadOnly()
 
@@ -142,21 +130,15 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
     public boolean delete(String rootPath, String relativePath) {
         String[] pathAndName = getPathAndName(relativePath);
         Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("delete() "+relativePath);
-            LOG.debug("delete() listing="+listing);
-        } // if
+        LOG.debug("delete() {}", relativePath);
+        LOG.debug("delete() listing={}", listing);
         // remove named item
         File file = getFile(rootPath, relativePath);
         if (listing.containsKey(pathAndName[1])) {
             listing.remove(pathAndName[1]);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("delete() flushing "+pathAndName[0]+"/"+pathAndName[1]);
-            } // if
+            LOG.info("delete() flushing {}/{}", pathAndName[0], pathAndName[1]);
             flushMetaData(rootPath, pathAndName, listing);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("delete() listing="+listing);
-            } // if
+            LOG.info("delete() listing={}", listing);
             if (file.isDirectory()) {
                 String metaDataPath = getMetaDataPath(relativePath);
                 File metaDataFile = getFile(rootPath, metaDataPath);
@@ -173,13 +155,9 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
     @Override
     public InputStream getInputStream(String rootPath, String relativePath) throws IOException {
         File file = getFile(rootPath, relativePath);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getInputStream() getting input stream for "+file.getPath());
-        } // if
+        LOG.debug("getInputStream() getting input stream for {}", file.getPath());
         inputStreams++;
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getInputStream("+relativePath+") inputStreams="+inputStreams);
-        } // if
+        LOG.debug("getInputStream({}) inputStreams={}", relativePath, inputStreams);
         return new FileInputStream(file);
     } // getInputStream()
 
@@ -187,22 +165,16 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
     @Override
     protected OutputStream getOutputStream(String rootPath, String relativePath, boolean forPayload) throws IOException {
         File file = getFile(rootPath, relativePath);
-        String[] pathAndName = getPathAndName(relativePath);        
+        String[] pathAndName = getPathAndName(relativePath);
         Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
         if (forPayload&&(listing.get(pathAndName[1])==null||!file.exists())) {
             FileInfo info = createFileInfo(file, pathAndName);
             listing.put(info.getName(), info);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("getOutputStream() flushing "+pathAndName[0]+"/"+pathAndName[1]);
-            } // if
+                LOG.info("getOutputStream() flushing {}/{}",pathAndName[0],pathAndName[1]);
             flushMetaData(rootPath, pathAndName, listing);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("getOutputStream() getting output stream for "+file.getPath()+" "+info);
-            } // if
+                LOG.debug("getOutputStream() getting output stream for {} {}",file.getPath(),info);
         } // if
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getOutputStream() getting output stream for "+file.getPath());
-        } // if
+            LOG.debug("getOutputStream() getting output stream for {}",file.getPath());
         outputStreams++;
         if (LOG.isInfoEnabled()) {
             LOG.info("getOutputStream("+relativePath+") outputStreams="+outputStreams);
@@ -245,6 +217,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
 
                 return result;
             } // getPassword()
+
         };
         String encryptedPath = args[2];
         String[] elements = encryptedPath.split("\\\\");

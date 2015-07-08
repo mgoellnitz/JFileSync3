@@ -40,8 +40,15 @@ public final class JFSSynchronization {
 
     /**
      * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSSynchronization.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
      */
-    private static JFSSynchronization instance = null;
+    private static class SingletonHolder {
+
+        public static final JFSSynchronization INSTANCE = new JFSSynchronization();
+
+    }
 
     /**
      * Answers questions during before the algorithm is performed.
@@ -52,7 +59,8 @@ public final class JFSSynchronization {
     /**
      * Creates a new synchronization object.
      */
-    private JFSSynchronization() {
+    protected JFSSynchronization() {
+        // Avoid external instanciation
     }
 
 
@@ -62,11 +70,7 @@ public final class JFSSynchronization {
      * @return The only instance.
      */
     public static JFSSynchronization getInstance() {
-        if (instance==null) {
-            instance = new JFSSynchronization();
-        }
-
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +40,7 @@ public abstract class AbstractJFSFileProducerFactory implements JFSFileProducerF
             idx++;
             name = name.substring(idx);
         } // if
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getPathAndName("+relativePath+") "+parentPath+";"+name);
-        } // if
+        LOG.debug("getPathAndName({}) {};{}", relativePath, parentPath, name);
         result[0] = parentPath;
         result[1] = name;
         return result;

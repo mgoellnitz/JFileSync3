@@ -32,8 +32,15 @@ public final class JFSComparisonMonitor {
 
     /**
      * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSComparisonMonitor.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
      */
-    private static JFSComparisonMonitor instance = null;
+    private static class SingletonHolder {
+
+        public static final JFSComparisonMonitor INSTANCE = new JFSComparisonMonitor();
+
+    }
 
     /**
      * The number items to handle on every level of the file hierarchy.
@@ -74,7 +81,8 @@ public final class JFSComparisonMonitor {
     /**
      * Creates a new comparison object.
      */
-    private JFSComparisonMonitor() {
+    protected JFSComparisonMonitor() {
+        // Avoid external instanciation.
     }
 
 
@@ -83,12 +91,8 @@ public final class JFSComparisonMonitor {
      *
      * @return The only instance.
      */
-    public  static JFSComparisonMonitor getInstance() {
-        if (instance==null) {
-            instance = new JFSComparisonMonitor();
-        }
-
-        return instance;
+    public static JFSComparisonMonitor getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
 
@@ -153,7 +157,7 @@ public final class JFSComparisonMonitor {
     /**
      * @return Returns the ratio of the items already handled in percent.
      */
-     int getRatio() {
+    int getRatio() {
         float ratio = 0;
         for (int i = itemsStarted.size()-1; i>=0; i--) {
             int started = itemsStarted.get(i);
@@ -229,7 +233,7 @@ public final class JFSComparisonMonitor {
     /**
      * @return Returns the currently handeled target directory.
      */
-    public  JFSFile getCurrentTgt() {
+    public JFSFile getCurrentTgt() {
         return currentTgt;
     }
 

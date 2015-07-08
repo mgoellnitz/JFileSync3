@@ -29,8 +29,15 @@ public final class JFSDeleteMonitor {
 
     /**
      * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSDeleteMonitor.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
      */
-    private static JFSDeleteMonitor instance = null;
+    private static class SingletonHolder {
+
+        public static final JFSDeleteMonitor INSTANCE = new JFSDeleteMonitor();
+
+    }
 
     /**
      * The number of files to delete.
@@ -51,7 +58,8 @@ public final class JFSDeleteMonitor {
     /**
      * Creates a new synchronization object.
      */
-    private JFSDeleteMonitor() {
+    protected JFSDeleteMonitor() {
+        // Avoid external instanciation.
     }
 
 
@@ -61,11 +69,7 @@ public final class JFSDeleteMonitor {
      * @return The only instance.
      */
     public static JFSDeleteMonitor getInstance() {
-        if (instance==null) {
-            instance = new JFSDeleteMonitor();
-        }
-
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 

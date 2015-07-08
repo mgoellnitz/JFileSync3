@@ -188,9 +188,7 @@ public class JFSSyncMode {
         } else {
             // Add basic actions based on the stored history:
             computeBasicAction(element);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("computeAction() isAutomatic "+element.getAction());
-            } // if
+            LOG.info("computeAction() isAutomatic {}", element.getAction());
 
             // Check whether the parent is also copied if the children are
             // copied:
@@ -228,9 +226,7 @@ public class JFSSyncMode {
         // Use history, if a corresponding history item is available, and
         // else, merge the structures:
         JFSHistory history = element.getRoot().getHistory();
-        if (LOG.isInfoEnabled()) {
-            LOG.info("computeBasicAction() history="+history);
-        } // fi
+        LOG.info("computeBasicAction() history={}", history);
         if (history==null) {
             merge(element);
         } else {

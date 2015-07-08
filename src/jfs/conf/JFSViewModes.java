@@ -19,6 +19,7 @@
 package jfs.conf;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.TreeMap;
 import jfs.conf.JFSSyncMode.SyncAction;
 
@@ -33,8 +34,16 @@ public final class JFSViewModes {
 
     /**
      * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSViewModes.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
      */
-    private static JFSViewModes instance = null;
+    private static class SingletonHolder {
+
+        public static final JFSViewModes INSTANCE = new JFSViewModes();
+
+    }
+
 
     /**
      * The default mode.
@@ -44,13 +53,13 @@ public final class JFSViewModes {
     /**
      * The map containing all available modes.
      */
-    private TreeMap<Integer, JFSViewMode> modes = new TreeMap<Integer, JFSViewMode>();
+    private Map<Integer, JFSViewMode> modes = new TreeMap<>();
 
 
     /**
      * Creates a new table of sync modes.
      */
-    private JFSViewModes() {
+    protected JFSViewModes() {
         JFSViewMode m;
 
         // View Mode VIEW_ALL. View all files of the comparison table:
@@ -140,11 +149,7 @@ public final class JFSViewModes {
      * @return The only instance.
      */
     public static JFSViewModes getInstance() {
-        if (instance==null) {
-            instance = new JFSViewModes();
-        }
-
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 

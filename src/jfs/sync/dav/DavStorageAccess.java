@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,9 +81,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
             String username = JFSConfig.getInstance().getServerUserName();
             String passphrase = JFSConfig.getInstance().getServerPassPhrase();
             sardine = SardineFactory.begin(username, passphrase, WindowsProxySelector.getInstance());
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("getSardine() webdav client "+sardine);
-            } // if
+            LOG.debug("getSardine() webdav client {}", sardine);
         } // if
         return sardine;
     } // getSardine()
@@ -102,9 +100,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         } catch (UnsupportedEncodingException e) {
             LOG.error("getUrl() System doesn't know UTF8 ?!?!");
         } // try/catch
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getUrl("+relativePath+") "+rootPath+urlSegment);
-        } // if
+        LOG.debug("getUrl({}) {}{}", relativePath, rootPath, urlSegment);
         return rootPath+urlSegment;
     } // getUrl()
 
@@ -118,16 +114,12 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
             String[] pathAndName = getPathAndName(url);
             available = getListing(rootPath, pathAndName[0]).contains(pathAndName[1]);
         } // if
-        if (LOG.isInfoEnabled()) {
-            LOG.info("getListing() listing: "+url+" - "+available);
-        } // if
+        LOG.info("getListing() listing: {} - {}", url, available);
         List<DavResource> listing = null;
         try {
             if (available) {
                 listing = getSardine().list(url+getSeparator());
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("getListing("+listing.size()+") listing "+url);
-                } // if
+                LOG.info("getListing({}) listing {}", listing.size(), url);
             } else {
                 listing = Collections.emptyList();
             } // if
@@ -149,9 +141,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
      */
     private FileInfo createFileInfo(String rootPath, String relativePath, String[] pathAndName) {
         String url = getUrl(rootPath, relativePath);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createFileInfo() url="+url);
-        } // if
+        LOG.debug("createFileInfo() url={}", url);
         FileInfo result = new FileInfo();
         result.setExists(false);
 
@@ -162,9 +152,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         Collection<DavResource> resources = Collections.emptyList();
         try {
             String[] urlPathAndName = getPathAndName(url);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("createFileInfo() - "+urlPathAndName[0]+" / "+urlPathAndName[1]);
-            } // if
+            LOG.debug("createFileInfo() - {} / {}", urlPathAndName[0], urlPathAndName[1]);
             // resources = getSardine().list(urlPathAndName[0]+getSeparator());
             resources = getListing(rootPath, urlPathAndName[0]);
             for (DavResource resource : resources) {
@@ -194,10 +182,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
             LOG.error("createFileInfo()", e);
         } // try/catch
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createFileInfo("+pathAndName[0]+"/"+pathAndName[1]+") "+result);
-        } // if
-
+        LOG.debug("createFileInfo({}/{}) {}", pathAndName[0], pathAndName[1], result);
         return result;
     } // createFileInfo()
 
@@ -215,9 +200,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
 
     @Override
     public boolean createDirectory(String rootPath, String relativePath) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createDirectory() "+relativePath);
-        } // if
+        LOG.debug("createDirectory() {}", relativePath);
         String url = getUrl(rootPath, relativePath);
         try {
             getSardine().createDirectory(url);
@@ -228,9 +211,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
                     LOG.warn("createDirectory("+url+") status code: "+se.getStatusCode()+" "+se.getResponsePhrase());
                 } // if
             } // if
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("createDirectory()", e);
-            } // if
+            LOG.warn("createDirectory()", e);
             return false;
         } // try/catch
         String[] pathAndName = getPathAndName(relativePath);
@@ -250,16 +231,12 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         info.setSize(0);
 
         listing.put(pathAndName[1], info);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createDirectory() post-listing="+listing);
-        } // if
+        LOG.debug("createDirectory() post-listing={}", listing);
         if (LOG.isInfoEnabled()) {
             LOG.info("createDirectory() flushing "+pathAndName[0]+"/: "+listing);
         } // if
         flushMetaData(rootPath, pathAndName, listing);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createDirectory() flushing empty path "+pathAndName[0]+"/"+pathAndName[1]);
-        } // if
+        LOG.debug("createDirectory() flushing empty path {}/{}", pathAndName[0], pathAndName[1]);
         listing = Collections.emptyMap();
         pathAndName[0] += getSeparator();
         pathAndName[0] += pathAndName[1];
@@ -318,39 +295,29 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
     public boolean delete(String rootPath, String relativePath) {
         String[] pathAndName = getPathAndName(relativePath);
         Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("delete() "+relativePath);
-            LOG.debug("delete() listing="+listing);
-        } // if
+        LOG.debug("delete() {}", relativePath);
+        LOG.debug("delete() listing={}", listing);
         // remove named item
         if (listing.containsKey(pathAndName[1])) {
             FileInfo info = listing.get(pathAndName[1]);
             listing.remove(pathAndName[1]);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("delete() flushing "+pathAndName[0]+"/"+pathAndName[1]);
-            } // if
+            LOG.info("delete() flushing {}/{}", pathAndName[0], pathAndName[1]);
             flushMetaData(rootPath, pathAndName, listing);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("delete() listing="+listing);
-            } // if
+            LOG.info("delete() listing={}", listing);
             if (info.isDirectory()) {
                 String metaDataPath = getMetaDataPath(relativePath);
                 String metaDataUrl = getUrl(rootPath, metaDataPath);
                 try {
                     getSardine().delete(metaDataUrl);
                 } catch (Exception e) {
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("delete()", e);
-                    } // if
+                    LOG.warn("delete()", e);
                     return false;
                 } // try/catch
             } // if
             try {
                 getSardine().delete(getUrl(rootPath, relativePath)+(info.isDirectory() ? "/" : ""));
             } catch (Exception e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("delete()", e);
-                } // if
+                LOG.warn("delete()", e);
                 return false;
             } // try/catch
         } // if
@@ -366,9 +333,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
 
 
     protected OutputStream getOutputStream(String rootPath, final String relativePath, final boolean forPayload) throws IOException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getOutputStream() "+relativePath);
-        } // if
+        LOG.debug("getOutputStream() {}", relativePath);
         final String url = getUrl(rootPath, relativePath);
         String[] pathAndName = getPathAndName(relativePath);
         if (forPayload&&(!getSardine().exists(url))) {
@@ -379,15 +344,12 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
                 LOG.info("getOutputStream() flushing "+pathAndName[0]+"/"+pathAndName[1]+": "+listing);
             } // if
             flushMetaData(rootPath, pathAndName, listing);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("getOutputStream() getting output stream for "+url+" "+info);
-            } // if
+            LOG.debug("getOutputStream() getting output stream for {} {}", url, info);
         } // if
         OutputStream result = new com.gc.iotools.stream.os.OutputStreamToInputStream<String>() {
 
             @Override
             protected String doRead(InputStream input) throws Exception {
-                System.out.println("doRead("+forPayload+") "+url);
                 try {
                     getSardine().put(url, input);
                 } catch (SardineException se) {

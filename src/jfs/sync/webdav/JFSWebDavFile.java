@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,6 +102,7 @@ public class JFSWebDavFile extends JFSFile {
         if (!resource.isDirectory()) {
             Date modificationDate = resource.getModified();
             String modifiedDateString = resource.getCustomProps().get(PROP_LAST_MODIFIED_TIME);
+            LOG.warn("createFileInfo() custom properties for {}: {}", resource.getName(), resource.getCustomProps());
             if (modifiedDateString!=null) {
                 try {
                     synchronized (DATE_FORMAT) {
@@ -215,9 +216,7 @@ public class JFSWebDavFile extends JFSFile {
     @Override
     protected InputStream getInputStream() {
         String url = getUrl(info.getPath()+"/"+info.getName());
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getInputStream() url "+url);
-        } // if
+        LOG.debug("getInputStream() url {}", url);
         try {
             input = access.get(url);
         } catch (IOException e) {
@@ -237,9 +236,7 @@ public class JFSWebDavFile extends JFSFile {
      */
     @Override
     protected OutputStream getOutputStream() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getOutputStream()");
-        } // if
+        LOG.debug("getOutputStream()");
         final String url = getUrl(info.getPath()+"/"+info.getName());
 
         try {
@@ -300,9 +297,7 @@ public class JFSWebDavFile extends JFSFile {
         boolean result = false;
         try {
             String url = getUrl(info.getPath()+"/"+getName());
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("delete() deleting "+url);
-            } // if
+            LOG.debug("delete() deleting {}", url);
             access.delete(url+(info.isDirectory() ? "/" : ""));
             result = true;
         } catch (IOException e) {
@@ -417,9 +412,7 @@ public class JFSWebDavFile extends JFSFile {
         boolean result = false;
         try {
             String url = getUrl(info.getPath()+"/"+info.getName());
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("mkdir() creating "+url);
-            } // if
+            LOG.debug("mkdir() creating {}", url);
             access.createDirectory(url);
             result = true;
         } catch (IOException e) {
@@ -444,20 +437,18 @@ public class JFSWebDavFile extends JFSFile {
             modificationDate = DATE_FORMAT.format(new Date(time));
         }
 
-        if (LOG.isInfoEnabled()) {
-            LOG.info("setLastModified() setting time for "+url+" to "+modificationDate);
-        } // if
-
+        LOG.debug("setLastModified() setting time for {} to {}", url, modificationDate);
         List<QName> removeProps = new ArrayList<>(1);
         removeProps.add(QNAME_LAST_MODIFIED_TIME);
         Map<QName, String> addProps = new HashMap<>();
         addProps.put(QNAME_LAST_MODIFIED_TIME, modificationDate);
         try {
             List<DavResource> result = access.patch(url, addProps);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("setLastModified() result list size "+result.size());
-            } // if
+            LOG.info("setLastModified() result list size {}", result.size());
             success = (result.size()==1);
+            if (success) {
+                LOG.info("setLastModified() result custom props {}", result.get(0).getCustomProps());
+            } // if
         } catch (IOException e) {
             LOG.error("setLastModified() failed for "+url, e);
         } // try/catch
@@ -515,6 +506,7 @@ public class JFSWebDavFile extends JFSFile {
         info.setDirectory(srcFile.isDirectory());
         info.setExists(srcFile.exists());
         info.setSize(srcFile.getLength());
+        LOG.info("postCopyTgt() {}", getName());
         setLastModified(srcFile.getLastModified());
 
         return true;

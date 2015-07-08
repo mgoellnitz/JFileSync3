@@ -26,6 +26,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * Utility class to automatically detect windows http proxy settings.
  */
@@ -35,37 +36,39 @@ public final class WindowsProxySelector extends ProxySelector {
 
     private final ProxySelector root;
 
-    private static ProxySelector instance = null;
+
+    /**
+     * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSTable.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
+     */
+    private static class SingletonHolder {
+
+        public static final ProxySelector INSTANCE = new WindowsProxySelector();
+
+    }
 
 
-    private WindowsProxySelector() {
+    protected WindowsProxySelector() {
         root = ProxySelector.getDefault();
         ProxySelector.setDefault(null);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("select() root "+root);
-        } // if
+        LOG.debug("select() root {}", root);
     } // WindowsProxySelector()
 
 
     public static ProxySelector getInstance() {
-        if (instance==null) {
-            instance = new WindowsProxySelector();
-        } // if
-        return instance;
+        return SingletonHolder.INSTANCE;
     } // getInstance()
 
 
     @Override
     public List<Proxy> select(URI uri) {
-        List<Proxy> result = null;
-
         URI url = URI.create(uri.toString().replace("https://", "http://"));
-        result = root.select(url);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("select() uri "+uri);
-            LOG.debug("select() url "+url);
-            LOG.debug("select() proxies "+result);
-        } // if
+        List<Proxy> result = root.select(url);
+        LOG.debug("select() uri {}", uri);
+        LOG.debug("select() url {}", url);
+        LOG.debug("select() proxies {}", result);
         return result;
     }// select()
 

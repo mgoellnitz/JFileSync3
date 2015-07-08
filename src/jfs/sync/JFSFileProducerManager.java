@@ -40,10 +40,18 @@ public final class JFSFileProducerManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(JFSFileProducerManager.class);
 
+
     /**
      * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSFileProducerManager.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
      */
-    private static JFSFileProducerManager instance = null;
+    private static class SingletonHolder {
+
+        public static final JFSFileProducerManager INSTANCE = new JFSFileProducerManager();
+
+    }
 
     /**
      * All registered factories for a certain URI scheme.
@@ -60,7 +68,7 @@ public final class JFSFileProducerManager {
      * Registers all factories and sets the default factory.
      */
     @SuppressWarnings("unchecked")
-    private JFSFileProducerManager() {
+    protected JFSFileProducerManager() {
         factories = new HashMap<>();
         Properties p = new Properties();
         ClassLoader classLoader = this.getClass().getClassLoader();
@@ -96,11 +104,7 @@ public final class JFSFileProducerManager {
      * @return The only instance.
      */
     public static JFSFileProducerManager getInstance() {
-        if (instance==null) {
-            instance = new JFSFileProducerManager();
-        }
-
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 

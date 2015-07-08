@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.StorageAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * This is a storage layer access which encryptes the filenames, compresses and encrytes contents and is aware of the
@@ -95,7 +96,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
         int i = 0;
         for (String item : items) {
             String decryptedItem = getDecryptedFileName(relativePath, item);
-            result[i++ ] = decryptedItem;
+            result[i++] = decryptedItem;
             if (LOG.isInfoEnabled()) {
                 LOG.info("list() "+item+" -> "+decryptedItem);
             } // if
@@ -104,7 +105,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
         // sort out meta data
         Collection<String> itemCollection = new HashSet<>();
         for (String item : result) {
-            if ( !getMetaDataFileName(relativePath).equals(item)) {
+            if (!getMetaDataFileName(relativePath).equals(item)) {
                 itemCollection.add(item);
             } // if
         } // for
@@ -113,7 +114,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
         result = new String[itemCollection.size()];
         i = 0;
         for (String item : itemCollection) {
-            result[i++ ] = item;
+            result[i++] = item;
         } // for
         return result;
     }// list()
@@ -137,16 +138,14 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
         if (result.isExists()) {
             result.setCanRead(file.canRead());
             result.setCanWrite(file.canWrite());
-            if ( !result.isDirectory()) {
+            if (!result.isDirectory()) {
                 result.setModificationDate(file.lastModified());
-                result.setSize( -1);
+                result.setSize(-1);
             } else {
                 result.setSize(0);
             } // if
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("getFileInfo() could not detect file for "+result.getPath());
-            } // if
+            LOG.debug("getFileInfo() could not detect file for {}", result.getPath());
         } // if
         return result;
     } // getFileInfo()
@@ -154,9 +153,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
 
     @Override
     public boolean createDirectory(String rootPath, String relativePath) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createDirectory() "+relativePath);
-        } // if
+        LOG.debug("createDirectory() {}", relativePath);
         return getFile(rootPath, relativePath).mkdir();
     }
 
@@ -204,9 +201,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
     @Override
     public InputStream getInputStream(String rootPath, String relativePath) throws IOException {
         File file = getFile(rootPath, relativePath);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getInputStream() getting input stream for "+file.getPath());
-        } // if
+        LOG.debug("getInputStream() getting input stream for {}", file.getPath());
         return new FileInputStream(file);
     }
 
@@ -214,9 +209,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
     @Override
     public OutputStream getOutputStream(String rootPath, String relativePath) throws IOException {
         File file = getFile(rootPath, relativePath);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getOutputStream() getting output stream for "+file.getPath());
-        } // if
+        LOG.debug("getOutputStream() getting output stream for {}", file.getPath());
         return new FileOutputStream(file);
     }
 

@@ -141,9 +141,7 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final String getName() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getName() "+name);
-        }
+        LOG.debug("getName() {}", name);
         return name;
     }
 
@@ -153,9 +151,7 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final String getPath() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getPath() "+path);
-        }
+        LOG.debug("getPath() {}", path);
         return path;
     }
 
@@ -165,9 +161,7 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean isDirectory() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("isDirectory() "+isDirectory);
-        } // if
+        LOG.debug("isDirectory() {}", isDirectory);
         return isDirectory;
     }
 
@@ -177,9 +171,7 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean canRead() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("canRead() "+canRead);
-        }
+        LOG.debug("canRead() {}", canRead);
         return canRead;
     }
 
@@ -189,9 +181,7 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean canWrite() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("canWrite() "+canWrite);
-        }
+        LOG.debug("canWrite() {}", canWrite);
         return canWrite;
     }
 
@@ -201,9 +191,7 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final long getLength() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getLength() "+length);
-        }
+        LOG.debug("getLength() {}", length);
         return length;
     }
 
@@ -213,9 +201,7 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final long getLastModified() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getLastModified() "+lastModified);
-        } // if
+        LOG.debug("getLastModified() {}", lastModified);
         return lastModified;
     }
 
@@ -239,9 +225,7 @@ public class JFSLocalFile extends JFSFile {
             }
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getList() "+list);
-        }
+        LOG.debug("getList() {}", list);
         return list;
     }
 
@@ -251,7 +235,7 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean exists() {
-        LOG.debug("JFSLocalFile.exists() "+exists);
+        LOG.debug("JFSLocalFile.exists() {}", exists);
         return exists;
     }
 

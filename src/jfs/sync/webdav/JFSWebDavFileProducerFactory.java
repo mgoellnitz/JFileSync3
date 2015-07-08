@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,15 +21,18 @@ import jfs.sync.JFSFileProducer;
 import jfs.sync.JFSFileProducerFactory;
 import jfs.sync.base.AbstractJFSFileProducerFactory;
 
+
 /**
  * This class produces factories for webdav JFS file producers.
- * 
+ *
  * @author Martin Goellnitz
- * 
+ *
  */
 public class JFSWebDavFileProducerFactory extends AbstractJFSFileProducerFactory {
 
-    /** The prefix used to indicate an external file. */
+    /**
+     * The prefix used to indicate an external file.
+     */
     public static final String SCHEME_NAME = "webdav";
 
 
@@ -45,12 +48,13 @@ public class JFSWebDavFileProducerFactory extends AbstractJFSFileProducerFactory
 
 
     /**
+     * @param uri Base URI for web dav access base folder.
+     * @return WebDavFileProducer instance using the given base uri.
      * @see JFSFileProducerFactory#createProducer(String)
      */
     @Override
     public final JFSFileProducer createProducer(String uri) {
-        JFSWebDavFileProducer p = new JFSWebDavFileProducer(uri.substring(SCHEME_NAME.length()+3));
-        return p;
+        return new JFSWebDavFileProducer(uri.substring(SCHEME_NAME.length()+3));
     }
 
 }

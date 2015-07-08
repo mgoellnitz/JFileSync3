@@ -169,9 +169,7 @@ public class JFSElement implements Comparable<JFSElement> {
         // time resolution is two seconds. So we have a maximum tolerance range
         // of 2000ms for each comparison:
         long diffTime = compareToTime(srcLastModified, tgtLastModified);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("revalidate() diffTime="+diffTime);
-        } // if
+        LOG.debug("revalidate() diffTime={}", diffTime);
 
         if (srcFile==null) {
             state = ElementState.SRC_IS_NULL;

@@ -35,13 +35,20 @@ public final class JFSText {
     /**
      * The system's line separator.
      */
-    public final static String LINE_SEPARATOR = System.getProperty(
-            "line.separator", "\n");
+    public final static String LINE_SEPARATOR = System.getProperty(            "line.separator", "\n");
 
     /**
      * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSText.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
      */
-    private static JFSText instance = null;
+    private static class SingletonHolder {
+
+        public static final JFSText INSTANCE = new JFSText();
+
+    }
+
 
     /**
      * Stores the system locale.
@@ -57,7 +64,7 @@ public final class JFSText {
     /**
      * Sets some default values for the object.
      */
-    private JFSText() {
+    protected JFSText() {
         locale = Locale.getDefault();
         bundle = ResourceBundle.getBundle(JFSConst.TRANSLATION_CLASS);
     }
@@ -69,11 +76,7 @@ public final class JFSText {
      * @return The only JFSText instance.
      */
     public static JFSText getInstance() {
-        if (instance==null) {
-            instance = new JFSText();
-        }
-
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 

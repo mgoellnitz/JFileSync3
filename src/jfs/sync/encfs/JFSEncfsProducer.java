@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2015, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import org.mrpdaemon.sec.encfs.EncFSVolumeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * This class produces webdav JFS files to be handled by the algorithm.
  *
@@ -47,9 +48,7 @@ public class JFSEncfsProducer extends JFSFileProducer {
         if (volume==null) {
             String passphrase = JFSConfig.getInstance().getEncryptionPassPhrase();
             try {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("("+uri+") opening volume");
-                } // if
+                LOG.info("({}) opening volume", uri);
                 volume = new EncFSVolumeBuilder().withRootPath(uri).withPassword(passphrase).buildVolume();
             } catch (Exception e) {
                 LOG.error("()", e);

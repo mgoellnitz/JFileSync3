@@ -44,8 +44,15 @@ public final class JFSTable implements JFSConfigObserver {
 
     /**
      * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSTable.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
      */
-    private static JFSTable instance = null;
+    private static class SingletonHolder {
+
+        public static final JFSTable INSTANCE = new JFSTable();
+
+    }
 
     /**
      * The JFS root elements corresponding to the directory pairs.
@@ -76,7 +83,7 @@ public final class JFSTable implements JFSConfigObserver {
     /**
      * Creates a new table object.
      */
-    private JFSTable() {
+    protected JFSTable() {
         // Set default values:
         clean();
     }
@@ -88,11 +95,7 @@ public final class JFSTable implements JFSConfigObserver {
      * @return The only instance.
      */
     public static JFSTable getInstance() {
-        if (instance==null) {
-            instance = new JFSTable();
-        }
-
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 

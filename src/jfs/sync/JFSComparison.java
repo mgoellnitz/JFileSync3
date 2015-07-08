@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync;
 
 import java.util.Arrays;
@@ -26,6 +25,7 @@ import jfs.conf.JFSDirectoryPair;
 import jfs.sync.JFSProgress.ProgressActivity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * Compares all JFS directory pairs and adds the results to the table.
@@ -37,14 +37,25 @@ public final class JFSComparison {
 
     private static final Logger LOG = LoggerFactory.getLogger(JFSComparison.class);
 
-    /** Stores the only instance of the class. */
-    private static JFSComparison instance = null;
+
+    /**
+     * Stores the only instance of the class.
+     *
+     * SingletonHolder is loaded on the first execution of JFSComparison.getInstance()
+     * or the first access to SingletonHolder.INSTANCE, not before.
+     */
+    private static class SingletonHolder {
+
+        public static final JFSComparison INSTANCE = new JFSComparison();
+
+    }
 
 
     /**
      * Creates a new comparison object.
      */
-    private JFSComparison() {
+    protected JFSComparison() {
+        // Avoid external instanciation.
     }
 
 
@@ -54,11 +65,7 @@ public final class JFSComparison {
      * @return The only instance.
      */
     public static JFSComparison getInstance() {
-        if (instance==null) {
-            instance = new JFSComparison();
-        }
-
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
 
@@ -66,29 +73,25 @@ public final class JFSComparison {
      * Inserts an element to the comparison table and starts the comparison algorithm recursively, if and only if the
      * matched files are directories. At least one (source or target) file has to be not equal to null.
      *
-     * @param srcFile
-     *            A source file which may be null if no corresponding source file exists, but a target file.
-     * @param tgtFile
-     *            A target file which may be null if no corresponding target file exists, but a source file.
-     * @param parent
-     *            The parent element.
-     * @param isDirectory
-     *            Determines whether the files are directories.
+     * @param srcFile A source file which may be null if no corresponding source file exists, but a target file.
+     * @param tgtFile A target file which may be null if no corresponding target file exists, but a source file.
+     * @param parent The parent element.
+     * @param isDirectory Determines whether the files are directories.
      */
     private void add(JFSFile srcFile, JFSFile tgtFile, JFSElement parent, boolean isDirectory) {
         assert srcFile!=null||tgtFile!=null;
 
         // Determine whether the comparison should be performed:
         JFSConfig config = JFSConfig.getInstance();
-        if ( !config.getIncludes().isEmpty()) {
-            if (srcFile!=null&& !config.matchesIncludes(srcFile)) {
+        if (!config.getIncludes().isEmpty()) {
+            if (srcFile!=null&&!config.matchesIncludes(srcFile)) {
                 return;
             }
-            if (tgtFile!=null&& !config.matchesIncludes(tgtFile)) {
+            if (tgtFile!=null&&!config.matchesIncludes(tgtFile)) {
                 return;
             }
         }
-        if ( !config.getExcludes().isEmpty()) {
+        if (!config.getExcludes().isEmpty()) {
             if (srcFile!=null&&config.matchesExcludes(srcFile)) {
                 return;
             }
@@ -108,7 +111,7 @@ public final class JFSComparison {
 
         // Start algorithm recursively, if the files are directories:
         // (This is the case, if one of them is a directory!)
-        if (isDirectory&& !JFSProgress.getInstance().isCanceled()) {
+        if (isDirectory&&!JFSProgress.getInstance().isCanceled()) {
             compareDirectories(srcFile, tgtFile, element);
         } // if
     }
@@ -118,13 +121,13 @@ public final class JFSComparison {
      * Compares two lists of files and writes the result to the comparison table. Both lists must be not equal to null.
      *
      * @param srcFiles
-     *            The array of source files.
+     * The array of source files.
      * @param tgtFiles
-     *            The array of target files.
+     * The array of target files.
      * @param parent
-     *            The parent element.
+     * The parent element.
      * @param isDirectory
-     *            Determines whether the files are directories.
+     * Determines whether the files are directories.
      */
     private void compareFiles(JFSFile[] srcFiles, JFSFile[] tgtFiles, JFSElement parent, boolean isDirectory) {
         assert srcFiles!=null&&tgtFiles!=null;
@@ -149,22 +152,22 @@ public final class JFSComparison {
             if (comp==0) {
                 // Case 1: We found two matching files:
                 add(srcFiles[srcIndex], tgtFiles[tgtIndex], parent, isDirectory);
-                srcIndex++ ;
-                tgtIndex++ ;
+                srcIndex++;
+                tgtIndex++;
             } else if (comp>0) {
                 // Case 2: No matching file was found and the source file is
                 // greater than the target file. In this case we have to write
                 // the target file to the comparison table and investigate the
                 // next target file in the list:
                 add(null, tgtFiles[tgtIndex], parent, isDirectory);
-                tgtIndex++ ;
+                tgtIndex++;
             } else if (comp<0) {
                 // Case 3: No matching file was found and the target file is
                 // greater than the source file. In this case we have to write
                 // the source file to the comparison table and investigate the
                 // next source file in the list:
                 add(srcFiles[srcIndex], null, parent, isDirectory);
-                srcIndex++ ;
+                srcIndex++;
             }
         }
 
@@ -175,7 +178,7 @@ public final class JFSComparison {
                 LOG.debug("compareFiles()  II - srx "+srcIndex+" tgx "+tgtIndex+" "+tgtFiles[tgtIndex]);
             } // if
             add(null, tgtFiles[tgtIndex], parent, isDirectory);
-            tgtIndex++ ;
+            tgtIndex++;
         }
 
         // Case 5: All target files were already handled. In this case we have
@@ -185,7 +188,7 @@ public final class JFSComparison {
                 LOG.debug("compareFiles() III - srx "+srcIndex+" tgx "+tgtIndex+" "+srcFiles[srcIndex]);
             } // if
             add(srcFiles[srcIndex], null, parent, isDirectory);
-            srcIndex++ ;
+            srcIndex++;
         }
     }
 
@@ -195,13 +198,13 @@ public final class JFSComparison {
      * to be not equal to null.
      *
      * @param srcDir
-     *            A source directory which may be null if no corresponding source directory exists, but a target
-     *            directory.
+     * A source directory which may be null if no corresponding source directory exists, but a target
+     * directory.
      * @param tgtDir
-     *            A target directory which may be null if no corresponding target directory exists, but a source
-     *            directory.
+     * A target directory which may be null if no corresponding target directory exists, but a source
+     * directory.
      * @param parent
-     *            The parent element.
+     * The parent element.
      */
     private void compareDirectories(JFSFile srcDir, JFSFile tgtDir, JFSElement parent) {
         assert srcDir!=null||tgtDir!=null;
@@ -268,7 +271,7 @@ public final class JFSComparison {
             monitor.setRootUriTgt(pair.getTgt());
 
             // Create root element and add it to the table:
-            if ( !progress.isCanceled()) {
+            if (!progress.isCanceled()) {
                 JFSRootElement root = new JFSRootElement(pair);
                 JFSTable.getInstance().addRoot(root);
 

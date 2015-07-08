@@ -40,12 +40,6 @@ public final class JFSHistoryManager {
 
     /**
      * Stores the only instance of the class.
-     */
-    private static JFSHistoryManager instance = null;
-
-
-    /**
-     * Stores the only instance of the class.
      *
      * SingletonHolder is loaded on the first execution of JFSHistoryManager.getInstance()
      * or the first access to SingletonHolder.INSTANCE, not before.
