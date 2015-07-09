@@ -122,18 +122,14 @@ public class JFSEncryptedStream extends OutputStream {
 
     @Override
     public void write(byte[] b) throws IOException {
-        // if (log.isDebugEnabled()) {
         // log.debug("write() "+b.length+"b");
-        // } // if
         delegate.write(b);
     } // write()
 
 
     @Override
     public void write(byte[] b, int off, int len) throws IOException {
-        // if (log.isDebugEnabled()) {
         // log.debug("write() "+len+"b");
-        // } // if
         delegate.write(b, off, len);
     } // write()
 
@@ -286,19 +282,15 @@ public class JFSEncryptedStream extends OutputStream {
         if (bt.compressedValue.length<l) {
             marker = COMPRESSION_BZIP2;
             bytes = bt.compressedValue;
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("close() using bzip2 and saving "+(l-bytes.length)+" bytes.");
-            } // if
+            LOG.warn("close() using bzip2 and saving {} bytes.", (l-bytes.length));
             l = bytes.length;
         } // if
 
-        if (LOG.isInfoEnabled()) {
-            if (marker==COMPRESSION_NONE) {
-                LOG.info("close() using no compression");
-            } // if
-            if (marker==COMPRESSION_LZMA) {
-                LOG.info("close() using lzma");
-            } // if
+        if (marker==COMPRESSION_NONE) {
+            LOG.info("close() using no compression");
+        } // if
+        if (marker==COMPRESSION_LZMA) {
+            LOG.info("close() using lzma");
         } // if
 
         ObjectOutputStream oos = new ObjectOutputStream(baseOutputStream);
@@ -371,9 +363,7 @@ public class JFSEncryptedStream extends OutputStream {
             ObjectInputStream ois = new ObjectInputStream(in);
             byte marker = readMarker(ois);
             long l = readLength(ois);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("JFSEncryptedStream.createInputStream() length check "+expectedLength+" == "+l+"?");
-            } // if
+            LOG.debug("JFSEncryptedStream.createInputStream() length check {} == {}?", expectedLength, l);
             if (expectedLength!=DONT_CHECK_LENGTH) {
                 if (l!=expectedLength) {
                     LOG.error("JFSEncryptedStream.createInputStream() length check failed");

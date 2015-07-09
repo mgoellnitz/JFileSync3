@@ -72,9 +72,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
             byte[] credentials = getCredentials(relativePath);
             Cipher cipher = SecurityUtils.getCipher(getCipherSpec(), Cipher.DECRYPT_MODE, credentials);
             inputStream = new CipherInputStream(inputStream, cipher);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("getMetaData() reading infos for "+relativePath);
-            } // if
+            LOG.debug("getMetaData() reading infos for {}", relativePath);
             ois = new ObjectInputStream(inputStream);
             Object o;
             while ((o = ois.readObject())!=null) {
@@ -85,9 +83,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
                         synchronized (FORMATTER) {
                             date = FORMATTER.format(new Date(fi.getModificationDate()));
                         }
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("getMetaData() "+relativePath+getSeparator()+fi.getName()+": "+date);
-                        } // if
+                        LOG.debug("getMetaData() {}{}: {}", relativePath+getSeparator(), fi.getName(), date);
                     } // if
                     result.put(fi.getName(), fi);
                 } // if
@@ -96,9 +92,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
         } catch (FileNotFoundException|EOFException e) {
             // empty directory or - who cares?
         } catch (Exception e) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("getMetaData() possible issue while reading infos "+e, e);
-            } // if
+            LOG.info("getMetaData() possible issue while reading infos {}", e, e);
         } finally {
             try {
                 if (ois!=null) {
@@ -132,9 +126,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
      */
     public void flushMetaData(String rootPath, String[] pathAndName, Map<String, FileInfo> listing) {
         try {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("flushMetaData() flushing "+listing);
-            } // if
+            LOG.debug("flushMetaData() flushing {}", listing);
             OutputStream os = getOutputStream(rootPath, getMetaDataPath(pathAndName[0]), false);
 
             try {
@@ -152,9 +144,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
             ObjectOutputStream oos = new ObjectOutputStream(os);
 
             for (FileInfo info : listing.values()) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("flushMetaData() writing "+info.getName());
-                } // if
+                LOG.debug("flushMetaData() writing {}", info.getName());
                 oos.writeObject(info);
             } // for
             oos.flush();
@@ -162,7 +152,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
             if (LOG.isDebugEnabled()) {
                 Map<String, FileInfo> backtest = getMetaData(rootPath, pathAndName[0]);
                 for (FileInfo info : backtest.values()) {
-                    LOG.debug("flushMetaData() reading "+info.getName());
+                    LOG.debug("flushMetaData() reading {}", info.getName());
                 } // for
             } // if
         } catch (IOException ioe) {
@@ -173,9 +163,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
 
     public Map<String, FileInfo> getParentListing(String rootPath, String[] pathAndName) {
         Map<String, FileInfo> listing = getMetaData(rootPath, pathAndName[0]);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getParentListing("+pathAndName[0]+") "+listing);
-        } // if
+        LOG.debug("getParentListing({}) {}", pathAndName[0], listing);
         return listing;
     } // getParentListing()
 
@@ -202,9 +190,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
             listing.remove(info.getName());
         } // if
         listing.put(info.getName(), info);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("flush() flushing "+pathAndName[0]+"/"+pathAndName[1]);
-        } // if
+        LOG.info("flush() flushing {}/{}", pathAndName[0], pathAndName[1]);
         flushMetaData(rootPath, pathAndName, listing);
     } // flush()
 

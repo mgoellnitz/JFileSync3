@@ -166,10 +166,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
                             synchronized (DATE_FORMAT) {
                                 modificationDate = DATE_FORMAT.parse(modifiedDateString);
                             }
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("createFileInfo() "+modificationDate+" ["+modificationDate.getTime()+";"
-                                        +resource.getModified().getTime()+"]");
-                            } // if
+                            LOG.debug("createFileInfo() {} [{};{}]", modificationDate, modificationDate.getTime(), resource.getModified().getTime());
                         } catch (Exception e) {
                             LOG.error("createFileInfo()", e);
                         } // try/catch
@@ -207,18 +204,14 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         } catch (Exception e) {
             if (e instanceof SardineException) {
                 SardineException se = (SardineException) e;
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("createDirectory("+url+") status code: "+se.getStatusCode()+" "+se.getResponsePhrase());
-                } // if
+                LOG.warn("createDirectory({}) status code: {} {}", url, se.getStatusCode(), se.getResponsePhrase());
             } // if
             LOG.warn("createDirectory()", e);
             return false;
         } // try/catch
         String[] pathAndName = getPathAndName(relativePath);
         Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createDirectory("+relativePath+") pre-listing="+listing);
-        } // if
+        LOG.debug("createDirectory({}) pre-listing={}", relativePath, listing);
 
         FileInfo info = new FileInfo();
         info.setCanRead(true);
@@ -232,9 +225,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
 
         listing.put(pathAndName[1], info);
         LOG.debug("createDirectory() post-listing={}", listing);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("createDirectory() flushing "+pathAndName[0]+"/: "+listing);
-        } // if
+        LOG.info("createDirectory() flushing {}/: {}", pathAndName[0], listing);
         flushMetaData(rootPath, pathAndName, listing);
         LOG.debug("createDirectory() flushing empty path {}/{}", pathAndName[0], pathAndName[1]);
         listing = Collections.emptyMap();
@@ -275,9 +266,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         success = true;
         // TODO: starting from here it's the same as with local files
         if (success) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("setLastModified() flushing "+pathAndName[0]+"/"+pathAndName[1]);
-            } // if
+            LOG.info("setLastModified() flushing {}/{}", pathAndName[0], pathAndName[1]);
             info.setModificationDate(modificationDate);
             flushMetaData(rootPath, pathAndName, listing);
         } // if
@@ -340,9 +329,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
             FileInfo info = createFileInfo(rootPath, relativePath, pathAndName);
             Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
             listing.put(info.getName(), info);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("getOutputStream() flushing "+pathAndName[0]+"/"+pathAndName[1]+": "+listing);
-            } // if
+            LOG.info("getOutputStream() flushing {}/{}: {}", pathAndName[0], pathAndName[1], listing);
             flushMetaData(rootPath, pathAndName, listing);
             LOG.debug("getOutputStream() getting output stream for {} {}", url, info);
         } // if

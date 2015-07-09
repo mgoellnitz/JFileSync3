@@ -97,9 +97,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
         for (String item : items) {
             String decryptedItem = getDecryptedFileName(relativePath, item);
             result[i++] = decryptedItem;
-            if (LOG.isInfoEnabled()) {
-                LOG.info("list() "+item+" -> "+decryptedItem);
-            } // if
+            LOG.info("list() {} -> {}", item, decryptedItem);
         } // for
 
         // sort out meta data
@@ -178,11 +176,8 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
     @Override
     public boolean delete(String rootPath, String relativePath) {
         File file = getFile(rootPath, relativePath);
-        if (LOG.isWarnEnabled()) {
-            LOG.warn("delete("+relativePath+") "+file.getAbsolutePath());
-            LOG.warn("delete("+relativePath+") file.exists(): "+file.exists()+" "
-                    +filePermissionsString(file));
-        } // if
+        LOG.warn("delete({}) {}", relativePath, file.getAbsolutePath());
+        LOG.warn("delete({}) file.exists(): {} {}", relativePath, file.exists(), filePermissionsString(file));
         if (file.isDirectory()) {
             String metaDataPath = getMetaDataPath(relativePath);
             File metaDataFile = getFile(rootPath, metaDataPath);
@@ -191,9 +186,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
             } // if
         } // if
         file.delete();
-        if (LOG.isWarnEnabled()) {
-            LOG.warn("delete("+relativePath+") file.exists(): "+file.exists());
-        } // if
+        LOG.warn("delete({}) file.exists(): {}", relativePath, file.exists());
         return !file.exists();
     } // delete()
 

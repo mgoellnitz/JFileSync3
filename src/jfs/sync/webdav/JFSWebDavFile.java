@@ -87,9 +87,7 @@ public class JFSWebDavFile extends JFSFile {
 
 
     private FileInfo createFileInfo(String folder, DavResource resource) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createFileInfo() "+folder+resource.getName()+" ["+resource.isDirectory()+"]"+resource.getCustomProps());
-        } // if
+        LOG.debug("createFileInfo() {} [{}] {}", folder+resource.getName(), resource.isDirectory(), resource.getCustomProps());
         FileInfo result = new FileInfo();
         result.setCanRead(true);
         result.setCanWrite(true);
@@ -108,9 +106,7 @@ public class JFSWebDavFile extends JFSFile {
                     synchronized (DATE_FORMAT) {
                         modificationDate = DATE_FORMAT.parse(modifiedDateString);
                     }
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("createFileInfo() "+modificationDate+" ["+time+";"+resource.getModified().getTime()+"]");
-                    } // if
+                    LOG.debug("createFileInfo() {} [{};{}]", modificationDate, time, resource.getModified().getTime());
                 } catch (Exception e) {
                     LOG.error("createFileInfo()", e);
                 } // try/catch
@@ -352,9 +348,7 @@ public class JFSWebDavFile extends JFSFile {
 
                         int i = 0;
                         for (DavResource resource : listing) {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("getList("+i+") "+folder+" / "+resource.getPath());
-                            } // if
+                            LOG.debug("getList({}) {} / {}", i, folder, resource.getPath());
                             if (!folder.endsWith(resource.getPath())) {
                                 String path = resource.getPath().substring(rootLength);
                                 if (resource.isDirectory()) {
@@ -442,6 +436,8 @@ public class JFSWebDavFile extends JFSFile {
         removeProps.add(QNAME_LAST_MODIFIED_TIME);
         Map<QName, String> addProps = new HashMap<>();
         addProps.put(QNAME_LAST_MODIFIED_TIME, modificationDate);
+        QName qn = new QName("http://www.provocon.de/sync", "JFileSync", "sync");
+        addProps.put(qn, modificationDate);
         try {
             List<DavResource> result = access.patch(url, addProps);
             LOG.info("setLastModified() result list size {}", result.size());
