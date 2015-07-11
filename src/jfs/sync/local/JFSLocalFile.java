@@ -225,7 +225,7 @@ public class JFSLocalFile extends JFSFile {
             }
         }
 
-        LOG.debug("getList() {}", list);
+        LOG.debug("getList() {}", list, ""); // Last string just to avoid a compiler warning
         return list;
     }
 

@@ -137,7 +137,7 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     public final boolean canWrite() {
-        LOG.warn("canWrite() {}", fileInfo.isCanWrite());
+        LOG.debug("canWrite() {}", fileInfo.isCanWrite());
         return fileInfo.isCanWrite();
     }
 

@@ -100,7 +100,7 @@ public class JFSWebDavFile extends JFSFile {
         if (!resource.isDirectory()) {
             Date modificationDate = resource.getModified();
             String modifiedDateString = resource.getCustomProps().get(PROP_LAST_MODIFIED_TIME);
-            LOG.warn("createFileInfo() custom properties for {}: {}", resource.getName(), resource.getCustomProps());
+            LOG.info("createFileInfo() custom properties for {}: {}", resource.getName(), resource.getCustomProps());
             if (modifiedDateString!=null) {
                 try {
                     synchronized (DATE_FORMAT) {

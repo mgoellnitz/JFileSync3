@@ -7,24 +7,28 @@ For local folders encryption can use EncFS and thus be compatible with encfs4win
 
 (With GUI, command line, and stored profiles.)
 
-This software was developed because I personally needed a easy to use syncing tool to have everyday backups of highly confidential material - business and private. And none of the services I came accross could suite these needs.
+This software was developed because I personally needed a easy to use syncing tool to have everyday backups of highly
+confidential material - business and private. And none of the services I came accross could suite these needs.
 
 It is heavily based on the work of Jens Heidrich and the JFileSync2.2
 
 JFileSync is a SourceForge project and available via the following URL:
 http://jfilesync.sourceforge.net/
 
-Don't mix the derived work here and his clean software on sourceforge. Only bother him if it's related to his original version. Other complaints go here :-)
+Don't mix the derived work here and his clean software on sourceforge. Only bother him if it's related to his original
+version. Other complaints go here :-)
 
 Other contributions - though not directly committed by him - are from https://github.com/srmo
 
-Binary Distribution: 
+Binary Distribution:
 
 https://bintray.com/artifact/download/mgoellnitz/generic/JFileSync3.zip
 
 Scenario:
 
-You replaced regular backups with online syncing tools like SugarSync, Syncplicity, Copy.com, Yandex Drive, Dropbox, Wuala, Google Drive, and so on. After having synced your media files, downloaded software, publicly available documents you come to the more confidential stuff...
+You replaced regular backups with online syncing tools like SugarSync, Syncplicity, Copy.com, Yandex Drive, Dropbox,
+Wuala, Google Drive, Mega, and so on. After having synced your media files, downloaded software, publicly available
+documents you come to the more confidential stuff...
 
 Possible Solutions:
 
@@ -37,10 +41,10 @@ c) Encrypt locally on every file access and thus only sync encrypted stuff which
 d) If you trust your local system and need to store frequently accessed files, you would like to encrypt only short before or on backing up/syncing files. This is where this software fills the gap. It can sync directories, local or webdav, and it can do this with either of these encrypted. Additionally it can sync with encfs volumes stored in local folders (which in turn can be synchronized and used in the net via encfs, encfs4win, BoxCryptor, and Encdroid)
 
 
-1) Introduction
+Introduction
+------------
 
-JFileSync is used to synchronize directories of (usually) two different file
-systems. 
+JFileSync is used to synchronize directories of (usually) two different file systems.
 
 What you have to do, to use JFileSync3 for that purpose is specifying an
 appropriate configuration profile for JFileSync3.
@@ -51,13 +55,15 @@ plug-ins) via the command line interface. Call 'bin/JFileSync -help' to
 get an overview of all possible command line options.
 
 
-2) Requirements
+Requirements
+------------
 
 - Java 6 Runtime Environment (see 'http://java.oracle.com')
 
 - JCE extension when using other algorithms than AES (see 'http://java.oracle.com')
 
-3) Installation and Application Start
+Installation and Application Start
+----------------------------------
 
 - Unzip the distribution file to a directory of your choice.
 - For simplicity reasons a Windows launcher ('JFileSync3.exe'), a batch file ('bin/JFileSync3.bat') and a Unix
@@ -66,8 +72,8 @@ get an overview of all possible command line options.
   will have to give executable rights manually before launching the
   application, e.g.: 'chmod a+rx JFileSync.sh'.
 
-2) License and Usage Terms
-
+License and Usage Terms
+-----------------------
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
 Foundation; either version 2 of the License, or (at your option) any later
@@ -81,9 +87,9 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 St, Fifth Floor, Boston, MA, 02110-1301, USA
 
-JFileSync3 uses libraries or parts of Open Source projects which are partly included as source code:
+JFileSync3 uses libraries or parts of Open Source projects where additionally some of the are included as source code:
 
-- EncFS Java: LGPL
+- EncFS Java: LGPL (Source)
 
 - Sardine: Apache
 
@@ -95,7 +101,7 @@ JFileSync3 uses libraries or parts of Open Source projects which are partly incl
 
 - Bouncy Castle providers: BC
 
-- SevenZip/LZMA: LZMA SDK is written and placed in the public domain by Igor Pavlov.
+- SevenZip/LZMA: LZMA SDK is written and placed in the public domain by Igor Pavlov. (Source)
 
 Some code in LZMA SDK is based on public domain code from another developers:
   1) PPMd var.H (2001): Dmitry Shkarin
@@ -113,19 +119,22 @@ You can find a copy all licenses of JFileSync3 and the used libraries in the
 'legal' sub directory of this distribution.
 
 
-5) Development Notes
+Development Notes
+-----------------
 
 Required packages for JFileSync3 development (not included in the distribution):
-- Java 7 SDK >= 1.7.0 (see 'http://java.sun.com')
-- Gradle >= 1.4 (see 'http://www.gradle.org')
+- Java 7 SDK >= 1.7.0 (see 'http://java.sun.com') (Java 8 should be working)
+- Gradle >= 1.4 (see 'http://www.gradle.org' - Recommended are versions 2.2 and up)
 
 Used and therewith recommended development tools:
 - Java 7 SDK 1.7.0
 - Netbeans 7.4
 
-The encryption backend tries its very best to avoid known plaintext attacks with filenames like in directory names ("src/main/java") and with the contents of the files.
+The encryption backend tries its very best to avoid known plaintext attacks with filenames like in directory names
+("src/main/java") and with the contents of the files.
 
-The contents are compressed before they are encrypted (in most cases - depending on size and special file types) and the software tries three algorithms to do that: LZMS, BZIP2, Deflate.
+The contents are compressed before they are encrypted (in most cases - depending on size and special file types) and the
+software tries three algorithms to do that: LZMS, BZIP2, Deflate.
 
 The filenames are encoded, scrambled and then encrypted.
 
@@ -133,11 +142,13 @@ Metafiles to speed up acces of the directory structures don't have constant name
 
 Passwords to derive keys from are not constant along the whole directory structure.
 
-So I now have a two-way synching from plain text directories to encrypted directories which I in turn sync with the internet services. As you might see from some code snippets I am playing around or thinking about direct API usage for Dropbox, WebDAV and so on...
+So I now have a two-way synching from plain text directories to encrypted directories which I in turn sync with the internet
+services. As you might see from some code snippets I am playing around or thinking about direct API usage for Dropbox, WebDAV and so on...
 
-You will need the unlimited encryption add-on by Oracle for your JDK if you want to use anything except the default cipher AES.
+You will need the unlimited encryption add-on by Oracle for your JDK if you want to use anything except the default cipher
+AES.
 
-Feel free to issue bug reports and ideas here. 
+Feel free to issue bug reports and ideas here.
 
 HOW-BUILD:
 
@@ -155,7 +166,7 @@ gradle launch4j distZip
 
 so that the distribution will contain an additional JFileSync3.exe executable file.
 
-a small test-suite can be found in profiles/test (which is not packaged in the distribtions zip) and can be called via 
+a small test-suite can be found in profiles/test (which is not packaged in the distribtions zip) and can be called via
 
 ```bash
 gradle encryptionTest
