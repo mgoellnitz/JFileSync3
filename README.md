@@ -163,7 +163,8 @@ Take the ZIP file from build/distributions
 Optionally if launch4j is installed and available on your path you can build with
 
 ```bash
-gradle launch4j distZip
+gradle clean build launch4j
+gradle distZip
 ```
 
 so that the distribution will contain an additional JFileSync3.exe executable file.

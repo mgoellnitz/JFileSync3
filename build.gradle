@@ -12,7 +12,7 @@ compileJava.options.deprecation = true
 
 buildscript {
   repositories {
-    mavenCentral()
+    jcenter()
     maven { url "http://repo.smokejumperit.com" }
   }
   dependencies {
@@ -64,6 +64,8 @@ dependencies {
 mainClassName = 'jfs.JFileSync'
 // mainClass = 'jfs.JFileSync'
 
+distTar.enabled = false
+
 launch4j {
   mainClassName = project.mainClassName
   version = '3.0.9'
@@ -95,7 +97,7 @@ distZip {
   //	from 'bin'
   //	include 'E*.bat'
   //}
-  into(project.name) {
+  into("$project.name") {
     from "$buildDir/launch4j"
     include '*.exe'
     include '*.xml'
