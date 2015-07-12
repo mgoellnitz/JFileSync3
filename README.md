@@ -3,6 +3,8 @@ Java based File Syncing Tool
 
 [![Dependency Status](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071)
 
+[ ![Download](https://api.bintray.com/packages/mgoellnitz/generic/JFileSync3/images/download.svg) ](https://bintray.com/mgoellnitz/generic/JFileSync3/_latestVersion)
+
 File Syncing with optional Compression and Encryption for Local and WebDAV Folders.
 
 For local folders encryption can use EncFS and thus be compatible with encfs4win, BoxCryptor, Encdroid and so on.
@@ -21,10 +23,6 @@ Don't mix the derived work here and his clean software on sourceforge. Only both
 version. Other complaints go here :-)
 
 Other contributions - though not directly committed by him - are from https://github.com/srmo
-
-Binary Distribution:
-
-https://bintray.com/artifact/download/mgoellnitz/generic/JFileSync3.zip
 
 Scenario:
 
