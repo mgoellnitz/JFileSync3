@@ -166,7 +166,7 @@ public class JFSWebDavFile extends JFSFile {
                 } // if
             } // for
         } catch (IOException ioe) {
-            LOG.error("() getting parent folder list for '"+pathAndName[0]+"': "+ioe.getMessage());
+            LOG.error("() getting parent folder list for '"+pathAndName[0]+"': "+ioe.getMessage(), ioe);
         } // try/catch
 
         if (LOG.isInfoEnabled()) {
