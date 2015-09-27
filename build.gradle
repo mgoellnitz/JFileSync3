@@ -119,6 +119,7 @@ distZip {
     include 'profiles/*.*'
     include 'README.md'
   }
+  /*
   // I personally have the JCE stuff prepared there
   into(project.name) {
     from '..'
@@ -129,6 +130,7 @@ distZip {
     from '..'
     include 'profiles/**'
   }
+  */
 }
 
 task(encryptionTest) << {
