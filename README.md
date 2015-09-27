@@ -2,16 +2,11 @@ Java based File Syncing Tool
 ============================
 
 [![Dependency Status](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071)
+[![Latest Release](https://img.shields.io/github/release/mgoellnitz/JFileSync3.svg)](https://github.com/mgoellnitz/JFileSync3/releases/latest)
 
 File Syncing with optional Compression and Encryption for Local and WebDAV Folders. For local folders encryption can use
 EncFS and thus be compatible with encfs4win, BoxCryptor Classic, Encdroid and so on. (With GUI, command line, and stored
 profiles.)
-
-[![Download](https://api.bintray.com/packages/mgoellnitz/generic/JFileSync3/images/download.svg)](https://bintray.com/mgoellnitz/generic/JFileSync3/_latestVersion)
-
-Binary Distribution: [![Download](https://img.shields.io/github/downloads/mgoellnitz/JFileSync3/latest/total.svg)](https://github.com/mgoellnitz/JFileSync3/releases/download/3.0.11/JFileSync3.zip)
-
-Latest Release: [![Latest Release](https://img.shields.io/github/release/mgoellnitz/JFileSync3.svg)](https://github.com/mgoellnitz/JFileSync3/releases/latest)
 
 This software was developed because I personally needed a easy to use syncing tool to have everyday backups of highly
 confidential material - business and private. And none of the services I came accross could suite these needs.
