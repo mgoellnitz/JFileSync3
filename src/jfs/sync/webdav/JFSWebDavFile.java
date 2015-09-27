@@ -27,12 +27,13 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import javax.xml.namespace.QName;
 import jfs.conf.JFSConfig;
@@ -48,15 +49,12 @@ import org.slf4j.LoggerFactory;
  * Represents an external file and uses a WebDAV backend.
  *
  * @author Martin Goellnitz
- *
  */
 public class JFSWebDavFile extends JFSFile {
 
-    private static final String PROP_LAST_MODIFIED_TIME = "Win32LastModifiedTime";
-
-    private static final QName QNAME_LAST_MODIFIED_TIME = new QName("urn:schemas-microsoft-com:", PROP_LAST_MODIFIED_TIME, "ns1");
-
     private static final DateFormat DATE_FORMAT;
+
+    static final Set<QName> CUSTOM_PROPS = new HashSet<>();
 
     private static final Logger LOG = LoggerFactory.getLogger(JFSWebDavFile.class);
 
@@ -87,7 +85,7 @@ public class JFSWebDavFile extends JFSFile {
 
 
     private FileInfo createFileInfo(String folder, DavResource resource) {
-        LOG.debug("createFileInfo() {} [{}] {}", folder+resource.getName(), resource.isDirectory(), resource.getCustomProps());
+        LOG.debug("createFileInfo() {} [{}] {}", folder+"/"+resource.getName(), resource.isDirectory(), resource.getCustomProps());
         FileInfo result = new FileInfo();
         result.setCanRead(true);
         result.setCanWrite(true);
@@ -99,19 +97,19 @@ public class JFSWebDavFile extends JFSFile {
         long time = 0;
         if (!resource.isDirectory()) {
             Date modificationDate = resource.getModified();
-            String modifiedDateString = resource.getCustomProps().get(PROP_LAST_MODIFIED_TIME);
-            LOG.info("createFileInfo() custom properties for {}: {}", resource.getName(), resource.getCustomProps());
+            String modifiedDateString = resource.getCustomProps().get(JFSWebDavFileProducer.PROP_LAST_MODIFIED_TIME_WIN);
+            LOG.info("createFileInfo() custom properties for {}: {}", resource.getName(), resource.getCustomPropsNS());
             if (modifiedDateString!=null) {
                 try {
                     synchronized (DATE_FORMAT) {
                         modificationDate = DATE_FORMAT.parse(modifiedDateString);
                     }
-                    LOG.debug("createFileInfo() {} [{};{}]", modificationDate, time, resource.getModified().getTime());
                 } catch (Exception e) {
                     LOG.error("createFileInfo()", e);
                 } // try/catch
             } // if
             time = modificationDate.getTime();
+            LOG.debug("createFileInfo() {} [{};{}]", modificationDate, time, resource.getModified().getTime());
         } // if
         result.setModificationDate(time);
         return result;
@@ -132,12 +130,10 @@ public class JFSWebDavFile extends JFSFile {
     /**
      * Creates a new external file for a certain path using a specific file producer.
      *
-     * @param access
-     * The server access object to use.
-     * @param fileProducer
-     * The assigned file producer.
-     * @param path
-     * The path to create the external file for.
+     * @param access The server access object to use.
+     * @param fileProducer The assigned file producer.
+     * @param path The path to create the external file for.
+     * @param isDirectory tell if the given path describes a directory
      */
     public JFSWebDavFile(Sardine access, JFSFileProducer fileProducer, String path, boolean isDirectory) {
         super(fileProducer, path);
@@ -240,6 +236,13 @@ public class JFSWebDavFile extends JFSFile {
 
                 @Override
                 protected String doRead(InputStream input) throws Exception {
+//                    Date d = new Date(146801458666L);
+//                    String lastModified = DATE_FORMAT.format(d);
+//                    Map<String, String> headers = new HashMap<>();
+//                    headers.put("Last-Modified", lastModified);
+//                    headers.put("Date", lastModified);
+//                    LOG.debug("getOutputStream() headers {}", headers);
+//                    getAccess().put(url, input, headers);
                     getAccess().put(url, input);
                     return "";
                 }
@@ -417,6 +420,35 @@ public class JFSWebDavFile extends JFSFile {
 
 
     /**
+     * set or modify a property
+     *
+     * @param property qualified property name with namespace
+     * @param value new property value
+     */
+    private boolean setProperty(String url, QName property, String value) {
+        boolean success = false;
+//        List<QName> removeProps = new ArrayList<>(1);
+//        removeProps.add(property);
+        Set<QName> props = new HashSet<>(1);
+        props.add(property);
+        Map<QName, String> addProps = new HashMap<>();
+        addProps.put(property, value);
+        try {
+            List<DavResource> result = access.patch(url, addProps);
+            LOG.info("setProperty() result list size {}", result.size());
+            success = (result.size()==1);
+            if (success) {
+                result = access.list(url, 1, props);
+                LOG.info("setProperty() result custom props {}", result.get(0).getCustomPropsNS());
+            } // if
+        } catch (IOException e) {
+            LOG.error("setProperty() failed for "+url, e);
+        } // try/catch
+        return success;
+    } // setProperty
+
+
+    /**
      * @see JFSFile#setLastModified(long)
      */
     @Override
@@ -432,22 +464,10 @@ public class JFSWebDavFile extends JFSFile {
         }
 
         LOG.debug("setLastModified() setting time for {} to {}", url, modificationDate);
-        List<QName> removeProps = new ArrayList<>(1);
-        removeProps.add(QNAME_LAST_MODIFIED_TIME);
-        Map<QName, String> addProps = new HashMap<>();
-        addProps.put(QNAME_LAST_MODIFIED_TIME, modificationDate);
-        QName qn = new QName("http://www.provocon.de/sync", "JFileSync", "sync");
-        addProps.put(qn, modificationDate);
-        try {
-            List<DavResource> result = access.patch(url, addProps);
-            LOG.info("setLastModified() result list size {}", result.size());
-            success = (result.size()==1);
-            if (success) {
-                LOG.info("setLastModified() result custom props {}", result.get(0).getCustomProps());
-            } // if
-        } catch (IOException e) {
-            LOG.error("setLastModified() failed for "+url, e);
-        } // try/catch
+        success = setProperty(url, JFSWebDavFileProducer.QNAME_LAST_MODIFIED_TIME, modificationDate);
+        success = success&setProperty(url, JFSWebDavFileProducer.QNAME_LAST_MODIFIED_TIME_WIN, modificationDate);
+        success = success&setProperty(url, JFSWebDavFileProducer.QNAME_CUSTOM_MODIFIED, modificationDate);
+
         return success;
     } // setLastModified()
 
