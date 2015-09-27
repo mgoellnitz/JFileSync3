@@ -1,8 +1,8 @@
 Java based File Syncing Tool
 ============================
 
-[![Dependency Status](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071)
 [![Latest Release](https://img.shields.io/github/release/mgoellnitz/JFileSync3.svg)](https://github.com/mgoellnitz/JFileSync3/releases/latest)
+[![Dependency Status](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071)
 
 File Syncing with optional Compression and Encryption for Local and WebDAV Folders. For local folders encryption can use
 EncFS and thus be compatible with encfs4win, BoxCryptor Classic, Encdroid and so on. (With GUI, command line, and stored
@@ -58,9 +58,9 @@ get an overview of all possible command line options.
 Requirements
 ------------
 
-- Java 6 Runtime Environment (see 'http://java.oracle.com')
+- Java 7 Runtime Environment, Java 8 supported (see 'http://java.oracle.com')
 
-- JCE extension when using other algorithms than AES (see 'http://java.oracle.com')
+- Only when using other algorithms than AES: JCE extension  (see 'http://java.oracle.com')
 
 Installation and Application Start
 ----------------------------------
@@ -128,7 +128,7 @@ Required packages for JFileSync3 development (not included in the distribution):
 
 Used and therewith recommended development tools:
 - Java 7 SDK 1.7.0
-- Netbeans 7.4
+- Netbeans 8.0
 
 The encryption backend tries its very best to avoid known plaintext attacks with filenames like in directory names
 ("src/main/java") and with the contents of the files.
@@ -150,7 +150,7 @@ AES.
 
 Feel free to issue bug reports and ideas here.
 
-HOW-BUILD:
+HOWTO BUILD:
 
 ```bash
 gradle distZip
