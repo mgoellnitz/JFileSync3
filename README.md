@@ -26,7 +26,7 @@ Other contributions - though not directly committed by him - are from https://gi
 
 Binary Distribution:
 
-https://bintray.com/artifact/download/mgoellnitz/generic/JFileSync3/3.0.11/JFileSync3.zip
+https://github.com/mgoellnitz/JFileSync3/releases/download/3.0.11/JFileSync3.zip
 
 Scenario:
 
