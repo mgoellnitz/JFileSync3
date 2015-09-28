@@ -130,7 +130,7 @@ public class JFSHistoryManagerView extends JDialog implements ActionListener, Li
         // Pack and activate dialog:
         update();
         checkButtons();
-        historyPanel.setPreferredSize(new Dimension(450, 350));
+        historyPanel.setPreferredSize(new Dimension(650, 450));
         pack();
         JFSSupport.center(frame, this);
         this.setVisible(true);
