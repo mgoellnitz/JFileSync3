@@ -26,20 +26,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 import jfs.conf.JFSConfig;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.StorageAccess;
 import jfs.sync.meta.AbstractMetaStorageAccess;
+import jfs.sync.util.DavUtils;
 import jfs.sync.util.WindowsProxySelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,17 +45,6 @@ import org.slf4j.LoggerFactory;
  * Storage access with encrypted files, separate meta data file for each directory and a WebDAV backend.
  */
 public class DavStorageAccess extends AbstractMetaStorageAccess implements StorageAccess {
-
-    private static final String PROP_LAST_MODIFIED_TIME = "Win32LastModifiedTime";
-
-    // See commented area below
-    // private static final QName QNAME_LAST_MODIFIED_TIME = new QName("urn:schemas-microsoft-com:", PROP_LAST_MODIFIED_TIME, "ns1");
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ROOT);
-
-
-    static {
-        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
-    }
 
     private static final Logger LOG = LoggerFactory.getLogger(DavStorageAccess.class);
 
@@ -144,7 +129,6 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         LOG.debug("createFileInfo() url={}", url);
         FileInfo result = new FileInfo();
         result.setExists(false);
-
         result.setCanRead(true);
         result.setCanWrite(true);
         result.setPath(pathAndName[0]);
@@ -153,26 +137,14 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         try {
             String[] urlPathAndName = getPathAndName(url);
             LOG.debug("createFileInfo() - {} / {}", urlPathAndName[0], urlPathAndName[1]);
-            // resources = getSardine().list(urlPathAndName[0]+getSeparator());
             resources = getListing(rootPath, urlPathAndName[0]);
             for (DavResource resource : resources) {
                 if (urlPathAndName[1].equals(resource.getName())) {
                     result.setDirectory(resource.isDirectory());
                     result.setExists(true);
-                    Date modificationDate = resource.getModified();
-                    String modifiedDateString = resource.getCustomProps().get(PROP_LAST_MODIFIED_TIME);
-                    if (modifiedDateString!=null) {
-                        try {
-                            synchronized (DATE_FORMAT) {
-                                modificationDate = DATE_FORMAT.parse(modifiedDateString);
-                            }
-                            LOG.debug("createFileInfo() {} [{};{}]", modificationDate, modificationDate.getTime(), resource.getModified().getTime());
-                        } catch (Exception e) {
-                            LOG.error("createFileInfo()", e);
-                        } // try/catch
-                    } // if
-                    result.setModificationDate(modificationDate.getTime());
-                    result.setSize(resource.getContentLength());
+                    long modificationTime = DavUtils.getModificationDate(resource);
+                    result.setModificationDate(modificationTime);
+                    result.setSize(resource.isDirectory() ? 0 : resource.getContentLength());
                 } // if
             } // for
         } catch (Exception e) {
@@ -237,37 +209,30 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
 
 
     @Override
-    public boolean setLastModified(String rootPath, String relativePath, long modificationDate) {
+    public boolean setLastModified(String rootPath, String relativePath, long modified) {
         boolean success = false;
         String[] pathAndName = getPathAndName(relativePath);
         Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
         FileInfo info = listing.get(pathAndName[1]);
         // TODO: Still not working from time to time...
-        // try {
-        // String url = getUrl(rootPath, relativePath)+(info.isDirectory() ? "/" : "");
-        // String modificationDateString = DATE_FORMAT.format(new Date(modificationDate));
-        // if (log.isInfoEnabled()) {
-        // log.info("setLastModified() setting time for "+url+" to "+modificationDateString);
-        // } // if
-        // Map<QName, String> addProps = new HashMap<QName, String>();
-        // addProps.put(QNAME_LAST_MODIFIED_TIME, modificationDateString);
-        // try {
-        // List<DavResource> result = sardine.patch(url, addProps);
-        // if (log.isInfoEnabled()) {
-        // log.info("setLastModified() result list size "+result.size());
-        // } // if
-        // success = (result.size()==1);
-        // } catch (IOException e) {
-        // log.error("setLastModified()", e);
-        // } // try/catch
-        // } catch (Exception e) {
-        // log.error("setLastModified()", e);
-        // } // try/catch
-        success = true;
+        try {
+            String url = getUrl(rootPath, relativePath)+(info.isDirectory() ? "/" : "");
+            String modificationDate = DavUtils.getFormattedDate(modified);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("setLastModified() setting time for "+url+" to "+modificationDate);
+            } // if
+            success = DavUtils.setProperty(sardine, url, DavUtils.QNAME_LAST_MODIFIED_TIME, modificationDate);
+            success = success&DavUtils.setProperty(sardine, url, DavUtils.QNAME_LAST_MODIFIED_TIME_WIN, modificationDate);
+            success = success&DavUtils.setProperty(sardine, url, DavUtils.QNAME_CUSTOM_MODIFIED, modificationDate);
+        } catch (Exception e) {
+            LOG.error("setLastModified()", e);
+        } // try/catch
+        // success = true;
+
         // TODO: starting from here it's the same as with local files
         if (success) {
             LOG.info("setLastModified() flushing {}/{}", pathAndName[0], pathAndName[1]);
-            info.setModificationDate(modificationDate);
+            info.setModificationDate(modified);
             flushMetaData(rootPath, pathAndName, listing);
         } // if
         return success;

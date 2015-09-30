@@ -24,10 +24,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.namespace.QName;
 import jfs.conf.JFSConfig;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
+import jfs.sync.util.DavUtils;
 import jfs.sync.util.WindowsProxySelector;
 import static jfs.sync.webdav.JFSWebDavFile.CUSTOM_PROPS;
 import org.slf4j.Logger;
@@ -42,22 +42,9 @@ import org.slf4j.LoggerFactory;
  */
 public class JFSWebDavFileProducer extends JFSFileProducer {
 
-    public static final String PROP_LAST_MODIFIED_TIME_WIN = "Win32LastModifiedTime";
-
-    public static final QName QNAME_LAST_MODIFIED_TIME_WIN = new QName("urn:schemas-microsoft-com:", PROP_LAST_MODIFIED_TIME_WIN, "ns1");
-
-    public static final String PROP_LAST_MODIFIED_TIME = "getlastmodified";
-
-    public static final String PROP_CUSTOM_MODIFIED = "JFileSync";
-
-    public static final QName QNAME_LAST_MODIFIED_TIME = new QName("DAV:", PROP_LAST_MODIFIED_TIME, "d");
-
-    public static final QName QNAME_CUSTOM_MODIFIED = new QName("http://www.provocon.de/sync", PROP_CUSTOM_MODIFIED, "sync");
-
-
     static {
-        CUSTOM_PROPS.add(QNAME_CUSTOM_MODIFIED);
-        CUSTOM_PROPS.add(QNAME_LAST_MODIFIED_TIME_WIN);
+        CUSTOM_PROPS.add(DavUtils.QNAME_CUSTOM_MODIFIED);
+        CUSTOM_PROPS.add(DavUtils.QNAME_LAST_MODIFIED_TIME_WIN);
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(JFSWebDavFileProducer.class);

@@ -25,22 +25,16 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 import javax.xml.namespace.QName;
 import jfs.conf.JFSConfig;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 import jfs.sync.base.AbstractJFSFileProducerFactory;
 import jfs.sync.encryption.FileInfo;
+import jfs.sync.util.DavUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,8 +45,6 @@ import org.slf4j.LoggerFactory;
  * @author Martin Goellnitz
  */
 public class JFSWebDavFile extends JFSFile {
-
-    private static final DateFormat DATE_FORMAT;
 
     static final Set<QName> CUSTOM_PROPS = new HashSet<>();
 
@@ -78,12 +70,6 @@ public class JFSWebDavFile extends JFSFile {
     private InputStream input = null;
 
 
-    static {
-        DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ROOT);
-        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
-    }
-
-
     private FileInfo createFileInfo(String folder, DavResource resource) {
         LOG.debug("createFileInfo() {} [{}] {}", folder+"/"+resource.getName(), resource.isDirectory(), resource.getCustomProps());
         FileInfo result = new FileInfo();
@@ -96,20 +82,7 @@ public class JFSWebDavFile extends JFSFile {
         result.setSize(resource.isDirectory() ? 0 : resource.getContentLength());
         long time = 0;
         if (!resource.isDirectory()) {
-            Date modificationDate = resource.getModified();
-            String modifiedDateString = resource.getCustomProps().get(JFSWebDavFileProducer.PROP_LAST_MODIFIED_TIME_WIN);
-            LOG.info("createFileInfo() custom properties for {}: {}", resource.getName(), resource.getCustomPropsNS());
-            if (modifiedDateString!=null) {
-                try {
-                    synchronized (DATE_FORMAT) {
-                        modificationDate = DATE_FORMAT.parse(modifiedDateString);
-                    }
-                } catch (Exception e) {
-                    LOG.error("createFileInfo()", e);
-                } // try/catch
-            } // if
-            time = modificationDate.getTime();
-            LOG.debug("createFileInfo() {} [{};{}]", modificationDate, time, resource.getModified().getTime());
+            time = DavUtils.getModificationDate(resource);
         } // if
         result.setModificationDate(time);
         return result;
@@ -420,53 +393,18 @@ public class JFSWebDavFile extends JFSFile {
 
 
     /**
-     * set or modify a property
-     *
-     * @param property qualified property name with namespace
-     * @param value new property value
-     */
-    private boolean setProperty(String url, QName property, String value) {
-        boolean success = false;
-//        List<QName> removeProps = new ArrayList<>(1);
-//        removeProps.add(property);
-        Set<QName> props = new HashSet<>(1);
-        props.add(property);
-        Map<QName, String> addProps = new HashMap<>();
-        addProps.put(property, value);
-        try {
-            List<DavResource> result = access.patch(url, addProps);
-            LOG.info("setProperty() result list size {}", result.size());
-            success = (result.size()==1);
-            if (success) {
-                result = access.list(url, 1, props);
-                LOG.info("setProperty() result custom props {}", result.get(0).getCustomPropsNS());
-            } // if
-        } catch (IOException e) {
-            LOG.error("setProperty() failed for "+url, e);
-        } // try/catch
-        return success;
-    } // setProperty
-
-
-    /**
      * @see JFSFile#setLastModified(long)
      */
     @Override
     public boolean setLastModified(long time) {
-        boolean success = false;
-
         info.setModificationDate(time);
 
         String url = getUrl(info.getPath()+"/"+info.getName())+(isDirectory() ? "/" : "");
-        String modificationDate;
-        synchronized (DATE_FORMAT) {
-            modificationDate = DATE_FORMAT.format(new Date(time));
-        }
-
+        String modificationDate = DavUtils.getFormattedDate(time);
         LOG.debug("setLastModified() setting time for {} to {}", url, modificationDate);
-        success = setProperty(url, JFSWebDavFileProducer.QNAME_LAST_MODIFIED_TIME, modificationDate);
-        success = success&setProperty(url, JFSWebDavFileProducer.QNAME_LAST_MODIFIED_TIME_WIN, modificationDate);
-        success = success&setProperty(url, JFSWebDavFileProducer.QNAME_CUSTOM_MODIFIED, modificationDate);
+        boolean success = DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_TIME, modificationDate);
+        success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_TIME_WIN, modificationDate);
+        success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_CUSTOM_MODIFIED, modificationDate);
 
         return success;
     } // setLastModified()
