@@ -74,7 +74,7 @@ public class JFSReportView extends JDialog implements ActionListener {
 
             // Create the modal dialog:
             setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            setSize(400, 500);
+            setSize(600, 550);
             setTitle(t.get("report.title.failed"));
             JFSSupport.center(frame, this);
 
