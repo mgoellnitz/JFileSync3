@@ -217,17 +217,10 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         // TODO: Still not working from time to time...
         try {
             String url = getUrl(rootPath, relativePath)+(info.isDirectory() ? "/" : "");
-            String modificationDate = DavUtils.getFormattedDate(modified);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("setLastModified() setting time for "+url+" to "+modificationDate);
-            } // if
-            success = DavUtils.setProperty(sardine, url, DavUtils.QNAME_LAST_MODIFIED_TIME, modificationDate);
-            success = success&DavUtils.setProperty(sardine, url, DavUtils.QNAME_LAST_MODIFIED_TIME_WIN, modificationDate);
-            success = success&DavUtils.setProperty(sardine, url, DavUtils.QNAME_CUSTOM_MODIFIED, modificationDate);
+            success = DavUtils.setLastModified(sardine, url, modified);
         } catch (Exception e) {
             LOG.error("setLastModified()", e);
         } // try/catch
-        // success = true;
 
         // TODO: starting from here it's the same as with local files
         if (success) {

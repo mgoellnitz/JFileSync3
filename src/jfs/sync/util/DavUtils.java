@@ -63,6 +63,24 @@ public final class DavUtils {
     }
 
 
+    public static long getModificationDate(DavResource resource) {
+        Date modificationDate = resource.getModified();
+        String modifiedDateString = resource.getCustomProps().get(DavUtils.PROP_LAST_MODIFIED_TIME_WIN);
+        LOG.info("getModificationDate() custom properties for {}: {}", resource.getName(), resource.getCustomPropsNS());
+        if (modifiedDateString!=null) {
+            try {
+                synchronized (DATE_FORMAT) {
+                    modificationDate = DATE_FORMAT.parse(modifiedDateString);
+                }
+            } catch (Exception e) {
+                LOG.error("createFileInfo()", e);
+            } // try/catch
+        } // if
+        LOG.debug("getModificationDate() {} [{};{}]", modificationDate.getTime(), modificationDate, resource.getModified().getTime());
+        return modificationDate.getTime();
+    } // getModificationDate()
+
+
     /**
      * Set or modify a property.
      *
@@ -72,7 +90,7 @@ public final class DavUtils {
      * @param value new property value
      * @return true if setting of property was succesful
      */
-    public static boolean setProperty(Sardine sardine, String url, QName property, String value) {
+    private static boolean setProperty(Sardine sardine, String url, QName property, String value) {
         boolean success = false;
 //        List<QName> removeProps = new ArrayList<>(1);
 //        removeProps.add(property);
@@ -96,33 +114,26 @@ public final class DavUtils {
 
 
     /**
-     * Get GMT formatted time from time value in seconds since the epoche.
+     * Set modification time for a given resource.
+     * This method tries to set the modification date and a second custom flag like it's used
+     * by the windows explorer.
      *
-     * @param time time value
-     * @return formatted time and date - like in HTTP headers.
+     * @param access Sardine instance to use.
+     * @param url url of the resource to set the modification time for.
+     * @param time modification time in seconds since the epoche
+     * @return return if operation was successul
      */
-    public static String getFormattedDate(long time) {
+    public static boolean setLastModified(Sardine access, String url, long time) {
+        String modificationDate;
         synchronized (DATE_FORMAT) {
-            return DATE_FORMAT.format(new Date(time));
+            modificationDate = DATE_FORMAT.format(new Date(time));
         }
-    } // getFormattedDate()
+        LOG.debug("setLastModified() setting time for {} to {}", url, modificationDate);
+        boolean success = DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_TIME, modificationDate);
+        success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_TIME_WIN, modificationDate);
+        // success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_CUSTOM_MODIFIED, modificationDate);
 
-
-    public static long getModificationDate(DavResource resource) {
-        Date modificationDate = resource.getModified();
-        String modifiedDateString = resource.getCustomProps().get(DavUtils.PROP_LAST_MODIFIED_TIME_WIN);
-        LOG.info("getModificationDate() custom properties for {}: {}", resource.getName(), resource.getCustomPropsNS());
-        if (modifiedDateString!=null) {
-            try {
-                synchronized (DATE_FORMAT) {
-                    modificationDate = DATE_FORMAT.parse(modifiedDateString);
-                }
-            } catch (Exception e) {
-                LOG.error("createFileInfo()", e);
-            } // try/catch
-        } // if
-        LOG.debug("getModificationDate() {} [{};{}]", modificationDate.getTime(), modificationDate, resource.getModified().getTime());
-        return modificationDate.getTime();
-    } // getModificationDate()
+        return success;
+    } // setLastModified()
 
 } // DavUtils

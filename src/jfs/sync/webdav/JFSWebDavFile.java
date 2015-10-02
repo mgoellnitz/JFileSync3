@@ -400,13 +400,7 @@ public class JFSWebDavFile extends JFSFile {
         info.setModificationDate(time);
 
         String url = getUrl(info.getPath()+"/"+info.getName())+(isDirectory() ? "/" : "");
-        String modificationDate = DavUtils.getFormattedDate(time);
-        LOG.debug("setLastModified() setting time for {} to {}", url, modificationDate);
-        boolean success = DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_TIME, modificationDate);
-        success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_TIME_WIN, modificationDate);
-        success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_CUSTOM_MODIFIED, modificationDate);
-
-        return success;
+        return DavUtils.setLastModified(access, url, time);
     } // setLastModified()
 
 
