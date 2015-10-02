@@ -170,11 +170,11 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         if (forPayload&&(listing.get(pathAndName[1])==null||!file.exists())) {
             FileInfo info = createFileInfo(file, pathAndName);
             listing.put(info.getName(), info);
-                LOG.info("getOutputStream() flushing {}/{}",pathAndName[0],pathAndName[1]);
+            LOG.info("getOutputStream() flushing {}/{}", pathAndName[0], pathAndName[1]);
             flushMetaData(rootPath, pathAndName, listing);
-                LOG.debug("getOutputStream() getting output stream for {} {}",file.getPath(),info);
+            LOG.debug("getOutputStream() getting output stream for {} {}", file.getPath(), info);
         } // if
-            LOG.debug("getOutputStream() getting output stream for {}",file.getPath());
+        LOG.debug("getOutputStream() getting outpult stream for {}", file.getPath());
         outputStreams++;
         if (LOG.isInfoEnabled()) {
             LOG.info("getOutputStream("+relativePath+") outputStreams="+outputStreams);
