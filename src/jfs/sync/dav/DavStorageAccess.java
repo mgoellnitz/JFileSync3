@@ -214,7 +214,6 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         String[] pathAndName = getPathAndName(relativePath);
         Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
         FileInfo info = listing.get(pathAndName[1]);
-        // TODO: Still not working from time to time...
         try {
             String url = getUrl(rootPath, relativePath)+(info.isDirectory() ? "/" : "");
             success = DavUtils.setLastModified(sardine, url, modified);

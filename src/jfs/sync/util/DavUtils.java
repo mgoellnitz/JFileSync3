@@ -129,8 +129,8 @@ public final class DavUtils {
             modificationDate = DATE_FORMAT.format(new Date(time));
         }
         LOG.debug("setLastModified() setting time for {} to {}", url, modificationDate);
-        boolean success = DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_TIME, modificationDate);
-        success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_TIME_WIN, modificationDate);
+        boolean success = DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_TIME_WIN, modificationDate);
+        // success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_TIME, modificationDate);
         // success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_CUSTOM_MODIFIED, modificationDate);
 
         return success;
