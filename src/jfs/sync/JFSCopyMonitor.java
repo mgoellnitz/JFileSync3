@@ -119,7 +119,7 @@ public final class JFSCopyMonitor {
      * @return Returns the ratio of bytes already transfered in percent.
      */
     public int getRatio() {
-        return getRatio(bytesTransfered, bytesToTransfer);
+        return getRatio(bytesTransfered+bytesTransferedCurrentFile, bytesToTransfer);
     }
 
 
