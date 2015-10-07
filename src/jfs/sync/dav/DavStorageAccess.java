@@ -34,7 +34,7 @@ import java.util.Map;
 import jfs.conf.JFSConfig;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.StorageAccess;
-import jfs.sync.meta.AbstractMetaStorageAccess;
+import jfs.sync.encryption.AbstractMetaStorageAccess;
 import jfs.sync.util.DavUtils;
 import jfs.sync.util.WindowsProxySelector;
 import org.slf4j.Logger;

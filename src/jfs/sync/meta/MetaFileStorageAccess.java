@@ -17,6 +17,7 @@
  */
 package jfs.sync.meta;
 
+import jfs.sync.encryption.AbstractMetaStorageAccess;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
