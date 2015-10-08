@@ -32,9 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import jfs.conf.JFSConfig;
+import jfs.sync.encryption.AbstractMetaStorageAccess;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.StorageAccess;
-import jfs.sync.encryption.AbstractMetaStorageAccess;
 import jfs.sync.util.DavUtils;
 import jfs.sync.util.WindowsProxySelector;
 import org.slf4j.Logger;
@@ -53,7 +53,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
     /*
      * To speed things up we have a second DavResource based directory cache
      */
-    private final Map<String, List<DavResource>> directoryCache = new HashMap<String, List<DavResource>>();
+    private final Map<String, List<DavResource>> directoryCache = new HashMap<>();
 
 
     public DavStorageAccess(String cipher) {

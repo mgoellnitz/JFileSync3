@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2013, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-package jfs.sync.dav;
+package jfs.sync.encdav;
 
 import java.util.Map;
 import jfs.conf.JFSConfig;
@@ -27,9 +27,9 @@ import jfs.sync.encryption.JFSEncryptedFileProducer;
 /**
  * File producer factory creating instances of WebDAV accessing file producsers.
  */
-public class JFSDavFileProducerFactory extends AbstractEncryptedFileProducerFactory {
+public class JFSEncDavFileProducerFactory extends AbstractEncryptedFileProducerFactory {
 
-    public static final String SCHEME_NAME = "dav";
+    public static final String SCHEME_NAME = "encdav";
 
 
     @Override
@@ -40,10 +40,10 @@ public class JFSDavFileProducerFactory extends AbstractEncryptedFileProducerFact
 
     @Override
     public JFSFileProducer createProducer(String uri) {
-        DavStorageAccess storageAccess = new DavStorageAccess(JFSConfig.getInstance().getEncryptionCipher());
+        EncDavStorageAccess storageAccess = new EncDavStorageAccess(JFSConfig.getInstance().getEncryptionCipher(), JFSConfig.getInstance().isShortenPaths());
         Map<String, Long> levels = getCompressionsLevels();
         String shortenedUri = uri.substring(SCHEME_NAME.length()+3);
         return new JFSEncryptedFileProducer(storageAccess, levels, SCHEME_NAME, shortenedUri);
     } // createProducer()
 
-} // JFSDavFileProducserFactory
+} // JFSEncDavFileProducserFactory
