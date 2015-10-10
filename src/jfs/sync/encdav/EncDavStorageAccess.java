@@ -28,9 +28,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import jfs.conf.JFSConfig;
+import jfs.sync.base.AbstractJFSFileProducerFactory;
 import jfs.sync.encryption.AbstractEncryptedStorageAccess;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.StorageAccess;
@@ -47,13 +50,11 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
 
     private static final Logger LOG = LoggerFactory.getLogger(EncDavStorageAccess.class);
 
+    private Map<String, List<DavResource>> folderCache = new HashMap<>();
+
     private Sardine sardine = null;
 
     private String cipherspec = "AES";
-
-    private static final String SALT = "#Mb6{Z-Öu9Rw4[D_jHn~CeKx2QiV]=a8F@1öG5+p}7Äü01-T";
-
-    private static final String FILESALT = "4Om27Z+6nF[h'8Ec}L0_ds9J=3Her~5Ke7rv]1-ÜLö9ä@#yX";
 
 
     public EncDavStorageAccess(String cipher, boolean shortenPaths) {
@@ -97,43 +98,57 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
     } // getCipherSpec()
 
 
-    @Override
-    protected byte[] getCredentials(String relativePath) {
-        return getCredentials(relativePath, SALT);
-    } // getCredentials()
-
-
-    @Override
-    public byte[] getFileCredentials(String password) {
-        return getCredentials(password, FILESALT);
-    } // getFileCredentials()
-
-
-    protected DavResource getFile(String rootPath, String relativePath) {
-        String url = getUrl(rootPath, relativePath);
-        List<DavResource> listing = Collections.emptyList();
-        try {
-            listing = getSardine().list(url);
-            LOG.info("getListing() {} elements in {}", listing.size(), url);
-        } catch (Exception e) {
-            LOG.error("getFile()", e);
-        } // try/catch
-
-        return listing.size()>0 ? listing.get(0) : null;
-    } // getFile()
-
-
     protected List<DavResource> getListing(String rootPath, String relativePath) {
         String url = getUrl(rootPath, relativePath);
         List<DavResource> listing = Collections.emptyList();
-        try {
-            listing = getSardine().list(url);
-            LOG.info("getListing() {} elements in {}", listing.size(), url);
-        } catch (Exception e) {
-            LOG.error("getListing()", e);
-        } // try/catch
-
+        if (folderCache.containsKey(url)) {
+            listing = folderCache.get(url);
+        } else {
+            try {
+                listing = getSardine().list(url);
+            } catch (Exception e) {
+                LOG.error("getListing()", e);
+            } // try/catch
+        } // if
+        LOG.debug("getListing() {} elements in {}", listing.size(), url);
         return listing;
+    } // getListing()
+
+
+    private String getEncryptedPathElement(DavResource item, int prefixLength) {
+        String rPath = item.getPath().substring(prefixLength);
+        if (rPath.endsWith("/")) {
+            rPath = rPath.substring(0, rPath.length()-1);
+        } // if
+        int x = rPath.lastIndexOf('/');
+        if (x>0) {
+            rPath = rPath.substring(x+1);
+        } // if
+        LOG.debug("getEncryptedPathElement({})  {}", item, rPath);
+        return rPath;
+    } // getEncryptedPathElement()
+
+
+    protected DavResource getFile(String rootPath, String relativePath) {
+        int uriStartIndex = rootPath.indexOf('/', 9);
+        int prefixLength = rootPath.substring(uriStartIndex).length()+1;
+        String[] pathAndName = AbstractJFSFileProducerFactory.getPathAndName(relativePath, "/");
+        String pathElement = pathAndName[1].length()>0 ? getEncryptedFileName(pathAndName[0], pathAndName[1]) : pathAndName[1];
+        LOG.debug("getFile() {} + {} {}", relativePath, pathAndName[1], pathElement);
+        List<DavResource> listing = getListing(rootPath, pathAndName[0]);
+        DavResource result = null;
+        for (DavResource item : listing) {
+            String rPath = getEncryptedPathElement(item, prefixLength);
+            // LOG.debug("getFile() {} '{}'=='{}' ? {}", item, rPath, pathElement, rPath.equals(pathElement));
+            if (rPath.equals(pathElement)) {
+                result = item;
+            } // if
+        }  // for
+        LOG.debug("getFile() {} - {} / {}: {}", relativePath, pathAndName[0], pathAndName[1], result);
+        if (result==null) {
+            LOG.error("getFile() {}", relativePath, new Exception(""));
+        } // if
+        return result;
     } // getFile()
 
 
@@ -141,13 +156,19 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
     public String[] list(String rootPath, String relativePath) {
         List<DavResource> items = getListing(rootPath, relativePath);
 
+        int uriStartIndex = rootPath.indexOf('/', 9);
+        int prefixLength = rootPath.substring(uriStartIndex).length()+1;
+        LOG.debug("list() {} - {} [{}:{}]", rootPath, relativePath, uriStartIndex, prefixLength);
         // decrypt
-        String[] result = new String[items.size()];
-        int i = 0;
-        for (DavResource item : items) {
-            String decryptedItem = getDecryptedFileName(relativePath, item.getPath());
-            result[i++] = decryptedItem;
-            LOG.info("list() {} -> {}", item, decryptedItem);
+        String[] result = new String[items.size()-1];
+        int i = 1;
+        while (i<items.size()) {
+            DavResource item = items.get(i);
+            LOG.debug("list() {}: {}", relativePath, item);
+            String rPath = getEncryptedPathElement(item, prefixLength);
+            String decryptedItem = getDecryptedFileName(relativePath, rPath);
+            result[(i++)-1] = decryptedItem;
+            LOG.debug("list() {} -> {}", rPath, decryptedItem);
         } // for
 
         // sort out meta data
@@ -175,25 +196,22 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
         result.setName(name);
         result.setPath(rootPath+relativePath);
 
-        DavResource file = getFile(rootPath, relativePath);
+        DavResource resource = getFile(rootPath, relativePath);
         result.setCanRead(false);
         result.setCanWrite(false);
         result.setDirectory(false);
-        if (file!=null) {
-            result.setDirectory(file.isDirectory());
+        if (resource!=null) {
+            result.setDirectory(resource.isDirectory());
             result.setExists(true);
         } else {
             result.setExists(false);
         } // if
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getFileInfo() "+result.getPath()+" e["+result.isExists()+"] d["+result.isDirectory()
-                    +"]");
-        } // if
+        LOG.debug("getFileInfo() {} e[{}] d[{}]", result.getPath(), result.isExists(), result.isDirectory());
         if (result.isExists()) {
             result.setCanRead(true);
             result.setCanWrite(true);
             if (!result.isDirectory()) {
-                result.setModificationDate(file.getModified().getTime());
+                result.setModificationDate(DavUtils.getModificationDate(resource));
                 result.setSize(-1);
             } else {
                 result.setSize(0);
@@ -286,21 +304,5 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
     public void flush(String rootPath, FileInfo info) {
         // Nothing to do in this implementation
     } // flush()
-
-
-    /**
-     * Test
-     */
-    public static void main(String[] args) throws Exception {
-        EncDavStorageAccess d = new EncDavStorageAccess("AES", true);
-
-        String relativePath = "a/path/for/me";
-
-        String enc = d.getEncryptedFileName(relativePath, "src");
-        System.out.println("enc= "+enc);
-        String plain = d.getDecryptedFileName(relativePath, enc);
-        System.out.println("plain= "+plain);
-        d.getPassword(relativePath);
-    } // main()
 
 } // EnvDavStorageAccess

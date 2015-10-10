@@ -36,7 +36,6 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.NoSuchPaddingException;
 import jfs.sync.encrypted.EncryptedFileStorageAccess;
-import jfs.sync.encryption.FileInfo;
 import jfs.sync.util.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

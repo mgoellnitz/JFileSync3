@@ -189,7 +189,7 @@ public class JFSEncryptedFile extends JFSFile {
 
                 for (int i = 0; i<files.length; i++) {
                     // asFolder parameter doesn't to anything
-                    LOG.debug("getList() {} {}", i, files[i]);
+                    LOG.debug("getList({}) {} {}", getName(), i, files[i]);
                     list[i] = fileProducer.getJfsFile(getRelativePath()+fileProducer.getSeparator()+files[i], false);
                 } // for
             } else {

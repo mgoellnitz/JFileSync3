@@ -72,6 +72,10 @@ public abstract class AbstractEncryptedStorageAccess {
 
     private static int bits = 6;
 
+    private static final String SALT = "#Mb6{Z-Öu9Rw4[D_jHn~CeKx2QiV]=a8F@1öG5+p}7Äü01-T";
+
+    private static final String FILESALT = "4Om27Z+6nF[h'8Ec}L0_ds9J=3Her~5Ke7rv]1-ÜLö9ä@#yX";
+
 
     /**
      * Storage Access with encrypted everything - names, contents and optional meta data.
@@ -103,6 +107,16 @@ public abstract class AbstractEncryptedStorageAccess {
 
 
     public abstract String getCipherSpec();
+
+
+    protected byte[] getCredentials(String relativePath) {
+        return getCredentials(relativePath, SALT);
+    } // getCredentials()
+
+
+    public byte[] getFileCredentials(String password) {
+        return getCredentials(password, FILESALT);
+    } // getFileCredentials()
 
 
     protected String[] getPathAndName(String relativePath) {
@@ -153,9 +167,6 @@ public abstract class AbstractEncryptedStorageAccess {
         } // for
         return credentials;
     } // getCredentials()
-
-
-    protected abstract byte[] getCredentials(String relativePath);
 
 
     private void generateSpecialCodes(String relativePath, List<String> specialCodes, List<Integer> specialLengths) {

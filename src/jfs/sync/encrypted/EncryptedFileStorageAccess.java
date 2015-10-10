@@ -46,10 +46,6 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
 
     private String cipherspec = "AES";
 
-    private static final String SALT = "#Mb6{Z-Öu9Rw4[D_jHn~CeKx2QiV]=a8F@1öG5+p}7Äü01-T";
-
-    private static final String FILESALT = "4Om27Z+6nF[h'8Ec}L0_ds9J=3Her~5Ke7rv]1-ÜLö9ä@#yX";
-
 
     public EncryptedFileStorageAccess(String cipher, boolean shortenPaths) {
         super(shortenPaths);
@@ -67,18 +63,6 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
     public String getCipherSpec() {
         return cipherspec;
     } // getCipherSpec()
-
-
-    @Override
-    protected byte[] getCredentials(String relativePath) {
-        return getCredentials(relativePath, SALT);
-    } // getCredentials()
-
-
-    @Override
-    public byte[] getFileCredentials(String password) {
-        return getCredentials(password, FILESALT);
-    } // getFileCredentials()
 
 
     protected File getFile(String rootPath, String relativePath) {
@@ -115,7 +99,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
             result[i++] = item;
         } // for
         return result;
-    }// list()
+    } // list()
 
 
     @Override
@@ -130,8 +114,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
         result.setCanRead(true);
         result.setCanWrite(true);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("getFileInfo() "+result.getPath()+" e["+result.isExists()+"] d["+result.isDirectory()
-                    +"]");
+            LOG.debug("getFileInfo() "+result.getPath()+" e["+result.isExists()+"] d["+result.isDirectory()+"]");
         } // if
         if (result.isExists()) {
             result.setCanRead(file.canRead());
