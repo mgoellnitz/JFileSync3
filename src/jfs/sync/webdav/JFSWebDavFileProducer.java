@@ -29,7 +29,6 @@ import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 import jfs.sync.util.DavUtils;
 import jfs.sync.util.WindowsProxySelector;
-import static jfs.sync.webdav.JFSWebDavFile.CUSTOM_PROPS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,11 +40,6 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class JFSWebDavFileProducer extends JFSFileProducer {
-
-    static {
-        CUSTOM_PROPS.add(DavUtils.QNAME_CUSTOM_MODIFIED);
-        CUSTOM_PROPS.add(DavUtils.QNAME_LAST_MODIFIED_TIME_WIN);
-    }
 
     private static final Logger LOG = LoggerFactory.getLogger(JFSWebDavFileProducer.class);
 
@@ -59,7 +53,7 @@ public class JFSWebDavFileProducer extends JFSFileProducer {
             return directoryCache.get(url);
         } // if
         LOG.debug("getListing() listing {}", url);
-        List<DavResource> listing = sardine.list(url, 1, CUSTOM_PROPS);
+        List<DavResource> listing = sardine.list(url, 1, DavUtils.getCustomDavProperties());
         LOG.info("getListing({}) listing {}", listing.size(), url);
         directoryCache.put(url, listing);
         return listing;

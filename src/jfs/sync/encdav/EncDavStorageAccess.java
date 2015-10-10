@@ -105,7 +105,7 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
             listing = folderCache.get(url);
         } else {
             try {
-                listing = getSardine().list(url);
+                listing = getSardine().list(url, 1, DavUtils.getCustomDavProperties());
             } catch (Exception e) {
                 LOG.error("getListing()", e);
             } // try/catch

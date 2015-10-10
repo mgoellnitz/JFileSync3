@@ -56,11 +56,20 @@ public final class DavUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(DavUtils.class);
 
+    private static final Set<QName> CUSTOM_PROPS = new HashSet<>();
+
 
     static {
+        CUSTOM_PROPS.add(DavUtils.QNAME_CUSTOM_MODIFIED);
+        CUSTOM_PROPS.add(DavUtils.QNAME_LAST_MODIFIED_TIME_WIN);
         DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ROOT);
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
+
+
+    public static Set<QName> getCustomDavProperties() {
+        return CUSTOM_PROPS;
+    } // getCustomDavProperties()
 
 
     public static long getModificationDate(DavResource resource) {

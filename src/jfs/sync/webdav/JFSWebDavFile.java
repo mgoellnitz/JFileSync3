@@ -25,10 +25,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import javax.xml.namespace.QName;
 import jfs.conf.JFSConfig;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
@@ -45,8 +42,6 @@ import org.slf4j.LoggerFactory;
  * @author Martin Goellnitz
  */
 public class JFSWebDavFile extends JFSFile {
-
-    static final Set<QName> CUSTOM_PROPS = new HashSet<>();
 
     private static final Logger LOG = LoggerFactory.getLogger(JFSWebDavFile.class);
 
