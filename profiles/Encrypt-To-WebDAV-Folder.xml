@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jFileSync title="Local Folder to Encrypted WebDAV Folder">
   <server user="username" passphrase="VerySecret"/>
-  <encryption passphrase="SecretPassphrase"/>
+  <encryption passphrase="SecretPassphrase" cipher="AES"  shorten="false"/>
   <directory src="Local Folder" tgt="dav://https://webdav.host/directory/path"/>
 </jFileSync>

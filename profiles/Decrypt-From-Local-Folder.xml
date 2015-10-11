@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<jFileSync title="Decrypt from Local Folder">
-  <encryption passphrase="SecretPassword"/>
-  <directory src="encrypted://C:/storage/EncryptedFolder" tgt="PlaintextFolder"/>
-</jFileSync>
