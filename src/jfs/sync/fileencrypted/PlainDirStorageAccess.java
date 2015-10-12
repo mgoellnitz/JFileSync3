@@ -23,11 +23,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import jfs.conf.JFSConfig;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.StorageAccess;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * With this module only the files and not their filesnames get encrypted.
+ *
+ * It is excluded from the builing path and only serves as a documentation reference.
+ */
 public class PlainDirStorageAccess implements StorageAccess {
 
     private static Logger log = LoggerFactory.getLogger(PlainDirStorageAccess.class);

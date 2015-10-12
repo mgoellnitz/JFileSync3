@@ -127,17 +127,6 @@ public class JFSRootElement extends JFSElement {
 
 
     /**
-     * Shut downs the file producers of the comparison object when not needed any more (e.g., before creating a new one
-     * for the directory pair).
-     */
-    public final void shutDownProducers() {
-        JFSFileProducerManager pm = JFSFileProducerManager.getInstance();
-        pm.shutDownProducer(srcProducer.getUri());
-        pm.shutDownProducer(tgtProducer.getUri());
-    }
-
-
-    /**
      * @see JFSElement#setSrcFile(JFSFile)
      */
     @Override

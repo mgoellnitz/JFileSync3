@@ -48,19 +48,7 @@ public abstract class AbstractJFSFileProducerFactory implements JFSFileProducerF
 
 
     @Override
-    public void cancelProducer(String uri) {
-        // empty default
-    }
-
-
-    @Override
     public void resetProducers() {
-        // empty default
-    }
-
-
-    @Override
-    public void shutDownProducer(String uri) {
         // empty default
     }
 

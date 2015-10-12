@@ -131,28 +131,6 @@ public final class JFSFileProducerManager {
 
 
     /**
-     * Shuts down an existing producer for a special URI.
-     *
-     * @param uri
-     * The URI to distroy the producer for.
-     */
-    public void shutDownProducer(String uri) {
-        getFactory(uri).shutDownProducer(uri);
-    }
-
-
-    /**
-     * Cancels an existing producer for a special URI.
-     *
-     * @param uri
-     * The URI to distroy the producer for.
-     */
-    public void cancelProducer(String uri) {
-        getFactory(uri).cancelProducer(uri);
-    }
-
-
-    /**
      * Returns the factory for a special URI.
      *
      * @param uri

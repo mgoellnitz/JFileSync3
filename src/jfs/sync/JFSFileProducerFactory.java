@@ -21,7 +21,7 @@ package jfs.sync;
 
 /**
  * This class produces and destroys factories for JFS files.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSFileProducerFactory.java,v 1.1 2005/05/06 11:06:57 heidrich Exp $
  */
@@ -38,29 +38,11 @@ public interface JFSFileProducerFactory {
 
     /**
      * Returns a new procucer for a special URI.
-     * 
+     *
      * @param uri
      *            The URI to create the producer for.
      * @return The created producer.
      */
     JFSFileProducer createProducer(String uri);
-
-
-    /**
-     * Shuts down an existing producer for a special URI.
-     * 
-     * @param uri
-     *            The URI to distroy the producer for.
-     */
-    void shutDownProducer(String uri);
-
-
-    /**
-     * Cancels an existing producer for a special URI.
-     * 
-     * @param uri
-     *            The URI to distroy the producer for.
-     */
-    void cancelProducer(String uri);
 
 }

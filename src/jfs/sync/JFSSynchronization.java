@@ -255,13 +255,6 @@ public final class JFSSynchronization {
         }
         progress.end();
 
-        // Shuts down file producers of previously created comparison
-        // objects:
-        for (int j = 0; j<table.getRootsSize(); j++) {
-            JFSRootElement root = table.getRootElement(j);
-            root.shutDownProducers();
-        }
-
         // Store the history, even if the synchronization process was
         // cancelled:
         if (config.isStoreHistory()) {

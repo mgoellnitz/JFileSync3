@@ -244,23 +244,13 @@ public final class JFSProgress {
         JFSFileProducerManager pm = JFSFileProducerManager.getInstance();
         if (activity==ProgressActivity.COMPARISON) {
             JFSComparisonMonitor cm = JFSComparisonMonitor.getInstance();
-            pm.cancelProducer(cm.getRootUriSrc());
-            pm.cancelProducer(cm.getRootUriTgt());
         } else if (activity==ProgressActivity.SYNCHRONIZATION_COPY) {
             JFSCopyMonitor cm = JFSCopyMonitor.getInstance();
             if (cm.getCurrentSrc()!=null) {
                 JFSFileProducer producer = cm.getCurrentSrc().getFileProducer();
-                pm.cancelProducer(producer.getUri());
             }
             if (cm.getCurrentTgt()!=null) {
                 JFSFileProducer producer = cm.getCurrentTgt().getFileProducer();
-                pm.cancelProducer(producer.getUri());
-            }
-        } else if (activity==ProgressActivity.SYNCHRONIZATION_DELETE) {
-            JFSDeleteMonitor dm = JFSDeleteMonitor.getInstance();
-            if (dm.getCurrentFile()!=null) {
-                JFSFileProducer producer = dm.getCurrentFile().getFileProducer();
-                pm.cancelProducer(producer.getUri());
             }
         }
     }
