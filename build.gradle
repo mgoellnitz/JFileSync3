@@ -61,7 +61,6 @@ dependencies {
 }
 
 mainClassName = 'jfs.JFileSync'
-// mainClass = 'jfs.JFileSync'
 
 distTar.enabled = false
 
