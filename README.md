@@ -8,6 +8,9 @@ File syncing with optional compression and encryption for local and WebDAV folde
 EncFS and thus be compatible with encfs4win, BoxCryptor Classic, Encdroid and so on. (With GUI, command line, and stored
 profiles.)
 
+Find more on the scenarios where this tool might help you in in the growing
+[project wiki](https://github.com/mgoellnitz/JFileSync3/wiki).
+
 This software was developed because I personally needed an easy to use syncing tool to have everyday backups of highly
 confidential material - business and private. And none of the services I came accross could suite these needs.
 
@@ -30,6 +33,7 @@ version. Other complaints go here :-) Feel free to add any issues to this projec
 
 Other contributions - though not directly committed by him - are from https://github.com/srmo
 
+
 Online Scenario
 ---------------
 
@@ -46,23 +50,24 @@ Select any of them - I have some personal notes on the in the wiki.
 b) Trust the providers encryption
 
 Use Teamdrive, or iDrive Sync. With Teamdrive you can - in some cases - even see the encrypted files depending on the
-backend you use. With iDrive Sync you have to provide a custom password as a base for the generated keys
-(This rips out some functions like sharing which gives you a hint, that they really do what they are saying).
+backend you use. With iDrive Sync you have to provide a custom password as a base for the generated keys (This rips
+out some functions like sharing which gives you a hint, that they really do what they are saying).
 
 c) Encrypt locally on every file access and thus only sync encrypted stuff which you can still see.
 
-Boxcryptor, EncFS come into my mind. Disadvantage here is the de- and encryption on nearly every access.
-Really locally stored are only the encrypted files.
+Boxcryptor, EncFS come into my mind. Disadvantage here is the de- and encryption on nearly every access. Really locally
+stored are only the encrypted files.
 
-d) If you trust your local system and need to store frequently accessed files, you would like to encrypt only short before or on backing up/syncing files.
+d) If you trust your local system and need to store frequently accessed files, you would like to encrypt only short
+before or on backing up/syncing files.
 
-This is where this software fills the gap. It can sync directories, local or webdav, and it can do this with either
-of these encrypted. Additionally it can sync with encfs volumes stored in local folders. It is my common practice, that
+This is where this software fills the gap. It can sync directories, local or webdav, and it can do this with either of
+these encrypted. Additionally it can sync with encfs volumes stored in local folders. It is my common practice, that
 the local encrypted folders are in turn synced with one of the online syncing services.
 
 If you use EncFS in this scenario, it is possible to access the encrypted and synced files from mobile devices with
-Boxcryptor Classic for iOS and Android and additionally EncFS tools for android. Also this EncFS solution is
-compatible with encfs4win and of course Linux based encfs.
+Boxcryptor Classic for iOS and Android and additionally EncFS tools for android. Also this EncFS solution is compatible
+with encfs4win and of course Linux based encfs.
 
 
 Requirements
@@ -96,11 +101,11 @@ get an overview of all possible command line options.
 Configuration
 -------------
 
-JFileSync works with profiles controlling which folders to use, which files to include or ommit, how to log into
-WebDAV servers, and which encryption cipher and passphrase to use.
+JFileSync works with profiles controlling which folders to use, which files to include or ommit, how to log into WebDAV
+servers, and which encryption cipher and passphrase to use.
 
-These profiles need to be set up and can be stored in XML files. The distribution contains a set of profile file
-examples illustrating all the intended scenarios.
+These profiles need to be set up and can be stored in XML files. The distribution contains a set of profile file examples
+illustrating all the intended scenarios.
 
 
 License and Usage Terms
@@ -184,8 +189,8 @@ Metafiles to speed up access of the directory structures don't have constant nam
 
 Passwords to derive keys from are not constant along the whole directory structure.
 
-You will need the unlimited encryption add-on by Oracle for your JDK, if you want to use anything except the default cipher
-AES.
+You will need the unlimited encryption add-on by Oracle for your JDK, if you want to use anything except the default
+cipher AES.
 
 Feel free to issue bug reports and ideas here.
 
