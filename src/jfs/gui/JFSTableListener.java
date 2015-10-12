@@ -1,6 +1,6 @@
 /*
  * JFileSync
- * Copyright (C) 2002-2007, Jens Heidrich
+ * Copyright (C) 2002-2008, Jens Heidrich
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -136,6 +136,24 @@ public class JFSTableListener implements MouseListener, ActionListener {
      * The mouse event to deal with.
      */
     private void handlePopupMenu(MouseEvent e) {
+        // If appropriate, adjust the selection in response to a popup
+        // trigger
+        if (e.isPopupTrigger()) {
+            int row = table.rowAtPoint(e.getPoint());
+            if (row==-1) {
+                // The popup trigger was fired outside the
+                // bounds of the table; ignore it
+                return;
+            }
+            ListSelectionModel model = table.getSelectionModel();
+            if (!model.isSelectedIndex(row)) {
+                // The popup trigger was fired within the
+                // bounds of the table but outside of the
+                // current selection; change the selection
+                model.setSelectionInterval(row, row);
+            }
+        }
+
         if (e.isPopupTrigger()&&!table.getSelectionModel().isSelectionEmpty()) {
             // Updates the selection of JFS elements:
             updateSelection();

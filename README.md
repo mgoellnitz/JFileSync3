@@ -20,7 +20,11 @@ identified a set of backup areas which didn't need online syncing but just regul
 syncing services available provide WebDAV backends, so I can decide to use a service online or manual (scheduled).
 
 It is heavily based on the work of Jens Heidrich and the JFileSync2.2. After some hacking aroung in his code I felt that
-this one here is a fork, ripping out his original remove backends and changing the purpose quite a lot.
+this one here is a fork, ripping out his original remove backends and changing the purpose quite a lot. I had to
+realise the Jens re-started his work in the original product, so that this decision now would need some rethinking.
+So be aware that this code here is based in the 2007 version JFileSync2.2 and not the more recent 2.3 and 2.4 work,
+which heads in part in similar directions as my code (ripping out the server, using VFS, presenting a new Windows
+and even Mac integration).
 
 JFileSync is a SourceForge project and available via the following URL:
 
