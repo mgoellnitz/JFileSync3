@@ -20,6 +20,7 @@ package jfs.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
@@ -487,6 +488,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
                 if ("OPEN".equals(cmd)) {
                     File last = s.getLastProfileDir();
                     JFileChooser chooser = new JFileChooser(last);
+                    chooser.setPreferredSize(new Dimension(700, 600));
                     JFSConfigFileFilter filter = new JFSConfigFileFilter();
                     chooser.setFileFilter(filter);
 
