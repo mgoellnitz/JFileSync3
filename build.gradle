@@ -1,25 +1,33 @@
-defaultTasks 'clean', 'build'
+/*
+ * Copyright (C) 2013-2015, Martin Goellnitz
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
+ */
+plugins {
+  id "edu.sc.seis.launch4j" version "1.5.1"
+}
 
 apply plugin: 'java'
 apply plugin: 'application'
-apply plugin:com.smokejumperit.gradle.ExecPlugin
-apply plugin: 'launch4j'
+
+defaultTasks 'clean', 'build'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 compileJava.options.encoding = 'UTF-8'
 compileJava.options.deprecation = true
-
-buildscript {
-  repositories {
-    jcenter()
-    maven { url "http://repo.smokejumperit.com" }
-  }
-  dependencies {
-    classpath 'com.smokejumperit:gradle-plugins:0.8.2'
-    classpath 'edu.sc.seis.gradle:launch4j:1.0.6'
-  }
-}
 
 repositories {
   jcenter()
@@ -121,48 +129,70 @@ distZip {
   /*
   // I personally have the JCE stuff prepared there
   into(project.name) {
-    from '..'
-    include 'jce-jre-patches/**'
+  from '..'
+  include 'jce-jre-patches/**'
   }
   // You might package your personal profiles in here
   into(project.name) {
-    from '..'
-    include 'profiles/**'
+  from '..'
+  include 'profiles/**'
   }
-  */
+   */
 }
 
-task(encryptionTest) << {
+private List<String> getCmd(String cmd) {
+  // TODO: OS-Switch
+  def prefix = "" // "cmd /c " for windows
+  List<String> result = new ArrayList<>(2)
+  "$prefix$cmd".split(" ").each {
+    result.add(it)
+  }
+  return result
+}
+
+task(prepareTest) << {
   // Extract distribution
-  println "Extracting distribution"
   ant.unzip(src: "$buildDir/distributions/${project.name}.zip", dest: "$buildDir")
   // Extract test data
-  println "Extracting test data"
   ant.unzip(src: "test/test-folders.zip", dest: "$buildDir/${project.name}")
-
-  // TODO: OS-Switch
-  def prefix = ""; // "cmd /c " for windows
-
-  // Only for linux
-  String cmd = "chmod 755 bin${File.separator}${project.name}"
-  project.exec(cmd, "$buildDir/${project.name}")
-
-  println "Encrypting"
-  cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}1-encrypt-with-metadata.xml -nogui -nohistory -quiet"
-  project.exec(cmd, "$buildDir/${project.name}")
-
-  println "Decrypting taking every folder metadata into account"
-  cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}2-decrypt-with-metadata.xml -nogui -nohistory -quiet"
-  project.exec(cmd, "$buildDir/${project.name}")
-
-  println "Decrypting ignoring any folder's metadata"
-  cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}3-decrypt-without-metadata.xml -nogui -nohistory -quiet"
-  project.exec(cmd, "$buildDir/${project.name}")
-
-  println "And now please compare by hand"
-  cmd = "${prefix}bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}4-compare-resulting-folders.xml -nohistory"
-  project.exec(cmd, "$buildDir/${project.name}")
 }
+
+task makeTestExecutable(type:Exec) {
+  // Only for linux
+  workingDir "$buildDir/${project.name}"
+  commandLine "chmod", "755",  "bin${File.separator}${project.name}"
+  println commandLine.class.name
+}
+
+task encrypt(type:Exec) {
+  // Encrypt
+  workingDir "$buildDir/${project.name}"
+  commandLine getCmd("bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}1-encrypt-with-metadata.xml -nogui -nohistory -quiet")
+}
+
+task decrypt(type:Exec) {
+  // Decrypt taking every folder metadata into account
+  workingDir "$buildDir/${project.name}"
+  commandLine  getCmd("bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}2-decrypt-with-metadata.xml -nogui -nohistory -quiet")
+}
+
+task decryptIgnoring(type:Exec) {
+  // Decrypt ignoring any folder's metadata
+  commandLine getCmd("bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}3-decrypt-without-metadata.xml -nogui -nohistory -quiet")
+  workingDir "$buildDir/${project.name}"
+}
+
+task encryptionTest(type:Exec) {
+  // Compare by hand
+  commandLine getCmd("bin${File.separator}${project.name} -config ..${File.separator}..${File.separator}test${File.separator}4-compare-resulting-folders.xml -nohistory")
+  workingDir "$buildDir/${project.name}"
+}
+
+encryptionTest.dependsOn decryptIgnoring
+decryptIgnoring.dependsOn decrypt
+decrypt.dependsOn encrypt
+encrypt.dependsOn makeTestExecutable
+makeTestExecutable.dependsOn prepareTest
 
 // Project specific default output directory for eclipse users
 // apply plugin: 'eclipse'
