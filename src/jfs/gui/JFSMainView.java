@@ -705,9 +705,9 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
      * Updates the list of last profiles.
      */
     public final void updateLastOpenedProfiles() {
-        JFSSettings s = JFSSettings.getInstance();
-        List<File> profiles = s.getLastOpenedProfiles();
-        for (int i = 0; i<profiles.size(); i++) {
+        List<File> profiles = JFSSettings.getInstance().getLastOpenedProfiles();
+        int max = Math.min(profiles.size(), JFSConst.LAST_OPENED_PROFILES_SIZE);
+        for (int i = 0; i<max; i++) {
             String name = profiles.get(i).getName();
             if (name.length()>30) {
                 name = name.substring(0, 26)+"...";
@@ -715,7 +715,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             lastOpenedProfiles[i].setText((i+1)+". "+name);
             lastOpenedProfiles[i].setVisible(true);
         }
-        for (int i = profiles.size(); i<JFSConst.LAST_OPENED_PROFILES_SIZE; i++) {
+        for (int i = max; i<JFSConst.LAST_OPENED_PROFILES_SIZE; i++) {
             lastOpenedProfiles[i].setText("");
             lastOpenedProfiles[i].setVisible(false);
         }
