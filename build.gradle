@@ -161,7 +161,6 @@ task makeTestExecutable(type:Exec) {
   // Only for linux
   workingDir "$buildDir/${project.name}"
   commandLine "chmod", "755",  "bin${File.separator}${project.name}"
-  println commandLine.class.name
 }
 
 task encrypt(type:Exec) {
