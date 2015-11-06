@@ -126,6 +126,11 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
     public void flushMetaData(String rootPath, String[] pathAndName, Map<String, FileInfo> listing) {
         try {
             LOG.debug("flushMetaData() flushing {}", listing);
+            for (FileInfo fi : listing.values()) {
+                if (!fi.isCanWrite()) {
+                    LOG.error("flushMetaData() cannot write file {} / {}", fi.getPath(), fi.getName());
+                } // if
+            } // for
             OutputStream os = getOutputStream(rootPath, getMetaDataPath(pathAndName[0]), false);
 
             try {
@@ -151,7 +156,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
             if (LOG.isDebugEnabled()) {
                 Map<String, FileInfo> backtest = getMetaData(rootPath, pathAndName[0]);
                 for (FileInfo info : backtest.values()) {
-                    LOG.debug("flushMetaData() reading {}", info.getName());
+                    LOG.debug("flushMetaData() reading {}", info);
                 } // for
             } // if
         } catch (IOException ioe) {
