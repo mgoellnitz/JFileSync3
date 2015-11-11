@@ -52,8 +52,8 @@ dependencies {
   // dropbox client
   // compile files(fileTree(dir: 'lib', includes: ['*.jar']))
 
-  compile 'org.slf4j:slf4j-api:1.7.12'
-  compile 'org.slf4j:slf4j-log4j12:1.7.12'
+  compile 'org.slf4j:slf4j-api:1.7.13'
+  compile 'org.slf4j:slf4j-log4j12:1.7.13'
   compile 'com.github.lookfirst:sardine:5.6'
   compile 'org.slf4j:jul-to-slf4j:1.7.12' // starting with version 5.6 Sardine uses JUL
 
