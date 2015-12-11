@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import javax.xml.namespace.QName;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +77,7 @@ public final class DavUtils {
         Date modificationDate = resource.getModified();
         String modifiedDateString = resource.getCustomProps().get(DavUtils.PROP_LAST_MODIFIED_TIME_WIN);
         LOG.info("getModificationDate() custom properties for {}: {}", resource.getName(), resource.getCustomPropsNS());
-        if (modifiedDateString!=null) {
+        if (StringUtils.isNotEmpty(modifiedDateString)) {
             try {
                 synchronized (DATE_FORMAT) {
                     modificationDate = DATE_FORMAT.parse(modifiedDateString);
