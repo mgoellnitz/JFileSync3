@@ -466,7 +466,7 @@ public abstract class AbstractEncryptedStorageAccess {
             } // if
         } // for
         LOG.debug("getFilename() {} -> {}", relativePath, path);
-        if (path.length()>245) {
+        if (path.length()>253) {
             LOG.warn("getFileName() long path {} for {}", path.length(), relativePath);
         } // if
         return path;
