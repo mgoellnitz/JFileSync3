@@ -60,7 +60,7 @@ dependencies {
   // Cifs code looks good but I don't have shares to use so I skip this
   // compile 'jcifs:jcifs:1.3.17'
   compile 'org.apache.commons:commons-lang3:3.4'
-  compile 'org.apache.commons:commons-compress:1.10'
+  compile 'org.apache.commons:commons-compress:1.11'
   compile 'net.sf.jsignature.io-tools:easystream:1.2.15'
 
   // compile 'org.bouncycastle:bcprov-jdk16:1.46'
