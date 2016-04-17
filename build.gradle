@@ -53,7 +53,6 @@ dependencies {
   // compile files(fileTree(dir: 'lib', includes: ['*.jar']))
 
   compile 'org.slf4j:slf4j-api:1.7.21'
-  compile 'org.slf4j:slf4j-log4j12:1.7.21'
   compile 'com.github.lookfirst:sardine:5.7'
   compile 'org.slf4j:jul-to-slf4j:1.7.21' // starting with version 5.6 Sardine uses JUL
 
@@ -66,6 +65,11 @@ dependencies {
   // compile 'org.bouncycastle:bcprov-jdk16:1.46'
   compile 'org.bouncycastle:bcprov-jdk15on:1.54'
   compile 'javax.servlet:javax.servlet-api:3.1.0'
+
+  // Logging:
+  // compile 'org.slf4j:slf4j-log4j12:1.7.21'
+  runtime 'ch.qos.logback:logback-classic:1.1.7'
+  runtime 'org.codehaus.groovy:groovy:2.4.6'
 }
 
 mainClassName = 'jfs.JFileSync'
