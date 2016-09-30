@@ -21,6 +21,7 @@ import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -82,6 +83,8 @@ public final class DavUtils {
                 synchronized (DATE_FORMAT) {
                     modificationDate = DATE_FORMAT.parse(modifiedDateString);
                 }
+            } catch (ParseException pe) {
+                LOG.error("createFileInfo() {}", pe.getMessage());
             } catch (Exception e) {
                 LOG.error("createFileInfo()", e);
             } // try/catch
