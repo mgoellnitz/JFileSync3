@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2016 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  */
 package jfs.sync.meta;
 
-import jfs.sync.encryption.AbstractMetaStorageAccess;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -26,6 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 import javax.crypto.Cipher;
+import jfs.sync.encryption.AbstractMetaStorageAccess;
 import jfs.sync.encryption.FileInfo;
 import jfs.sync.encryption.JFSEncryptedStream;
 import jfs.sync.util.SecurityUtils;
@@ -166,6 +166,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
     @Override
     protected OutputStream getOutputStream(String rootPath, String relativePath, boolean forPayload) throws IOException {
         File file = getFile(rootPath, relativePath);
+        file.setWritable(true); // at least try...
         String[] pathAndName = getPathAndName(relativePath);
         Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
         if (forPayload&&(listing.get(pathAndName[1])==null||!file.exists())) {

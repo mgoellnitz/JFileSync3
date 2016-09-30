@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2016 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -139,6 +139,7 @@ public class JFSEncryptedFile extends JFSFile {
     public final boolean canWrite() {
         LOG.debug("canWrite() {}", fileInfo.isCanWrite());
         return fileInfo.isCanWrite();
+        // return true;
     }
 
 
