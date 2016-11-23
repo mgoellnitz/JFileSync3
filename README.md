@@ -164,7 +164,7 @@ Development Notes
 
 Required packages for JFileSync3 development (not included in the distribution):
 
-- Java 7 SDK >= 1.7.0 (see 'http://java.sun.com') (Java 8 should be working)
+- Java 7 SDK >= 1.7.0 (see 'http://java.sun.com') (Java 8 is working)
 - Gradle >= 1.4 (see 'http://www.gradle.org' - Recommended are versions 2.2.1 and up)
 
 Used and as a result recommended development tools:
