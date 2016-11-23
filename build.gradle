@@ -153,7 +153,7 @@ private List<String> getCmd(String cmd) {
   return result
 }
 
-task(prepareTest) << {
+task prepareTest(type:Exec)  {
   // Extract distribution
   ant.unzip(src: "$buildDir/distributions/${project.name}.zip", dest: "$buildDir")
   // Extract test data
