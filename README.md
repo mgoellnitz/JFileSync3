@@ -1,5 +1,4 @@
-Java based File Syncing Tool
-============================
+# Java based encrypting File Syncing Tool
 
 [![Latest Release](https://img.shields.io/github/release/mgoellnitz/JFileSync3.svg)](https://github.com/mgoellnitz/JFileSync3/releases/latest)
 [![Dependency Status](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071)
@@ -38,8 +37,7 @@ version. Other complaints go here :-) Feel free to add any issues to this projec
 Other contributions - though not directly committed by him - are from https://github.com/srmo
 
 
-Online Scenario
----------------
+## Online Scenario
 
 You replaced (or want to) your regular backups with online syncing tools and don't have backup media anymore.
 This helps doing backups of your work in remote situations where e.g. don't want to carry confidential backup media
@@ -74,16 +72,14 @@ Boxcryptor Classic for iOS and Android and additionally EncFS tools for android.
 with encfs4win and of course Linux based encfs.
 
 
-Requirements
-------------
+## Requirements
 
-- Java 7 Runtime Environment, Java 8 supported (see 'http://java.oracle.com')
+- Java 8 Runtime Environment, OenJDK supported (see 'http://java.oracle.com')
 
 - Only when using other algorithms than AES: JCE extension  (see 'http://java.oracle.com')
 
 
-Installation and Application Start
-----------------------------------
+## Installation and Application Start
 
 Unzip the distribution file to a directory of your choice.
 
@@ -102,8 +98,7 @@ provides full access to all features (apart from plug-ins) via the command line 
 get an overview of all possible command line options.
 
 
-Configuration
--------------
+## Configuration
 
 JFileSync works with profiles controlling which folders to use, which files to include or ommit, how to log into WebDAV
 servers, and which encryption cipher and passphrase to use.
@@ -112,8 +107,7 @@ These profiles need to be set up and can be stored in XML files. The distributio
 illustrating all the intended scenarios.
 
 
-License and Usage Terms
------------------------
+## License and Usage Terms
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -159,18 +153,17 @@ Some code in LZMA SDK is based on public domain code from another developers:
 You can find a copy all licenses of JFileSync3 and the used libraries in the 'legal' folder of this distribution.
 
 
-Development Notes
------------------
+## Development Notes
 
 Required packages for JFileSync3 development (not included in the distribution):
 
-- Java 7 SDK >= 1.7.0 (see 'http://java.sun.com') (Java 8 is working)
-- Gradle >= 1.4 (see 'http://www.gradle.org' - Recommended are versions 2.2.1 and up)
+- Java 8 SDK >= 1.8.0 (see 'http://java.sun.com')
+- Gradle >= 2.1.1 (see 'http://www.gradle.org')
 
 Used and as a result recommended development tools:
 
-- Java 7 SDK 1.7.0
-- Netbeans 8.0
+- Java 8 SDK 1.8.0
+- Netbeans 8.1
 
 The following structure describes all folder and files included in the JFileSync3 source repository:
 
@@ -199,8 +192,7 @@ cipher AES.
 Feel free to issue bug reports and ideas here.
 
 
-Building and Packaging
-----------------------
+## Building and Packaging
 
 
 The software is built through the usual

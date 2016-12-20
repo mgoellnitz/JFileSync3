@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
 plugins {
-  id "edu.sc.seis.launch4j" version "1.5.1"
+  id "edu.sc.seis.launch4j" version "2.1.0"
 }
 
 apply plugin: 'java'
@@ -79,7 +79,7 @@ launch4j {
   mainClassName = project.mainClassName
   version = '3.0.14'
   copyright = '(C) 2002-2016, J. Heidrich, M. Goellnitz'
-  downloadUrl = 'https://www.dropbox.com/s/3n4snlbw9tyjgec/JFileSync3.zip'
+  downloadUrl = 'https://github.com/mgoellnitz/JFileSync3/releases'
   supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
   icon = "$project.projectDir/win/JFileSync3.ico"
   dontWrapJar = true
@@ -154,6 +154,7 @@ private List<String> getCmd(String cmd) {
 }
 
 task prepareTest(type:Exec)  {
+  commandLine "echo", "unzipping"
   // Extract distribution
   ant.unzip(src: "$buildDir/distributions/${project.name}.zip", dest: "$buildDir")
   // Extract test data
