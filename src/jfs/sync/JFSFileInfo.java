@@ -61,22 +61,22 @@ public class JFSFileInfo implements Serializable {
     /**
      * Determines whether the file is a directory.
      */
-    private boolean isDirectory = false;
+    private boolean directory = false;
 
     /**
      * Determines whether we can read the file.
      */
-    private boolean canRead = true;
+    private boolean readable = true;
 
     /**
      * Determines whether we can write to the file.
      */
-    private boolean canWrite = true;
+    private boolean writable = true;
 
     /**
-     * Determines whether the file exists.
+     * Determines whether the file existing.
      */
-    private boolean exists = false;
+    private boolean existing = false;
 
     /**
      * The length of the file. Zero for directories.
@@ -123,11 +123,11 @@ public class JFSFileInfo implements Serializable {
 
         name = file.getName();
         path = file.getPath();
-        exists = file.exists();
+        existing = file.exists();
 
-        if (exists) {
-            canRead = file.canRead();
-            canWrite = file.canWrite();
+        if (existing) {
+            readable = file.canRead();
+            writable = file.canWrite();
         }
 
         return file;
@@ -142,9 +142,9 @@ public class JFSFileInfo implements Serializable {
     public final void update() {
         File file = complete();
 
-        if (exists) {
-            isDirectory = file.isDirectory();
-            if (!isDirectory) {
+        if (existing) {
+            directory = file.isDirectory();
+            if (!directory) {
                 length = file.length();
                 lastModified = file.lastModified();
             }
@@ -152,7 +152,7 @@ public class JFSFileInfo implements Serializable {
             if (list==null) {
                 String[] fileList = file.list();
 
-                if (isDirectory&&(fileList!=null)) {
+                if (directory&&(fileList!=null)) {
                     list = new JFSFileInfo[fileList.length];
 
                     for (int i = 0; i<fileList.length; i++) {
@@ -175,15 +175,15 @@ public class JFSFileInfo implements Serializable {
 
         File file = new File(path);
 
-        if (!isDirectory) {
+        if (!directory) {
             success = success&&file.setLastModified(lastModified);
         }
 
-        if (!canWrite) {
+        if (!writable) {
             success = success&&file.setReadOnly();
         }
 
-        if (isDirectory&&list!=null) {
+        if (directory&&list!=null) {
             for (JFSFileInfo fi : list) {
                 success = success&&fi.updateFileSystem();
             }
@@ -293,7 +293,7 @@ public class JFSFileInfo implements Serializable {
      * @return True if and only if the file is a directory.
      */
     public final boolean isDirectory() {
-        return isDirectory;
+        return directory;
     }
 
 
@@ -304,7 +304,7 @@ public class JFSFileInfo implements Serializable {
      * True if and only if the file is a directory.
      */
     public void setDirectory(boolean b) {
-        isDirectory = b;
+        directory = b;
     }
 
 
@@ -314,7 +314,7 @@ public class JFSFileInfo implements Serializable {
      * @return True if and only if we can read the file.
      */
     public final boolean canRead() {
-        return canRead;
+        return readable;
     }
 
 
@@ -324,7 +324,7 @@ public class JFSFileInfo implements Serializable {
      * @return True if and only if we can write to the file.
      */
     public final boolean canWrite() {
-        return canWrite;
+        return writable;
     }
 
 
@@ -332,7 +332,7 @@ public class JFSFileInfo implements Serializable {
      * Marks the file or directory named by this abstract pathname so that only read operations are allowed.
      */
     public final void setReadOnly() {
-        canWrite = false;
+        writable = false;
     }
 
 
@@ -389,23 +389,23 @@ public class JFSFileInfo implements Serializable {
 
 
     /**
-     * Tests whether the file denoted by this abstract pathname exists.
+     * Tests whether the file denoted by this abstract pathname existing.
      *
-     * @return True if and only if the file denoted by this abstract pathname exists; false otherwise.
+     * @return True if and only if the file denoted by this abstract pathname existing; false otherwise.
      */
     public final boolean exists() {
-        return exists;
+        return existing;
     }
 
 
     /**
-     * Sets whether the file exists or not on server side.
+     * Sets whether the file existing or not on server side.
      *
      * @param b
-     * True if and only if the file exists.
+     * True if and only if the file existing.
      */
     public void setExists(boolean b) {
-        exists = b;
+        existing = b;
     }
 
 

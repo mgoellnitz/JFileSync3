@@ -170,7 +170,7 @@ public final class JFSCopyMonitor {
      * @param bytesToTransfer
      * The bytes to transfer to set.
      */
-    void setBytesToTransfer(long bytesToTransfer) {
+    public void setBytesToTransfer(long bytesToTransfer) {
         this.bytesToTransfer = bytesToTransfer;
     }
 
@@ -189,7 +189,7 @@ public final class JFSCopyMonitor {
      * @param bytesToTransferCurrentFile
      * The bytes to transfer to set.
      */
-    void setBytesToTransferCurrentFile(long bytesToTransferCurrentFile) {
+    public void setBytesToTransferCurrentFile(long bytesToTransferCurrentFile) {
         this.bytesToTransferCurrentFile = bytesToTransferCurrentFile;
     }
 
@@ -208,7 +208,7 @@ public final class JFSCopyMonitor {
      * @param bytesTransfered
      * The bytes transfered to set.
      */
-    void setBytesTransfered(long bytesTransfered) {
+    public void setBytesTransfered(long bytesTransfered) {
         this.bytesTransfered = bytesTransfered;
     }
 
@@ -227,7 +227,7 @@ public final class JFSCopyMonitor {
      * @param bytesTransferedCurrentFile
      * The bytes transfered to set.
      */
-    void setBytesTransferedCurrentFile(long bytesTransferedCurrentFile) {
+    public void setBytesTransferedCurrentFile(long bytesTransferedCurrentFile) {
         this.bytesTransferedCurrentFile = bytesTransferedCurrentFile;
     }
 
@@ -246,7 +246,7 @@ public final class JFSCopyMonitor {
      * @param currentSrc
      * The current source to set.
      */
-    void setCurrentSrc(JFSFile currentSrc) {
+    public void setCurrentSrc(JFSFile currentSrc) {
         this.currentSrc = currentSrc;
     }
 
@@ -265,7 +265,7 @@ public final class JFSCopyMonitor {
      * @param currentTgt
      * The current target to set.
      */
-    void setCurrentTgt(JFSFile currentTgt) {
+    public void setCurrentTgt(JFSFile currentTgt) {
         this.currentTgt = currentTgt;
     }
 
@@ -297,7 +297,7 @@ public final class JFSCopyMonitor {
      * @param filesCopied
      * The files copied to set.
      */
-    void setFilesCopied(int filesCopied) {
+    public void setFilesCopied(int filesCopied) {
         this.filesCopied = filesCopied;
     }
 
@@ -316,7 +316,7 @@ public final class JFSCopyMonitor {
      * @param filesToCopy
      * The files to copy to set.
      */
-    void setFilesToCopy(int filesToCopy) {
+    public void setFilesToCopy(int filesToCopy) {
         this.filesToCopy = filesToCopy;
     }
 

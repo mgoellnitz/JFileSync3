@@ -142,7 +142,7 @@ public final class JFSProgress {
      * @param activity
      * The type of activity to start.
      */
-    void prepare(ProgressActivity activity) {
+    public void prepare(ProgressActivity activity) {
         this.activity = activity;
         this.state = ProgressState.PREPARATION;
         canceled = false;
@@ -155,7 +155,7 @@ public final class JFSProgress {
     /**
      * Starts a progress computation.
      */
-    void start() {
+    public void start() {
         state = ProgressState.ACTIVE;
         startTime = System.currentTimeMillis();
         update();
@@ -165,7 +165,7 @@ public final class JFSProgress {
     /**
      * Ends a progress computation.
      */
-    void end() {
+    public void end() {
         state = ProgressState.DONE;
         duration = System.currentTimeMillis()-startTime;
         update();
@@ -239,20 +239,6 @@ public final class JFSProgress {
      */
     public void cancel() {
         canceled = true;
-
-        // Shut down producers at once in order to avoid waiting for time out:
-        JFSFileProducerManager pm = JFSFileProducerManager.getInstance();
-        if (activity==ProgressActivity.COMPARISON) {
-            JFSComparisonMonitor cm = JFSComparisonMonitor.getInstance();
-        } else if (activity==ProgressActivity.SYNCHRONIZATION_COPY) {
-            JFSCopyMonitor cm = JFSCopyMonitor.getInstance();
-            if (cm.getCurrentSrc()!=null) {
-                JFSFileProducer producer = cm.getCurrentSrc().getFileProducer();
-            }
-            if (cm.getCurrentTgt()!=null) {
-                JFSFileProducer producer = cm.getCurrentTgt().getFileProducer();
-            }
-        }
     }
 
 
@@ -293,7 +279,7 @@ public final class JFSProgress {
      * Sends a message to all existing observers that the algorithm's state was updated, if and only if a minimum time
      * period between two subsequent updates is gone.
      */
-    void fireUpdate() {
+    public void fireUpdate() {
         if ((System.currentTimeMillis()-updateTime)>=JFSConst.PROGRESS_UPDATE) {
             updateTime = System.currentTimeMillis();
             update();

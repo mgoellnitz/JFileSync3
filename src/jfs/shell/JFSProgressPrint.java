@@ -44,7 +44,7 @@ public class JFSProgressPrint implements JFSProgressObserver {
     /**
      * The stream for controling cancel operations.
      */
-    private BufferedReader din = new BufferedReader(new InputStreamReader(System.in));
+    private final BufferedReader din = new BufferedReader(new InputStreamReader(System.in));
 
 
     /**

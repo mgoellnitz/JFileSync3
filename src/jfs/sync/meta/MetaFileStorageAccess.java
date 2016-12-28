@@ -33,6 +33,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * Storage access implementation working with meta information collection file and encrypted file names and contents.
+ * @author martin */
 public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
 
     private static final Logger LOG = LoggerFactory.getLogger(MetaFileStorageAccess.class);

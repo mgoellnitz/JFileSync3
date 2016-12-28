@@ -173,9 +173,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             }
             SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
             buildInfo += " - build date "+formatter.format(new Date(jfsFile.lastModified()))+" ";
-        } catch (URISyntaxException use) {
-            ;
-        } catch (MalformedURLException mue) {
+        } catch (URISyntaxException|MalformedURLException mue) {
             ;
         } // try/catch
 

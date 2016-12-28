@@ -16,8 +16,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync;
+
 
 /**
  * Sorts a list of objects using the heap sort algorithm. The class is used to
@@ -26,83 +26,91 @@ package jfs.sync;
  * This is necessary because the predefined order differs between the File
  * object und the String object. The new JFSFile object compares the Strings of
  * the file names and implements the Comparable Interface.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: HeapSort.java,v 1.13 2007/02/26 18:49:09 heidrich Exp $
+ * @param <E> base class to compare
  */
 public class HeapSort<E extends Comparable<E>> {
 
-	/** Array of comparables. */
-	private E[] c;
+    /** Array of comparables. */
+    private E[] c;
 
-	/**
-	 * Switches two elements of the array.
-	 * 
-	 * @param a
-	 *            Index of the first object.
-	 * @param b
-	 *            Index of the second object.
-	 */
-	private void switchElements(int a, int b) {
-		E temp = c[a];
-		c[a] = c[b];
-		c[b] = temp;
-	}
 
-	/**
-	 * Heapfies the array within a certain region.
-	 * 
-	 * @param left
-	 *            The left side of the region.
-	 * @param right
-	 *            The right side of the region.
-	 */
-	private void heapify(int left, int right) {
-		int k = 2 * left;
+    /**
+     * Switches two elements of the array.
+     *
+     * @param a
+     * Index of the first object.
+     * @param b
+     * Index of the second object.
+     */
+    private void switchElements(int a, int b) {
+        E temp = c[a];
+        c[a] = c[b];
+        c[b] = temp;
+    }
 
-		if (k > right)
-			return;
 
-		if ((k + 1) > right) {
-			if (c[k - 1].compareTo(c[left - 1]) > 0)
-				switchElements(left - 1, k - 1);
+    /**
+     * Heapfies the array within a certain region.
+     *
+     * @param left
+     * The left side of the region.
+     * @param right
+     * The right side of the region.
+     */
+    private void heapify(int left, int right) {
+        int k = 2*left;
 
-			return;
-		}
+        if (k>right) {
+            return;
+        }
 
-		if (c[k - 1].compareTo(c[k]) < 0)
-			k++;
+        if ((k+1)>right) {
+            if (c[k-1].compareTo(c[left-1])>0) {
+                switchElements(left-1, k-1);
+            }
 
-		if (c[left - 1].compareTo(c[k - 1]) < 0) {
-			switchElements(left - 1, k - 1);
-			heapify(k, right);
-		}
-	}
+            return;
+        }
 
-	/**
-	 * Sorts an array of files.
-	 * 
-	 * @param array
-	 *            Array of comparables.
-	 */
-	public void sort(E[] array) {
-		if (array == null)
-			return;
+        if (c[k-1].compareTo(c[k])<0) {
+            k++;
+        }
 
-		c = array;
+        if (c[left-1].compareTo(c[k-1])<0) {
+            switchElements(left-1, k-1);
+            heapify(k, right);
+        }
+    }
 
-		int left = (c.length / 2) + 1;
-		int right = c.length;
 
-		while (left > 1) {
-			left--;
-			heapify(left, right);
-		}
+    /**
+     * Sorts an array of files.
+     *
+     * @param array
+     * Array of comparables.
+     */
+    public void sort(E[] array) {
+        if (array==null) {
+            return;
+        }
 
-		while (right > 1) {
-			switchElements(right - 1, left - 1);
-			right--;
-			heapify(left, right);
-		}
-	}
+        c = array;
+
+        int left = (c.length/2)+1;
+        int right = c.length;
+
+        while (left>1) {
+            left--;
+            heapify(left, right);
+        }
+
+        while (right>1) {
+            switchElements(right-1, left-1);
+            right--;
+            heapify(left, right);
+        }
+    }
 }

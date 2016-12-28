@@ -45,10 +45,10 @@ public class JFSWebDavFileProducer extends JFSFileProducer {
 
     private Sardine sardine;
 
-    private Map<String, List<DavResource>> directoryCache = new HashMap<>(256);
+    private final Map<String, List<DavResource>> directoryCache = new HashMap<>(256);
 
 
-    List<DavResource> getListing(String url) throws IOException {
+    public List<DavResource> getListing(String url) throws IOException {
         if (directoryCache.containsKey(url)) {
             return directoryCache.get(url);
         } // if

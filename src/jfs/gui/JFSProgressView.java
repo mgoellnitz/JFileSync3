@@ -285,14 +285,18 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
                 comparisonPanel.setVisible(true);
                 deletePanel.setVisible(false);
                 copyPanel.setVisible(false);
-            } else if (a==ProgressActivity.SYNCHRONIZATION_DELETE) {
-                comparisonPanel.setVisible(false);
-                deletePanel.setVisible(true);
-                copyPanel.setVisible(false);
-            } else if (a==ProgressActivity.SYNCHRONIZATION_COPY) {
-                comparisonPanel.setVisible(false);
-                deletePanel.setVisible(false);
-                copyPanel.setVisible(true);
+            } else {
+                if (a==ProgressActivity.SYNCHRONIZATION_DELETE) {
+                    comparisonPanel.setVisible(false);
+                    deletePanel.setVisible(true);
+                    copyPanel.setVisible(false);
+                } else {
+                    if (a==ProgressActivity.SYNCHRONIZATION_COPY) {
+                        comparisonPanel.setVisible(false);
+                        deletePanel.setVisible(false);
+                        copyPanel.setVisible(true);
+                    }
+                }
             }
         }
     }
@@ -330,21 +334,25 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
                 if (cm.getCurrentDir()!=null) {
                     comparisonCurrentDir.setText(cm.getCurrentDir().getRelativePath());
                 }
-            } else if (a==ProgressActivity.SYNCHRONIZATION_DELETE&&deletePanel.isVisible()) {
-                JFSDeleteMonitor dm = JFSDeleteMonitor.getInstance();
-                deleteStmtsNo.setText(dm.getFilesDeleted()+"/"+dm.getFilesToDelete());
-                if (dm.getCurrentFile()!=null) {
-                    deleteCurrentFile.setText(dm.getCurrentFile().getRelativePath());
-                }
-            } else if (a==ProgressActivity.SYNCHRONIZATION_COPY&&copyPanel.isVisible()) {
-                JFSCopyMonitor cm = JFSCopyMonitor.getInstance();
-                copyStmtsNo.setText(cm.getFilesCopied()+"/"+cm.getFilesToCopy());
-                copyBytes.setText(JFSFormatter.getLength(cm.getBytesTransfered())+"/"
-                        +JFSFormatter.getLength(cm.getBytesToTransfer()));
-                if (cm.getCurrentFile()!=null) {
-                    copyCurrentFile.setText(cm.getCurrentFile().getRelativePath());
-                    copyBytesCurrentFile.setText(JFSFormatter.getLength(cm.getBytesTransferedCurrentFile())+"/"
-                            +JFSFormatter.getLength(cm.getBytesToTransferCurrentFile()));
+            } else {
+                if (a==ProgressActivity.SYNCHRONIZATION_DELETE&&deletePanel.isVisible()) {
+                    JFSDeleteMonitor dm = JFSDeleteMonitor.getInstance();
+                    deleteStmtsNo.setText(dm.getFilesDeleted()+"/"+dm.getFilesToDelete());
+                    if (dm.getCurrentFile()!=null) {
+                        deleteCurrentFile.setText(dm.getCurrentFile().getRelativePath());
+                    }
+                } else {
+                    if (a==ProgressActivity.SYNCHRONIZATION_COPY&&copyPanel.isVisible()) {
+                        JFSCopyMonitor cm = JFSCopyMonitor.getInstance();
+                        copyStmtsNo.setText(cm.getFilesCopied()+"/"+cm.getFilesToCopy());
+                        copyBytes.setText(JFSFormatter.getLength(cm.getBytesTransfered())+"/"
+                                +JFSFormatter.getLength(cm.getBytesToTransfer()));
+                        if (cm.getCurrentFile()!=null) {
+                            copyCurrentFile.setText(cm.getCurrentFile().getRelativePath());
+                            copyBytesCurrentFile.setText(JFSFormatter.getLength(cm.getBytesTransferedCurrentFile())+"/"
+                                    +JFSFormatter.getLength(cm.getBytesToTransferCurrentFile()));
+                        }
+                    }
                 }
             }
         }
@@ -374,16 +382,20 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
                 JFSSupport.center(getParent(), this);
                 repaint();
                 mainView.updateComparisonTable();
-            } else if (s==ProgressState.DONE) {
-                completionBar.setValue(100);
-                repaint();
-                reset();
-                mainView.update();
-            } else if (s==ProgressState.ACTIVE) {
-                completionBar.setValue(progress.getCompletionRatio());
-                setDetails();
-                repaint();
-                mainView.updateComparisonTable();
+            } else {
+                if (s==ProgressState.DONE) {
+                    completionBar.setValue(100);
+                    repaint();
+                    reset();
+                    mainView.update();
+                } else {
+                    if (s==ProgressState.ACTIVE) {
+                        completionBar.setValue(progress.getCompletionRatio());
+                        setDetails();
+                        repaint();
+                        mainView.updateComparisonTable();
+                    }
+                }
             }
         }
     }
@@ -424,6 +436,11 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
             public void run() {
                 // Wait for dialog to appear:
                 while (!dialog.isVisible()) {
+                    try {
+                        Thread.sleep(1L);
+                    } catch (InterruptedException ie) {
+
+                    }
                 }
 
                 // Compare:
@@ -455,6 +472,11 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
             public void run() {
                 // Wait for dialog to appear:
                 while (!dialog.isVisible()) {
+                    try {
+                        Thread.sleep(5);
+                    } catch (InterruptedException ie) {
+                        ;
+                    }
                 }
 
                 // Synchronize:

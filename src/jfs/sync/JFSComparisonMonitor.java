@@ -118,7 +118,7 @@ public final class JFSComparisonMonitor {
      * The weigth of the currently handled item; i.e., the delta by which the number of handled items is
      * increased if this item is completely handled.
      */
-    void increase(int containedItems, int weight) {
+    public void increase(int containedItems, int weight) {
         itemsStarted.add(containedItems);
         itemsHandled.add(0);
         itemsWeight.add(weight);
@@ -128,7 +128,7 @@ public final class JFSComparisonMonitor {
     /**
      * Decreases the depth for the started and handled items. Always used in combination with increase().
      */
-    void decrease() {
+    public void decrease() {
         // All vector (should ;-) have the same size, so we just
         // use the size of itemsStarted to remove the last elements:
         int size = itemsStarted.size();
@@ -157,7 +157,7 @@ public final class JFSComparisonMonitor {
     /**
      * @return Returns the ratio of the items already handled in percent.
      */
-    int getRatio() {
+    public int getRatio() {
         float ratio = 0;
         for (int i = itemsStarted.size()-1; i>=0; i--) {
             int started = itemsStarted.get(i);
@@ -225,7 +225,7 @@ public final class JFSComparisonMonitor {
      * @param currentSrc
      * The current source to set.
      */
-    void setCurrentSrc(JFSFile currentSrc) {
+    public void setCurrentSrc(JFSFile currentSrc) {
         this.currentSrc = currentSrc;
     }
 
@@ -244,7 +244,7 @@ public final class JFSComparisonMonitor {
      * @param currentTgt
      * The current target to set.
      */
-    void setCurrentTgt(JFSFile currentTgt) {
+    public void setCurrentTgt(JFSFile currentTgt) {
         this.currentTgt = currentTgt;
     }
 

@@ -38,7 +38,7 @@ import jfs.conf.JFSText;
 
 /**
  * This dialog manages server settings.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSConfigServerView.java,v 1.10 2006/01/05 18:27:25 heidrich
  *          Exp $
@@ -67,7 +67,7 @@ public class JFSConfigServerView extends JDialog implements ActionListener {
 
 	/**
 	 * Initializes the config view.
-	 * 
+	 *
 	 * @param dialog
 	 *            The main frame.
 	 * @param config
@@ -159,12 +159,12 @@ public class JFSConfigServerView extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		String cmd = event.getActionCommand();
 
-		if (cmd.equals("button.cancel") || cmd.equals("button.ok")) {
+		if ("button.cancel".equals(cmd) || "button.ok".equals(cmd)) {
 			setVisible(false);
 			dispose();
 		}
 
-		if (cmd.equals("button.ok")) {
+		if ("button.ok".equals(cmd)) {
 			config.setServerTimeout(timeout.getNumber().intValue());
 			config.setServerUserName(user.getText());
 			config.setServerPassPhrase(String.valueOf(passphrase.getPassword()));
@@ -173,5 +173,5 @@ public class JFSConfigServerView extends JDialog implements ActionListener {
 					.getPassword()));
 		}
 	}
-	
+
 }
