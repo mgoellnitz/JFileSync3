@@ -88,6 +88,13 @@ launch4j {
   maxHeapSize = 1536
 }
 
+task createApplication(type: edu.sc.seis.launch4j.tasks.Launch4jExternalTask) {
+    outfile = 'JFileSync3.exe'
+    xmlFileName = 'JFileSync3.xml'
+}
+
+distZip.dependsOn createApplication
+
 startScripts {
   doLast {
     // Add some more reasonable memory settings to JFileSync3

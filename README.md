@@ -74,9 +74,11 @@ with encfs4win and of course Linux based encfs.
 
 ## Requirements
 
-- Java 8 Runtime Environment, OenJDK supported (see 'http://java.oracle.com')
+- Java 8 Runtime Environment, OenJDK supported (see http://java.oracle.com)
 
-- Only when using other algorithms than AES: JCE extension  (see 'http://java.oracle.com')
+- Launch4j installation on the path (see https://sourceforge.net/projects/launch4j/)
+
+- Only when using other algorithms than AES: JCE extension  (see http://java.oracle.com)
 
 
 ## Installation and Application Start
@@ -195,7 +197,11 @@ Feel free to issue bug reports and ideas here.
 ## Building and Packaging
 
 
-The software is built through the usual
+Building requires a launch4j installation available from the path. This was 
+necessary to use a pathed one on 64bit systems mixing the original launch4j with
+the 64bit ld and windres from mingw-binutils.
+
+The software is built with the usual
 
 ```bash
 gradle build
@@ -207,25 +213,10 @@ and can be started - e.g. for IDE integration - through
 gradle run
 ```
 
-A basic packaging can be generate with
-
-```bash
-gradle distZip
-```
-
 Take the ZIP file from build/distributions.
 
-Optionally - if launch4j is installed and available on your path - you can build with
-
-```bash
-gradle clean build launch4j
-gradle distZip
-```
-
-so that the distribution will contain an additional JFileSync3.exe executable file. This is the way, the distribution
-packages are generated.
-
-a small test-suite can be found in profiles/test (which is not packaged in the distribtions zip) and can be called via
+A small test-suite can be found in profiles/test (which is not packaged in the 
+distribtions zip) and can be called via
 
 ```bash
 gradle encryptionTest
