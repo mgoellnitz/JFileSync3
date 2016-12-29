@@ -160,12 +160,14 @@ private List<String> getCmd(String cmd) {
   return result
 }
 
-task prepareTest(type:Exec)  {
-  commandLine "echo", "unzipping"
-  // Extract distribution
-  ant.unzip(src: "$buildDir/distributions/${project.name}.zip", dest: "$buildDir")
-  // Extract test data
-  ant.unzip(src: "test/test-folders.zip", dest: "$buildDir/${project.name}")
+task prepareTestee(type:Copy)  {
+  from zipTree("$buildDir/distributions/${project.name}.zip")
+  into "$buildDir"
+}
+
+task prepareTest(type:Copy)  {
+  from zipTree("test/test-folders.zip")
+  into "$buildDir/${project.name}"
 }
 
 task makeTestExecutable(type:Exec) {
@@ -203,6 +205,7 @@ decryptIgnoring.dependsOn decrypt
 decrypt.dependsOn encrypt
 encrypt.dependsOn makeTestExecutable
 makeTestExecutable.dependsOn prepareTest
+prepareTest.dependsOn prepareTestee
 
 // Project specific default output directory for eclipse users
 // apply plugin: 'eclipse'
