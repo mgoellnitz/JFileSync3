@@ -68,9 +68,9 @@ public abstract class AbstractEncryptedStorageAccess {
 
     private final Map<String, String> decryptionCache = new HashMap<>();
 
-    private static int decoding_mask = 32;
+    private int decodingMask = 32;
 
-    private static int bits = 6;
+    private int bits = 6;
 
     private static final String SALT = "#Mb6{Z-Öu9Rw4[D_jHn~CeKx2QiV]=a8F@1öG5+p}7Äü01-T";
 
@@ -89,7 +89,7 @@ public abstract class AbstractEncryptedStorageAccess {
             throw new RuntimeException("Character missing in 7bit table");
         } // if
         if (shortenPaths) {
-            decoding_mask = 64;
+            decodingMask = 64;
             bits = 7;
         } // if
         for (int i = 0; i<CODES.length; i++) {
@@ -162,9 +162,7 @@ public abstract class AbstractEncryptedStorageAccess {
         String localPwd = getPassword(relativePath)+salt;
         byte[] localBytes = getEncodedFileName("", localPwd);
         byte[] credentials = new byte[32];
-        for (int i = 0; i<32; i++) {
-            credentials[i] = localBytes[i];
-        } // for
+        System.arraycopy(localBytes, 0, credentials, 0, 32);
         return credentials;
     } // getCredentials()
 
@@ -245,11 +243,11 @@ public abstract class AbstractEncryptedStorageAccess {
 
 
     protected byte[] getEncodedFileName(String relativePath, String name) {
-        List<String> specialCodes = new ArrayList<String>();
-        List<Integer> specialLengths = new ArrayList<Integer>();
+        List<String> specialCodes = new ArrayList<>();
+        List<Integer> specialLengths = new ArrayList<>();
         generateSpecialCodes(relativePath, specialCodes, specialLengths);
 
-        List<Byte> resultList = new ArrayList<Byte>();
+        List<Byte> resultList = new ArrayList<>();
 
         int bc = 0;
         byte value = 0;
@@ -354,7 +352,7 @@ public abstract class AbstractEncryptedStorageAccess {
             for (int i = 0; i<name.length(); i++) {
                 char code = name.charAt(i);
                 byte index = reverseCodes[code];
-                for (int mask = decoding_mask; mask>0; mask = mask>>1) {
+                for (int mask = decodingMask; mask>0; mask = mask>>1) {
                     int bit = (index&mask)==0 ? 0 : 1;
                     // System.out.print(bit);
                     value = (byte) ((value<<1)+bit);

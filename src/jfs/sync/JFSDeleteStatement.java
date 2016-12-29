@@ -23,17 +23,17 @@ package jfs.sync;
  * Represents a delete statement; i.e., a files that has to be deleted. The
  * object includes the file object and a flag which determines whether the
  * delete statement has to be performed or not.
- * 
+ *
  * @author Jens Heidrich
  * @version $Id: JFSDeleteStatement.java,v 1.10 2007/02/26 18:49:09 heidrich Exp $
  */
 public class JFSDeleteStatement {
 
 	/** The associated element of the comparison table. */
-	private JFSElement element;
+	private final JFSElement element;
 
 	/** The file to be deleted. */
-	private JFSFile delFile;
+	private final JFSFile delFile;
 
 	/** Flag. If this flag is set, the delete statement has to be performed. */
 	private boolean deleteFlag = true;
@@ -46,7 +46,7 @@ public class JFSDeleteStatement {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param element
 	 *            The associated element of the comparison table.
 	 * @param delFile
@@ -59,7 +59,7 @@ public class JFSDeleteStatement {
 
 	/**
 	 * Returns the file that has to be deleted.
-	 * 
+	 *
 	 * @return A JFSFile object.
 	 */
 	public final JFSFile getFile() {
@@ -68,7 +68,7 @@ public class JFSDeleteStatement {
 
 	/**
 	 * Returns the state of the delete flag.
-	 * 
+	 *
 	 * @return The delete flag.
 	 */
 	public final boolean getDeleteFlag() {
@@ -79,7 +79,7 @@ public class JFSDeleteStatement {
 	 * Sets the state of the delete flag. If the boolean value is true the file
 	 * is enabled to be deleted. If it is false, the delete statement is skiped
 	 * in the algorithm which uses the JFSDeleteStatement object.
-	 * 
+	 *
 	 * @param deleteFlag
 	 *            The delete flag.
 	 */
@@ -89,7 +89,7 @@ public class JFSDeleteStatement {
 
 	/**
 	 * Returns the state of the success flag.
-	 * 
+	 *
 	 * @return The success flag.
 	 */
 	public final boolean getSuccess() {
@@ -99,7 +99,7 @@ public class JFSDeleteStatement {
 	/**
 	 * Sets the state of the success flag. If the boolean value is true the file
 	 * was successfully deleted.
-	 * 
+	 *
 	 * @param success
 	 *            The success flag.
 	 */
@@ -109,7 +109,7 @@ public class JFSDeleteStatement {
 
 	/**
 	 * Returns the associated element of the comparison table.
-	 * 
+	 *
 	 * @return Element of the comparison table.
 	 */
 	public JFSElement getElement() {

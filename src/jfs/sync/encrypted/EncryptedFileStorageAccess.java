@@ -44,7 +44,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
 
     private static final Logger LOG = LoggerFactory.getLogger(EncryptedFileStorageAccess.class);
 
-    private String cipherspec = "AES";
+    private final String cipherspec;
 
 
     public EncryptedFileStorageAccess(String cipher, boolean shortenPaths) {

@@ -239,20 +239,6 @@ public final class JFSProgress {
      */
     public void cancel() {
         canceled = true;
-
-        // Shut down producers at once in order to avoid waiting for time out:
-        JFSFileProducerManager pm = JFSFileProducerManager.getInstance();
-        if (activity==ProgressActivity.COMPARISON) {
-            JFSComparisonMonitor cm = JFSComparisonMonitor.getInstance();
-        } else if (activity==ProgressActivity.SYNCHRONIZATION_COPY) {
-            JFSCopyMonitor cm = JFSCopyMonitor.getInstance();
-            if (cm.getCurrentSrc()!=null) {
-                JFSFileProducer producer = cm.getCurrentSrc().getFileProducer();
-            }
-            if (cm.getCurrentTgt()!=null) {
-                JFSFileProducer producer = cm.getCurrentTgt().getFileProducer();
-            }
-        }
     }
 
 

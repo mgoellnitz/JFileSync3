@@ -57,22 +57,22 @@ public class JFSHistoryManagerView extends JDialog implements ActionListener, Li
     /**
      * The table of histories.
      */
-    private JFSHistoryTable historyTable;
+    private final JFSHistoryTable historyTable;
 
     /**
      * Number of histories.
      */
-    private JLabel historyLabel;
+    private final JLabel historyLabel;
 
     /**
      * The clear button.
      */
-    private JButton clearButton;
+    private final JButton clearButton;
 
     /**
      * The clear all button.
      */
-    private JButton clearAllButton;
+    private final JButton clearAllButton;
 
 
     /**
@@ -145,7 +145,7 @@ public class JFSHistoryManagerView extends JDialog implements ActionListener, Li
         JFSText t = JFSText.getInstance();
         String cmd = event.getActionCommand();
 
-        if (cmd.equals("CLEAR_ALL")) {
+        if ("CLEAR_ALL".equals(cmd)) {
             int result = JOptionPane.showConfirmDialog(this, t.get("history.clearAll.question"),
                     t.get("general.warning"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 
@@ -160,7 +160,7 @@ public class JFSHistoryManagerView extends JDialog implements ActionListener, Li
             }
         }
 
-        if (cmd.equals("CLEAR")) {
+        if ("CLEAR".equals(cmd)) {
             ListSelectionModel model = historyTable.getJTable().getSelectionModel();
 
             // If a row is selected remove it from the table:
@@ -184,7 +184,7 @@ public class JFSHistoryManagerView extends JDialog implements ActionListener, Li
             }
         }
 
-        if (cmd.equals("button.close")) {
+        if ("button.close".equals(cmd)) {
             setVisible(false);
             dispose();
         }

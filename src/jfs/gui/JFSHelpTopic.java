@@ -34,12 +34,12 @@ public class JFSHelpTopic implements Comparable<JFSHelpTopic> {
     /**
      * The ID of the help topic.
      */
-    private String id;
+    private final String id;
 
     /**
      * The title of the topic id.
      */
-    private String title;
+    private final String title;
 
 
     /**

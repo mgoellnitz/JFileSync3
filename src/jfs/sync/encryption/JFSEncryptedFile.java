@@ -36,6 +36,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * File descriptor for encrypted files to hide encrypted names, size differences and the like.
+ */
 public class JFSEncryptedFile extends JFSFile {
 
     private static final Logger LOG = LoggerFactory.getLogger(JFSEncryptedFile.class);

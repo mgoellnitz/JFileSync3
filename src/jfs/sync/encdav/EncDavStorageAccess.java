@@ -50,11 +50,11 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
 
     private static final Logger LOG = LoggerFactory.getLogger(EncDavStorageAccess.class);
 
-    private Map<String, List<DavResource>> folderCache = new HashMap<>();
+    private final Map<String, List<DavResource>> folderCache = new HashMap<>();
 
     private Sardine sardine = null;
 
-    private String cipherspec = "AES";
+    private final String cipherspec;
 
 
     public EncDavStorageAccess(String cipher, boolean shortenPaths) {

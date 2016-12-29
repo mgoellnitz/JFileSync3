@@ -68,32 +68,32 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
     /**
      * Determines whether to handle include or exclude filters.
      */
-    private boolean isIncludeFilter;
+    private final boolean isIncludeFilter;
 
     /**
      * The table of filters to change.
      */
-    private JFSFilterTable filterTable;
+    private final JFSFilterTable filterTable;
 
     /**
      * Number of filters.
      */
-    private JLabel filterLabel;
+    private final JLabel filterLabel;
 
     /**
      * The up button.
      */
-    private JButton upButton;
+    private final JButton upButton;
 
     /**
      * The down button.
      */
-    private JButton downButton;
+    private final JButton downButton;
 
     /**
      * The remove button.
      */
-    private JButton removeButton;
+    private final JButton removeButton;
 
 
     /**
@@ -194,7 +194,7 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
         JFSText t = JFSText.getInstance();
         String cmd = event.getActionCommand();
 
-        if (cmd.equals("button.up")) {
+        if ("button.up".equals(cmd)) {
             int row = filterTable.getJTable().getSelectedRow();
 
             // If a row is selected and it is not the first one then
@@ -228,7 +228,7 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
             }
         }
 
-        if (cmd.equals("button.add")) {
+        if ("button.add".equals(cmd)) {
             // Create dialog:
             JPanel row1Panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             JPanel row2Panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -281,7 +281,7 @@ public class JFSConfigFilterView extends JDialog implements ActionListener, List
             }
         }
 
-        if (cmd.equals("button.remove")) {
+        if ("button.remove".equals(cmd)) {
             ListSelectionModel model = filterTable.getJTable().getSelectionModel();
 
             // If a row is selected remove it from the table:

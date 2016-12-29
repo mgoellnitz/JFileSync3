@@ -45,7 +45,7 @@ public class JFSEncfsFile extends JFSFile {
     /**
      * The retrieved file information object from the server.
      */
-    private FileInfo info = null;
+    private final FileInfo info;
 
     private EncFSFile file = null;
 
@@ -77,9 +77,9 @@ public class JFSEncfsFile extends JFSFile {
 
         this.access = access;
 
+        info = new FileInfo();
         try {
             String[] pathAndName = AbstractJFSFileProducerFactory.getPathAndName(path, "/");
-            info = new FileInfo();
             info.setPath(pathAndName[0]);
             info.setName(pathAndName[1]);
             info.setDirectory(isDirectory);
