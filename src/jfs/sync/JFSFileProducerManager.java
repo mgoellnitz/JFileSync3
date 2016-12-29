@@ -71,7 +71,7 @@ public final class JFSFileProducerManager {
     protected JFSFileProducerManager() {
         factories = new HashMap<>();
         Properties p = new Properties();
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader classLoader = this.getClass().getClassLoader();
         try {
             p.load(classLoader.getResourceAsStream("producers.properties"));
         } catch (Exception e) {

@@ -32,24 +32,24 @@ public class JFSCopyStatement {
     /**
      * The associated element of the comparison table.
      */
-    private final JFSElement element;
+    private JFSElement element;
 
     /**
      * The source file.
      */
-    private final JFSFile srcFile;
+    private JFSFile srcFile;
 
     /**
      * The target file.
      */
-    private final JFSFile tgtFile;
+    private JFSFile tgtFile;
 
     /**
      * Determines whether the source file in the copy statement equals to the
      * source file of the comparison table element (true) or the target file
      * (false).
      */
-    private final boolean copyFromSource;
+    private boolean isCopyFromSource;
 
     /**
      * Flag. If this flag is set, the copy statement has to be performed.
@@ -79,9 +79,9 @@ public class JFSCopyStatement {
         this.tgtFile = tgtFile;
 
         if (srcFile==element.getSrcFile()) {
-            copyFromSource = true;
+            isCopyFromSource = true;
         } else {
-            copyFromSource = false;
+            isCopyFromSource = false;
         }
     }
 
@@ -171,7 +171,7 @@ public class JFSCopyStatement {
      * table.
      */
     public boolean isCopyFromSource() {
-        return copyFromSource;
+        return isCopyFromSource;
     }
 
 }

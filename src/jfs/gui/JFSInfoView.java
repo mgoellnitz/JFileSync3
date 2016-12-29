@@ -25,17 +25,19 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import jfs.conf.JFSConst;
 import jfs.conf.JFSText;
 
 /**
  * This dialog displays information about the currently used JFS version.
- *
+ * 
  * @author Jens Heidrich
  * @version $Id: JFSInfoView.java,v 1.5 2007/02/26 18:49:10 heidrich Exp $
  */
@@ -46,7 +48,7 @@ public class JFSInfoView extends JDialog implements ActionListener {
 
     /**
      * Initializes the dialog.
-     *
+     * 
      * @param mainView
      *            The main view.
      */
@@ -110,7 +112,7 @@ public class JFSInfoView extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         String cmd = event.getActionCommand();
 
-        if ("button.close".equals(cmd)) {
+        if (cmd.equals("button.close")) {
             setVisible(false);
             dispose();
         }

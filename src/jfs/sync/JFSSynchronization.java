@@ -53,7 +53,7 @@ public final class JFSSynchronization {
     /**
      * Answers questions during before the algorithm is performed.
      */
-    private final JFSQuestion question = new JFSQuestion();
+    private JFSQuestion question = new JFSQuestion();
 
 
     /**

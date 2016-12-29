@@ -65,37 +65,37 @@ public class JFSHelpView extends JDialog implements ActionListener, HyperlinkLis
      * The available help topics.
      */
     @SuppressWarnings("rawtypes")
-    private final JList topicsList;
+    private JList topicsList;
 
     /**
      * The available help topics.
      */
-    private final Set<JFSHelpTopic> topics = new TreeSet<>();
+    private Set<JFSHelpTopic> topics = new TreeSet<>();
 
     /**
      * The editor pane with the content on html file.
      */
-    private final JEditorPane content;
+    private JEditorPane content;
 
     /**
      * The backward history of viewed files.
      */
-    private final List<URL> bwdHistory = new ArrayList<>(JFSConst.HELP_HISTORY_SIZE);
+    private List<URL> bwdHistory = new ArrayList<>(JFSConst.HELP_HISTORY_SIZE);
 
     /**
      * The forward history of viewed files.
      */
-    private final List<URL> fwdHistory = new ArrayList<>(JFSConst.HELP_HISTORY_SIZE);
+    private List<URL> fwdHistory = new ArrayList<>(JFSConst.HELP_HISTORY_SIZE);
 
     /**
      * The backward button.
      */
-    private final JButton bwdButton;
+    private JButton bwdButton;
 
     /**
      * The forward button.
      */
-    private final JButton fwdButton;
+    private JButton fwdButton;
 
 
     /**
@@ -274,26 +274,26 @@ public class JFSHelpView extends JDialog implements ActionListener, HyperlinkLis
     public void actionPerformed(ActionEvent event) {
         String cmd = event.getActionCommand();
 
-        if ("HOME".equals(cmd)) {
+        if (cmd.equals("HOME")) {
             JFSConst c = JFSConst.getInstance();
             setNewUrl(c.getResourceUrl(c.getString("jfs.help.startTopic")));
         }
 
-        if ("BWD".equals(cmd)) {
+        if (cmd.equals("BWD")) {
             if (!bwdHistory.isEmpty()) {
                 URL last = bwdHistory.remove(bwdHistory.size()-1);
                 update(fwdHistory, last);
             }
         }
 
-        if ("FWD".equals(cmd)) {
+        if (cmd.equals("FWD")) {
             if (!fwdHistory.isEmpty()) {
                 URL last = fwdHistory.remove(fwdHistory.size()-1);
                 update(bwdHistory, last);
             }
         }
 
-        if ("button.close".equals(cmd)) {
+        if (cmd.equals("button.close")) {
             setVisible(false);
         }
     }

@@ -45,7 +45,7 @@ import jfs.sync.JFSTable;
  * of all the specified directory pair is compared. After that, you may enter
  * different options via a shell-like environment or skip the shell and directly
  * perform the synchronization depeding on the command line options.
- *
+ * 
  * @author Jens Heidrich
  * @version $Id: JFSShell.java,v 1.11 2007/02/26 18:49:11 heidrich Exp $
  */
@@ -58,7 +58,7 @@ public final class JFSShell {
 	/**
 	 * Reads a positive number out of a string of the following form: "[command]
 	 * [number]"
-	 *
+	 * 
 	 * @param input
 	 *            The input string.
 	 * @param min
@@ -96,7 +96,7 @@ public final class JFSShell {
 
 	/**
 	 * Prints the content of URL to standard out.
-	 *
+	 * 
 	 * @param url
 	 *            The input url.
 	 */
@@ -124,7 +124,7 @@ public final class JFSShell {
 	/**
 	 * Starts the JFS command line shell in order to perform comparisons and
 	 * synchronizations.
-	 *
+	 * 
 	 * @param quiet
 	 *            This option has to be true, if comparison and synchronization
 	 *            should run in background. It has to be false, if a shell
@@ -228,6 +228,8 @@ public final class JFSShell {
 						JFSShell.printURL(JFSConst.getInstance().getResourceUrl("jfs.help.topic.shell"));
 					} else if ("sync".equals(input)) {
 						synchronize();
+					} else if ("exit".equals(input)) {
+						// Just leave the loop.
 					} else if (input.length() > 0) {
 						JFSLog.getErr().getStream().println(t.get("error.validCommand"));
 					}

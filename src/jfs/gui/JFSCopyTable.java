@@ -45,7 +45,7 @@ public class JFSCopyTable extends AbstractTableModel {
     /**
      * The object with information that should be displayed by the table.
      */
-    private final List<JFSCopyStatement> v;
+    private List<JFSCopyStatement> v;
 
     /**
      * The corresponding JTable.

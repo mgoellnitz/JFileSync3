@@ -21,9 +21,6 @@ import jfs.sync.JFSFileProducer;
 import jfs.sync.encryption.AbstractEncryptedFileProducerFactory;
 import jfs.sync.encryption.JFSEncryptedFileProducer;
 
-/**
- * File producer factory for encrypted files.
- */
 public class JFSEncryptedFileProducerFactory extends AbstractEncryptedFileProducerFactory {
 
     public static final String SCHEME_NAME = "slowenc";

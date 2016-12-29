@@ -69,10 +69,6 @@ public final class DavUtils {
     }
 
 
-    private DavUtils() {
-    }
-
-
     public static Set<QName> getCustomDavProperties() {
         return CUSTOM_PROPS;
     } // getCustomDavProperties()

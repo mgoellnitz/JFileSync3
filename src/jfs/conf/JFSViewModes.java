@@ -48,12 +48,12 @@ public final class JFSViewModes {
     /**
      * The default mode.
      */
-    private final int defaultMode;
+    private int defaultMode;
 
     /**
      * The map containing all available modes.
      */
-    private final Map<Integer, JFSViewMode> modes = new TreeMap<>();
+    private Map<Integer, JFSViewMode> modes = new TreeMap<>();
 
 
     /**

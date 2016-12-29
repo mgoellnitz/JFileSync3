@@ -50,11 +50,11 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
 
     private static final Logger LOG = LoggerFactory.getLogger(EncDavStorageAccess.class);
 
-    private final Map<String, List<DavResource>> folderCache = new HashMap<>();
+    private Map<String, List<DavResource>> folderCache = new HashMap<>();
 
     private Sardine sardine = null;
 
-    private final String cipherspec;
+    private String cipherspec = "AES";
 
 
     public EncDavStorageAccess(String cipher, boolean shortenPaths) {
@@ -222,7 +222,6 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
         return result;
     } // getFileInfo()
 
-
     /* TODO: above this line needs modification */
 
     @Override
@@ -231,10 +230,11 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
         String url = getUrl(rootPath, relativePath);
         try {
             getSardine().createDirectory(url);
-        } catch (SardineException se) {
-            LOG.warn("createDirectory({}) status code: {} {}", url, se.getStatusCode(), se.getResponsePhrase());
-            return false;
         } catch (Exception e) {
+            if (e instanceof SardineException) {
+                SardineException se = (SardineException) e;
+                LOG.warn("createDirectory({}) status code: {} {}", url, se.getStatusCode(), se.getResponsePhrase());
+            } // if
             LOG.warn("createDirectory()", e);
             return false;
         } // try/catch

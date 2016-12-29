@@ -45,7 +45,7 @@ public class JFSDeleteTable extends AbstractTableModel {
     /**
      * The object with information that should be displayed by the table.
      */
-    private final List<JFSDeleteStatement> v;
+    private List<JFSDeleteStatement> v;
 
     /**
      * The corresponding JTable.

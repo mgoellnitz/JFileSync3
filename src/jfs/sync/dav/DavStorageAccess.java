@@ -173,10 +173,11 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         String url = getUrl(rootPath, relativePath);
         try {
             getSardine().createDirectory(url);
-        } catch (SardineException se) {
-            LOG.warn("createDirectory({}) status code: {} {}", url, se.getStatusCode(), se.getResponsePhrase());
-            return false;
         } catch (Exception e) {
+            if (e instanceof SardineException) {
+                SardineException se = (SardineException) e;
+                LOG.warn("createDirectory({}) status code: {} {}", url, se.getStatusCode(), se.getResponsePhrase());
+            } // if
             LOG.warn("createDirectory()", e);
             return false;
         } // try/catch

@@ -53,12 +53,12 @@ public final class JFSText {
     /**
      * Stores the system locale.
      */
-    private final Locale locale;
+    private Locale locale = null;
 
     /**
      * Stores the resource bundle.
      */
-    private final ResourceBundle bundle;
+    private ResourceBundle bundle = null;
 
 
     /**

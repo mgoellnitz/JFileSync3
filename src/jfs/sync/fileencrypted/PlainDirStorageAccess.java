@@ -50,7 +50,8 @@ public class PlainDirStorageAccess implements StorageAccess {
 
     @Override
     public byte[] getFileCredentials(String password) {
-        return (password+SALT).substring(0, 16).getBytes();
+        byte[] credentials = (password+SALT).substring(0, 16).getBytes();
+        return credentials;
     } // getFileCredentials()
 
 

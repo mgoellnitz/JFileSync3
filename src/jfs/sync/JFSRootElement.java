@@ -39,17 +39,17 @@ public class JFSRootElement extends JFSElement {
     /**
      * The used producer to create source JFS file objects.
      */
-    private final JFSFileProducer srcProducer;
+    private JFSFileProducer srcProducer;
 
     /**
      * The used producer to create target JFS file objects.
      */
-    private final JFSFileProducer tgtProducer;
+    private JFSFileProducer tgtProducer;
 
     /**
      * The synchronization history.
      */
-    private final JFSHistory history;
+    private JFSHistory history;
 
 
     /**

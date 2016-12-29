@@ -102,19 +102,19 @@ class JFSConfigXML extends JFSConfig {
                 attr = root.getAttributeNode("keepuseractions");
 
                 if (attr!=null) {
-                    setKeepUserActions(Boolean.parseBoolean(attr.getValue()));
+                    setKeepUserActions(Boolean.valueOf(attr.getValue()).booleanValue());
                 }
 
                 attr = root.getAttributeNode("storehistory");
 
                 if (attr!=null) {
-                    setStoreHistory(Boolean.parseBoolean(attr.getValue()));
+                    setStoreHistory(Boolean.valueOf(attr.getValue()).booleanValue());
                 }
 
                 attr = root.getAttributeNode("setcanwrite");
 
                 if (attr!=null) {
-                    setCanWrite(Boolean.parseBoolean(attr.getValue()));
+                    setCanWrite(Boolean.valueOf(attr.getValue()).booleanValue());
                 }
             } catch (NumberFormatException e) {
                 // Thrown by parseInt() and parseByte(). Continue in this case.

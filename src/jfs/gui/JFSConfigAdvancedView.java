@@ -25,6 +25,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -32,12 +33,13 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
+
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSText;
 
 /**
  * This dialog manages advanced settings.
- *
+ * 
  * @author Jens Heidrich
  * @version $Id: JFSConfigAdvancedView.java,v 1.1 2005/05/17 07:37:51 heidrich Exp $
  */
@@ -55,18 +57,18 @@ public class JFSConfigAdvancedView extends JDialog implements ActionListener {
     private SpinnerNumberModel bufferSize;
 
     /** The keep user actions check box. */
-    private final JCheckBox keepUserActions;
+    private JCheckBox keepUserActions;
 
     /** The history checkbox. */
-    private final JCheckBox history;
+    private JCheckBox history;
 
     /** The set can write checkbox. */
-    private final JCheckBox setCanWrite;
+    private JCheckBox setCanWrite;
 
 
     /**
      * Initializes the config view.
-     *
+     * 
      * @param dialog
      *            The main frame.
      * @param config

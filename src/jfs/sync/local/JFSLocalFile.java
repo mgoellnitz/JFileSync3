@@ -53,32 +53,32 @@ public class JFSLocalFile extends JFSFile {
     /**
      * The name of the file.
      */
-    private final String name;
+    private String name = null;
 
     /**
      * The path of the file.
      */
-    private final String path;
+    private String path = null;
 
     /**
      * Tells whether the file is a directory.
      */
-    private boolean directory = false;
+    private boolean isDirectory = false;
 
     /**
      * Tells whether we can read the file.
      */
-    private boolean readable = true;
+    private boolean canRead = true;
 
     /**
      * Tells whether we can write to the file.
      */
-    private boolean writable = true;
+    private boolean canWrite = true;
 
     /**
      * Determines whether the file exists.
      */
-    private boolean existing = false;
+    private boolean exists = false;
 
     /**
      * The length of the file. Zero for directories.
@@ -120,16 +120,16 @@ public class JFSLocalFile extends JFSFile {
         file = new File(fileProducer.getRootPath()+getRelativePath());
         name = file.getName();
         path = file.getPath();
-        directory = file.isDirectory();
-        existing = file.exists();
+        isDirectory = file.isDirectory();
+        exists = file.exists();
         if (LOG.isDebugEnabled()) {
-            LOG.debug("() "+getPath()+" e["+existing+"] d["+directory+"]");
+            LOG.debug("() "+getPath()+" e["+exists+"] d["+isDirectory+"]");
         }
-        if (existing) {
-            readable = file.canRead();
-            writable = file.canWrite();
+        if (exists) {
+            canRead = file.canRead();
+            canWrite = file.canWrite();
         }
-        if (!directory) {
+        if (!isDirectory) {
             lastModified = file.lastModified();
             length = file.length();
         }
@@ -161,8 +161,8 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean isDirectory() {
-        LOG.debug("isDirectory() {}", directory);
-        return directory;
+        LOG.debug("isDirectory() {}", isDirectory);
+        return isDirectory;
     }
 
 
@@ -171,8 +171,8 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean canRead() {
-        LOG.debug("canRead() {}", readable);
-        return readable;
+        LOG.debug("canRead() {}", canRead);
+        return canRead;
     }
 
 
@@ -181,8 +181,8 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean canWrite() {
-        LOG.debug("canWrite() {}", writable);
-        return writable;
+        LOG.debug("canWrite() {}", canWrite);
+        return canWrite;
     }
 
 
@@ -235,8 +235,8 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean exists() {
-        LOG.debug("JFSLocalFile.exists() {}", existing);
-        return existing;
+        LOG.debug("JFSLocalFile.exists() {}", exists);
+        return exists;
     }
 
 
@@ -248,7 +248,7 @@ public class JFSLocalFile extends JFSFile {
         boolean success = file.mkdir();
 
         if (success) {
-            directory = true;
+            isDirectory = true;
         }
 
         return success;
@@ -282,7 +282,7 @@ public class JFSLocalFile extends JFSFile {
         boolean success = file.setReadOnly();
 
         if (success) {
-            writable = false;
+            canWrite = false;
         }
 
         return success;
@@ -387,7 +387,7 @@ public class JFSLocalFile extends JFSFile {
 
         // Set last modified and read-only only when file is no directory:
         if (!JFSProgress.getInstance().isCanceled()&&!srcFile.isDirectory()) {
-            existing = true;
+            exists = true;
             length = srcFile.getLength();
             success = success&&setLastModified(srcFile.getLastModified());
             if (!srcFile.canWrite()) {
