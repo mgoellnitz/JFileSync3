@@ -36,7 +36,7 @@ appender('FILE', RollingFileAppender) {
   append = true
   rollingPolicy(TimeBasedRollingPolicy) {
     fileNamePattern = "./jfs3-%d{yyyy-MM-dd_HH}.log"
-    maxHistory = 7
+    maxHistory = 4
   }
   encoder(PatternLayoutEncoder) {
     pattern = filePattern
