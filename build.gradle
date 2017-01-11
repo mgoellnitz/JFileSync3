@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2016 Martin Goellnitz
+ * Copyright (C) 2013-2017 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,18 +52,18 @@ dependencies {
   // dropbox client
   // compile files(fileTree(dir: 'lib', includes: ['*.jar']))
 
-  compile 'org.slf4j:slf4j-api:1.7.21'
+  compile 'org.slf4j:slf4j-api:1.7.22'
   compile 'com.github.lookfirst:sardine:5.7'
-  compile 'org.slf4j:jul-to-slf4j:1.7.21' // starting with version 5.6 Sardine uses JUL
+  compile 'org.slf4j:jul-to-slf4j:1.7.22' // starting with version 5.6 Sardine uses JUL
 
   // Cifs code looks good but I don't have shares to use so I skip this
   // compile 'jcifs:jcifs:1.3.17'
   compile 'org.apache.commons:commons-lang3:3.5'
-  compile 'org.apache.commons:commons-compress:1.12'
+  compile 'org.apache.commons:commons-compress:1.13'
   compile 'net.sf.jsignature.io-tools:easystream:1.2.15'
 
   // compile 'org.bouncycastle:bcprov-jdk16:1.46'
-  compile 'org.bouncycastle:bcprov-jdk15on:1.55'
+  compile 'org.bouncycastle:bcprov-jdk15on:1.56'
   compile 'javax.servlet:javax.servlet-api:3.1.0'
 
   // Logging:
@@ -78,7 +78,7 @@ distTar.enabled = false
 launch4j {
   mainClassName = project.mainClassName
   version = '3.0.15'
-  copyright = '(C) 2002-2016, J. Heidrich, M. Goellnitz'
+  copyright = '(C) 2002-2017, J. Heidrich, M. Goellnitz'
   downloadUrl = 'https://github.com/mgoellnitz/JFileSync3/releases'
   supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
   icon = "$project.projectDir/win/JFileSync3.ico"
