@@ -68,7 +68,7 @@ dependencies {
 
   // Logging:
   runtime 'ch.qos.logback:logback-classic:1.1.8'
-  runtime 'org.codehaus.groovy:groovy:2.4.7'
+  runtime 'org.codehaus.groovy:groovy:2.4.8'
 }
 
 mainClassName = 'jfs.JFileSync'
