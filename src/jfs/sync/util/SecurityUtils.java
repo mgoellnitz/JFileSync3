@@ -64,4 +64,14 @@ public final class SecurityUtils {
         return cipher;
     } // getPasswordCipher()
 
+
+    public static void main(String[] args) {
+        System.out.println(PROVIDER.getName());
+        for (String key : PROVIDER.stringPropertyNames()) {
+            if (key.startsWith("Cipher")) {
+                System.out.println("\t"+key+"\t"+PROVIDER.getProperty(key));
+            }
+        }
+    }
+
 } // SecurityUtils()
