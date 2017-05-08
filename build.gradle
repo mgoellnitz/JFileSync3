@@ -98,7 +98,7 @@ distZip.dependsOn createApplication
 startScripts {
   doLast {
     // Add some more reasonable memory settings to JFileSync3
-    unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-ms1280m -mx1536m -Xms1280m -Xmx1536m"')
+    unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-splash:$APP_HOME/bin/JFileSync3-640x50-splash.png -ms1280m -mx1536m -Xms1280m -Xmx1536m"')
     windowsScript.text = windowsScript.text.replace('DEFAULT_JVM_OPTS=', 'DEFAULT_JVM_OPTS=-ms1280m -mx1536m -Xms1280m -Xmx1536m')
     // Armor start script to use javaw and start when not used as a command line tool
     windowsScript.text = windowsScript.text.replace('java.exe', '%JAVA_CMD%')
