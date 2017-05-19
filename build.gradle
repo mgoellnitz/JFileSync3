@@ -59,11 +59,11 @@ dependencies {
   // Cifs code looks good but I don't have shares to use so I skip this
   // compile 'jcifs:jcifs:1.3.17'
   compile 'org.apache.commons:commons-lang3:3.5'
-  compile 'org.apache.commons:commons-compress:1.13'
+  compile 'org.apache.commons:commons-compress:1.14'
   compile 'net.sf.jsignature.io-tools:easystream:1.2.15'
 
   // compile 'org.bouncycastle:bcprov-jdk16:1.46'
-  compile 'org.bouncycastle:bcprov-jdk15on:1.56'
+  compile 'org.bouncycastle:bcprov-jdk15on:1.57'
   compile 'javax.servlet:javax.servlet-api:3.1.0'
 
   // Logging:
