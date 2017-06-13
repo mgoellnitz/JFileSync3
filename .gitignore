@@ -5,3 +5,6 @@
 /lib
 *.log
 /.nb-gradle
+/.trackdown
+/github-issues.md
+/roadmap.md
