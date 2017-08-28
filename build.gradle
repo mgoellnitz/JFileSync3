@@ -64,7 +64,7 @@ dependencies {
 
   // compile 'org.bouncycastle:bcprov-jdk16:1.46'
   compile 'org.bouncycastle:bcprov-jdk15on:1.57'
-  compile 'javax.servlet:javax.servlet-api:3.1.0'
+  compile 'javax.servlet:javax.servlet-api:4.0.0'
 
   // Logging:
   runtime 'ch.qos.logback:logback-classic:1.2.3'
