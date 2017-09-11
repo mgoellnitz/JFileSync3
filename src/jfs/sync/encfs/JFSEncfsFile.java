@@ -428,13 +428,4 @@ public class JFSEncfsFile extends JFSFile {
         return true;
     }
 
-
-    /**
-     * @see JFSFile#flush()
-     */
-    @Override
-    public boolean flush() {
-        return true;
-    }
-
 } // JFSEncfsFile

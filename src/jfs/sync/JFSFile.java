@@ -330,15 +330,6 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
 
     /**
-     * Flushes all changes to the file object if not performed yet. This is done recursively. So, a flush on the root
-     * file performs a flush on all childs.
-     *
-     * @return True if and only if the operation was successful.
-     */
-    public abstract boolean flush();
-
-
-    /**
      * Writes the content of the JFS file to a new target file. If this file is a directory false is returned. This
      * method just copies the contents from this file to the target file, no attributes, like the last modified date or
      * the can attribute are adopted.

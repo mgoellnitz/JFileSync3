@@ -407,13 +407,4 @@ public class JFSLocalFile extends JFSFile {
         return true;
     }
 
-
-    /**
-     * @see JFSFile#flush()
-     */
-    @Override
-    public boolean flush() {
-        return true;
-    }
-
 }
