@@ -58,7 +58,7 @@ public class JFSEncfsFile extends JFSFile {
 
     private OutputStream output = null;
 
-    InputStream input = null;
+    private InputStream input = null;
 
 
     /**

@@ -142,7 +142,7 @@ public final class JFSProgress {
      * @param activity
      * The type of activity to start.
      */
-    void prepare(ProgressActivity activity) {
+    public void prepare(ProgressActivity activity) {
         this.activity = activity;
         this.state = ProgressState.PREPARATION;
         canceled = false;
@@ -155,7 +155,7 @@ public final class JFSProgress {
     /**
      * Starts a progress computation.
      */
-    void start() {
+    public void start() {
         state = ProgressState.ACTIVE;
         startTime = System.currentTimeMillis();
         update();
@@ -165,7 +165,7 @@ public final class JFSProgress {
     /**
      * Ends a progress computation.
      */
-    void end() {
+    public void end() {
         state = ProgressState.DONE;
         duration = System.currentTimeMillis()-startTime;
         update();
@@ -279,7 +279,7 @@ public final class JFSProgress {
      * Sends a message to all existing observers that the algorithm's state was updated, if and only if a minimum time
      * period between two subsequent updates is gone.
      */
-    void fireUpdate() {
+    public void fireUpdate() {
         if ((System.currentTimeMillis()-updateTime)>=JFSConst.PROGRESS_UPDATE) {
             updateTime = System.currentTimeMillis();
             update();

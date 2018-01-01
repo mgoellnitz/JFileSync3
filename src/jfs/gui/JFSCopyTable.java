@@ -107,20 +107,8 @@ public class JFSCopyTable extends AbstractTableModel {
             return null;
         }
 
-        JFSFile file;
-        switch (column) {
-            case 0:
-                file = v.get(row).getSrc();
-                break;
-            default:
-                file = v.get(row).getTgt();
-                break;
-        }
-
-        if (file!=null) {
-            return file.getPath();
-        }
-        return "";
+        JFSFile file = column==0 ? v.get(row).getSrc() : v.get(row).getTgt();
+        return file!=null ? file.getPath() : "";
     }
 
 

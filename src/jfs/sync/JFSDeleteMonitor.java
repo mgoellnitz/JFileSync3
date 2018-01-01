@@ -127,7 +127,7 @@ public final class JFSDeleteMonitor {
      * @param filesToDelete
      * The number of files to delete to set.
      */
-    void setFilesToDelete(int filesToDelete) {
+    public void setFilesToDelete(int filesToDelete) {
         this.filesToDelete = filesToDelete;
     }
 
@@ -146,7 +146,7 @@ public final class JFSDeleteMonitor {
      * @param filesDeleted
      * The number of files deleted to set.
      */
-    void setFilesDeleted(int filesDeleted) {
+    public void setFilesDeleted(int filesDeleted) {
         this.filesDeleted = filesDeleted;
     }
 
