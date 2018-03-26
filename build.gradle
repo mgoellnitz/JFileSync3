@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
 plugins {
-  id "edu.sc.seis.launch4j" version "2.1.0"
+  id "edu.sc.seis.launch4j" version "2.4.3"
   id "net.ossindex.audit" version "0.1.1"
 }
 
@@ -69,8 +69,8 @@ dependencies {
   compile 'javax.servlet:javax.servlet-api:4.0.0'
   
   // Need to fix versions of transitive dependencies
-  launch4j 'com.thoughtworks.xstream:xstream:1.4.10'
-  launch4j 'commons-beanutils:commons-beanutils:1.9.3'
+  // launch4j 'com.thoughtworks.xstream:xstream:1.4.10'
+  // launch4j 'commons-beanutils:commons-beanutils:1.9.3'
 
   // Logging:
   runtime 'ch.qos.logback:logback-classic:1.2.3'
@@ -145,15 +145,15 @@ distZip {
   /*
   // I personally have the JCE stuff prepared there
   into(project.name) {
-  from '..'
-  include 'jce-jre-patches/**'
+    from '..'
+    include 'jce-jre-patches/**'
   }
   // You might package your personal profiles in here
   into(project.name) {
-  from '..'
-  include 'profiles/**'
+    from '..'
+    include 'profiles/**'
   }
-   */
+  */
 }
 
 private List<String> getCmd(String cmd) {
