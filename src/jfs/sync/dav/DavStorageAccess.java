@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2018, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  */
 package jfs.sync.dav;
 
+import com.gc.iotools.stream.os.OutputStreamToInputStream;
 import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
@@ -290,7 +291,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
             flushMetaData(rootPath, pathAndName, listing);
             LOG.debug("getOutputStream() getting output stream for {} {}", url, info);
         } // if
-        OutputStream result = new com.gc.iotools.stream.os.OutputStreamToInputStream<String>() {
+        OutputStreamToInputStream<String> result = new OutputStreamToInputStream<String>() {
 
             @Override
             protected String doRead(InputStream input) throws Exception {
@@ -307,6 +308,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
             }
 
         };
+        result.setDefaultPipeSize(256000);
         return result;
     } // getOutputStream()
 

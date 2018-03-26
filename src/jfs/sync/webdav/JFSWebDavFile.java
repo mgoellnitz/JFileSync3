@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2018, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  */
 package jfs.sync.webdav;
 
+import com.gc.iotools.stream.os.OutputStreamToInputStream;
 import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import java.io.IOException;
@@ -200,22 +201,16 @@ public class JFSWebDavFile extends JFSFile {
         final String url = getUrl(info.getPath()+"/"+info.getName());
 
         try {
-            OutputStream result = new com.gc.iotools.stream.os.OutputStreamToInputStream<String>() {
+            OutputStreamToInputStream<String> result = new OutputStreamToInputStream<String>() {
 
                 @Override
                 protected String doRead(InputStream input) throws Exception {
-//                    Date d = new Date(146801458666L);
-//                    String lastModified = DATE_FORMAT.format(d);
-//                    Map<String, String> headers = new HashMap<>();
-//                    headers.put("Last-Modified", lastModified);
-//                    headers.put("Date", lastModified);
-//                    LOG.debug("getOutputStream() headers {}", headers);
-//                    getAccess().put(url, input, headers);
                     getAccess().put(url, input);
                     return "";
                 }
 
             };
+            result.setDefaultPipeSize(256000);
             output = result;
             return result;
         } catch (Exception e) {
