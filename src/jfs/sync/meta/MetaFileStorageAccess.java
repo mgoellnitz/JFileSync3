@@ -33,10 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-/**
- * Storage access using meta (data) files.
- * Everything including file names and meta data is encrypted with keys rolling with the directory structure.
- */
 public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
 
     private static final Logger LOG = LoggerFactory.getLogger(MetaFileStorageAccess.class);

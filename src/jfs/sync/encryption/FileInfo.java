@@ -43,7 +43,7 @@ public class FileInfo implements Serializable {
 
     private boolean exists = false;
 
-    private boolean directory = false;
+    private boolean isDirectory = false;
 
 
     public String getName() {
@@ -117,12 +117,12 @@ public class FileInfo implements Serializable {
 
 
     public boolean isDirectory() {
-        return directory;
+        return isDirectory;
     }
 
 
     public void setDirectory(boolean isDirectory) {
-        this.directory = isDirectory;
+        this.isDirectory = isDirectory;
     }
 
 

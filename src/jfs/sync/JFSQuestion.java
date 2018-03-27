@@ -130,7 +130,7 @@ public class JFSQuestion {
      * The element to request an answer for.
      * @return The given answer by the oracle.
      */
-    public final QuestionAnswer answer(JFSElement element) {
+    final QuestionAnswer answer(JFSElement element) {
         if (oracle==null) {
             return QuestionAnswer.SKIP;
         }

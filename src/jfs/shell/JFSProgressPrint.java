@@ -31,8 +31,6 @@ import jfs.sync.JFSFormatter;
 import jfs.sync.JFSProgress;
 import jfs.sync.JFSProgress.ProgressActivity;
 import jfs.sync.JFSProgressObserver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -42,8 +40,6 @@ import org.slf4j.LoggerFactory;
  * @version $Id: JFSProgressPrint.java,v 1.9 2007/07/20 14:07:10 heidrich Exp $
  */
 public class JFSProgressPrint implements JFSProgressObserver {
-
-    private static final Logger LOG = LoggerFactory.getLogger(JFSProgressPrint.class);
 
     /**
      * The stream for controling cancel operations.
@@ -133,7 +129,7 @@ public class JFSProgressPrint implements JFSProgressObserver {
                 }
             }
         } catch (IOException e) {
-            LOG.warn("update()", e.getMessage());
+            // Just continue...
         }
     }
 

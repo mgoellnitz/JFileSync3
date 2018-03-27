@@ -75,8 +75,6 @@ import jfs.conf.JFSViewModes;
 import jfs.sync.JFSProgress;
 import jfs.sync.JFSSynchronization;
 import jfs.sync.JFSTable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -86,8 +84,6 @@ import org.slf4j.LoggerFactory;
  * @version $Id: JFSMainView.java,v 1.39 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSMainView extends WindowAdapter implements ActionListener, ComponentListener, JFSConfigObserver, JFSLogObserver {
-
-    private static final Logger LOG = LoggerFactory.getLogger(JFSMainView.class);
 
     /**
      * Stores the corresponding frame.
@@ -177,11 +173,11 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             }
             SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
             buildInfo += " - build date "+formatter.format(new Date(jfsFile.lastModified()))+" ";
-        } catch (URISyntaxException|MalformedURLException e) {
-            LOG.debug("getAppTitle()", e);
-        }
-        // try/catch
-         // try/catch
+        } catch (URISyntaxException use) {
+            ;
+        } catch (MalformedURLException mue) {
+            ;
+        } // try/catch
 
         String version = JFSConst.getInstance().getString("jfs.version");
         JFSConfig config = JFSConfig.getInstance();

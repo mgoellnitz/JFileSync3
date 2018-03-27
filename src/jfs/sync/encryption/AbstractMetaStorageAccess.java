@@ -90,7 +90,6 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
             ois.close();
         } catch (FileNotFoundException|EOFException e) {
             // empty directory or - who cares?
-            LOG.debug("getMetaData() possibly empty directory");
         } catch (Exception e) {
             LOG.info("getMetaData() possible issue while reading infos {}", e, e);
         } finally {

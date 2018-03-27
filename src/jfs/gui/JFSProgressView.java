@@ -424,7 +424,6 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
             public void run() {
                 // Wait for dialog to appear:
                 while (!dialog.isVisible()) {
-                    ;
                 }
 
                 // Compare:
@@ -456,7 +455,6 @@ public class JFSProgressView extends JDialog implements JFSProgressObserver, Act
             public void run() {
                 // Wait for dialog to appear:
                 while (!dialog.isVisible()) {
-                    ;
                 }
 
                 // Synchronize:

@@ -189,7 +189,7 @@ public final class JFSCopyMonitor {
      * @param bytesToTransferCurrentFile
      * The bytes to transfer to set.
      */
-    public void setBytesToTransferCurrentFile(long bytesToTransferCurrentFile) {
+    void setBytesToTransferCurrentFile(long bytesToTransferCurrentFile) {
         this.bytesToTransferCurrentFile = bytesToTransferCurrentFile;
     }
 
@@ -208,7 +208,7 @@ public final class JFSCopyMonitor {
      * @param bytesTransfered
      * The bytes transfered to set.
      */
-    public void setBytesTransfered(long bytesTransfered) {
+    void setBytesTransfered(long bytesTransfered) {
         this.bytesTransfered = bytesTransfered;
     }
 
@@ -227,7 +227,7 @@ public final class JFSCopyMonitor {
      * @param bytesTransferedCurrentFile
      * The bytes transfered to set.
      */
-    public void setBytesTransferedCurrentFile(long bytesTransferedCurrentFile) {
+    void setBytesTransferedCurrentFile(long bytesTransferedCurrentFile) {
         this.bytesTransferedCurrentFile = bytesTransferedCurrentFile;
     }
 
@@ -246,7 +246,7 @@ public final class JFSCopyMonitor {
      * @param currentSrc
      * The current source to set.
      */
-    public void setCurrentSrc(JFSFile currentSrc) {
+    void setCurrentSrc(JFSFile currentSrc) {
         this.currentSrc = currentSrc;
     }
 
@@ -265,7 +265,7 @@ public final class JFSCopyMonitor {
      * @param currentTgt
      * The current target to set.
      */
-    public void setCurrentTgt(JFSFile currentTgt) {
+    void setCurrentTgt(JFSFile currentTgt) {
         this.currentTgt = currentTgt;
     }
 
@@ -297,7 +297,7 @@ public final class JFSCopyMonitor {
      * @param filesCopied
      * The files copied to set.
      */
-    public void setFilesCopied(int filesCopied) {
+    void setFilesCopied(int filesCopied) {
         this.filesCopied = filesCopied;
     }
 
@@ -316,7 +316,7 @@ public final class JFSCopyMonitor {
      * @param filesToCopy
      * The files to copy to set.
      */
-    public void setFilesToCopy(int filesToCopy) {
+    void setFilesToCopy(int filesToCopy) {
         this.filesToCopy = filesToCopy;
     }
 

@@ -205,9 +205,9 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
         String relativePath = "a/path/for/me";
 
         String enc = d.getEncryptedFileName(relativePath, "src");
-        LOG.info("enc={}", enc);
+        System.out.println("enc= "+enc);
         String plain = d.getDecryptedFileName(relativePath, enc);
-        LOG.info("plain={}", plain);
+        System.out.println("plain= "+plain);
         d.getPassword(relativePath);
     } // main()
 

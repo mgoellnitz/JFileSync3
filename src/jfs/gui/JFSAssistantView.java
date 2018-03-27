@@ -35,17 +35,20 @@ import jfs.conf.JFSText;
 
 /**
  * This dialog assists a new user in performing a synchronization.
- *
+ * 
  * @author Jens Heidrich
  * @version $Id: JFSAssistantView.java,v 1.9 2007/02/26 18:49:10 heidrich Exp $
  */
 public class JFSAssistantView extends JDialog implements ActionListener {
-
+    
     /** The UID. */
     private static final long serialVersionUID = 200L;
 
     /** The main view. */
     private final JFSMainView mainView;
+
+    /** The button for step 1. */
+    private final JButton step1Button;
 
     /** The button for step 2. */
     private final JButton step2Button;
@@ -56,7 +59,7 @@ public class JFSAssistantView extends JDialog implements ActionListener {
 
     /**
      * Initializes the assistant.
-     *
+     * 
      * @param mainView
      *            The main view.
      */
@@ -80,7 +83,7 @@ public class JFSAssistantView extends JDialog implements ActionListener {
         step1.setBorder(new TitledBorder(t.get("assistant.editProfile")));
         step1.add(new JLabel(t.get("assistant.step1")), BorderLayout.NORTH);
         JPanel step1ButtonPanel = new JPanel();
-        JButton step1Button = JFSSupport.getButton("jfs.icon.profile", "OPTIONS", this, "menu.options");
+        step1Button = JFSSupport.getButton("jfs.icon.profile", "OPTIONS", this, "menu.options");
         step1Button.setText(t.get("menu.options"));
         step1ButtonPanel.add(step1Button);
         step1.add(step1ButtonPanel, BorderLayout.SOUTH);
@@ -155,5 +158,5 @@ public class JFSAssistantView extends JDialog implements ActionListener {
             setVisible(false);
         }
     }
-
+    
 }

@@ -48,7 +48,7 @@ public class JFSWebDavFileProducer extends JFSFileProducer {
     private final Map<String, List<DavResource>> directoryCache = new HashMap<>(256);
 
 
-    public List<DavResource> getListing(String url) throws IOException {
+    List<DavResource> getListing(String url) throws IOException {
         if (directoryCache.containsKey(url)) {
             return directoryCache.get(url);
         } // if

@@ -32,7 +32,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import jfs.conf.JFSConfig;
-import jfs.conf.JFSDirectoryPair;
 import jfs.conf.JFSText;
 import jfs.sync.JFSFileProducerManager;
 
@@ -159,8 +158,12 @@ public class JFSDirectoryTable extends AbstractTableModel implements TableCellRe
             return null;
         }
 
-        JFSDirectoryPair pair = config.getDirectoryList().get(row);
-        return column == 0 ? pair.getSrc() : pair.getTgt();
+        switch (column) {
+            case 0:
+                return config.getDirectoryList().get(row).getSrc();
+            default:
+                return config.getDirectoryList().get(row).getTgt();
+        }
     }
 
 

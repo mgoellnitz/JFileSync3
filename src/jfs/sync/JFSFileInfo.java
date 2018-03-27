@@ -66,7 +66,7 @@ public class JFSFileInfo implements Serializable {
     /**
      * Determines whether we can read the file.
      */
-    private boolean readable = true;
+    private boolean canRead = true;
 
     /**
      * Determines whether we can write to the file.
@@ -126,7 +126,7 @@ public class JFSFileInfo implements Serializable {
         exists = file.exists();
 
         if (exists) {
-            readable = file.canRead();
+            canRead = file.canRead();
             canWrite = file.canWrite();
         }
 
@@ -314,7 +314,7 @@ public class JFSFileInfo implements Serializable {
      * @return True if and only if we can read the file.
      */
     public final boolean canRead() {
-        return readable;
+        return canRead;
     }
 
 

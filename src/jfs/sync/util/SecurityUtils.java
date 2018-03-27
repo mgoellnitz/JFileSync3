@@ -29,16 +29,12 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
  * Basic security methods collected in a utility class.
  */
 public final class SecurityUtils {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SecurityUtils.class);
 
     private static final BouncyCastleProvider PROVIDER = new BouncyCastleProvider();
 
@@ -70,10 +66,10 @@ public final class SecurityUtils {
 
 
     public static void main(String[] args) {
-        LOG.info(PROVIDER.getName());
+        System.out.println(PROVIDER.getName());
         for (String key : PROVIDER.stringPropertyNames()) {
             if (key.startsWith("Cipher")) {
-                LOG.info("\t"+key+"\t"+PROVIDER.getProperty(key));
+                System.out.println("\t"+key+"\t"+PROVIDER.getProperty(key));
             }
         }
     }
