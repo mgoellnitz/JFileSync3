@@ -62,7 +62,9 @@ dependencies {
   compile 'org.apache.commons:commons-vfs2:2.2'
   compile 'org.apache.commons:commons-lang3:3.7'
   compile 'org.apache.commons:commons-compress:1.15'
-  compile 'net.sf.jsignature.io-tools:easystream:1.2.15'
+  compile ('net.sf.jsignature.io-tools:easystream:1.2.15') {
+    exclude group: 'org.slf4j', module: 'slf4j-api' 
+  }
 
   // compile 'org.bouncycastle:bcprov-jdk16:1.46'
   compile 'org.bouncycastle:bcprov-jdk15on:1.58'
@@ -145,15 +147,15 @@ distZip {
   /*
   // I personally have the JCE stuff prepared there
   into(project.name) {
-    from '..'
-    include 'jce-jre-patches/**'
+  from '..'
+  include 'jce-jre-patches/**'
   }
   // You might package your personal profiles in here
   into(project.name) {
-    from '..'
-    include 'profiles/**'
+  from '..'
+  include 'profiles/**'
   }
-  */
+   */
 }
 
 private List<String> getCmd(String cmd) {
