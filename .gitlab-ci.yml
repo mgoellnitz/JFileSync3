@@ -38,9 +38,6 @@ JFileSync3:
 
 cache:
   paths:
-  - /tmp/.gradle/caches/
-  - /tmp/.gradle/wrapper/
-  - /tmp/l4j.tgz
   - tmp/.gradle/caches/
   - tmp/.gradle/wrapper/
   - tmp/l4j.tgz
