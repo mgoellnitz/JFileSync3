@@ -17,25 +17,30 @@
 image: gradle:4.7-jdk8
 
 before_script:
-  - export GRADLE_USER_HOME=/tmp/.gradle
-  - test ! -f /tmp/l4j.tgz && wget -O /tmp/l4j.tgz https://netix.dl.sourceforge.net/project/launch4j/launch4j-3/3.11/launch4j-3.11-linux-x64.tgz
-  - tar xzf /tmp/l4j.tgz
+  - mkdir -p tmp
+  - export GRADLE_USER_HOME=$(pwd)/tmp/.gradle
+  - test ! -f tmp/l4j.tgz && wget -O tmp/l4j.tgz https://netix.dl.sourceforge.net/project/launch4j/launch4j-3/3.11/launch4j-3.11-linux-x64.tgz
+  - tar xzf tmp/l4j.tgz
   - export PATH=$(pwd)/launch4j:$PATH
+  - echo $PATH
 
 stages:
-  - JFileSync
+  - build
 
-build:
-  stage: JFileSync
+JFileSync3:
+  stage: build
   script: gradle --stacktrace --scan clean build
   artifacts:
     paths:
     - build/distributions/*
     expire_in: 30 days
-    name: ${CI_BUILD_STAGE}
+    name: ${CI_JOB_NAME}-snapshot
 
 cache:
   paths:
   - /tmp/.gradle/caches/
   - /tmp/.gradle/wrapper/
   - /tmp/l4j.tgz
+  - tmp/.gradle/caches/
+  - tmp/.gradle/wrapper/
+  - tmp/l4j.tgz
