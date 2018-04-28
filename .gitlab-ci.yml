@@ -20,8 +20,8 @@ before_script:
   - export GRADLE_USER_HOME=/tmp/.gradle
   - wget -O l4j.tgz https://netix.dl.sourceforge.net/project/launch4j/launch4j-3/3.11/launch4j-3.11-linux-x64.tgz
   - tar xzf l4j.tgz
-  - ls
   - export PATH=./launch4j:$PATH
+  - launch4j --help
 
 stages:
   - JFileSync
