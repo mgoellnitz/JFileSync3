@@ -24,7 +24,7 @@ stages:
 
 build:
   stage: JFileSync
-  script: gradle clean createApplication launch4j build
+  script: gradle clean createApplication build
   artifacts:
     paths:
     - build/distributions/*
