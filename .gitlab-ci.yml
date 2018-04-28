@@ -18,7 +18,7 @@ image: provocon/gitlabci-gradle-java
 
 before_script:
   - export GRADLE_USER_HOME=/tmp/.gradle
-  - curl 'https://netix.dl.sourceforge.net/project/launch4j/launch4j-3/3.11/launch4j-3.11-linux-x64.tgz' > l4j.tgz
+  - wget -O l4j.tgz https://netix.dl.sourceforge.net/project/launch4j/launch4j-3/3.11/launch4j-3.11-linux-x64.tgz
   - tar xzf l4j.tgz
   - export PATH=./launch4j:$PATH
 
