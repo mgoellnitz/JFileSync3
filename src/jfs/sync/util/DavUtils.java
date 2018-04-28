@@ -42,17 +42,25 @@ import org.slf4j.LoggerFactory;
  */
 public final class DavUtils {
 
-    public static final String PROP_LAST_MODIFIED_TIME_WIN = "Win32LastModifiedTime";
+    public static final String PROP_LAST_MODIFIED_WIN = "Win32LastModifiedTime";
 
-    public static final QName QNAME_LAST_MODIFIED_TIME_WIN = new QName("urn:schemas-microsoft-com:", PROP_LAST_MODIFIED_TIME_WIN, "ns1");
+    public static final QName QNAME_LAST_MODIFIED_WIN = new QName("urn:schemas-microsoft-com:", PROP_LAST_MODIFIED_WIN, "ns1");
 
-    public static final String PROP_LAST_MODIFIED_TIME = "getlastmodified";
+    public static final String PROP_LAST_MODIFIED = "getlastmodified";
 
     public static final String PROP_CUSTOM_MODIFIED = "JFileSync";
 
-    public static final QName QNAME_LAST_MODIFIED_TIME = new QName("DAV:", PROP_LAST_MODIFIED_TIME, "d");
+    public static final String NS_DAV = "DAV:";
 
-    public static final QName QNAME_CUSTOM_MODIFIED = new QName("http://www.provocon.de/sync", PROP_CUSTOM_MODIFIED, "sync");
+    public static final String NS_ASF = "http://apache.org/dav/props/";
+
+    public static final String NS_CUSTOM = "http://www.provocon.de/sync";
+
+    public static final QName QNAME_LAST_MODIFIED = new QName(NS_DAV, PROP_LAST_MODIFIED, "d");
+
+    public static final QName QNAME_LAST_MODIFIED_APACHE_ORG = new QName(NS_ASF, PROP_LAST_MODIFIED, "asf");
+
+    public static final QName QNAME_CUSTOM_MODIFIED = new QName(NS_CUSTOM, PROP_CUSTOM_MODIFIED, "sync");
 
     private static final DateFormat DATE_FORMAT;
 
@@ -62,8 +70,8 @@ public final class DavUtils {
 
 
     static {
-        CUSTOM_PROPS.add(DavUtils.QNAME_CUSTOM_MODIFIED);
-        CUSTOM_PROPS.add(DavUtils.QNAME_LAST_MODIFIED_TIME_WIN);
+        CUSTOM_PROPS.add(DavUtils.QNAME_LAST_MODIFIED_WIN);
+        // CUSTOM_PROPS.add(DavUtils.QNAME_CUSTOM_MODIFIED);
         DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ROOT);
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
@@ -78,10 +86,26 @@ public final class DavUtils {
     } // getCustomDavProperties()
 
 
+    public static String formatDate(long time) {
+        Date d = new Date(time);
+        return DATE_FORMAT.format(d);
+    }
+
+
+    public static Map<String, String> createHeadersMap(long time) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Date", formatDate(time));
+        return headers;
+    }
+
+
     public static long getModificationDate(DavResource resource) {
         Date modificationDate = resource.getModified();
-        String modifiedDateString = resource.getCustomProps().get(DavUtils.PROP_LAST_MODIFIED_TIME_WIN);
-        LOG.info("getModificationDate() custom properties for {}: {}", resource.getName(), resource.getCustomPropsNS());
+        Map<String, String> customProps = resource.getCustomProps();
+        String modifiedDateString = customProps.get(DavUtils.PROP_LAST_MODIFIED_WIN);
+        LOG.debug("getModificationDate({}) custom properties {}", resource.getName(), resource.getCustomPropsNS());
+        // LOG.info("getModificationDate({}) plain custom properties {}", resource.getName(), customProps);
+        LOG.info("getModificationDate({}) modification date {}", resource.getName(), modifiedDateString);
         if (StringUtils.isNotEmpty(modifiedDateString)) {
             try {
                 synchronized (DATE_FORMAT) {
@@ -109,8 +133,9 @@ public final class DavUtils {
      */
     private static boolean setProperty(Sardine sardine, String url, QName property, String value) {
         boolean success = false;
-//        List<QName> removeProps = new ArrayList<>(1);
-//        removeProps.add(property);
+        //  Not necessary:
+        // List<QName> removeProps = new ArrayList<>(1);
+        // removeProps.add(property);
         Set<QName> props = new HashSet<>(1);
         props.add(property);
         Map<QName, String> addProps = new HashMap<>();
@@ -121,7 +146,13 @@ public final class DavUtils {
             success = (result.size()==1);
             if (success) {
                 result = sardine.list(url, 1, props);
-                LOG.info("setProperty() result custom props {}", result.get(0).getCustomPropsNS());
+                Map<QName, String> customProps = result.get(0).getCustomPropsNS();
+                String check = customProps.get(property);
+                if (StringUtils.isEmpty(check)) {
+                    LOG.warn("setProperty() backend not capable of setting properties");
+                }
+                LOG.info("setProperty() result custom props {}", customProps);
+                // LOG.warn("setProperty() result plain custom props {}", result.get(0).getCustomProps());
             } // if
         } catch (IOException e) {
             LOG.error("setProperty() failed for "+url, e);
@@ -146,9 +177,14 @@ public final class DavUtils {
             modificationDate = DATE_FORMAT.format(new Date(time));
         }
         LOG.debug("setLastModified() setting time for {} to {}", url, modificationDate);
-        boolean success = DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_TIME_WIN, modificationDate);
-        // success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_TIME, modificationDate);
+        // Windows "standard" way - but not working on many backends
+        boolean success = DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_WIN, modificationDate);
+        // Only working on backends were the above also works - so useless:
+        // success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_APACHE_ORG, modificationDate);
         // success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_CUSTOM_MODIFIED, modificationDate);
+        // Read only property:
+        // success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED, modificationDate);
+        LOG.info("setLastModified() setting time for {} to {}: {}", url, modificationDate, success);
 
         return success;
     } // setLastModified()
