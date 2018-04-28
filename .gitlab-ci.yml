@@ -14,11 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-image: provocon/gitlabci-gradle-java
+image: gradle:4.7-jdk8
 
 before_script:
   - export GRADLE_USER_HOME=/tmp/.gradle
-  - apk update && apk add ca-certificates && update-ca-certificates && apk add openssl
   - wget -O l4j.tgz https://netix.dl.sourceforge.net/project/launch4j/launch4j-3/3.11/launch4j-3.11-linux-x64.tgz
   - tar xzf l4j.tgz
   - ls
