@@ -21,14 +21,13 @@ before_script:
   - wget -O l4j.tgz https://netix.dl.sourceforge.net/project/launch4j/launch4j-3/3.11/launch4j-3.11-linux-x64.tgz
   - tar xzf l4j.tgz
   - export PATH=./launch4j:$PATH
-  - launch4j --help
 
 stages:
   - JFileSync
 
 build:
   stage: JFileSync
-  script: gradle clean build
+  script: gradle --stacktrace --scan clean build
   artifacts:
     paths:
     - build/distributions/*
