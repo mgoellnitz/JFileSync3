@@ -30,7 +30,7 @@ stages:
 JFileSync3:
   stage: build
   script: 
-  - gradle --stacktrace --scan clean build
+  - gradle clean build
   - unzip build/distributions/JFileSync3.zip
   artifacts:
     paths:
