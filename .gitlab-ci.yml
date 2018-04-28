@@ -18,9 +18,9 @@ image: gradle:4.7-jdk8
 
 before_script:
   - export GRADLE_USER_HOME=/tmp/.gradle
-  - wget -O l4j.tgz https://netix.dl.sourceforge.net/project/launch4j/launch4j-3/3.11/launch4j-3.11-linux-x64.tgz
-  - tar xzf l4j.tgz
-  - export PATH=./launch4j:$PATH
+  - test ! -f /tmp/l4j.tgz && wget -O /tmp/l4j.tgz https://netix.dl.sourceforge.net/project/launch4j/launch4j-3/3.11/launch4j-3.11-linux-x64.tgz
+  - tar xzf /tmp/l4j.tgz
+  - export PATH=$(pwd)/launch4j:$PATH
 
 stages:
   - JFileSync
@@ -38,3 +38,4 @@ cache:
   paths:
   - /tmp/.gradle/caches/
   - /tmp/.gradle/wrapper/
+  - /tmp/l4j.tgz
