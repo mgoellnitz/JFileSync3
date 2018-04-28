@@ -30,9 +30,10 @@ stages:
 JFileSync3:
   stage: build
   script: gradle --stacktrace --scan clean build
+  script: unzip build/distributions/JFileSync3.zip
   artifacts:
     paths:
-    - build/distributions/*
+    - JFileSync3/*
     expire_in: 30 days
     name: ${CI_JOB_NAME}-snapshot
 
