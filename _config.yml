@@ -1,0 +1,8 @@
+title: JFileSync3
+description: File Syncing based on JFileSync with encryption and compression for local folders and WebDAV backends. Also (partly) compatible with encfs / boxcryptor (classic)  volumes.
+google_analytics: UA-59511125-3
+show_downloads: true
+theme: jekyll-theme-slate
+
+gems:
+  - jekyll-mentions
