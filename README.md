@@ -3,6 +3,9 @@
 [![Latest Release](https://img.shields.io/github/release/mgoellnitz/JFileSync3.svg)](https://github.com/mgoellnitz/JFileSync3/releases/latest)
 [![Dependency Status](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071)
 
+[SNAPSHOT](https://gitlab.com/api/v3/projects/mgoellnitz%2FJFileSync3/builds/artifacts/master/download?job=JFileSync3)
+builds are also available.
+
 File syncing with optional compression and encryption for local and WebDAV 
 folders. For local folders encryption can use EncFS and thus be compatible with 
 encfs4win, BoxCryptor Classic, Encdroid and so on. 
