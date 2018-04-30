@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2018, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,12 +70,12 @@ public class JFSWebDavFileProducer extends JFSFileProducer {
             String username = JFSConfig.getInstance().getServerUserName();
             String passphrase = JFSConfig.getInstance().getServerPassPhrase();
             sardine = SardineFactory.begin(username, passphrase, WindowsProxySelector.getInstance());
-            LOG.debug("getSardine() webdav client {}", sardine);
+            LOG.debug("() webdav client {}", sardine);
         } // if
         try {
             Thread.sleep(500);
         } catch (InterruptedException ie) {
-            LOG.error("getSardine()", ie);
+            LOG.error("()", ie);
         } // try/catch
     } // JFSWebDavFileProducer()
 
