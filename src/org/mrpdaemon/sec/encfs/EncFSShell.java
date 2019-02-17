@@ -1,3 +1,5 @@
+package org.mrpdaemon.sec.encfs;
+
 /*
  * EncFS Java Library
  * Copyright (C) 2011 Mark R. Pariente
@@ -26,18 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
-import org.mrpdaemon.sec.encfs.EncFSConfig;
-import org.mrpdaemon.sec.encfs.EncFSConfigFactory;
-import org.mrpdaemon.sec.encfs.EncFSException;
-import org.mrpdaemon.sec.encfs.EncFSFile;
-import org.mrpdaemon.sec.encfs.EncFSFileInputStream;
-import org.mrpdaemon.sec.encfs.EncFSFileProvider;
-import org.mrpdaemon.sec.encfs.EncFSInvalidPasswordException;
-import org.mrpdaemon.sec.encfs.EncFSLocalFileProvider;
-import org.mrpdaemon.sec.encfs.EncFSProgressListener;
-import org.mrpdaemon.sec.encfs.EncFSUtil;
-import org.mrpdaemon.sec.encfs.EncFSVolume;
-import org.mrpdaemon.sec.encfs.EncFSVolumeBuilder;
 
 
 public final class EncFSShell {
