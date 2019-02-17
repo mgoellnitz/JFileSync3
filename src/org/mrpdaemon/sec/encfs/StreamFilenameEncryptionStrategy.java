@@ -14,36 +14,39 @@
  */
 package org.mrpdaemon.sec.encfs;
 
-import java.security.InvalidAlgorithmParameterException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
+import java.security.InvalidAlgorithmParameterException;
 
+//Implementation of block filename decryption strategy
+public class StreamFilenameEncryptionStrategy extends
+		BasicFilenameEncryptionStrategy {
 
-/**
- * Implementation of block filename decryption strategy.
- */
-public class StreamFilenameEncryptionStrategy extends BasicFilenameEncryptionStrategy {
+	public StreamFilenameEncryptionStrategy(EncFSVolume volume,
+			String volumePath) {
+		super(volume, volumePath, EncFSFilenameEncryptionAlgorithm.STREAM);
+	}
 
-    public StreamFilenameEncryptionStrategy(EncFSVolume volume, String volumePath) {
-        super(volume, volumePath, EncFSFilenameEncryptionAlgorithm.STREAM);
-    }
+	// Stream encryption
+	@Override
+	protected byte[] encryptConcrete(EncFSVolume volume,
+			byte[] paddedDecFileName, byte[] fileIv)
+			throws EncFSCorruptDataException {
+		try {
+			return StreamCrypto.streamEncrypt(volume, fileIv,
+					paddedDecFileName);
+		} catch (InvalidAlgorithmParameterException e) {
+			throw new EncFSCorruptDataException(e);
+		} catch (IllegalBlockSizeException e) {
+			throw new EncFSCorruptDataException(e);
+		} catch (BadPaddingException e) {
+			throw new EncFSCorruptDataException(e);
+		} catch (EncFSUnsupportedException e) {
+			throw new EncFSCorruptDataException(e);
+		}
+	}
 
-
-    /**
-     * Stream encryption.
-     */
-    @Override
-    protected byte[] encryptConcrete(EncFSVolume volume, byte[] paddedDecFileName, byte[] fileIv) throws EncFSCorruptDataException {
-        try {
-            return StreamCrypto.streamEncrypt(volume, fileIv, paddedDecFileName);
-        } catch (InvalidAlgorithmParameterException|IllegalBlockSizeException|BadPaddingException|EncFSUnsupportedException e) {
-            throw new EncFSCorruptDataException(e);
-        }
-    }
-
-
-    protected byte[] getPaddedDecFilename(byte[] decFileName) {
-        return decFileName;
-    }
-
+	protected byte[] getPaddedDecFilename(byte[] decFileName) {
+		return decFileName;
+	}
 }

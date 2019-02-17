@@ -23,21 +23,16 @@ import java.util.Properties;
 /**
  * Writer methods that write an EncFSConfig into a file
  */
-public final class EncFSConfigWriter {
+public class EncFSConfigWriter {
 
     // Version to use if the properties file can't be read
-    private static final String ENCFS_JAVA_LIB_VERSION_DEV = "JFileSync3";
+    private static final String ENCFS_JAVA_LIB_VERSION_DEV = "dev";
 
     // Property file
     private static final String ENCFS_JAVA_LIB_PROPERTY_FILE = "library.properties";
 
     // Property key for version
     private static final String ENCFS_JAVA_LIB_VERSION_KEY = "library.version";
-
-
-    private EncFSConfigWriter() {
-    }
-
 
     // Retrieve library version
 
@@ -63,11 +58,10 @@ public final class EncFSConfigWriter {
         }
     }
 
-
     // Create config file contents from a given EncFSConfig / password
 
     private static String createConfigFileContents(EncFSConfig config) {
-        // TODO: This implementation is pretty horrible, but it works :)
+        // XXX: This implementation is pretty horrible, but it works :)
         String result = "";
 
         result += "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
@@ -113,7 +107,7 @@ public final class EncFSConfigWriter {
 
         result += "\t<blockMACBytes>"
                 +Integer
-                .toString(config.getNumberOfMACBytesForEachFileBlock())
+                        .toString(config.getNumberOfMACBytesForEachFileBlock())
                 +"</blockMACBytes>\n";
         result += "\t<blockMACRandBytes>"
                 +Integer.toString(config
@@ -170,5 +164,4 @@ public final class EncFSConfigWriter {
         os.write(configFileContents.getBytes());
         os.close();
     }
-
 }

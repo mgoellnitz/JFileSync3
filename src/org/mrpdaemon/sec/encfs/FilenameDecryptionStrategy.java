@@ -14,53 +14,40 @@
  */
 package org.mrpdaemon.sec.encfs;
 
-
-/**
- * Common class for all filename decryption strategies
- */
+// Common class for all filename decryption strategies
 abstract class FilenameDecryptionStrategy {
 
-    private final EncFSVolume volume;
+	private final EncFSVolume volume;
+	private final String volumePath;
+	private final EncFSFilenameEncryptionAlgorithm algorithm;
 
-    private final String volumePath;
+	String getVolumePath() {
+		return volumePath;
+	}
 
-    private final EncFSFilenameEncryptionAlgorithm algorithm;
+	EncFSVolume getVolume() {
+		return volume;
+	}
 
+	FilenameDecryptionStrategy(EncFSVolume volume, String volumePath,
+			EncFSFilenameEncryptionAlgorithm algorithm) {
+		this.volume = volume;
+		this.volumePath = volumePath;
+		this.algorithm = algorithm;
+	}
 
-    String getVolumePath() {
-        return volumePath;
-    }
+	// Decryption implementation to be provided by subclass
+	protected abstract String decryptImpl(String fileName)
+			throws EncFSCorruptDataException, EncFSChecksumException;
 
+	// Decrypt the given filename
+	public String decrypt(String filename) throws EncFSChecksumException,
+			EncFSCorruptDataException {
+		if (volume.getConfig().getFilenameAlgorithm() != algorithm) {
+			throw new IllegalStateException(
+					"only accessable when algorithm is " + algorithm);
+		}
 
-    EncFSVolume getVolume() {
-        return volume;
-    }
-
-
-    FilenameDecryptionStrategy(EncFSVolume volume, String volumePath,
-            EncFSFilenameEncryptionAlgorithm algorithm) {
-        this.volume = volume;
-        this.volumePath = volumePath;
-        this.algorithm = algorithm;
-    }
-
-
-    // Decryption implementation to be provided by subclass
-
-    protected abstract String decryptImpl(String fileName)
-            throws EncFSCorruptDataException, EncFSChecksumException;
-
-
-    // Decrypt the given filename
-
-    public String decrypt(String filename) throws EncFSChecksumException,
-            EncFSCorruptDataException {
-        if (volume.getConfig().getFilenameAlgorithm()!=algorithm) {
-            throw new IllegalStateException(
-                    "only accessable when algorithm is "+algorithm);
-        }
-
-        return decryptImpl(filename);
-    }
-
+		return decryptImpl(filename);
+	}
 }
