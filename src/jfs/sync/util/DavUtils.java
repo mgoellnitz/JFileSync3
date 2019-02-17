@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015, Martin Goellnitz
+ * Copyright (C) 2015-2019, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,21 +46,19 @@ public final class DavUtils {
 
     public static final QName QNAME_LAST_MODIFIED_WIN = new QName("urn:schemas-microsoft-com:", PROP_LAST_MODIFIED_WIN, "ns1");
 
-    public static final String PROP_LAST_MODIFIED = "getlastmodified";
+    public static final String PROP_GET_LAST_MODIFIED = "getlastmodified";
 
-    public static final String PROP_CUSTOM_MODIFIED = "JFileSync";
+    public static final String PROP_LAST_MODIFIED = "lastmodified";
 
     public static final String NS_DAV = "DAV:";
 
     public static final String NS_ASF = "http://apache.org/dav/props/";
 
-    public static final String NS_CUSTOM = "http://www.provocon.de/sync";
+    public static final QName QNAME_GET_LAST_MODIFIED = new QName(NS_DAV, PROP_GET_LAST_MODIFIED, "D");
 
-    public static final QName QNAME_LAST_MODIFIED = new QName(NS_DAV, PROP_LAST_MODIFIED, "d");
+    public static final QName QNAME_LAST_MODIFIED = new QName(NS_DAV, PROP_LAST_MODIFIED, "D");
 
-    public static final QName QNAME_LAST_MODIFIED_APACHE_ORG = new QName(NS_ASF, PROP_LAST_MODIFIED, "asf");
-
-    public static final QName QNAME_CUSTOM_MODIFIED = new QName(NS_CUSTOM, PROP_CUSTOM_MODIFIED, "sync");
+    public static final QName QNAME_LAST_MODIFIED_APACHE_ORG = new QName(NS_ASF, PROP_GET_LAST_MODIFIED, "asf");
 
     private static final DateFormat DATE_FORMAT;
 
@@ -71,8 +69,9 @@ public final class DavUtils {
 
     static {
         CUSTOM_PROPS.add(DavUtils.QNAME_LAST_MODIFIED_WIN);
+        CUSTOM_PROPS.add(DavUtils.QNAME_LAST_MODIFIED);
         // CUSTOM_PROPS.add(DavUtils.QNAME_CUSTOM_MODIFIED);
-        DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ROOT);
+        DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ROOT);
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
@@ -104,7 +103,6 @@ public final class DavUtils {
         Map<String, String> customProps = resource.getCustomProps();
         String modifiedDateString = customProps.get(DavUtils.PROP_LAST_MODIFIED_WIN);
         LOG.debug("getModificationDate({}) custom properties {}", resource.getName(), resource.getCustomPropsNS());
-        // LOG.info("getModificationDate({}) plain custom properties {}", resource.getName(), customProps);
         LOG.info("getModificationDate({}) modification date {}", resource.getName(), modifiedDateString);
         if (StringUtils.isNotEmpty(modifiedDateString)) {
             try {
@@ -149,9 +147,9 @@ public final class DavUtils {
                 Map<QName, String> customProps = result.get(0).getCustomPropsNS();
                 String check = customProps.get(property);
                 if (StringUtils.isEmpty(check)) {
-                    LOG.warn("setProperty() backend not capable of setting properties");
+                    LOG.warn("setProperty() backend not capable of setting property {}", property);
                 }
-                LOG.info("setProperty() result custom props {}", customProps);
+                LOG.warn("setProperty({}={}) result custom props {}", property, value, customProps);
                 // LOG.warn("setProperty() result plain custom props {}", result.get(0).getCustomProps());
             } // if
         } catch (IOException e) {
@@ -178,12 +176,9 @@ public final class DavUtils {
         }
         LOG.debug("setLastModified() setting time for {} to {}", url, modificationDate);
         // Windows "standard" way - but not working on many backends
-        boolean success = DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_WIN, modificationDate);
+        boolean success = DavUtils.setProperty(access, url, QNAME_LAST_MODIFIED_WIN, modificationDate);
         // Only working on backends were the above also works - so useless:
-        // success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED_APACHE_ORG, modificationDate);
-        // success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_CUSTOM_MODIFIED, modificationDate);
-        // Read only property:
-        // success = success&DavUtils.setProperty(access, url, DavUtils.QNAME_LAST_MODIFIED, modificationDate);
+        // success = success&DavUtils.setProperty(access, url, QNAME_LAST_MODIFIED_APACHE_ORG, modificationDate);
         LOG.info("setLastModified() setting time for {} to {}: {}", url, modificationDate, success);
 
         return success;
