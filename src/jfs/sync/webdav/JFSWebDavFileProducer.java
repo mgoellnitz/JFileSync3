@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This class produces webdav JFS files to be handled by the algorithm.
+ * This class produces webdav JFS files to be handled with the WebDAV protocol.
  *
  * @author Martin Goellnitz
  *
@@ -48,7 +48,14 @@ public class JFSWebDavFileProducer extends JFSFileProducer {
     private final Map<String, List<DavResource>> directoryCache = new HashMap<>(256);
 
 
-    List<DavResource> getListing(String url) throws IOException {
+    /**
+     * Obtain a WebDAV listing and use internal cache.
+     *
+     * @param url URL to fetch resources from
+     * @return list of DAV ressources
+     * @throws IOException
+     */
+    public List<DavResource> getListing(String url) throws IOException {
         if (directoryCache.containsKey(url)) {
             return directoryCache.get(url);
         } // if
