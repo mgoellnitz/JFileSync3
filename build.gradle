@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
 plugins {
-  id "edu.sc.seis.launch4j" version "2.4.3"
-  id "net.ossindex.audit" version "0.4.8"
+  id "edu.sc.seis.launch4j" version "2.4.4"
+  id "net.ossindex.audit" version "0.4.11"
 }
 
 apply plugin: 'java'
@@ -53,30 +53,30 @@ dependencies {
   // dropbox client
   // compile files(fileTree(dir: 'lib', includes: ['*.jar']))
 
-  compile 'org.slf4j:slf4j-api:1.7.25'
-  compile 'com.github.lookfirst:sardine:5.7'
-  compile 'org.slf4j:jul-to-slf4j:1.7.25' // starting with version 5.6 Sardine uses JUL
+  compile 'org.slf4j:slf4j-api:1.7.26'
+  compile 'com.github.lookfirst:sardine:5.8'
+  compile 'org.slf4j:jul-to-slf4j:1.7.26' // starting with version 5.6 Sardine uses JUL
 
   // Cifs code looks good but I don't have shares to use so I skip this
   // compile 'jcifs:jcifs:1.3.17'
-  compile 'org.apache.commons:commons-vfs2:2.2'
-  compile 'org.apache.commons:commons-lang3:3.7'
+  compile 'org.apache.commons:commons-vfs2:2.3'
+  compile 'org.apache.commons:commons-lang3:3.9'
   compile 'org.apache.commons:commons-compress:1.18'
   compile ('net.sf.jsignature.io-tools:easystream:1.2.15') {
     exclude group: 'org.slf4j', module: 'slf4j-api' 
   }
 
   // compile 'org.bouncycastle:bcprov-jdk16:1.46'
-  compile 'org.bouncycastle:bcprov-jdk15on:1.58'
-  compile 'javax.servlet:javax.servlet-api:4.0.0'
+  compile 'org.bouncycastle:bcprov-jdk15on:1.61'
+  compile 'javax.servlet:javax.servlet-api:4.0.1'
   
-  // Need to fix versions of transitive dependencies
+  // Needed to fix versions of transitive dependencies
   // launch4j 'com.thoughtworks.xstream:xstream:1.4.10'
   // launch4j 'commons-beanutils:commons-beanutils:1.9.3'
 
   // Logging:
   runtime 'ch.qos.logback:logback-classic:1.2.3'
-  runtime 'org.codehaus.groovy:groovy:2.4.13'
+  runtime 'org.codehaus.groovy:groovy:2.5.7'
 }
 
 mainClassName = 'jfs.JFileSync'
@@ -214,6 +214,7 @@ decrypt.dependsOn encrypt
 encrypt.dependsOn makeTestExecutable
 makeTestExecutable.dependsOn prepareTest
 prepareTest.dependsOn prepareTestee
+prepareTestee.dependsOn audit
 
 // Project specific default output directory for eclipse users
 // apply plugin: 'eclipse'
