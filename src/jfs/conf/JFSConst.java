@@ -74,11 +74,6 @@ public final class JFSConst {
     public final static String WORKING_DIR = System.getProperty("user.dir", ".");
 
     /**
-     * The file name of the default user profile file.
-     */
-    public final static String DEFAULT_PROFILE_FILE = "Profile.xml";
-
-    /**
      * The file name of the settings file.
      */
     public final static String SETTINGS_FILE = "Settings.xml";

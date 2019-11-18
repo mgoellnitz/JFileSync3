@@ -119,19 +119,19 @@ You can start the application through
 - a Unix shell script ('bin/JFileSync3')
 - a Unity launcher script
 
-ATTENTION: Because JFileSync is distributed as a Zip archive, Unix users will 
+ATTENTION: Because JFileSync3 is distributed as a Zip archive, Unix users will 
 have to give executable rights manually before launching the application, e.g.: 
-'chmod a+rx JFileSync.sh'.
+'chmod a+rx bin/JFileSync3'.
 
 Nearly all functions of JFileSync3 can be controlled via the Graphical User 
 Interface (GUI). However, JFileSync3 provides full access to all features 
-(apart from plug-ins) via the command line interface. Call `bin/JFileSync -help`
+(apart from plug-ins) via the command line interface. Call `bin/JFileSync3 -help`
 to get an overview of all possible command line options.
 
 
 ## Configuration
 
-JFileSync works with profiles controlling which folders to use, which files to 
+JFileSync3 works with profiles controlling which folders to use, which files to 
 include or ommit, how to log into WebDAV servers, and which encryption cipher 
 and passphrase to use.
 
@@ -193,7 +193,6 @@ You can find a copy all licenses of JFileSync3 and the used libraries in the
 Required packages for JFileSync3 development (not included in the distribution):
 
 - Java 8 SDK >= 1.8.0 (see 'http://java.sun.com')
-- Gradle >= 2.1.1 (see 'http://www.gradle.org')
 
 Used and as a result recommended development tools:
 
@@ -242,13 +241,13 @@ the 64bit ld and windres from mingw-binutils.
 The software is built with the usual
 
 ```bash
-gradle build
+./gradlew build
 ```
 
 and can be started - e.g. for IDE integration - through
 
 ```bash
-gradle run
+./gradlew run
 ```
 
 Take the ZIP file from build/distributions.
@@ -257,5 +256,5 @@ A small test-suite can be found in profiles/test (which is not packaged in the
 distribtions zip) and can be called via
 
 ```bash
-gradle encryptionTest
+./gradlew encryptionTest
 ```

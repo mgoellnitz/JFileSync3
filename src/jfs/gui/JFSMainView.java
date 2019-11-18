@@ -266,7 +266,10 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
 
         // Load default configuration if option is specified:
         if (loadDefaults) {
-            config.loadDefaultFile();
+            File currentProfile = JFSSettings.getInstance().getCurrentProfile();
+            if (currentProfile!=null&&currentProfile.exists()) {
+                config.load(currentProfile);
+            }
         }
 
         // Redirect error stream to log file:
@@ -638,9 +641,6 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
                     JOptionPane.WARNING_MESSAGE);
 
             if (result==JOptionPane.OK_OPTION) {
-                // Store last entered profile data:
-                config.storeDefaultFile();
-
                 // Store settings:
                 s.store();
 
@@ -839,12 +839,16 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
 
         if (state==Frame.NORMAL) {
             settings.setWindowBounds(r.x, r.y, r.width, r.height);
-        } else if (state==Frame.MAXIMIZED_VERT) {
-            settings.setWindowX(r.x);
-            settings.setWindowWidth(r.width);
-        } else if (state==Frame.MAXIMIZED_HORIZ) {
-            settings.setWindowY(r.y);
-            settings.setWindowHeight(r.height);
+        } else {
+            if (state==Frame.MAXIMIZED_VERT) {
+                settings.setWindowX(r.x);
+                settings.setWindowWidth(r.width);
+            } else {
+                if (state==Frame.MAXIMIZED_HORIZ) {
+                    settings.setWindowY(r.y);
+                    settings.setWindowHeight(r.height);
+                }
+            }
         }
     }
 

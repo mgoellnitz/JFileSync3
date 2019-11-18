@@ -32,9 +32,6 @@ import jfs.sync.JFSFile;
  */
 public abstract class JFSConfig implements Cloneable {
 
-    /** Stores the default configuration file. */
-    protected static File defaultFile = new File(JFSConst.HOME_DIR+File.separator+JFSConst.DEFAULT_PROFILE_FILE);
-
     /** Stores the title of the configuration. */
     protected String title;
 
@@ -96,7 +93,7 @@ public abstract class JFSConfig implements Cloneable {
     protected boolean dontAskQuestions = true;
 
 
-    /** 
+    /**
      * Stores the only instance of the class.
      *
      * SingletonHolder is loaded on the first execution of JFSConfig.getInstance()
@@ -157,36 +154,6 @@ public abstract class JFSConfig implements Cloneable {
 
         // When cleaned, the profile is stored by definition:
         currentProfileStored = true;
-    }
-
-
-    /**
-     * Loads the default configuration file in the user's home directory after program start if no configuration file
-     * was specified (GUI only).
-     */
-    public final void loadDefaultFile() {
-        if (defaultFile.exists()) {
-            // Loading the default file should not change whether the profile
-            // was changed:
-            boolean isStored = isCurrentProfileStored();
-            loadProfile(defaultFile);
-            setCurrentProfileStored(isStored);
-        }
-    }
-
-
-    /**
-     * Stores the default configuration file to the user's home directory after program termination (GUI only). If the
-     * directory doesn't exist, it is created from scratch.
-     */
-    public final void storeDefaultFile() {
-        File home = new File(JFSConst.HOME_DIR);
-
-        if ( !home.exists()) {
-            home.mkdir();
-        }
-
-        storeProfile(defaultFile);
     }
 
 
@@ -979,5 +946,5 @@ public abstract class JFSConfig implements Cloneable {
 
         return clone;
     }
-    
+
 }
