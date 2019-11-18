@@ -1,5 +1,5 @@
 # 
-# Copyright 2018 Martin Goellnitz
+# Copyright 2018-2019 Martin Goellnitz
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-image: gradle:4.7-jdk8
+image: gradle:6-jdk8
 
 before_script:
   - mkdir -p tmp
@@ -30,7 +30,7 @@ stages:
 JFileSync3:
   stage: build
   script: 
-  - gradle clean build
+  - gradle clean build audit
   - unzip build/distributions/JFileSync3.zip
   artifacts:
     paths:

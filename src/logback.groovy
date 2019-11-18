@@ -63,5 +63,6 @@ logger "org.webaccess", OFF, console, false
 // logger "jfs.sync.meta", DEBUG, console, false
 // logger "jfs.sync.encdav", INFO, console, false
 // logger "jfs.sync.dav", DEBUG, console, false
+// logger "jfs.sync.util", INFO, console, false
 // logger "org.apache.http.wire", DEBUG, console, false
 // logger "com.github.sardine", DEBUG, console, false
