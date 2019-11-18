@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-image: gradle:6-jdk8
+image: gradle:6.0-jdk8
 
 before_script:
   - mkdir -p tmp
