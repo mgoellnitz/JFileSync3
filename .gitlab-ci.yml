@@ -1,6 +1,6 @@
-# 
+#
 # Copyright 2018-2019 Martin Goellnitz
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -29,7 +29,7 @@ stages:
 
 JFileSync3:
   stage: build
-  script: 
+  script:
   - gradle clean build audit
   - unzip build/distributions/JFileSync3.zip
   artifacts:
