@@ -2,7 +2,7 @@
 
 [![Latest Release](https://img.shields.io/github/release/mgoellnitz/JFileSync3.svg)](https://github.com/mgoellnitz/JFileSync3/releases/latest)
 
-[SNAPSHOT](https://gitlab.com/api/v3/projects/mgoellnitz%2FJFileSync3/builds/artifacts/master/download?job=JFileSync3)
+[SNAPSHOT](https://gitlab.com/mgoellnitz/JFileSync3/-/jobs/artifacts/master/download?job=JFileSync3)
 builds are also available.
 
 File syncing with optional compression and encryption for local and WebDAV 
