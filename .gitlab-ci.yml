@@ -19,7 +19,7 @@ image: gradle:6.0-jdk11
 before_script:
   - mkdir -p tmp
   - export GRADLE_USER_HOME=$(pwd)/tmp/.gradle
-  - test ! -f tmp/l4j.tgz && wget -O tmp/l4j.tgz https://netix.dl.sourceforge.net/project/launch4j/launch4j-3/3.11/launch4j-3.11-linux-x64.tgz
+  - test ! -f tmp/l4j.tgz && wget -O tmp/l4j.tgz https://netix.dl.sourceforge.net/project/launch4j/launch4j-3/3.12/launch4j-3.12-linux-x64.tgz
   - tar xzf tmp/l4j.tgz
   - export PATH=$(pwd)/launch4j:$PATH
   - echo $PATH
