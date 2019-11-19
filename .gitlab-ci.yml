@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-image: gradle:6.0-jdk11
+image: amazoncorretto:11
 
 before_script:
   - mkdir -p tmp
@@ -31,7 +31,7 @@ JFileSync3:
   stage: build
   script:
   - java -version
-  - gradle clean build audit
+  - ./gradlew clean build audit
   - unzip build/distributions/JFileSync3.zip
   artifacts:
     paths:
