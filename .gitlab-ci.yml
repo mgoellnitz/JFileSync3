@@ -17,6 +17,7 @@
 image: devbeta/correttojdk:11.0.5.10.1
 
 before_script:
+  - echo "Before Script"
   - mkdir -p tmp
   - export GRADLE_USER_HOME=$(pwd)/tmp/.gradle
   - test ! -f tmp/l4j.tgz && wget -O tmp/l4j.tgz https://netix.dl.sourceforge.net/project/launch4j/launch4j-3/3.12/launch4j-3.12-linux-x64.tgz
@@ -30,6 +31,7 @@ stages:
 JFileSync3:
   stage: build
   script:
+  - echo "Build"
   - ./gradlew clean build audit
   - unzip build/distributions/JFileSync3.zip
   artifacts:
