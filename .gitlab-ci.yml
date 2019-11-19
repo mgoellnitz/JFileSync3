@@ -18,6 +18,7 @@ image: amazoncorretto:11
 
 before_script:
   - java -version
+  - uname -a
   - apt-get update && apt-get install -yq tar
   - mkdir -p tmp
   - export GRADLE_USER_HOME=$(pwd)/tmp/.gradle
