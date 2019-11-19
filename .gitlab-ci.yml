@@ -17,6 +17,8 @@
 image: amazoncorretto:11
 
 before_script:
+  - java -version
+  - apt-get update && apt-get install -yq tar
   - mkdir -p tmp
   - export GRADLE_USER_HOME=$(pwd)/tmp/.gradle
   - test ! -f tmp/l4j.tgz && wget -O tmp/l4j.tgz https://netix.dl.sourceforge.net/project/launch4j/launch4j-3/3.12/launch4j-3.12-linux-x64.tgz
@@ -30,7 +32,6 @@ stages:
 JFileSync3:
   stage: build
   script:
-  - java -version
   - ./gradlew clean build audit
   - unzip build/distributions/JFileSync3.zip
   artifacts:
