@@ -409,11 +409,4 @@ public class JFSEncryptedFile extends JFSFile {
         return true;
     } // postCopySrc()
 
-
-    @Override
-    protected void finalize() throws Throwable {
-        LOG.info("finalize() free memory {}", Runtime.getRuntime().freeMemory());
-        super.finalize();
-    } // finalize()
-
 } // JFSEncryptedFile()
