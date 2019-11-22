@@ -1,9 +1,9 @@
 # Java based encrypting File Syncing Tool
 
 [![Latest Release](https://img.shields.io/github/release/mgoellnitz/JFileSync3.svg)](https://github.com/mgoellnitz/JFileSync3/releases/latest)
-[![Dependency Status](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54fff1994a1064db0e000071)
+[![Build Status](https://gitlab.com/mgoellnitz/JFileSync3/badges/master/build.svg)](https://gitlab.com/mgoellnitz/JFieSync3/pipelines)
 
-[SNAPSHOT](https://gitlab.com/api/v3/projects/mgoellnitz%2FJFileSync3/builds/artifacts/master/download?job=JFileSync3)
+[SNAPSHOT](https://gitlab.com/mgoellnitz/JFileSync3/-/jobs/artifacts/master/download?job=JFileSync3)
 builds are also available.
 
 File syncing with optional compression and encryption for local and WebDAV 
@@ -18,10 +18,10 @@ little bit of discussion started in the [issues area at GitHub](https://github.c
 so feel free to add your comments there.
 
 This software was developed because I personally needed an easy to use syncing 
-tool to have everyday backups  - without thee need of multiple versions in file
+tool to have everyday backups  - without the need of multiple versions in file
 history - of highly confidential material - business and private. 
 
-None of the services I came accross could suite these needs.
+None of the services I came accross could suit these needs.
 
 The second reason why I find it helpful is, that I very much rely on online-syncing 
 tools for everyday backups and felt forced to use more than one of these 
@@ -41,7 +41,8 @@ I had to realise the Jens re-started his work on the original product, so that
 this decision now would need some rethinking. Be aware that this code here is 
 based on the 2007 version JFileSync2.2 and not the more recent 2.3 and 2.4 work,
 which heads in part in similar directions as my code (ripping out the server, 
-using VFS, presenting a new Windows and even Mac integration).
+using VFS, presenting a new Windows and even Mac integration). I did a manual
+back sync with 2.3a recently.
 
 JFileSync is a SourceForge project and available via the following URL:
 
@@ -102,9 +103,7 @@ compatible with encfs4win and of course Linux based encfs.
 
 ## Requirements
 
-- Java 8 Runtime Environment, OenJDK supported (see http://java.oracle.com)
-
-- Launch4j installation on the path (see https://sourceforge.net/projects/launch4j/)
+- Java 8 Runtime Environment, OpenJDK supported and recommended
 
 - Only when using other algorithms than AES: JCE extension  (see http://java.oracle.com)
 
@@ -120,19 +119,19 @@ You can start the application through
 - a Unix shell script ('bin/JFileSync3')
 - a Unity launcher script
 
-ATTENTION: Because JFileSync is distributed as a Zip archive, Unix users will 
+ATTENTION: Because JFileSync3 is distributed as a Zip archive, Unix users will 
 have to give executable rights manually before launching the application, e.g.: 
-'chmod a+rx JFileSync.sh'.
+'chmod a+rx bin/JFileSync3'.
 
 Nearly all functions of JFileSync3 can be controlled via the Graphical User 
 Interface (GUI). However, JFileSync3 provides full access to all features 
-(apart from plug-ins) via the command line interface. Call `bin/JFileSync -help`
+(apart from plug-ins) via the command line interface. Call `bin/JFileSync3 -help`
 to get an overview of all possible command line options.
 
 
 ## Configuration
 
-JFileSync works with profiles controlling which folders to use, which files to 
+JFileSync3 works with profiles controlling which folders to use, which files to 
 include or ommit, how to log into WebDAV servers, and which encryption cipher 
 and passphrase to use.
 
@@ -156,34 +155,23 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 St, Fifth Floor, Boston, MA, 02110-1301, USA
 
-JFileSync3 uses libraries or parts of Open Source projects where additionally 
-some of the are included as source code:
+JFileSync3 uses libraries or parts of Open Source projects. Some of them had to
+be included as source code for tecnical reasons in their distribution:
 
-- EncFS Java: LGPL (Source)
-
-- Sardine: Apache
-
-- Apache http components: Apache
-
-- Apache commons: Apache
-
-- IO-Tools: new BSD
-
-- Bouncy Castle providers: BC
-
-- SevenZip/LZMA: LZMA SDK is written and placed in the public domain by Igor Pavlov. (Source)
+* EncFS Java: LGPL (Source)
+* Sardine: Apache 2.0
+* Apache http components: Apache 2.0
+* Apache commons: Apache 2.0
+* IO-Tools: MIT
+* SLF4J: MIT
+* Bouncy Castle providers: BC
+* JCIFS: LGPL
+* Eclipse icons: the Common Public License - v 1.0.
+* SevenZip/LZMA: LZMA SDK is written and placed in the public domain by Igor Pavlov. (Source)
 
 Some code in LZMA SDK is based on public domain code from another developers:
   1) PPMd var.H (2001): Dmitry Shkarin
   2) SHA-256: Wei Dai (Crypto++ library)
-
-- log4j: Apache
-
-- JCIFS: LGPL
-
-- SLF4J: MIT
-
-- Eclipse icons: the Common Public License - v 1.0.
 
 You can find a copy all licenses of JFileSync3 and the used libraries in the 
 `legal/` directory of this distribution.
@@ -193,13 +181,13 @@ You can find a copy all licenses of JFileSync3 and the used libraries in the
 
 Required packages for JFileSync3 development (not included in the distribution):
 
-- Java 8 SDK >= 1.8.0 (see 'http://java.sun.com')
-- Gradle >= 2.1.1 (see 'http://www.gradle.org')
+* Java 8 SDK >= 1.8.0 (see 'http://java.sun.com')
+* Launch4j installation on the path (see https://sourceforge.net/projects/launch4j/)
 
 Used and as a result recommended development tools:
 
-- Java 8 SDK 1.8.0
-- Netbeans 8.1
+* Java 8 SDK 1.8.0
+* Netbeans 8.2
 
 The following structure describes all directories and files included in the 
 JFileSync3 source repository:
@@ -235,21 +223,18 @@ Feel free to issue bug reports and ideas here.
 
 ## Building and Packaging
 
-
-Building requires a launch4j installation available from the path. This was 
-necessary to use a pathed one on 64bit systems mixing the original launch4j with
-the 64bit ld and windres from mingw-binutils.
+Building requires a launch4j installation available from the path.
 
 The software is built with the usual
 
 ```bash
-gradle build
+./gradlew build
 ```
 
 and can be started - e.g. for IDE integration - through
 
 ```bash
-gradle run
+./gradlew run
 ```
 
 Take the ZIP file from build/distributions.
@@ -258,5 +243,5 @@ A small test-suite can be found in profiles/test (which is not packaged in the
 distribtions zip) and can be called via
 
 ```bash
-gradle encryptionTest
+./gradlew encryptionTest
 ```
