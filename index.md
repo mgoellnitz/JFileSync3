@@ -1,7 +1,7 @@
 # Java based encrypting File Syncing Tool
 
 [![Latest Release](https://img.shields.io/github/release/mgoellnitz/JFileSync3.svg)](https://github.com/mgoellnitz/JFileSync3/releases/latest)
-[![Build Status](https://gitlab.com/mgoellnitz/JFileSync3/badges/master/build.svg)](https://gitlab.com/mgoellnitz/JFieSync3/pipelines)
+[![Build Status](https://img.shields.io/gitlab/pipeline/mgoellnitz/JFileSync3.svg)](https://gitlab.com/mgoellnitz/JFileSync3/pipelines)
 
 [SNAPSHOT](https://gitlab.com/mgoellnitz/JFileSync3/-/jobs/artifacts/master/download?job=JFileSync3)
 builds are also available.
@@ -117,7 +117,7 @@ You can start the application through
 - a Windows launcher ('JFileSync3.exe')
 - a batch file ('bin/JFileSync3.bat')
 - a Unix shell script ('bin/JFileSync3')
-- a Unity launcher script
+- a Unity launcher script ('bin/JFileSync3.desktop')
 
 ATTENTION: Because JFileSync3 is distributed as a Zip archive, Unix users will 
 have to give executable rights manually before launching the application, e.g.: 
