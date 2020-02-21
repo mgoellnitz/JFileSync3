@@ -66,9 +66,9 @@ dependencies {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
   // Update transitive dependency databind
-  implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.2'
   implementation 'org.apache.commons:commons-lang3:3.9'
-  implementation 'org.apache.commons:commons-compress:1.19'
+  implementation 'org.apache.commons:commons-compress:1.20'
   implementation ('net.sf.jsignature.io-tools:easystream:1.2.15') {
     exclude group: 'org.slf4j', module: 'slf4j-api' 
   }
@@ -83,7 +83,7 @@ dependencies {
 
   // Logging:
   runtimeOnly 'ch.qos.logback:logback-classic:1.2.3'
-  runtimeOnly 'org.codehaus.groovy:groovy:2.5.9'
+  runtimeOnly 'org.codehaus.groovy:groovy:3.0.1'
 }
 
 mainClassName = 'jfs.JFileSync'
@@ -221,7 +221,7 @@ decrypt.dependsOn encrypt
 encrypt.dependsOn makeTestExecutable
 makeTestExecutable.dependsOn prepareTest
 prepareTest.dependsOn prepareTestee
-prepareTestee.dependsOn audit
+prepareTestee.dependsOn check
 
 // Project specific default output directory for eclipse users
 // apply plugin: 'eclipse'
