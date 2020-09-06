@@ -2,9 +2,7 @@
 
 [![Latest Release](https://img.shields.io/github/release/mgoellnitz/JFileSync3.svg)](https://github.com/mgoellnitz/JFileSync3/releases/latest)
 [![Build Status](https://img.shields.io/gitlab/pipeline/mgoellnitz/JFileSync3.svg)](https://gitlab.com/mgoellnitz/JFileSync3/pipelines)
-
-[SNAPSHOT](https://gitlab.com/mgoellnitz/JFileSync3/-/jobs/artifacts/master/download?job=JFileSync3)
-builds are also available.
+[![Download](https://img.shields.io/badge/Download-Snapshot-blue)](https://gitlab.com/mgoellnitz/JFileSync3/-/jobs/artifacts/master/download?job=JFileSync3)
 
 File syncing with optional compression and encryption for local and WebDAV 
 folders. For local folders encryption can use EncFS and thus be compatible with 
