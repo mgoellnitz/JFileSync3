@@ -57,6 +57,8 @@ dependencies {
   implementation ('com.github.lookfirst:sardine:5.10') {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
+  // Use later version than required by sardine to addess vulnerabilities
+  implementation 'org.apache.httpcomponents:httpclient:4.5.13'
   implementation 'org.slf4j:jcl-over-slf4j:1.7.30' // httpclient and vfs use JCL
   implementation 'org.slf4j:jul-to-slf4j:1.7.30' // starting with version 5.6 Sardine uses JUL
 
