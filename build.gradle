@@ -94,7 +94,7 @@ distTar.enabled = false
 
 launch4j {
   mainClassName = project.mainClassName
-  version = '3.0-SNAPSHOT'
+  version = '3.0.16'
   copyright = '(C) 2002-2020, J. Heidrich, M. Goellnitz'
   downloadUrl = 'https://github.com/mgoellnitz/JFileSync3/releases'
   supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
