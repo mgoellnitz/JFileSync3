@@ -30,10 +30,6 @@ targetCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
 compileJava.options.deprecation = true
 
-repositories {
-  jcenter()
-}
-
 sourceSets {
   main {
     java {
@@ -95,7 +91,7 @@ distTar.enabled = false
 launch4j {
   mainClassName = project.mainClassName
   version = '3.0-SNAPSHOT'
-  copyright = '(C) 2002-2020, J. Heidrich, M. Goellnitz'
+  copyright = '(C) 2002-2021, J. Heidrich, M. Goellnitz'
   downloadUrl = 'https://github.com/mgoellnitz/JFileSync3/releases'
   supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
   icon = "$project.projectDir/win/JFileSync3.ico"
@@ -110,7 +106,7 @@ task createApplication(type: edu.sc.seis.launch4j.tasks.Launch4jExternalTask) {
   xmlFileName = 'JFileSync3.xml'
 }
 
-distZip.dependsOn createApplication
+startScripts.dependsOn createApplication
 
 startScripts {
   doLast {
@@ -123,6 +119,8 @@ startScripts {
     windowsScript.text = windowsScript.text.replace('"%JAVA_EXE%" %DEFAULT_JVM_OPTS%', '%JAVA_PREFIX% "%JAVA_EXE%" %DEFAULT_JVM_OPTS%')
   }
 }
+
+distZip.dependsOn startScripts
 
 distZip {
   // TODO: later...
