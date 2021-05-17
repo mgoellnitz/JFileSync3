@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 Martin Goellnitz
+ * Copyright (C) 2013-2021 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
 plugins {
-  id "edu.sc.seis.launch4j" version "2.4.9"
+  id "edu.sc.seis.launch4j" version "2.5.0"
   id "net.ossindex.audit" version "0.4.11"
 }
 
