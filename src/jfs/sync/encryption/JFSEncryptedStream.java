@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2021 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -391,6 +391,9 @@ public class JFSEncryptedStream extends OutputStream {
                 boolean result = decoder.SetDecoderProperties(properties);
                 LOG.debug("JFSEncryptedStream.createInputStream() readBytes={}", readBytes);
                 LOG.debug("JFSEncryptedStream.createInputStream() result={}", result);
+                if (!result) {
+                    LOG.warn("JFSEncryptedStream.createInputStream() could not set LZMA decoder parameters.");
+                }
 
                 decoder.Code(in, outputStream, l);
                 in.close();
@@ -417,4 +420,4 @@ public class JFSEncryptedStream extends OutputStream {
         return marker;
     } // readMarker()
 
-} // JFSEncryptedOutputStream
+} // JFSEncryptedStream

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2016 Martin Goellnitz
+ * Copyright (C) 2010-2021 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -281,6 +281,9 @@ public class JFSEncryptedFile extends JFSFile {
         try {
             InputStream stream = fileProducer.getInputStream(getRelativePath());
             return JFSEncryptedStream.createInputStream(stream, getLength(), getCipher(Cipher.DECRYPT_MODE));
+        } catch (NullPointerException npe) {
+            LOG.error("getInputStream("+getRelativePath()+") Null Pointer Exception "+npe.getLocalizedMessage());
+            return null;
         } catch (IOException ioe) {
             LOG.error("getInputStream() I/O Exception "+ioe.getLocalizedMessage());
             return null;
