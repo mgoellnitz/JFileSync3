@@ -49,22 +49,22 @@ dependencies {
   // dropbox client
   // implementation files(fileTree(dir: 'lib', includes: ['*.jar']))
 
-  implementation 'org.slf4j:slf4j-api:1.7.30'
+  implementation 'org.slf4j:slf4j-api:1.7.32'
   implementation ('com.github.lookfirst:sardine:5.10') {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
   // Use later version than required by sardine to addess vulnerabilities
   implementation 'org.apache.httpcomponents:httpclient:4.5.13'
-  implementation 'org.slf4j:jcl-over-slf4j:1.7.30' // httpclient and vfs use JCL
-  implementation 'org.slf4j:jul-to-slf4j:1.7.30' // starting with version 5.6 Sardine uses JUL
+  implementation 'org.slf4j:jcl-over-slf4j:1.7.32' // httpclient and vfs use JCL
+  implementation 'org.slf4j:jul-to-slf4j:1.7.32' // starting with version 5.6 Sardine uses JUL
 
   // Cifs code looks good but I don't have shares to use so I skip this
   // implementation 'jcifs:jcifs:1.3.17'
-  implementation ('org.apache.commons:commons-vfs2:2.8.0') {
+  implementation ('org.apache.commons:commons-vfs2:2.9.0') {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
   // Update transitive dependency databind
-  implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
   implementation 'org.apache.commons:commons-lang3:3.12.0'
   implementation 'org.apache.commons:commons-compress:1.21'
   implementation ('net.sf.jsignature.io-tools:easystream:1.2.15') {
@@ -72,7 +72,7 @@ dependencies {
   }
 
   // implementation 'org.bouncycastle:bcprov-jdk16:1.46'
-  implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
+  implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
   implementation 'javax.servlet:javax.servlet-api:4.0.1'
   
   // Needed to fix versions of transitive dependencies
@@ -80,8 +80,8 @@ dependencies {
   // launch4j 'commons-beanutils:commons-beanutils:1.9.3'
 
   // Logging:
-  runtimeOnly 'ch.qos.logback:logback-classic:1.2.3'
-  runtimeOnly 'org.codehaus.groovy:groovy:3.0.8'
+  runtimeOnly 'ch.qos.logback:logback-classic:1.2.6'
+  runtimeOnly 'org.codehaus.groovy:groovy:3.0.9'
 }
 
 mainClassName = 'jfs.JFileSync'
