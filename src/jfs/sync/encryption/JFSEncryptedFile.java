@@ -23,6 +23,8 @@ import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
@@ -187,17 +189,20 @@ public class JFSEncryptedFile extends JFSFile {
     public final JFSFile[] getList() {
         if (list==null) {
             String[] files = fileProducer.list(getRelativePath());
-
+            list = new JFSFile[0];
             if (files!=null) {
-                list = new JFSFile[files.length];
-
+                List<JFSFile> listing = new ArrayList<>(files.length);
                 for (int i = 0; i<files.length; i++) {
                     // asFolder parameter doesn't to anything
                     LOG.debug("getList({}) {} {}", getName(), i, files[i]);
-                    list[i] = fileProducer.getJfsFile(getRelativePath()+fileProducer.getSeparator()+files[i], false);
+                    try {
+                        JFSFile entry = fileProducer.getJfsFile(getRelativePath()+fileProducer.getSeparator()+files[i], false);
+                        listing.add(entry);
+                    } catch (RuntimeException e) {
+                        LOG.error("getList()", e);
+                    }
                 } // for
-            } else {
-                list = new JFSFile[0];
+                list = listing.toArray(list);
             }
         }
 
@@ -352,6 +357,7 @@ public class JFSEncryptedFile extends JFSFile {
                 out = null;
             } // if
         } catch (IOException e) {
+            LOG.error("closeOutputStream()", e);
             JFSLog.getErr().getStream().println(t.get("error.io")+" "+e);
         } // try/catch
     } // closeOutputStream()

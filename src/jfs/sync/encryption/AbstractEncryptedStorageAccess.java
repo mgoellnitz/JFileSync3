@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2021 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -379,18 +379,8 @@ public abstract class AbstractEncryptedStorageAccess {
             String decryptedName = getDecodedFileName(relativePath, decryptedBytes);
             decryptionCache.put(relativePath+getSeparator()+name, decryptedName);
             name = decryptedName;
-        } catch (NoSuchAlgorithmException nsae) {
-            LOG.error("getDecryptedFileName() No Such Algorhithm "+nsae.getLocalizedMessage());
-        } catch (NoSuchPaddingException nspe) {
-            LOG.error("getDecryptedFileName() No Such Padding "+nspe.getLocalizedMessage());
-        } catch (InvalidKeyException ike) {
-            LOG.error("getDecryptedFileName() Invalid Key "+ike.getLocalizedMessage());
-        } catch (ArrayIndexOutOfBoundsException e) {
-            LOG.error("getDecryptedFileName() ArrayIndexOutOfBoundsException", e);
-        } catch (IllegalBlockSizeException e) {
-            LOG.error("getDecryptedFileName() IllegalBlockSizeException", e);
-        } catch (BadPaddingException e) {
-            LOG.error("getDecryptedFileName() BadPaddingException", e);
+        } catch (NoSuchAlgorithmException|NoSuchPaddingException|InvalidKeyException|ArrayIndexOutOfBoundsException|IllegalBlockSizeException|BadPaddingException e) {
+            LOG.error("getDecryptedFileName() "+e.getClass().getSimpleName()+" - "+e.getLocalizedMessage()+": "+name);
         } // try/catch
         return name;
     } // getDecryptedFileName()
@@ -455,11 +445,12 @@ public abstract class AbstractEncryptedStorageAccess {
                 String encodedString = getEncryptedFileName(originalPath, pathElement);
                 String checkBack = getDecryptedFileName(originalPath, encodedString);
                 // log.warn("getFile() "+pathElement+" == "+checkBack+"?");
-                if (!checkBack.equals(pathElement)) {
+                if (checkBack.equals(pathElement)) {
+                    path += getSeparator()+encodedString;
+                } else {
+                    path += getSeparator()+pathElement;
                     LOG.error("getFileName("+originalPath+") "+pathElement+" != "+checkBack+" in "+relativePath);
-                    throw new RuntimeException("getFileName() "+pathElement+" != "+checkBack);
                 } // if
-                path += getSeparator()+encodedString;
                 originalPath += getSeparator()+pathElement;
             } // if
         } // for
@@ -469,8 +460,8 @@ public abstract class AbstractEncryptedStorageAccess {
         } // if
         return path;
     } // getFileName()
-
-
+    
+    
     protected String getMetaDataFileName(String relativePath) {
         StringBuilder result = new StringBuilder(getLastPathElement(JFSConfig.getInstance().getEncryptionPassPhrase(), relativePath));
         result.reverse();
