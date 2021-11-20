@@ -356,7 +356,7 @@ public class JFSEncryptedStream extends OutputStream {
      * @param cipher
      * @return
      */
-    public static InputStream createInputStream(String filename, InputStream fis, long expectedLength, Cipher cipher) {
+    public static InputStream createInputStream(InputStream fis, long expectedLength, Cipher cipher) {
         try {
             InputStream in = fis;
             ObjectInputStream ois = new ObjectInputStream(in);
@@ -390,7 +390,7 @@ public class JFSEncryptedStream extends OutputStream {
                 }
                 Decoder decoder = new Decoder();
                 if (!decoder.SetDecoderProperties(properties)) {
-                    LOG.warn("JFSEncryptedStream.createInputStream({}) could not set LZMA decoder parameters.", filename);
+                    LOG.warn("JFSEncryptedStream.createInputStream() could not set LZMA decoder parameters.");
                 }
 
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

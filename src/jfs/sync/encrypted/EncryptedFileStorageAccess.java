@@ -177,7 +177,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
     @Override
     public InputStream getInputStream(String rootPath, String relativePath) throws IOException {
         File file = getFile(rootPath, relativePath);
-        LOG.debug("getInputStream() getting input stream for {}", file.getPath());
+        LOG.info("getInputStream() getting input stream for {}", file.getPath());
         return new FileInputStream(file);
     }
 
