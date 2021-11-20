@@ -29,6 +29,7 @@ import jfs.sync.encryption.StorageAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * With this module only the files and not their filesnames get encrypted.
  *
@@ -38,7 +39,9 @@ public class PlainDirStorageAccess implements StorageAccess {
 
     private static Logger log = LoggerFactory.getLogger(PlainDirStorageAccess.class);
 
-    /** padding for passwords */
+    /**
+     * padding for passwords
+     */
     private static final String SALT = "aqiowuecqouceienq";
 
 
@@ -72,9 +75,9 @@ public class PlainDirStorageAccess implements StorageAccess {
         if (result.isExists()) {
             result.setCanRead(file.canRead());
             result.setCanWrite(file.canWrite());
-            if ( !result.isDirectory()) {
+            if (!result.isDirectory()) {
                 result.setModificationDate(file.lastModified());
-                result.setSize( -1);
+                result.setSize(-1);
             } else {
                 result.setSize(0);
             } // if
