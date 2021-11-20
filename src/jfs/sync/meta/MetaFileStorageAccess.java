@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2016 Martin Goellnitz
+ * Copyright (C) 2010-2021 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -176,7 +176,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
             flushMetaData(rootPath, pathAndName, listing);
             LOG.debug("getOutputStream() getting output stream for {} {}", file.getPath(), info);
         } // if
-        LOG.debug("getOutputStream() getting outpult stream for {}", file.getPath());
+        LOG.debug("getOutputStream() getting output stream for {}", file.getPath());
         outputStreams++;
         if (LOG.isInfoEnabled()) {
             LOG.info("getOutputStream("+relativePath+") outputStreams="+outputStreams);
