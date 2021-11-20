@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2021 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,7 +77,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
             while ((o = ois.readObject())!=null) {
                 if (o instanceof FileInfo) {
                     FileInfo fi = (FileInfo) o;
-                    if (fi.isDirectory()) {
+                    if (fi.isDirectory() && LOG.isDebugEnabled()) {
                         String date;
                         synchronized (FORMATTER) {
                             date = FORMATTER.format(new Date(fi.getModificationDate()));
@@ -119,8 +119,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
      * flushing listing as meta data info for pathAndName[0] in rootPath
      *
      * @param rootPath
-     * @param pathAndName
-     * path and name for the file and path for which this update takes place
+     * @param pathAndName path and name for the file and path for which this update takes place
      * @param listing
      */
     public void flushMetaData(String rootPath, String[] pathAndName, Map<String, FileInfo> listing) {
