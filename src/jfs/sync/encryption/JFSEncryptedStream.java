@@ -164,7 +164,7 @@ public class JFSEncryptedStream extends OutputStream {
 
         byte marker = COMPRESSION_NONE;
 
-        LOG.debug("close() checking for compressions for");
+        LOG.info("internalClose() checking for compressions.");
 
         CompressionThread dt = new CompressionThread(originalBytes) {
 
@@ -282,15 +282,15 @@ public class JFSEncryptedStream extends OutputStream {
         if (bt.compressedValue.length<l) {
             marker = COMPRESSION_BZIP2;
             bytes = bt.compressedValue;
-            LOG.warn("close() using bzip2 and saving {} bytes.", (l-bytes.length));
+            LOG.warn("internalClose() using bzip2 and saving {} bytes.", (l-bytes.length));
             l = bytes.length;
         } // if
 
         if (marker==COMPRESSION_NONE) {
-            LOG.info("close() using no compression");
+            LOG.info("internalClose() using no compression");
         } // if
         if (marker==COMPRESSION_LZMA) {
-            LOG.info("close() using lzma");
+            LOG.info("internalClose() using lzma");
         } // if
 
         ObjectOutputStream oos = new ObjectOutputStream(baseOutputStream);
@@ -352,12 +352,11 @@ public class JFSEncryptedStream extends OutputStream {
     /**
      *
      * @param fis
-     * @param expectedLength
-     * length to be expected or -2 if you don't want the check
+     * @param expectedLength length to be expected or -2 if you don't want the check
      * @param cipher
      * @return
      */
-    public static InputStream createInputStream(InputStream fis, long expectedLength, Cipher cipher) {
+    public static InputStream createInputStream(String filename, InputStream fis, long expectedLength, Cipher cipher) {
         try {
             InputStream in = fis;
             ObjectInputStream ois = new ObjectInputStream(in);
@@ -383,18 +382,18 @@ public class JFSEncryptedStream extends OutputStream {
                 in = new BZip2CompressorInputStream(in);
             } // if
             if (marker==COMPRESSION_LZMA) {
-                Decoder decoder = new Decoder();
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
                 byte[] properties = new byte[5];
                 int readBytes = in.read(properties, 0, properties.length);
-                boolean result = decoder.SetDecoderProperties(properties);
-                LOG.debug("JFSEncryptedStream.createInputStream() readBytes={}", readBytes);
-                LOG.debug("JFSEncryptedStream.createInputStream() result={}", result);
-                if (!result) {
-                    LOG.warn("JFSEncryptedStream.createInputStream() could not set LZMA decoder parameters.");
+                LOG.info("JFSEncryptedStream.createInputStream() readBytes={}", readBytes);
+                if (readBytes != properties.length) {
+                    LOG.warn("JFSEncryptedStream.createInputStream() short read for LZMA decoder parameters.");
+                }
+                Decoder decoder = new Decoder();
+                if (!decoder.SetDecoderProperties(properties)) {
+                    LOG.warn("JFSEncryptedStream.createInputStream({}) could not set LZMA decoder parameters.", filename);
                 }
 
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 decoder.Code(in, outputStream, l);
                 in.close();
                 outputStream.close();
