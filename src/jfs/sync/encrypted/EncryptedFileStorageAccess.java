@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2021 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -146,8 +146,14 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
 
 
     @Override
-    public boolean setReadOnly(String rootPath, String relativePath) {
-        return getFile(rootPath, relativePath).setReadOnly();
+    public boolean setWritable(String rootPath, String relativePath, boolean writable) {
+        LOG.info("setWritable() set writable {}: {}", relativePath, writable);
+        boolean result = true;
+        File file = getFile(rootPath, relativePath);
+        if (file.exists()) {
+            result = file.setWritable(writable);
+        }
+        return result;
     }
 
 

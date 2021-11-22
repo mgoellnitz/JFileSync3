@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jFileSync title="2. Decrypt ignoring metadata">
+<jFileSync title="3. Decrypt ignoring metadata">
   <encryption passphrase="SecretPassword"/>
-  <directory src="secure://EncryptedWithMetadataFolder" tgt="PlaintextIgnoringMetadataFolder" />
+  <directory src="encrypted://EncryptedWithMetadataFolder" tgt="PlaintextIgnoringMetadataFolder" />
 </jFileSync>

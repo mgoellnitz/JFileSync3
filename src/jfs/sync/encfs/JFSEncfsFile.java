@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2021 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,12 +64,9 @@ public class JFSEncfsFile extends JFSFile {
     /**
      * Creates a new external file for a certain path using a specific file producer.
      *
-     * @param access
-     * The server access object to use.
-     * @param fileProducer
-     * The assigned file producer.
-     * @param path
-     * The path to create the external file for.
+     * @param access       The server access object to use.
+     * @param fileProducer The assigned file producer.
+     * @param path         The path to create the external file for.
      */
     public JFSEncfsFile(EncFSVolume access, JFSFileProducer fileProducer, String path, boolean isDirectory) {
         super(fileProducer, path);
@@ -111,10 +108,8 @@ public class JFSEncfsFile extends JFSFile {
     /**
      * Creates a new external root file and reads the structure from server.
      *
-     * @param access
-     * The server access object to use.
-     * @param fileProducer
-     * The assigned file producer.
+     * @param access       The server access object to use.
+     * @param fileProducer The assigned file producer.
      */
     public JFSEncfsFile(EncFSVolume access, JFSFileProducer fileProducer) {
         this(access, fileProducer, "", true);
@@ -211,6 +206,17 @@ public class JFSEncfsFile extends JFSFile {
             output = null;
         } // if
     } // closeOutputStream()
+
+
+    /**
+     * @see JFSFile#removeWriteLock()
+     */
+    @Override
+    public boolean removeWriteLock() {
+        LOG.debug("removeWriteLock() {}", file.getPath());
+        boolean result = file.isWritable();
+        return result;
+    } // removeWriteLock()
 
 
     /**

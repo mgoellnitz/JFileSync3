@@ -259,14 +259,20 @@ public class JFSEncryptedFile extends JFSFile {
     public final boolean setReadOnly() {
         boolean success = true;
         if (JFSConfig.getInstance().isSetCanWrite()) {
-
-            success = fileProducer.setReadOnly(getRelativePath());
-            if (success) {
-                fileInfo.setCanWrite(false);
-            } // if
+            success = fileProducer.setWritable(getRelativePath(), false);
+            fileInfo.setCanWrite(false);
         } // if
         return success;
     } // setReadOnly()
+
+
+    /**
+     * @see JFSFile#removeWriteLock()
+     */
+    @Override
+    public final boolean removeWriteLock() {
+        return fileProducer.setWritable(getRelativePath(), true);
+    }
 
 
     /**
@@ -394,6 +400,7 @@ public class JFSEncryptedFile extends JFSFile {
             // Just to work on the same file info
             fileInfo = fileProducer.getFileInfo(relativePath);
             fileInfo.setExists(true);
+            fileInfo.setCanWrite(srcFile.canWrite());
             fileInfo.setSize(srcFile.getLength());
             success = success&&setLastModified(srcFile.getLastModified());
             // set last modified has to implicitly

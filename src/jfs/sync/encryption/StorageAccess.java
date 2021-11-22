@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2021 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ public interface StorageAccess {
     boolean setLastModified(String rootpath, String path, long modificationDate);
 
 
-    boolean setReadOnly(String rootpath, String path);
+    boolean setWritable(String rootpath, String path, boolean writable);
 
 
     boolean delete(String rootpath, String path);

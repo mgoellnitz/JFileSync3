@@ -206,6 +206,22 @@ public class JFSVFSFile extends JFSFile {
 
 
     /**
+     * @see JFSFile#removeWriteLock()
+     */
+    public boolean removeWriteLock() {
+        if (file==null) {
+            return false;
+        }
+        try {
+            return file.setWritable(true, false);
+        } catch (FileSystemException e) {
+            LOG.error("removeWriteLock()", e);
+            return false;
+        }
+    }
+
+
+     /**
      * @see JFSFile#delete()
      */
     public boolean delete() {

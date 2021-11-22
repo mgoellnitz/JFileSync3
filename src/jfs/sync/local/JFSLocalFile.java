@@ -1,6 +1,6 @@
 /*
  * JFileSync
- * Copyright (C) 2002-2007, Jens Heidrich
+ * Copyright (C) 2002-2021 Jens Heidrich, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -290,6 +290,20 @@ public class JFSLocalFile extends JFSFile {
 
 
     /**
+     * @see JFSFile#removeWriteLock()
+     */
+    @Override
+    public final boolean removeWriteLock() {
+        boolean result = true;
+        if (file.exists()) {
+          result = file.setWritable(writable);
+          writable =  file.canWrite();
+        }
+        return result;
+    }
+
+
+    /**
      * @see JFSFile#delete()
      */
     @Override
@@ -318,6 +332,8 @@ public class JFSLocalFile extends JFSFile {
     @Override
     protected OutputStream getOutputStream() {
         try {
+            File file = new File(getPath());
+            file.setWritable(true);
             out = new FileOutputStream(getPath());
             return out;
         } catch (FileNotFoundException e) {

@@ -1,6 +1,6 @@
 /*
  * JFileSync
- * Copyright (C) 2002-2007, Jens Heidrich
+ * Copyright (C) 2002-2021 Jens Heidrich, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -253,6 +253,14 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
 
     /**
+     * Temporarily remove the write lock from the underlying file for subsequent copy tasks.
+     *
+     * @return True if and only if the operation succeeded; false otherwise.
+     */
+    public abstract boolean removeWriteLock();
+
+
+    /**
      * Deletes the file or directory denoted by this abstract pathname. If this pathname denotes a directory, then the
      * directory must be empty in order to be deleted.
      *
@@ -350,7 +358,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
         try {
             if ((input==null)||(output==null)) {
-                LOG.warn("copy() one of the two files was null");
+                LOG.warn("copy() one of the two files was null {} {}", input, output);
                 return false;
             }
 
@@ -406,7 +414,7 @@ public abstract class JFSFile implements Comparable<JFSFile> {
         // Test whether the source file (this) can be read by the application
         // and the target file (tgtFile) can be written to. If not, false is
         // returned:
-        if (!canRead()||!tgtFile.canWrite()) {
+        if (!canRead()||!tgtFile.removeWriteLock()) {
             LOG.error("copy() cannot read src or write target: "+canRead()+" / "+tgtFile.canWrite());
             return false;
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2018, Martin Goellnitz
+ * Copyright (C) 2010-2021 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -99,10 +99,10 @@ public class JFSWebDavFile extends JFSFile {
     /**
      * Creates a new external file for a certain path using a specific file producer.
      *
-     * @param access The server access object to use.
+     * @param access       The server access object to use.
      * @param fileProducer The assigned file producer.
-     * @param path The path to create the external file for.
-     * @param isDirectory tell if the given path describes a directory
+     * @param path         The path to create the external file for.
+     * @param isDirectory  tell if the given path describes a directory
      */
     public JFSWebDavFile(Sardine access, JFSFileProducer fileProducer, String path, boolean isDirectory) {
         super(fileProducer, path);
@@ -124,7 +124,7 @@ public class JFSWebDavFile extends JFSFile {
         } // if
         try {
             String folderUrl = getUrl(pathAndName[0])+"/";
-            List<DavResource> parentListing = ((JFSWebDavFileProducer) getFileProducer()).getListing(folderUrl);
+            List<DavResource> parentListing = ((JFSWebDavFileProducer)getFileProducer()).getListing(folderUrl);
             for (DavResource resource : parentListing) {
                 if (pathAndName[1].equals(resource.getName())) {
                     info = createFileInfo(pathAndName[0], resource);
@@ -143,10 +143,8 @@ public class JFSWebDavFile extends JFSFile {
     /**
      * Creates a new external root file and reads the structure from server.
      *
-     * @param access
-     * The server access object to use.
-     * @param fileProducer
-     * The assigned file producer.
+     * @param access       The server access object to use.
+     * @param fileProducer The assigned file producer.
      */
     public JFSWebDavFile(Sardine access, JFSFileProducer fileProducer) {
         this(access, fileProducer, "", true);
@@ -252,6 +250,18 @@ public class JFSWebDavFile extends JFSFile {
 
 
     /**
+     * @see JFSFile#removeWriteLock()
+     */
+    @Override
+    public boolean removeWriteLock() {
+        boolean result = true;
+        String url = getUrl(info.getPath()+"/"+getName());
+        LOG.debug("removeWriteLock() deleting {}", url);
+        return result;
+    } // removeWriteLock()
+
+
+    /**
      * @see JFSFile#delete()
      */
     @Override
@@ -307,7 +317,7 @@ public class JFSWebDavFile extends JFSFile {
                 try {
                     String folder = info.getPath()+"/"+info.getName()+"/";
                     String url = getUrl(folder);
-                    List<DavResource> listing = ((JFSWebDavFileProducer) getFileProducer()).getListing(url);
+                    List<DavResource> listing = ((JFSWebDavFileProducer)getFileProducer()).getListing(url);
                     if (listing.size()>1) {
                         list = new JFSWebDavFile[listing.size()-1];
                         int rootLength = new URL(getFileProducer().getRootPath()).getPath().length();

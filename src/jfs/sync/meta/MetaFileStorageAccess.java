@@ -121,10 +121,15 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
 
 
     @Override
-    public boolean setReadOnly(String rootPath, String relativePath) {
-        LOG.info("setReadOnly() not flushing {}", relativePath);
-        return getFile(rootPath, relativePath).setReadOnly();
-    } // setReadOnly()
+    public boolean setWritable(String rootPath, String relativePath, boolean writable) {
+        LOG.info("setWritable() set writable {}: {}", relativePath, writable);
+        boolean result = true;
+        File file = getFile(rootPath, relativePath);
+        if (file.exists()) {
+            result = file.setWritable(writable);
+        }
+        return result;
+    } // setWritable()
 
 
     @Override
@@ -166,11 +171,11 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
     @Override
     protected OutputStream getOutputStream(String rootPath, String relativePath, boolean forPayload) throws IOException {
         File file = getFile(rootPath, relativePath);
-        file.setWritable(true); // at least try...
         String[] pathAndName = getPathAndName(relativePath);
         Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
+        FileInfo info = null;
         if (forPayload&&(listing.get(pathAndName[1])==null||!file.exists())) {
-            FileInfo info = createFileInfo(file, pathAndName);
+            info = createFileInfo(file, pathAndName);
             listing.put(info.getName(), info);
             LOG.info("getOutputStream() flushing {}/{}", pathAndName[0], pathAndName[1]);
             flushMetaData(rootPath, pathAndName, listing);
@@ -182,7 +187,6 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
             LOG.info("getOutputStream("+relativePath+") outputStreams="+outputStreams);
         } // if
         OutputStream result = new FileOutputStream(file);
-        FileInfo info = createFileInfo(file, pathAndName);
         if (LOG.isDebugEnabled()) {
             LOG.debug("getOutputStream() have output stream for "+file.getPath()+" "+info+" "+result);
         } // if
@@ -224,7 +228,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         String encryptedPath = args[2];
         String[] elements = encryptedPath.split("\\\\");
         String path = "";
-        for (int i = 0; i<elements.length; i++) {
+        for (int i = 0;i<elements.length;i++) {
             String encryptedName = elements[i];
             String plain = storage.getDecryptedFileName(path, encryptedName);
             path += storage.getSeparator();
@@ -241,7 +245,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         int b = 0;
         while (b>=0) {
             b = is.read();
-            System.out.print((char) b);
+            System.out.print((char)b);
         } // while
         is.close();
     } // main()

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2021 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -114,8 +114,8 @@ public class PlainDirStorageAccess implements StorageAccess {
 
 
     @Override
-    public boolean setReadOnly(String rootPath, String relativePath) {
-        return getFile(rootPath, relativePath).setReadOnly();
+    public boolean setWritable(String rootPath, String relativePath, boolean writable) {
+        return getFile(rootPath, relativePath).setWritable(writable);
     }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2021 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,8 +57,8 @@ public abstract class AbstractFileProducer extends JFSFileProducer {
     }
 
 
-    public boolean setReadOnly(String relativePath) {
-        return storageAccess.setReadOnly(getRootPath(), relativePath);
+    public boolean setWritable(String relativePath, boolean writable) {
+        return storageAccess.setWritable(getRootPath(), relativePath, writable);
     }
 
 

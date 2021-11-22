@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2018, Martin Goellnitz
+ * Copyright (C) 2010-2021 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -233,9 +233,9 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
 
 
     @Override
-    public boolean setReadOnly(String rootpath, String path) {
+    public boolean setWritable(String rootpath, String path, boolean writable) {
         return false;
-    } // setReadOnly()
+    } // setWritable()
 
 
     @Override
