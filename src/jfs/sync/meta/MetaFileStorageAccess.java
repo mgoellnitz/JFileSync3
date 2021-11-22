@@ -88,7 +88,8 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
     @Override
     public boolean createDirectory(String rootPath, String relativePath) {
         File file = getFile(rootPath, relativePath);
-        boolean success = file.mkdir();
+        file.mkdir();
+        boolean success = file.exists();
         if (success) {
             String[] pathAndName = getPathAndName(relativePath);
             Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
