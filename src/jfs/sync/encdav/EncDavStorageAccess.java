@@ -35,7 +35,7 @@ import java.util.Map;
 import jfs.conf.JFSConfig;
 import jfs.sync.base.AbstractJFSFileProducerFactory;
 import jfs.sync.encryption.AbstractEncryptedStorageAccess;
-import jfs.sync.encryption.FileInfo;
+import jfs.sync.encryption.ExtendedFileInfo;
 import jfs.sync.encryption.StorageAccess;
 import jfs.sync.util.DavUtils;
 import jfs.sync.util.WindowsProxySelector;
@@ -190,8 +190,8 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
 
 
     @Override
-    public FileInfo getFileInfo(String rootPath, String relativePath) {
-        FileInfo result = new FileInfo();
+    public ExtendedFileInfo getFileInfo(String rootPath, String relativePath) {
+        ExtendedFileInfo result = new ExtendedFileInfo();
         String name = getLastPathElement(relativePath, relativePath);
         result.setName(name);
         result.setPath(rootPath+relativePath);
@@ -222,7 +222,6 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
         return result;
     } // getFileInfo()
 
-    /* TODO: above this line needs modification */
 
     @Override
     public boolean createDirectory(String rootPath, String relativePath) {
@@ -232,7 +231,7 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
             getSardine().createDirectory(url);
         } catch (Exception e) {
             if (e instanceof SardineException) {
-                SardineException se = (SardineException) e;
+                SardineException se = (SardineException)e;
                 LOG.warn("createDirectory({}) status code: {} {}", url, se.getStatusCode(), se.getResponsePhrase());
             } // if
             LOG.warn("createDirectory()", e);
@@ -259,7 +258,13 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
 
     @Override
     public boolean setWritable(String rootPath, String relativePath, boolean writable) {
-        return true;
+        return false;
+    }
+
+
+    @Override
+    public boolean setExecutable(String rootPath, String relativePath, boolean executable) {
+        return false;
     }
 
 
@@ -301,7 +306,7 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
 
 
     @Override
-    public void flush(String rootPath, FileInfo info) {
+    public void flush(String rootPath, ExtendedFileInfo info) {
         // Nothing to do in this implementation
     } // flush()
 

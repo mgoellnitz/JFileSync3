@@ -50,7 +50,7 @@ public class JFSEncryptedFile extends JFSFile {
      */
     private final AbstractFileProducer fileProducer;
 
-    private FileInfo fileInfo;
+    private ExtendedFileInfo fileInfo;
 
     /**
      * If the file is a directory this points to all files (and directories) within the directory. Null for all non
@@ -145,6 +145,16 @@ public class JFSEncryptedFile extends JFSFile {
         LOG.debug("canWrite() {}", fileInfo.isCanWrite());
         return fileInfo.isCanWrite();
         // return true;
+    }
+
+
+    /**
+     * @see JFSFile#canExecute()
+     */
+    @Override
+    public boolean canExecute() {
+        LOG.debug("canExecute() {}", fileInfo.isCanExecute());
+        return fileInfo.isCanExecute();
     }
 
 
@@ -264,6 +274,22 @@ public class JFSEncryptedFile extends JFSFile {
         } // if
         return success;
     } // setReadOnly()
+
+
+    /**
+     * @see JFSFile#setExecutable()
+     */
+    @Override
+    public boolean setExecutable() {
+        boolean success = true;
+        if (JFSConfig.getInstance().isSetCanExecute()) {
+            success = fileProducer.setExecutable(getRelativePath(), true);
+            if (success) {
+                fileInfo.setCanExecute(true);
+            } // if
+        } // if
+        return success;
+    } // setExecutable()
 
 
     /**
@@ -401,6 +427,7 @@ public class JFSEncryptedFile extends JFSFile {
             fileInfo = fileProducer.getFileInfo(relativePath);
             fileInfo.setExists(true);
             fileInfo.setCanWrite(srcFile.canWrite());
+            fileInfo.setCanExecute(srcFile.canExecute());
             fileInfo.setSize(srcFile.getLength());
             success = success&&setLastModified(srcFile.getLastModified());
             // set last modified has to implicitly
@@ -409,6 +436,9 @@ public class JFSEncryptedFile extends JFSFile {
             } // if
             if (!srcFile.canWrite()) {
                 success = success&&setReadOnly();
+            } // if
+            if (srcFile.canExecute()) {
+                success = success&&setExecutable();
             } // if
         } // if
 

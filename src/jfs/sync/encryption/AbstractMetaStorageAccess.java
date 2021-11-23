@@ -52,7 +52,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
 
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.MEDIUM, SimpleDateFormat.MEDIUM);
 
-    private final Map<String, Map<String, FileInfo>> directoryCache = new HashMap<>();
+    private final Map<String, Map<String, ExtendedFileInfo>> directoryCache = new HashMap<>();
 
 
     public AbstractMetaStorageAccess(String cipher, boolean shortenPaths) {
@@ -60,11 +60,11 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
     } // AbstractMetaStorageAccess()
 
 
-    protected Map<String, FileInfo> getMetaData(String rootPath, String relativePath) {
+    protected Map<String, ExtendedFileInfo> getMetaData(String rootPath, String relativePath) {
         if (directoryCache.containsKey(relativePath)) {
             return directoryCache.get(relativePath);
         } // if
-        Map<String, FileInfo> result = new HashMap<>();
+        Map<String, ExtendedFileInfo> result = new HashMap<>();
         ObjectInputStream ois = null;
         try {
             InputStream inputStream = getInputStream(rootPath, getMetaDataPath(relativePath));
@@ -75,9 +75,16 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
             ois = new ObjectInputStream(inputStream);
             Object o;
             while ((o = ois.readObject())!=null) {
-                if (o instanceof FileInfo) {
-                    FileInfo fi = (FileInfo) o;
-                    if (fi.isDirectory() && LOG.isDebugEnabled()) {
+                ExtendedFileInfo fi = null;
+                if (o instanceof ExtendedFileInfo) {
+                    fi = (ExtendedFileInfo)o;
+                } // if
+                if ((fi==null)&&(o instanceof FileInfo)) {
+                    FileInfo info = (FileInfo)o;
+                    fi = new ExtendedFileInfo(info);
+                } // if
+                if (fi!=null) {
+                    if (fi.isDirectory()&&LOG.isDebugEnabled()) {
                         String date;
                         synchronized (FORMATTER) {
                             date = FORMATTER.format(new Date(fi.getModificationDate()));
@@ -122,7 +129,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
      * @param pathAndName path and name for the file and path for which this update takes place
      * @param listing
      */
-    public void flushMetaData(String rootPath, String[] pathAndName, Map<String, FileInfo> listing) {
+    public void flushMetaData(String rootPath, String[] pathAndName, Map<String, ExtendedFileInfo> listing) {
         try {
             LOG.debug("flushMetaData() flushing {}", listing);
             OutputStream os = getOutputStream(rootPath, getMetaDataPath(pathAndName[0]), false);
@@ -141,15 +148,15 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
 
             ObjectOutputStream oos = new ObjectOutputStream(os);
 
-            for (FileInfo info : listing.values()) {
+            for (ExtendedFileInfo info : listing.values()) {
                 LOG.debug("flushMetaData() writing {}", info.getName());
                 oos.writeObject(info);
             } // for
             oos.flush();
             os.close();
             if (LOG.isDebugEnabled()) {
-                Map<String, FileInfo> backtest = getMetaData(rootPath, pathAndName[0]);
-                for (FileInfo info : backtest.values()) {
+                Map<String, ExtendedFileInfo> backtest = getMetaData(rootPath, pathAndName[0]);
+                for (ExtendedFileInfo info : backtest.values()) {
                     LOG.debug("flushMetaData() reading {}", info);
                 } // for
             } // if
@@ -159,8 +166,8 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
     } // flushMetaData()
 
 
-    public Map<String, FileInfo> getParentListing(String rootPath, String[] pathAndName) {
-        Map<String, FileInfo> listing = getMetaData(rootPath, pathAndName[0]);
+    public Map<String, ExtendedFileInfo> getParentListing(String rootPath, String[] pathAndName) {
+        Map<String, ExtendedFileInfo> listing = getMetaData(rootPath, pathAndName[0]);
         LOG.debug("getParentListing({}) {}", pathAndName[0], listing);
         return listing;
     } // getParentListing()
@@ -168,7 +175,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
 
     @Override
     public String[] list(String rootPath, String relativePath) {
-        Map<String, FileInfo> listing = getMetaData(rootPath, relativePath);
+        Map<String, ExtendedFileInfo> listing = getMetaData(rootPath, relativePath);
         String[] result = new String[listing.size()];
         int i = 0;
         for (String name : listing.keySet()) {
@@ -179,11 +186,11 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
 
 
     @Override
-    public void flush(String rootPath, FileInfo info) {
+    public void flush(String rootPath, ExtendedFileInfo info) {
         String[] pathAndName = new String[2];
         pathAndName[0] = info.getPath();
         pathAndName[1] = info.getName();
-        Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
+        Map<String, ExtendedFileInfo> listing = getParentListing(rootPath, pathAndName);
         if (listing.containsKey(info.getName())) {
             listing.remove(info.getName());
         } // if

@@ -76,6 +76,11 @@ public class JFSLocalFile extends JFSFile {
     private boolean writable = true;
 
     /**
+     * Tells whether we execute the file.
+     */
+    private boolean executable = false;
+
+    /**
      * Determines whether the file exists.
      */
     private boolean existing = false;
@@ -128,6 +133,7 @@ public class JFSLocalFile extends JFSFile {
         if (existing) {
             readable = file.canRead();
             writable = file.canWrite();
+            executable = file.canExecute();
         }
         if (!directory) {
             lastModified = file.lastModified();
@@ -183,6 +189,16 @@ public class JFSLocalFile extends JFSFile {
     public final boolean canWrite() {
         LOG.debug("canWrite() {}", writable);
         return writable;
+    }
+
+
+    /**
+     * @see JFSFile#canExecute()
+     */
+    @Override
+    public final boolean canExecute() {
+        LOG.debug("canExecute() {}", executable);
+        return executable;
     }
 
 
@@ -283,6 +299,25 @@ public class JFSLocalFile extends JFSFile {
 
         if (success) {
             writable = false;
+        }
+
+        return success;
+    }
+
+
+    /**
+     * @see JFSFile#setExecutable()
+     */
+    @Override
+    public final boolean setExecutable() {
+        if (!JFSConfig.getInstance().isSetCanExecute()) {
+            return true;
+        }
+
+        boolean success = file.setExecutable(true);
+
+        if (success) {
+            executable = file.canExecute();
         }
 
         return success;
@@ -408,6 +443,9 @@ public class JFSLocalFile extends JFSFile {
             success = success&&setLastModified(srcFile.getLastModified());
             if (!srcFile.canWrite()) {
                 success = success&&setReadOnly();
+            }
+            if (srcFile.canExecute()) {
+                success = success&&setExecutable();
             }
         }
 

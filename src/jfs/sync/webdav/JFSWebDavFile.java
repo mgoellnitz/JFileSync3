@@ -31,7 +31,7 @@ import jfs.conf.JFSConfig;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 import jfs.sync.base.AbstractJFSFileProducerFactory;
-import jfs.sync.encryption.FileInfo;
+import jfs.sync.encryption.ExtendedFileInfo;
 import jfs.sync.util.DavUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +49,7 @@ public class JFSWebDavFile extends JFSFile {
     /**
      * The retrieved file information object from the server.
      */
-    private FileInfo info = null;
+    private ExtendedFileInfo info = null;
 
     /**
      * The list of included files.
@@ -66,9 +66,9 @@ public class JFSWebDavFile extends JFSFile {
     private InputStream input = null;
 
 
-    private FileInfo createFileInfo(String folder, DavResource resource) {
+    private ExtendedFileInfo createFileInfo(String folder, DavResource resource) {
         LOG.debug("createFileInfo() {} [{}] {}", folder+"/"+resource.getName(), resource.isDirectory(), resource.getCustomProps());
-        FileInfo result = new FileInfo();
+        ExtendedFileInfo result = new ExtendedFileInfo();
         result.setCanRead(true);
         result.setCanWrite(true);
         result.setExists(true);
@@ -112,7 +112,7 @@ public class JFSWebDavFile extends JFSFile {
         String url = (fileProducer.getRootPath()+path).replace('\\', '/');
         String[] pathAndName = AbstractJFSFileProducerFactory.getPathAndName(url, "/");
 
-        info = new FileInfo();
+        info = new ExtendedFileInfo();
         info.setCanRead(true);
         info.setCanWrite(true);
         info.setPath(pathAndName[0]);
@@ -166,6 +166,15 @@ public class JFSWebDavFile extends JFSFile {
     @Override
     public boolean canWrite() {
         return info.isCanWrite();
+    }
+
+
+    /**
+     * @see JFSFile#canExecute()
+     */
+    @Override
+    public boolean canExecute() {
+        return info.isCanExecute();
     }
 
 
@@ -415,6 +424,19 @@ public class JFSWebDavFile extends JFSFile {
 
         return true;
     } // setReadOnly()
+
+
+    /**
+     * @see JFSFile#setExecutable()
+     */
+    @Override
+    public boolean setExecutable() {
+        if (JFSConfig.getInstance().isSetCanExecute()) {
+            info.setCanExecute(false);
+        } // if
+
+        return true;
+    } // setExecutable()
 
 
     /**

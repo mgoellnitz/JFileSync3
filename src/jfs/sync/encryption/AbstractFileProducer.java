@@ -37,7 +37,7 @@ public abstract class AbstractFileProducer extends JFSFileProducer {
     }
 
 
-    public FileInfo getFileInfo(String relativePath) {
+    public ExtendedFileInfo getFileInfo(String relativePath) {
         return storageAccess.getFileInfo(getRootPath(), relativePath);
     }
 
@@ -62,6 +62,11 @@ public abstract class AbstractFileProducer extends JFSFileProducer {
     }
 
 
+    public boolean setExecutable(String relativePath, boolean executable) {
+        return storageAccess.setExecutable(getRootPath(), relativePath, executable);
+    }
+
+
     public boolean delete(String relativePath) {
         return storageAccess.delete(getRootPath(), relativePath);
     }
@@ -82,7 +87,7 @@ public abstract class AbstractFileProducer extends JFSFileProducer {
     }
 
 
-    public void flush(FileInfo info) {
+    public void flush(ExtendedFileInfo info) {
         storageAccess.flush(getRootPath(), info);
     }
 

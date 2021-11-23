@@ -27,7 +27,7 @@ import java.io.OutputStream;
  */
 public interface StorageAccess {
 
-    FileInfo getFileInfo(String rootpath, String path);
+    ExtendedFileInfo getFileInfo(String rootpath, String path);
 
 
     String[] list(String rootpath, String path);
@@ -42,6 +42,9 @@ public interface StorageAccess {
     boolean setWritable(String rootpath, String path, boolean writable);
 
 
+    boolean setExecutable(String rootpath, String path, boolean executable);
+
+
     boolean delete(String rootpath, String path);
 
 
@@ -54,7 +57,7 @@ public interface StorageAccess {
     String getSeparator();
 
 
-    void flush(String rootPath, FileInfo info);
+    void flush(String rootPath, ExtendedFileInfo info);
 
 
     String getCipherSpec();

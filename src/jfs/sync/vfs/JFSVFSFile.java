@@ -221,7 +221,7 @@ public class JFSVFSFile extends JFSFile {
     }
 
 
-     /**
+    /**
      * @see JFSFile#delete()
      */
     public boolean delete() {
@@ -432,7 +432,19 @@ public class JFSVFSFile extends JFSFile {
 
 
     @Override
+    public boolean canExecute() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+    @Override
     public boolean setReadOnly() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+    @Override
+    public boolean setExecutable() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

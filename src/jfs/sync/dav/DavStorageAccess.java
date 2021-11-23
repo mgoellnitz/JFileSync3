@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import jfs.conf.JFSConfig;
 import jfs.sync.encryption.AbstractMetaStorageAccess;
-import jfs.sync.encryption.FileInfo;
+import jfs.sync.encryption.ExtendedFileInfo;
 import jfs.sync.encryption.StorageAccess;
 import jfs.sync.util.DavUtils;
 import jfs.sync.util.WindowsProxySelector;
@@ -125,10 +125,10 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
      * @param pathAndName
      * @return
      */
-    private FileInfo createFileInfo(String rootPath, String relativePath, String[] pathAndName) {
+    private ExtendedFileInfo createFileInfo(String rootPath, String relativePath, String[] pathAndName) {
         String url = getUrl(rootPath, relativePath);
         LOG.debug("createFileInfo() url={}", url);
-        FileInfo result = new FileInfo();
+        ExtendedFileInfo result = new ExtendedFileInfo();
         result.setExists(false);
         result.setCanRead(true);
         result.setCanWrite(true);
@@ -158,9 +158,9 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
 
 
     // TODO: very similar to local file case
-    public FileInfo getFileInfo(String rootPath, String relativePath) {
+    public ExtendedFileInfo getFileInfo(String rootPath, String relativePath) {
         String[] pathAndName = getPathAndName(relativePath);
-        FileInfo result = getParentListing(rootPath, pathAndName).get(pathAndName[1]);
+        ExtendedFileInfo result = getParentListing(rootPath, pathAndName).get(pathAndName[1]);
         if (result==null) {
             result = createFileInfo(rootPath, relativePath, pathAndName);
         } // if
@@ -183,10 +183,10 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
             return false;
         } // try/catch
         String[] pathAndName = getPathAndName(relativePath);
-        Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
+        Map<String, ExtendedFileInfo> listing = getParentListing(rootPath, pathAndName);
         LOG.debug("createDirectory({}) pre-listing={}", relativePath, listing);
 
-        FileInfo info = new FileInfo();
+        ExtendedFileInfo info = new ExtendedFileInfo();
         info.setCanRead(true);
         info.setCanWrite(true);
         info.setPath(pathAndName[0]);
@@ -213,8 +213,8 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
     public boolean setLastModified(String rootPath, String relativePath, long modified) {
         boolean success = false;
         String[] pathAndName = getPathAndName(relativePath);
-        Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
-        FileInfo info = listing.get(pathAndName[1]);
+        Map<String, ExtendedFileInfo> listing = getParentListing(rootPath, pathAndName);
+        ExtendedFileInfo info = listing.get(pathAndName[1]);
         try {
             String url = getUrl(rootPath, relativePath)+(info.isDirectory() ? "/" : "");
             success = DavUtils.setLastModified(sardine, url, modified);
@@ -239,14 +239,20 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
 
 
     @Override
+    public boolean setExecutable(String rootpath, String path, boolean executable) {
+        return false;
+    } // setExecutable()
+
+
+    @Override
     public boolean delete(String rootPath, String relativePath) {
         String[] pathAndName = getPathAndName(relativePath);
-        Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
+        Map<String, ExtendedFileInfo> listing = getParentListing(rootPath, pathAndName);
         LOG.debug("delete() {}", relativePath);
         LOG.debug("delete() listing={}", listing);
         // remove named item
         if (listing.containsKey(pathAndName[1])) {
-            FileInfo info = listing.get(pathAndName[1]);
+            ExtendedFileInfo info = listing.get(pathAndName[1]);
             listing.remove(pathAndName[1]);
             LOG.info("delete() flushing {}/{}", pathAndName[0], pathAndName[1]);
             flushMetaData(rootPath, pathAndName, listing);
@@ -284,8 +290,8 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
         final String url = getUrl(rootPath, relativePath);
         String[] pathAndName = getPathAndName(relativePath);
         if (forPayload&&(!getSardine().exists(url))) {
-            FileInfo info = createFileInfo(rootPath, relativePath, pathAndName);
-            Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
+            ExtendedFileInfo info = createFileInfo(rootPath, relativePath, pathAndName);
+            Map<String, ExtendedFileInfo> listing = getParentListing(rootPath, pathAndName);
             listing.put(info.getName(), info);
             LOG.info("getOutputStream() flushing {}/{}: {}", pathAndName[0], pathAndName[1], listing);
             flushMetaData(rootPath, pathAndName, listing);

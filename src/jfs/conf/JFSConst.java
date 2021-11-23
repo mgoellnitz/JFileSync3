@@ -145,6 +145,11 @@ public final class JFSConst {
     public static final boolean SET_CAN_WRITE = true;
 
     /**
+     * Determines whether the set can execute property of a file is set.
+     */
+    public static final boolean SET_CAN_EXECUTE = true;
+
+    /**
      * The used default server user name.
      */
     public static final String SERVER_USER_NAME = "";

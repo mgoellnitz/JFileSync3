@@ -131,6 +131,14 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
 
     /**
+     * Returns whether we can execute the file.
+     *
+     * @return True if and only if we can execute the file.
+     */
+    public abstract boolean canExecute();
+
+
+    /**
      * Returns the length of the file.
      *
      * @return Length of the file.
@@ -253,9 +261,17 @@ public abstract class JFSFile implements Comparable<JFSFile> {
 
 
     /**
-     * Temporarily remove the write lock from the underlying file for subsequent copy tasks.
+     * Marks the file or directory named by this abstract pathname to be executable.
      *
      * @return True if and only if the operation succeeded; false otherwise.
+     */
+    public abstract boolean setExecutable();
+
+
+    /**
+     * Temporarily remove the write lock from the underlying file for subsequent copy tasks.
+     *
+     * @return True if and only if the file is writable afterwards
      */
     public abstract boolean removeWriteLock();
 

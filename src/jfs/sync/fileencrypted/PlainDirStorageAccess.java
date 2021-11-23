@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import jfs.conf.JFSConfig;
-import jfs.sync.encryption.FileInfo;
+import jfs.sync.encryption.ExtendedFileInfo;
 import jfs.sync.encryption.StorageAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +59,8 @@ public class PlainDirStorageAccess implements StorageAccess {
 
 
     @Override
-    public FileInfo getFileInfo(String rootPath, String relativePath) {
-        FileInfo result = new FileInfo();
+    public ExtendedFileInfo getFileInfo(String rootPath, String relativePath) {
+        ExtendedFileInfo result = new ExtendedFileInfo();
         File file = getFile(rootPath, relativePath);
         result.setName(file.getName());
         result.setPath(file.getPath());
@@ -69,7 +69,7 @@ public class PlainDirStorageAccess implements StorageAccess {
         result.setCanRead(true);
         result.setCanWrite(true);
         if (log.isDebugEnabled()) {
-            log.debug("PlainDirStorageAccess.getFileInfo() "+result.getPath()+" e["+result.isExists()+"] d["+result.isDirectory()
+            log.debug("getFileInfo() "+result.getPath()+" e["+result.isExists()+"] d["+result.isDirectory()
                     +"]");
         } // if
         if (result.isExists()) {
@@ -83,7 +83,7 @@ public class PlainDirStorageAccess implements StorageAccess {
             } // if
         } else {
             if (log.isDebugEnabled()) {
-                log.debug("PlainDirStorageAccess.getFileInfo() could not detect file for "+result.getPath());
+                log.debug("getFileInfo() could not detect file for "+result.getPath());
             } // if
         } // if
         return result;
@@ -120,6 +120,12 @@ public class PlainDirStorageAccess implements StorageAccess {
 
 
     @Override
+    public boolean setExecutable(String rootPath, String relativePath, boolean executable) {
+        return getFile(rootPath, relativePath).setExecutable(executable);
+    }
+
+
+    @Override
     public boolean delete(String rootPath, String relativePath) {
         return getFile(rootPath, relativePath).delete();
     }
@@ -129,7 +135,7 @@ public class PlainDirStorageAccess implements StorageAccess {
     public InputStream getInputStream(String rootPath, String relativePath) throws IOException {
         File file = getFile(rootPath, relativePath);
         if (log.isDebugEnabled()) {
-            log.debug("PlainDirStorageAccess.getInputStream() getting input stream for "+file.getPath());
+            log.debug("getInputStream() getting input stream for "+file.getPath());
         } // if
         return new FileInputStream(file);
     }
@@ -148,7 +154,7 @@ public class PlainDirStorageAccess implements StorageAccess {
 
 
     @Override
-    public void flush(String rootPath, FileInfo info) {
+    public void flush(String rootPath, ExtendedFileInfo info) {
         // Nothing to do in this implementation
     }
 

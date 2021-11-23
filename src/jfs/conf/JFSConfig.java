@@ -59,6 +59,9 @@ public abstract class JFSConfig implements Cloneable {
     /** Determines whether the set can write property of a file is set. */
     protected boolean doSetCanWrite;
 
+    /** Determines whether the set can execute property of a file is set. */
+    protected boolean doSetCanExecute;
+
     /** The files to include in comparison. */
     protected List<JFSFilter> includes = new ArrayList<>();
 
@@ -138,6 +141,7 @@ public abstract class JFSConfig implements Cloneable {
         keepUserActions = JFSConst.KEEP_USER_ACTIONS;
         storeHistory = JFSConst.STORE_HISTORY;
         doSetCanWrite = JFSConst.SET_CAN_WRITE;
+        doSetCanExecute = JFSConst.SET_CAN_EXECUTE;
 
         // Includes and excludes:
         includes.clear();
@@ -481,6 +485,27 @@ public abstract class JFSConfig implements Cloneable {
     public void setCanWrite(boolean setCanWrite) {
         if (setCanWrite!=this.doSetCanWrite) {
             this.doSetCanWrite = setCanWrite;
+            setCurrentProfileStored(false);
+        }
+    }
+
+
+    /**
+     * @return Determines whether the set can execute property of a file is set.
+     */
+    public boolean isSetCanExecute() {
+        return doSetCanExecute;
+    }
+
+
+    /**
+     * Determines whether the set can execute property of a file is set.
+     *
+     * @param setCanExecute True if and only if the set can execute property of a file is set.
+     */
+    public void setCanExecute(boolean setCanExecute) {
+        if (setCanExecute!=this.doSetCanExecute) {
+            this.doSetCanExecute = setCanExecute;
             setCurrentProfileStored(false);
         }
     }

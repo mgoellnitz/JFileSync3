@@ -25,7 +25,7 @@ import jfs.conf.JFSConfig;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 import jfs.sync.base.AbstractJFSFileProducerFactory;
-import jfs.sync.encryption.FileInfo;
+import jfs.sync.encryption.ExtendedFileInfo;
 import org.mrpdaemon.sec.encfs.EncFSFile;
 import org.mrpdaemon.sec.encfs.EncFSVolume;
 import org.slf4j.Logger;
@@ -45,7 +45,7 @@ public class JFSEncfsFile extends JFSFile {
     /**
      * The retrieved file information object from the server.
      */
-    private final FileInfo info;
+    private final ExtendedFileInfo info;
 
     private EncFSFile file = null;
 
@@ -74,7 +74,7 @@ public class JFSEncfsFile extends JFSFile {
 
         this.access = access;
 
-        info = new FileInfo();
+        info = new ExtendedFileInfo();
         try {
             String[] pathAndName = AbstractJFSFileProducerFactory.getPathAndName(path, "/");
             info.setPath(pathAndName[0]);
@@ -84,6 +84,7 @@ public class JFSEncfsFile extends JFSFile {
                 file = access.getFile(path.length()==0 ? "/" : path);
                 info.setCanRead(file.isReadable());
                 info.setCanWrite(file.isWritable());
+                info.setCanExecute(file.isExecutable());
                 info.setPath(file.getParentPath());
                 info.setName(path.length()==0 ? "" : file.getName());
                 info.setDirectory(file.isDirectory());
@@ -131,6 +132,15 @@ public class JFSEncfsFile extends JFSFile {
     @Override
     public boolean canWrite() {
         return info.isCanWrite();
+    }
+
+
+    /**
+     * @see JFSFile#canExecute()
+     */
+    @Override
+    public boolean canExecute() {
+        return info.isCanExecute();
     }
 
 
@@ -382,6 +392,19 @@ public class JFSEncfsFile extends JFSFile {
 
 
     /**
+     * @see JFSFile#setExecutable()
+     */
+    @Override
+    public boolean setExecutable() {
+        if (JFSConfig.getInstance().isSetCanExecute()) {
+            info.setCanExecute(false);
+        } // if
+
+        return true;
+    } // setExecutable()
+
+
+    /**
      * @see JFSFile#preCopyTgt(JFSFile)
      */
     @Override
@@ -393,6 +416,9 @@ public class JFSEncfsFile extends JFSFile {
             info.setSize(srcFile.getLength());
             if (!srcFile.canWrite()) {
                 info.setCanWrite(false);
+            }
+            if (!srcFile.canExecute()) {
+                info.setCanExecute(true);
             }
         } // if
 

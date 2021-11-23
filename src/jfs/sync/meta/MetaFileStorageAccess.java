@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.util.Map;
 import javax.crypto.Cipher;
 import jfs.sync.encryption.AbstractMetaStorageAccess;
-import jfs.sync.encryption.FileInfo;
+import jfs.sync.encryption.ExtendedFileInfo;
 import jfs.sync.encryption.JFSEncryptedStream;
 import jfs.sync.util.SecurityUtils;
 import org.slf4j.Logger;
@@ -54,11 +54,12 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
      * @param pathAndName
      * @return
      */
-    private FileInfo createFileInfo(File file, String[] pathAndName) {
-        FileInfo result = new FileInfo();
+    private ExtendedFileInfo createFileInfo(File file, String[] pathAndName) {
+        ExtendedFileInfo result = new ExtendedFileInfo();
 
         result.setCanRead(true);
         result.setCanWrite(true);
+        result.setCanExecute(false);
         result.setDirectory(file.isDirectory());
         result.setExists(file.exists());
         result.setModificationDate(file.lastModified());
@@ -75,9 +76,9 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
 
 
     @Override
-    public FileInfo getFileInfo(String rootPath, String relativePath) {
+    public ExtendedFileInfo getFileInfo(String rootPath, String relativePath) {
         String[] pathAndName = getPathAndName(relativePath);
-        FileInfo result = getParentListing(rootPath, pathAndName).get(pathAndName[1]);
+        ExtendedFileInfo result = getParentListing(rootPath, pathAndName).get(pathAndName[1]);
         if (result==null) {
             result = createFileInfo(getFile(rootPath, relativePath), pathAndName);
         } // if
@@ -92,10 +93,10 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         boolean success = file.exists();
         if (success) {
             String[] pathAndName = getPathAndName(relativePath);
-            Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
+            Map<String, ExtendedFileInfo> listing = getParentListing(rootPath, pathAndName);
             LOG.debug("createDirectory() {}", relativePath);
             LOG.debug("createDirectory() listing={}", listing);
-            FileInfo info = createFileInfo(file, pathAndName);
+            ExtendedFileInfo info = createFileInfo(file, pathAndName);
             listing.put(pathAndName[1], info);
             LOG.debug("createDirectory() listing={}", listing);
             LOG.info("createDirectory() flushing {}/{}", pathAndName[0], pathAndName[1]);
@@ -111,8 +112,8 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         boolean success = getFile(rootPath, relativePath).setLastModified(modificationDate);
         if (success) {
             String[] pathAndName = getPathAndName(relativePath);
-            Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
-            FileInfo info = listing.get(pathAndName[1]);
+            Map<String, ExtendedFileInfo> listing = getParentListing(rootPath, pathAndName);
+            ExtendedFileInfo info = listing.get(pathAndName[1]);
             LOG.info("setLastModified() flushing {}/{}", pathAndName[0], pathAndName[1]);
             info.setModificationDate(modificationDate);
             flushMetaData(rootPath, pathAndName, listing);
@@ -136,7 +137,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
     @Override
     public boolean delete(String rootPath, String relativePath) {
         String[] pathAndName = getPathAndName(relativePath);
-        Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
+        Map<String, ExtendedFileInfo> listing = getParentListing(rootPath, pathAndName);
         LOG.debug("delete() {}", relativePath);
         LOG.debug("delete() listing={}", listing);
         // remove named item
@@ -173,8 +174,8 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
     protected OutputStream getOutputStream(String rootPath, String relativePath, boolean forPayload) throws IOException {
         File file = getFile(rootPath, relativePath);
         String[] pathAndName = getPathAndName(relativePath);
-        Map<String, FileInfo> listing = getParentListing(rootPath, pathAndName);
-        FileInfo info = null;
+        Map<String, ExtendedFileInfo> listing = getParentListing(rootPath, pathAndName);
+        ExtendedFileInfo info = null;
         if (forPayload&&(listing.get(pathAndName[1])==null||!file.exists())) {
             info = createFileInfo(file, pathAndName);
             listing.put(info.getName(), info);

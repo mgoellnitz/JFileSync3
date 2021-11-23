@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import jfs.sync.encryption.AbstractEncryptedStorageAccess;
-import jfs.sync.encryption.FileInfo;
+import jfs.sync.encryption.ExtendedFileInfo;
 import jfs.sync.encryption.StorageAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,8 +103,8 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
 
 
     @Override
-    public FileInfo getFileInfo(String rootPath, String relativePath) {
-        FileInfo result = new FileInfo();
+    public ExtendedFileInfo getFileInfo(String rootPath, String relativePath) {
+        ExtendedFileInfo result = new ExtendedFileInfo();
         String name = getLastPathElement(relativePath, relativePath);
         result.setName(name);
         result.setPath(rootPath+relativePath);
@@ -119,6 +119,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
         if (result.isExists()) {
             result.setCanRead(file.canRead());
             result.setCanWrite(file.canWrite());
+            result.setCanExecute(file.canExecute());
             if (!result.isDirectory()) {
                 result.setModificationDate(file.lastModified());
                 result.setSize(-1);
@@ -154,6 +155,12 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
             result = file.setWritable(writable);
         }
         return result;
+    }
+
+
+    @Override
+    public boolean setExecutable(String rootPath, String relativePath, boolean executable) {
+        return getFile(rootPath, relativePath).setExecutable(executable);
     }
 
 
@@ -197,7 +204,7 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
 
 
     @Override
-    public void flush(String rootPath, FileInfo info) {
+    public void flush(String rootPath, ExtendedFileInfo info) {
         // Nothing to do in this implementation
     } // flush()
 
