@@ -2,9 +2,7 @@
 
 [![Latest Release](https://img.shields.io/github/release/mgoellnitz/JFileSync3.svg)](https://github.com/mgoellnitz/JFileSync3/releases/latest)
 [![Build Status](https://img.shields.io/gitlab/pipeline/mgoellnitz/JFileSync3.svg)](https://gitlab.com/mgoellnitz/JFileSync3/pipelines)
-
-[SNAPSHOT](https://gitlab.com/mgoellnitz/JFileSync3/-/jobs/artifacts/master/download?job=JFileSync3)
-builds are also available.
+[![Download](https://img.shields.io/badge/Download-Snapshot-blue)](https://gitlab.com/mgoellnitz/JFileSync3/-/jobs/artifacts/master/download?job=JFileSync3)
 
 File syncing with optional compression and encryption for local and WebDAV 
 folders. For local folders encryption can use EncFS and thus be compatible with 
@@ -103,9 +101,9 @@ compatible with encfs4win and of course Linux based encfs.
 
 ## Requirements
 
-- Java 8 Runtime Environment, OpenJDK supported and recommended
+- Java 8 Runtime Environment, OpenJDK JRE supported and recommended
 
-- Only when using other algorithms than AES: JCE extension  (see http://java.oracle.com)
+- Only when using other algorithms than AES with such oldish JRE: JCE Extension
 
 
 ## Installation and Application Start
@@ -117,7 +115,7 @@ You can start the application through
 - a Windows launcher ('JFileSync3.exe')
 - a batch file ('bin/JFileSync3.bat')
 - a Unix shell script ('bin/JFileSync3')
-- a Unity launcher script ('bin/JFileSync3.desktop')
+- a XDG launcher script ('bin/JFileSync3.desktop')
 
 ATTENTION: Because JFileSync3 is distributed as a Zip archive, Unix users will 
 have to give executable rights manually before launching the application, e.g.: 
@@ -144,7 +142,7 @@ intended scenarios.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later
+Foundation; either version 3 of the License, or (at your option) any later
 version.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
@@ -156,7 +154,7 @@ this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 St, Fifth Floor, Boston, MA, 02110-1301, USA
 
 JFileSync3 uses libraries or parts of Open Source projects. Some of them had to
-be included as source code for tecnical reasons in their distribution:
+be included as source code for technical reasons in their distribution:
 
 * EncFS Java: LGPL (Source)
 * Sardine: Apache 2.0
@@ -169,7 +167,7 @@ be included as source code for tecnical reasons in their distribution:
 * Eclipse icons: the Common Public License - v 1.0.
 * SevenZip/LZMA: LZMA SDK is written and placed in the public domain by Igor Pavlov. (Source)
 
-Some code in LZMA SDK is based on public domain code from another developers:
+Some code in LZMA SDK is based on public domain code from other developers:
   1) PPMd var.H (2001): Dmitry Shkarin
   2) SHA-256: Wei Dai (Crypto++ library)
 
@@ -186,8 +184,8 @@ Required packages for JFileSync3 development (not included in the distribution):
 
 Used and as a result recommended development tools:
 
-* Java 8 SDK 1.8.0
-* Netbeans 8.2
+* OpenJDK 11.0
+* Netbeans 12.5
 
 The following structure describes all directories and files included in the 
 JFileSync3 source repository:
@@ -195,7 +193,7 @@ JFileSync3 source repository:
 - src: Java source code
 - legal: The program licenses.
 - profiles: Sample syncing profiles.
-- ubuntu: Ubuntu Unity desktop integration files
+- xdg: FreeDesktop.org desktop integration files
 - win: start scripts for parts of the system as tools - and a Windows icon file
 - test: profiles and data for the encryption test suite
 
@@ -215,8 +213,8 @@ names but calculated ones.
 Passwords to derive keys from are not constant along the whole directory 
 structure.
 
-You will need the unlimited encryption add-on by Oracle for your JDK, if you 
-want to use anything except the default cipher AES.
+For oldish Java 8 setups you will need the unlimited encryption add-on by 
+Oracle for your JDK, if you want to use anything except the default cipher AES.
 
 Feel free to issue bug reports and ideas here.
 
