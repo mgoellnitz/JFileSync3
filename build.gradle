@@ -138,9 +138,9 @@ distZip {
     from 'win'
     include '*.ico'
   }
-  // For the Ubuntu Unity desktop integration this looks better
+  // For the FreeDesktop.org desktop integration this looks better
   into("$project.name/bin") {
-    from 'ubuntu'
+    from 'xdg'
     include '*.desktop'
     include '*.png'
   }
@@ -152,11 +152,6 @@ distZip {
     include 'README.md'
   }
   /*
-  // I personally have the JCE stuff prepared there
-  into(project.name) {
-  from '..'
-  include 'jce-jre-patches/**'
-  }
   // You might package your personal profiles in here
   into(project.name) {
   from '..'
