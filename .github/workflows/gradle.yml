@@ -24,8 +24,9 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    container:
+      images: provocon/java:latest
 
     steps:
     - uses: actions/checkout@v2
@@ -35,8 +36,6 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
     - name: Build with Gradle
-      container:
-        images: provocon/java:latest
       run: ./gradlew clean build audit
     - name: Extract Package
       run: unzip build/distributions/*.zip
@@ -45,4 +44,3 @@ jobs:
       with:
         name: timetable
         path: JFileSync3/*
-
