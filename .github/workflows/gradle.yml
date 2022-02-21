@@ -38,7 +38,7 @@ jobs:
       uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
       with:
         arguments: clean build audit
-   - name: Extract Package
+    - name: Extract Package
       run: unzip build/distributions/*.zip
     - name: Archive Package
       uses: actions/upload-artifact@v2
