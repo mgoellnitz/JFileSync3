@@ -26,7 +26,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      images: provocon/java:latest
+      image: provocon/java:latest
 
     steps:
     - uses: actions/checkout@v2
