@@ -68,7 +68,8 @@ dependencies {
   implementation 'org.apache.commons:commons-lang3:3.12.0'
   implementation 'org.apache.commons:commons-compress:1.21'
   implementation ('net.sf.jsignature.io-tools:easystream:1.2.15') {
-    exclude group: 'org.slf4j', module: 'slf4j-api' 
+    exclude group: 'org.slf4j', module: 'slf4j-api'
+    exclude group: 'commons-io', module: 'commons-io'
   }
   // easystream depends on outdated vulnerable dependency below
   runtimeOnly 'commons-io:commons-io:2.11.0'
