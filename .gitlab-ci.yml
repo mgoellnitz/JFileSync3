@@ -28,7 +28,7 @@ JFileSync3:
   stage: build
   script:
   - ./gradlew clean build audit
-  - unzip build/distributions/JFileSync3.zip
+  - unzip -q build/distributions/JFileSync3.zip
   artifacts:
     paths:
     - JFileSync3/*
