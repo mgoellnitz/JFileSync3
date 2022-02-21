@@ -35,9 +35,9 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
-      with:
-        arguments: clean build audit
+      container:
+        images: provocon/java:latest
+      run: ./gradlew clean build audit
     - name: Extract Package
       run: unzip build/distributions/*.zip
     - name: Archive Package
