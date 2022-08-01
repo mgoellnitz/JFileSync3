@@ -53,8 +53,10 @@ dependencies {
   implementation ('com.github.lookfirst:sardine:5.10') {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
-  // Use later version than required by sardine to addess vulnerabilities
+  // Use later versions than required by sardine to address vulnerabilities
   implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+  implementation 'commons-codec:commons-codec:1.15'
+
   implementation 'org.slf4j:jcl-over-slf4j:1.7.36' // httpclient and vfs use JCL
   implementation 'org.slf4j:jul-to-slf4j:1.7.36' // starting with version 5.6 Sardine uses JUL
 
@@ -63,6 +65,7 @@ dependencies {
   implementation ('org.apache.commons:commons-vfs2:2.9.0') {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
+
   // Update transitive dependency databind
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
   implementation 'org.apache.commons:commons-lang3:3.12.0'
