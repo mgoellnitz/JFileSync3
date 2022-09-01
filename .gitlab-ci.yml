@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2019 Martin Goellnitz
+# Copyright 2018-2022 Martin Goellnitz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ stages:
 JFileSync3:
   stage: build
   script:
-  - ./gradlew clean build audit
+  - ./gradlew -PossindexUser=$OSS_INDEX_USER -PossindexToken=$OSS_INDEX_TOKEN clean audit build
   - unzip -q build/distributions/JFileSync3.zip
   artifacts:
     paths:

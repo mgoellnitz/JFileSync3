@@ -36,7 +36,7 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
     - name: Build with Gradle
-      run: ./gradlew clean build audit
+      run: ./gradlew clean build
     - name: Extract Package
       run: unzip -q build/distributions/*.zip
     - name: Archive Package

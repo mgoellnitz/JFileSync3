@@ -90,6 +90,12 @@ dependencies {
   runtimeOnly 'org.codehaus.groovy:groovy:3.0.12'
 }
 
+audit {
+  ignore = [ 'com.squareup.okhttp:okhttp:2.7.5' ]
+  user   = "$ossindexUser"
+  token  = "$ossindexToken"
+}
+
 mainClassName = 'jfs.JFileSync'
 
 distTar.enabled = false
