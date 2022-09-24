@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
 plugins {
-  id "edu.sc.seis.launch4j" version "2.5.0"
+  id "edu.sc.seis.launch4j" version "2.5.3"
   id "net.ossindex.audit" version "0.4.11"
 }
 
