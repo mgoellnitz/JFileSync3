@@ -12,8 +12,8 @@ encfs4win, BoxCryptor Classic, Encdroid and so on.
 JFileSync3 comes with a GUI, command line tooling, and stored profiles.
 
 Find more on the scenarios where this tool might help you in in the growing
-[project wiki](https://github.com/mgoellnitz/JFileSync3/wiki). Recently a 
-little bit of discussion started in the [issues area at GitHub](https://github.com/mgoellnitz/JFileSync3/issues)
+[project wiki](https://github.com/mgoellnitz/JFileSync3/wiki). We have a 
+little bit of discussion in the [issues area at GitHub](https://github.com/mgoellnitz/JFileSync3/issues)
 so feel free to add your comments there.
 
 This software was developed because I personally needed an easy to use syncing 
