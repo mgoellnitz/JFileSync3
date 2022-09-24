@@ -213,7 +213,7 @@ names but calculated ones.
 Passwords to derive keys from are not constant along the whole directory 
 structure.
 
-For oldish Java 8 setups you will need the unlimited encryption add-on by 
+For oldish Java 8 setups you will need the unlimited encryption add-on by
 Oracle for your JDK, if you want to use anything except the default cipher AES.
 
 Feel free to issue bug reports and ideas here.
