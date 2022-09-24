@@ -36,11 +36,11 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
     - name: Build with Gradle
-      run: ./gradlew clean build
+      run: ./gradlew -PossindexUser=${{secrets.OSS_INDEX_USER}} -PossindexToken=${{secrets.OSS_INDEX_TOKEN}} clean audit build
     - name: Extract Package
       run: unzip -q build/distributions/*.zip
     - name: Archive Package
       uses: actions/upload-artifact@v2
       with:
-        name: timetable
+        name: JFileSync3-SNAPSHOT
         path: JFileSync3/*
