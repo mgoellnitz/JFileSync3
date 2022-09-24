@@ -1,6 +1,7 @@
 # Java based encrypting File Syncing Tool
 
 [![Latest Release](https://img.shields.io/github/release/mgoellnitz/JFileSync3.svg)](https://github.com/mgoellnitz/JFileSync3/releases/latest)
+[![Build Status](https://img.shields.io/github/workflow/status/mgoellnitz/JFileSync3/Build%20JFileSync3)](https://github.com/mgoellnitz/JFileSync3/actions/workflows/gradle.yml)
 [![Build Status](https://img.shields.io/gitlab/pipeline/mgoellnitz/JFileSync3.svg)](https://gitlab.com/mgoellnitz/JFileSync3/pipelines)
 [![Download](https://img.shields.io/badge/Download-Snapshot-blue)](https://gitlab.com/mgoellnitz/JFileSync3/-/jobs/artifacts/master/download?job=JFileSync3)
 
