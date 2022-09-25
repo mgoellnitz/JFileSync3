@@ -7,7 +7,7 @@
 
 File syncing with optional compression and encryption for local and WebDAV 
 folders. For local folders encryption can use EncFS and thus be compatible with 
-encfs4win, BoxCryptor Classic, Encdroid and so on. 
+encfs4win, BoxCryptor Classic, EDS Lite, Encdroid and so on.
 
 JFileSync3 comes with a GUI, command line tooling, and stored profiles.
 
@@ -17,8 +17,8 @@ little bit of discussion in the [issues area at GitHub](https://github.com/mgoel
 so feel free to add your comments there.
 
 This software was developed because I personally needed an easy to use syncing 
-tool to have everyday backups  - without the need of multiple versions in file
-history - of highly confidential material - business and private. 
+tool to have everyday backups of highly confidential material - business and
+private. - without any need of multiple versions in file history.
 
 None of the services I came accross could suit these needs.
 
@@ -28,7 +28,7 @@ services.
 
 Using too many of them slows down your local machine too much, so I identified 
 a set of backup areas which didn't need online syncing but just regular cloud 
-based backup. Some of the syncing services available provide WebDAV backends, 
+based backups. Some of the syncing services available provide WebDAV backends,
 so I can decide to use a service online or manual (scheduled).
 
 JFileSync3 is heavily based on the work of Jens Heidrich and his JFileSync2.2. 
@@ -36,12 +36,12 @@ After some hacking aroung in his code I felt that this one here is a fork,
 ripping out his original remote backends and changing the purpose of the tool 
 quite a lot. 
 
-I had to realise the Jens re-started his work on the original product, so that 
+I had to realise that Jens re-started his work on the original product, so that
 this decision now would need some rethinking. Be aware that this code here is 
 based on the 2007 version JFileSync2.2 and not the more recent 2.3 and 2.4 work,
 which heads in part in similar directions as my code (ripping out the server, 
 using VFS, presenting a new Windows and even Mac integration). I did a manual
-back sync with 2.3a recently.
+back sync with 2.3a a while ago.
 
 JFileSync is a SourceForge project and available via the following URL:
 
@@ -102,9 +102,9 @@ compatible with encfs4win and of course Linux based encfs.
 
 ## Requirements
 
-- Java 8 Runtime Environment, OpenJDK JRE supported and recommended
+- Java 8 Runtime Environment, OpenJDK based JREs supported and recommended
 
-- Only when using other algorithms than AES with such oldish JRE: JCE Extension
+- Only when using algorithms other than AES with such oldish JRE: JCE Extension
 
 
 ## Installation and Application Start
@@ -180,7 +180,7 @@ You can find a copy all licenses of JFileSync3 and the used libraries in the
 
 Required packages for JFileSync3 development (not included in the distribution):
 
-* Java 8 SDK >= 1.8.0 (see 'http://java.sun.com')
+* Java 8 SDK >= 1.8.0 (see e.g. 'https://projects.eclipse.org/projects/adoptium')
 * Launch4j installation on the path (see https://sourceforge.net/projects/launch4j/)
 
 Used and as a result recommended development tools:
