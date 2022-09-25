@@ -51,8 +51,10 @@ TAG="$(echo $CURRENT|sed -e 's/[0-9][0-9]$//g')$COUNTER"
 echo Next Release $TAG
 sed -i.back -e "s/3.0-SNAPSHOT/$TAG/g" build.gradle
 sed -i.back -e "s/3.0-SNAPSHOT/$TAG/g" src/jfs/resources/conf/JFSConfig.properties
+sed -i.back -e "s/3.0-SNAPSHOT/$TAG/g" xdg/JFileSync3.desktop
 git commit -m "Release $TAG" build.gradle src/jfs/resources/conf/JFSConfig.properties
 git tag -a -m "Release $TAG" $TAG
 mv build.gradle.back build.gradle
+mv xdg/JFileSync3.desktop.back xdg/JFileSync3.desktop
 mv src/jfs/resources/conf/JFSConfig.properties.back src/jfs/resources/conf/JFSConfig.properties
 git commit -m "Move to next Release" build.gradle src/jfs/resources/conf/JFSConfig.properties
