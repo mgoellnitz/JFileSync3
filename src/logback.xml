@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+ Copyright 2022 Martin Goellnitz
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<!DOCTYPE configuration>
+<configuration>
+
+  <import class="ch.qos.logback.core.ConsoleAppender"/>
+  <import class="ch.qos.logback.core.rolling.RollingFileAppender"/>
+  <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
+  <import class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"/>
+
+  <variable name="FILE_PATTERN" value="%-9date{HH:mm:ss} %-5level %logger{35}.%msg%n"/>
+  <variable name="CONSOLE_PATTERN" value="%-5level %logger{35}.%msg%n"/>
+
+  <appender name="CONSOLE" class="ConsoleAppender">
+    <encoder class="PatternLayoutEncoder">
+      <pattern>${CONSOLE_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="RollingFileAppender">
+    <file>jfs3.log</file>
+    <append>true</append>
+    <rollingPolicy class="TimeBasedRollingPolicy">
+      <fileNamePattern>jfs3-%d{yyyy-MM-dd_HH}.log</fileNamePattern>
+      <maxHistory>4</maxHistory>
+    </rollingPolicy>
+    <encoder class="PatternLayoutEncoder">
+      <pattern>${FILE_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+  <!--
+  <logger name="jfs" level="INFO" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+  </logger>
+  <logger name="jfs.sync.encryption" level="DEBUG" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+  </logger>
+  -->
+
+  <logger name="org.webaccess" level="OFF">
+  </logger>
+  <logger name="org.apache" level="OFF">
+  </logger>
+
+  <root level="WARN">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="FILE"/>
+  </root>
+
+</configuration>
