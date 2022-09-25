@@ -33,7 +33,7 @@ JFileSync3:
     paths:
     - JFileSync3/*
     expire_in: 30 days
-    name: ${CI_JOB_NAME}-snapshot
+    name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}
 
 cache:
   paths:
