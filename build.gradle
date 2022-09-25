@@ -98,7 +98,7 @@ distTar.enabled = false
 
 launch4j {
   mainClassName = project.mainClassName
-  version = '3.0.17'
+  version = '3.0-SNAPSHOT'
   textVersion = 'Executables Release'
   fileDescription = 'Java based encrypting File Syncing Tool'
   errTitle = project.name

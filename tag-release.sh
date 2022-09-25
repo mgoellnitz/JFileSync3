@@ -57,4 +57,4 @@ git tag -a -m "Release $TAG" $TAG
 mv build.gradle.back build.gradle
 mv xdg/JFileSync3.desktop.back xdg/JFileSync3.desktop
 mv src/jfs/resources/conf/JFSConfig.properties.back src/jfs/resources/conf/JFSConfig.properties
-git commit -m "Move to next Release" build.gradle src/jfs/resources/conf/JFSConfig.properties
+git commit -m "Move to next Release" build.gradle src/jfs/resources/conf/JFSConfig.properties xdg/JFileSync3.desktop
