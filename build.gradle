@@ -98,10 +98,12 @@ distTar.enabled = false
 
 launch4j {
   mainClassName = project.mainClassName
-  version = '3.0-SNAPSHOT'
+  version = '3.0.17'
   textVersion = 'Executables Release'
   fileDescription = 'Java based encrypting File Syncing Tool'
   errTitle = project.name
+  // jreMinVersion = '11'
+  // splashFileName= 'win/JFileSync3-640x350-splash.bmp'
   copyright = '(C) 2002-2022, J. Heidrich, M. Goellnitz'
   downloadUrl = 'https://adoptium.net/de/temurin/releases'
   supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
@@ -146,6 +148,11 @@ distZip {
   into("$project.name/bin") {
     from 'win'
     include '*.ico'
+  }
+  // Spash screen for windows
+  into("$project.name/bin") {
+    from 'win'
+    include '*.bmp'
   }
   // For the FreeDesktop.org desktop integration this looks better
   into("$project.name/bin") {
