@@ -18,7 +18,9 @@ name: Build JFileSync3
 
 on:
   push:
-    branches: [ master ]
+    branches:
+    - master
+    - 3.*
   pull_request:
     branches: [ master ]
 
