@@ -1,6 +1,6 @@
 /*
  * JFileSync
- * Copyright (C) 2002-2021 Jens Heidrich, Martin Goellnitz
+ * Copyright (C) 2002-2022 Jens Heidrich, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -310,10 +310,6 @@ public class JFSLocalFile extends JFSFile {
      */
     @Override
     public final boolean setExecutable() {
-        if (!JFSConfig.getInstance().isSetCanExecute()) {
-            return true;
-        }
-
         boolean success = file.setExecutable(true);
 
         if (success) {

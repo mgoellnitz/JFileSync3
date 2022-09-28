@@ -1,6 +1,6 @@
 /*
  * JFileSync
- * Copyright (C) 2002-2007, Jens Heidrich
+ * Copyright (C) 2002-2022 Jens Heidrich, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -121,9 +121,9 @@ public class JFSElement implements Comparable<JFSElement> {
      * whether both files are equal. At least one file has to be not equal to null. If both files are equal, there
      * relative paths have to match. The parent must be a directory and must not be null.
      *
-     * @param srcFile Source file.
-     * @param tgtFile Target file.
-     * @param parent The parent of the current element.
+     * @param srcFile     Source file.
+     * @param tgtFile     Target file.
+     * @param parent      The parent of the current element.
      * @param isDirectory Determines whether the File objects are directories.
      */
     public JFSElement(JFSFile srcFile, JFSFile tgtFile, JFSElement parent, boolean isDirectory) {
@@ -194,6 +194,19 @@ public class JFSElement implements Comparable<JFSElement> {
         // Check length:
         if (state==ElementState.EQUAL&&srcFile.getLength()!=tgtFile.getLength()) {
             state = ElementState.LENGTH_INCONSISTENT;
+        }
+
+        // Check executable flag:
+        if (state==ElementState.EQUAL) {
+            JFSFileProducer srcProducer = srcFile.getFileProducer();
+            JFSFileProducer tgtProducer = tgtFile.getFileProducer();
+            if (srcProducer.hasExecutableFlag()&&tgtProducer.hasExecutableFlag()) {
+                if (!(srcFile.isDirectory()||tgtFile.isDirectory())) {
+                    if (srcFile.canExecute()!=tgtFile.canExecute()) {
+                        state = ElementState.LENGTH_INCONSISTENT;
+                    }
+                }
+            }
         }
 
         // Set action to NOP if isEqual is true:
@@ -269,7 +282,7 @@ public class JFSElement implements Comparable<JFSElement> {
      * Adds a child to the element.
      *
      * @param child
-     * The child to add.
+     *              The child to add.
      */
     public final void addChild(JFSElement child) {
         if (children==null) {

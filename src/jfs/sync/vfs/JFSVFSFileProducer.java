@@ -1,6 +1,6 @@
 /*
  * JFileSync
- * Copyright (C) 2002-2015, Jens Heidrich
+ * Copyright (C) 2002-2022 Jens Heidrich, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -109,4 +109,11 @@ public class JFSVFSFileProducer extends JFSFileProducer {
         }
         return schemes.toArray(schemesArray);
     }
+
+
+    @Override
+    public boolean hasExecutableFlag() {
+        return false;
+    }
+
 }

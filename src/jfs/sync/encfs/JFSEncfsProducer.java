@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2012 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  */
 package jfs.sync.encfs;
 
+import java.io.File;
 import jfs.conf.JFSConfig;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
@@ -72,6 +73,12 @@ public class JFSEncfsProducer extends JFSFileProducer {
     @Override
     public JFSFile getJfsFile(String path, boolean asFolder) {
         return new JFSEncfsFile(volume, this, path, asFolder);
+    }
+
+
+    @Override
+    public boolean hasExecutableFlag() {
+        return File.separatorChar == '/';
     }
 
 }

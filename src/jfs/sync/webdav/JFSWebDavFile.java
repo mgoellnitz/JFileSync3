@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2021 Martin Goellnitz
+ * Copyright (C) 2010-2022 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -431,10 +431,7 @@ public class JFSWebDavFile extends JFSFile {
      */
     @Override
     public boolean setExecutable() {
-        if (JFSConfig.getInstance().isSetCanExecute()) {
-            info.setCanExecute(false);
-        } // if
-
+        info.setCanExecute(true);
         return true;
     } // setExecutable()
 

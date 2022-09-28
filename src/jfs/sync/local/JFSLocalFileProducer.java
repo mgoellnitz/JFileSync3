@@ -1,6 +1,6 @@
 /*
  * JFileSync
- * Copyright (C) 2002-2007, Jens Heidrich
+ * Copyright (C) 2002-2022 Jens Heidrich, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 package jfs.sync.local;
 
+import java.io.File;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 
@@ -53,4 +54,11 @@ public class JFSLocalFileProducer extends JFSFileProducer {
     public final JFSFile getJfsFile(String path, boolean asFolder) {
         return new JFSLocalFile(this, path);
     }
+
+
+    @Override
+    public boolean hasExecutableFlag() {
+        return File.separatorChar == '/';
+    }
+
 }

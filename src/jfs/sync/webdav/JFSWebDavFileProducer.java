@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2018, Martin Goellnitz
+ * Copyright (C) 2010-2022 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,6 +102,12 @@ public class JFSWebDavFileProducer extends JFSFileProducer {
     @Override
     public JFSFile getJfsFile(String path, boolean asFolder) {
         return new JFSWebDavFile(sardine, this, path, asFolder);
+    }
+
+
+    @Override
+    public boolean hasExecutableFlag() {
+        return false;
     }
 
 } // JFSWebDavFileProducer

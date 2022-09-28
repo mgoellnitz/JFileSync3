@@ -1,6 +1,6 @@
 /*
  * JFileSync
- * Copyright (C) 2002-2007, Jens Heidrich
+ * Copyright (C) 2002-2022 Jens Heidrich, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -135,4 +135,14 @@ public abstract class JFSFileProducer {
         }
         return ".";
     }
+    
+    
+    /**
+     * Tell, if the undelying file systems supports the executable flag.
+     * Unix file systems do, windows, WebDav and so on don't. We should take
+     * this into account wheny comparing files.
+     * @return true if the file systems support file.setExecutable()
+     */
+    public abstract boolean hasExecutableFlag();
+
 }
