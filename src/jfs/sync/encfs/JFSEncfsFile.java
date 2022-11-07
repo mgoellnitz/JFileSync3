@@ -223,8 +223,12 @@ public class JFSEncfsFile extends JFSFile {
      */
     @Override
     public boolean removeWriteLock() {
-        LOG.debug("removeWriteLock() {}", file.getPath());
-        boolean result = file.isWritable();
+        // File file / not lock.
+        boolean result = true;
+        if (file != null) {
+            LOG.debug("removeWriteLock() {}", file.getPath());
+            result = file.isWritable();
+        }
         return result;
     } // removeWriteLock()
 
