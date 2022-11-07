@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
 plugins {
-  id "edu.sc.seis.launch4j" version "2.5.3"
+  id "edu.sc.seis.launch4j" version "2.5.4"
   id "net.ossindex.audit" version "0.4.11"
 }
 
@@ -65,9 +65,10 @@ dependencies {
   implementation ('org.apache.commons:commons-vfs2:2.9.0') {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
-
+  // Update transitive dependency from vfs - still has vulnerability
+  implementation 'org.apache.hadoop:hadoop-hdfs-client:3.3.4'
   // Update transitive dependency databind
-  implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
   implementation 'org.apache.commons:commons-lang3:3.12.0'
   implementation 'org.apache.commons:commons-compress:1.21'
   implementation ('net.sf.jsignature.io-tools:easystream:1.2.15') {
@@ -87,7 +88,7 @@ dependencies {
 }
 
 audit {
-  ignore = [ 'com.squareup.okhttp:okhttp:2.7.5' ]
+  ignore = [ 'com.squareup.okhttp:okhttp:2.7.5', 'org.apache.hadoop:hadoop-hdfs-client:3.3.4' ]
   user   = "$ossindexUser"
   token  = "$ossindexToken"
 }
