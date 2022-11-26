@@ -16,10 +16,8 @@
 #
 image: provocon/java:latest
 
-before_script:
-  - mkdir -p tmp
-  - export GRADLE_USER_HOME=$(pwd)/tmp/.gradle
-  - echo $PATH
+variables:
+  GRADLE_USER_HOME: /tmp/.gradle
 
 stages:
   - build
@@ -37,5 +35,5 @@ JFileSync3:
 
 cache:
   paths:
-  - tmp/.gradle/caches/
-  - tmp/.gradle/wrapper/
+  - /tmp/.gradle/caches/
+  - /tmp/.gradle/wrapper/
