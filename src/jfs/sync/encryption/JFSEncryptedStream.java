@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2021 Martin Goellnitz
+ * Copyright (C) 2010-2023 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -177,7 +177,7 @@ public class JFSEncryptedStream extends OutputStream {
                     dos.write(originalBytes);
                     dos.close();
                     compressedValue = deflaterStream.toByteArray();
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     LOG.error("run()", e);
                 } // try/catch
             } // run()
@@ -189,16 +189,14 @@ public class JFSEncryptedStream extends OutputStream {
             @Override
             public void run() {
                 try {
-                    if (originalBytes.length>BZIP_MAX_LENGTH) {
-                        compressedValue = originalBytes;
-                    } else {
+                    if (originalBytes.length<BZIP_MAX_LENGTH) {
                         ByteArrayOutputStream bzipStream = new ByteArrayOutputStream();
                         OutputStream bos = new BZip2CompressorOutputStream(bzipStream);
                         bos.write(originalBytes);
                         bos.close();
                         compressedValue = bzipStream.toByteArray();
                     } // if
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     LOG.error("run()", e);
                 } // try/catch
             } // run()
@@ -248,7 +246,7 @@ public class JFSEncryptedStream extends OutputStream {
                     encoder.WriteCoderProperties(lzmaStream);
                     encoder.Code(inStream, lzmaStream, -1, -1, null);
                     compressedValue = lzmaStream.toByteArray();
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     LOG.error("run()", e);
                 } // try/catch
             } // run()
@@ -266,20 +264,23 @@ public class JFSEncryptedStream extends OutputStream {
         } catch (InterruptedException e) {
             LOG.error("run()", e);
         } // try/catch
-
-        if (dt.compressedValue.length<l) {
+        
+        int compressedLength = dt.compressedValue.length;
+        if ((compressedLength > 5) && (compressedLength<l)) {
             marker = COMPRESSION_DEFLATE;
             bytes = dt.compressedValue;
             l = bytes.length;
         } // if
 
-        if (lt.compressedValue.length<l) {
+        compressedLength = lt.compressedValue.length;
+        if ((compressedLength > 5) && (compressedLength<l)) {
             marker = COMPRESSION_LZMA;
             bytes = lt.compressedValue;
             l = bytes.length;
         } // if
 
-        if (bt.compressedValue.length<l) {
+        compressedLength = bt.compressedValue.length;
+        if ((compressedLength > 5) && (compressedLength<l)) {
             marker = COMPRESSION_BZIP2;
             bytes = bt.compressedValue;
             LOG.warn("internalClose() using bzip2 and saving {} bytes.", (l-bytes.length));
@@ -292,6 +293,9 @@ public class JFSEncryptedStream extends OutputStream {
         if (marker==COMPRESSION_LZMA) {
             LOG.info("internalClose() using lzma");
         } // if
+        if (l < 10) {
+            LOG.error("internalClose() short write");
+        }
 
         ObjectOutputStream oos = new ObjectOutputStream(baseOutputStream);
         oos.writeByte(marker);
