@@ -65,7 +65,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         result.setModificationDate(file.lastModified());
         result.setName(pathAndName[1]);
         result.setPath(pathAndName[0]);
-        result.setSize(result.isDirectory() ? 0 : file.length());
+        result.setSize(result.isDirectory()?0:file.length());
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("createFileInfo("+pathAndName[0]+"/"+pathAndName[1]+") "+result);
@@ -230,7 +230,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         String encryptedPath = args[2];
         String[] elements = encryptedPath.split("\\\\");
         String path = "";
-        for (int i = 0;i<elements.length;i++) {
+        for (int i = 0; i<elements.length; i++) {
             String encryptedName = elements[i];
             String plain = storage.getDecryptedFileName(path, encryptedName);
             path += storage.getSeparator();
@@ -247,7 +247,6 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         int b = 0;
         while (b>=0) {
             b = is.read();
-            System.out.print((char)b);
         } // while
         is.close();
     } // main()
