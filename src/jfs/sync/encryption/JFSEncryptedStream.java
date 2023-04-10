@@ -264,23 +264,23 @@ public class JFSEncryptedStream extends OutputStream {
         } catch (InterruptedException e) {
             LOG.error("run()", e);
         } // try/catch
-        
+
         int compressedLength = dt.compressedValue.length;
-        if ((compressedLength > 5) && (compressedLength<l)) {
+        if ((compressedLength>5)&&(compressedLength<l)) {
             marker = COMPRESSION_DEFLATE;
             bytes = dt.compressedValue;
             l = bytes.length;
         } // if
 
         compressedLength = lt.compressedValue.length;
-        if ((compressedLength > 5) && (compressedLength<l)) {
+        if ((compressedLength>5)&&(compressedLength<l)) {
             marker = COMPRESSION_LZMA;
             bytes = lt.compressedValue;
             l = bytes.length;
         } // if
 
         compressedLength = bt.compressedValue.length;
-        if ((compressedLength > 5) && (compressedLength<l)) {
+        if ((compressedLength>5)&&(compressedLength<l)) {
             marker = COMPRESSION_BZIP2;
             bytes = bt.compressedValue;
             LOG.warn("internalClose() using bzip2 and saving {} bytes.", (l-bytes.length));
@@ -293,7 +293,7 @@ public class JFSEncryptedStream extends OutputStream {
         if (marker==COMPRESSION_LZMA) {
             LOG.info("internalClose() using lzma");
         } // if
-        if (l < 10) {
+        if (l<10) {
             LOG.error("internalClose() short write");
         }
 
@@ -360,7 +360,7 @@ public class JFSEncryptedStream extends OutputStream {
      * @param cipher
      * @return
      */
-    public static InputStream createInputStream(InputStream fis, long expectedLength, Cipher cipher) {
+    public static InputStream createInputStream(InputStream fis, long expectedLength, Cipher cipher) throws IOException {
         try {
             InputStream in = fis;
             ObjectInputStream ois = new ObjectInputStream(in);
@@ -389,7 +389,7 @@ public class JFSEncryptedStream extends OutputStream {
                 byte[] properties = new byte[5];
                 int readBytes = in.read(properties, 0, properties.length);
                 LOG.info("JFSEncryptedStream.createInputStream() readBytes={}", readBytes);
-                if (readBytes != properties.length) {
+                if (readBytes!=properties.length) {
                     LOG.warn("JFSEncryptedStream.createInputStream() short read for LZMA decoder parameters.");
                 }
                 Decoder decoder = new Decoder();
@@ -405,9 +405,8 @@ public class JFSEncryptedStream extends OutputStream {
                 in = new ByteArrayInputStream(outputStream.toByteArray());
             } // if
             return in;
-        } catch (IOException ioe) {
-            LOG.error("JFSEncryptedStream.createInputStream() I/O Exception "+ioe.getLocalizedMessage());
-            return null;
+        } catch (Error error) {
+            throw new IOException("createInputStream()", error);
         } // try/catch
     } // createInputStream()
 
