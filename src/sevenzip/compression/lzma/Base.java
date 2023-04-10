@@ -47,7 +47,7 @@ public class Base {
     public static final int kNumPosSlotBits = 6;
 
     public static final int kDicLogSizeMin = 0;
-	// public static final int kDicLogSizeMax = 28;
+    // public static final int kDicLogSizeMax = 28;
     // public static final int kDistTableSizeMax = kDicLogSizeMax * 2;
 
     public static final int kNumLenToPosStatesBits = 2; // it's for speed optimization
@@ -62,7 +62,7 @@ public class Base {
         if (len<kNumLenToPosStates) {
             return len;
         }
-        return (kNumLenToPosStates-1);
+        return (int) (kNumLenToPosStates-1);
     }
 
     public static final int kNumAlignBits = 4;

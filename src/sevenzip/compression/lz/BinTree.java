@@ -144,11 +144,11 @@ public class BinTree extends InWindow {
         if (HASH_ARRAY) {
             int temp = CrcTable[_bufferBase[cur]&0xFF]^(_bufferBase[cur+1]&0xFF);
             hash2Value = temp&(kHash2Size-1);
-            temp ^= ((_bufferBase[cur+2]&0xFF)<<8);
+            temp ^= ((int) (_bufferBase[cur+2]&0xFF)<<8);
             hash3Value = temp&(kHash3Size-1);
             hashValue = (temp^(CrcTable[_bufferBase[cur+3]&0xFF]<<5))&_hashMask;
         } else {
-            hashValue = ((_bufferBase[cur]&0xFF)^((_bufferBase[cur+1]&0xFF)<<8));
+            hashValue = ((_bufferBase[cur]&0xFF)^((int) (_bufferBase[cur+1]&0xFF)<<8));
         }
 
         int curMatch = _hash[kFixHashSize+hashValue];
@@ -204,7 +204,8 @@ public class BinTree extends InWindow {
                 break;
             }
             int delta = _pos-curMatch;
-            int cyclicPos = ((delta<=_cyclicBufferPos) ? (_cyclicBufferPos-delta)
+            int cyclicPos = ((delta<=_cyclicBufferPos)
+                    ? (_cyclicBufferPos-delta)
                     : (_cyclicBufferPos-delta+_cyclicBufferSize))<<1;
 
             int pby1 = _bufferOffset+curMatch;
@@ -264,12 +265,12 @@ public class BinTree extends InWindow {
                 int temp = CrcTable[_bufferBase[cur]&0xFF]^(_bufferBase[cur+1]&0xFF);
                 int hash2Value = temp&(kHash2Size-1);
                 _hash[hash2Value] = _pos;
-                temp ^= ((_bufferBase[cur+2]&0xFF)<<8);
+                temp ^= ((int) (_bufferBase[cur+2]&0xFF)<<8);
                 int hash3Value = temp&(kHash3Size-1);
                 _hash[kHash3Offset+hash3Value] = _pos;
                 hashValue = (temp^(CrcTable[_bufferBase[cur+3]&0xFF]<<5))&_hashMask;
             } else {
-                hashValue = ((_bufferBase[cur]&0xFF)^((_bufferBase[cur+1]&0xFF)<<8));
+                hashValue = ((_bufferBase[cur]&0xFF)^((int) (_bufferBase[cur+1]&0xFF)<<8));
             }
 
             int curMatch = _hash[kFixHashSize+hashValue];
@@ -289,7 +290,8 @@ public class BinTree extends InWindow {
                 }
 
                 int delta = _pos-curMatch;
-                int cyclicPos = ((delta<=_cyclicBufferPos) ? (_cyclicBufferPos-delta)
+                int cyclicPos = ((delta<=_cyclicBufferPos)
+                        ? (_cyclicBufferPos-delta)
                         : (_cyclicBufferPos-delta+_cyclicBufferSize))<<1;
 
                 int pby1 = _bufferOffset+curMatch;

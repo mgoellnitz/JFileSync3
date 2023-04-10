@@ -50,7 +50,6 @@ public class Decoder {
             }
             return symbol;
         }
-
     }
 
 
@@ -92,7 +91,6 @@ public class Decoder {
                 } while (symbol<0x100);
                 return (byte) symbol;
             }
-
         }
 
         Decoder2[] m_Coders;
@@ -130,7 +128,6 @@ public class Decoder {
         Decoder2 GetDecoder(int pos, byte prevByte) {
             return m_Coders[((pos&m_PosMask)<<m_NumPrevBits)+((prevByte&0xFF)>>>(8-m_NumPrevBits))];
         }
-
     }
 
     OutWindow m_OutWindow = new OutWindow();
@@ -286,8 +283,8 @@ public class Decoder {
                         int numDirectBits = (posSlot>>1)-1;
                         rep0 = ((2|(posSlot&1))<<numDirectBits);
                         if (posSlot<Base.kEndPosModelIndex) {
-                            rep0 += BitTreeDecoder.ReverseDecode(m_PosDecoders, rep0-posSlot-1, m_RangeDecoder,
-                                    numDirectBits);
+                            rep0 += BitTreeDecoder.ReverseDecode(m_PosDecoders,
+                                    rep0-posSlot-1, m_RangeDecoder, numDirectBits);
                         } else {
                             rep0 += (m_RangeDecoder.DecodeDirectBits(numDirectBits-Base.kNumAlignBits)<<Base.kNumAlignBits);
                             rep0 += m_PosAlignDecoder.ReverseDecode(m_RangeDecoder);
@@ -329,7 +326,7 @@ public class Decoder {
         int pb = remainder/5;
         int dictionarySize = 0;
         for (int i = 0; i<4; i++) {
-            dictionarySize += ((properties[1+i])&0xFF)<<(i*8);
+            dictionarySize += ((int) (properties[1+i])&0xFF)<<(i*8);
         }
         if (!SetLcLpPb(lc, lp, pb)) {
             return false;

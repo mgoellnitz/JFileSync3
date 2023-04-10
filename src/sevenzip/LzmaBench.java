@@ -62,7 +62,7 @@ public class LzmaBench {
             numBits -= NumBits;
             result = (Value<<numBits);
             Value = RG.GetRnd();
-            result |= Value&((1<<numBits)-1);
+            result |= Value&(((int) 1<<numBits)-1);
             Value >>>= numBits;
             NumBits = 32-numBits;
             return result;
@@ -102,7 +102,7 @@ public class LzmaBench {
 
         int GetLogRandBits(int numBits) {
             int len = RG.GetRnd(numBits);
-            return RG.GetRnd(len);
+            return RG.GetRnd((int) len);
         }
 
 
@@ -115,12 +115,12 @@ public class LzmaBench {
 
 
         int GetLen1() {
-            return RG.GetRnd(1+RG.GetRnd(2));
+            return RG.GetRnd(1+(int) RG.GetRnd(2));
         }
 
 
         int GetLen2() {
-            return RG.GetRnd(2+RG.GetRnd(2));
+            return RG.GetRnd(2+(int) RG.GetRnd(2));
         }
 
 
@@ -310,7 +310,7 @@ public class LzmaBench {
     static long GetCompressRating(int dictionarySize, long elapsedTime, long size) {
         long t = GetLogSize(dictionarySize)-(18<<kSubBits);
         long numCommandsForOne = 1060+((t*t*10)>>(2*kSubBits));
-        long numCommands = (size)*numCommandsForOne;
+        long numCommands = (long) (size)*numCommandsForOne;
         return MyMultDiv64(numCommands, elapsedTime);
     }
 
@@ -323,8 +323,8 @@ public class LzmaBench {
 
     static long GetTotalRating(int dictionarySize, long elapsedTimeEn, long sizeEn, long elapsedTimeDe, long inSizeDe,
             long outSizeDe) {
-        return (GetCompressRating(dictionarySize, elapsedTimeEn, sizeEn)+GetDecompressRating(elapsedTimeDe, inSizeDe,
-                outSizeDe))/2;
+        return (GetCompressRating(dictionarySize, elapsedTimeEn, sizeEn)
+                +GetDecompressRating(elapsedTimeDe, inSizeDe, outSizeDe))/2;
     }
 
 
@@ -439,7 +439,7 @@ public class LzmaBench {
                     throw (new Exception("CRC Error"));
                 }
             }
-            long benchSize = kBufferSize-progressInfo.InSize;
+            long benchSize = kBufferSize-(long) progressInfo.InSize;
             PrintResults(dictionarySize, encodeTime, benchSize, false, 0);
             System.out.print("     ");
             PrintResults(dictionarySize, decodeTime, kBufferSize, true, compressedSize);

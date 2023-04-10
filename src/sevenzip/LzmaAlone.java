@@ -1,15 +1,9 @@
 package sevenzip;
 
 
-/**
- *
- */
-public final class LzmaAlone {
+public class LzmaAlone {
 
-    /**
-     * Class describing the available command line options.
-     */
-    public static final class CommandLine {
+    static public class CommandLine {
 
         public static final int kEncode = 0;
 
@@ -149,7 +143,7 @@ public final class LzmaAlone {
     private LzmaAlone() {
     }
 
-
+    
     private static void printHelp() {
         System.out.println("\nUsage:  LZMA <e|d> [<switches>...] inputFile outputFile\n"
                 +"  e: encode file\n"
@@ -162,7 +156,9 @@ public final class LzmaAlone {
                 +"  -lc{N}: set number of literal context bits - [0, 8], default: 3\n"
                 +"  -lp{N}: set number of literal pos bits - [0, 4], default: 0\n"
                 +"  -pb{N}: set number of pos bits - [0, 4], default: 2\n"
-                +"  -mf{MF_ID}: set Match Finder: [bt2, bt4], default: bt4\n"+"  -eos:   write End Of Stream marker\n");
+                +"  -mf{MF_ID}: set Match Finder: [bt2, bt4], default: bt4\n"
+                +"  -eos:   write End Of Stream marker\n"
+        );
     }
 
 
@@ -257,6 +253,7 @@ public final class LzmaAlone {
         } else {
             throw new Exception("Incorrect command");
         }
+        return;
     }
 
 }
