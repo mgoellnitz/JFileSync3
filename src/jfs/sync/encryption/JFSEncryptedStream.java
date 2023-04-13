@@ -406,7 +406,7 @@ public class JFSEncryptedStream extends OutputStream {
             } // if
             return in;
         } catch (Error error) {
-            throw new IOException("createInputStream()", error);
+            throw new IOException("createInputStream() "+error.getLocalizedMessage(), error);
         } // try/catch
     } // createInputStream()
 
