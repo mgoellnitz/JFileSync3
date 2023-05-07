@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2022 Martin Goellnitz
+ * Copyright (C) 2010-2023 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -426,7 +426,6 @@ public class JFSEncryptedFile extends JFSFile {
             fileInfo.setCanExecute(srcFile.canExecute());
             fileInfo.setSize(srcFile.getLength());
             success = success&&setLastModified(srcFile.getLastModified());
-            // set last modified has to implicitly
             if (!success) {
                 fileProducer.flush(fileInfo);
             } // if
@@ -447,7 +446,9 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     protected boolean postCopySrc(JFSFile tgtFile) {
-        LOG.info("postCopySrc() free memory {}", Runtime.getRuntime().freeMemory());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("postCopySrc() free memory {}", Runtime.getRuntime().freeMemory());
+        }
         return true;
     } // postCopySrc()
 
