@@ -68,7 +68,7 @@ Possible Solutions:
 
 a) Trust the providers
 
-Select any of them - I have some personal notes on the in the wiki.
+Select any of them - I have some personal notes on them in the wiki.
 
 b) Trust the providers encryption
 
