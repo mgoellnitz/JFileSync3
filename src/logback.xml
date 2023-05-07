@@ -50,6 +50,12 @@
   <logger name="jfs" level="INFO" additivity="false">
     <appender-ref ref="CONSOLE"/>
   </logger>
+  <logger name="jfs.sync.meta" level="DEBUG" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+  </logger>
+  <logger name="jfs.sync.encrypted" level="DEBUG" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+  </logger>
   <logger name="jfs.sync.encryption" level="DEBUG" additivity="false">
     <appender-ref ref="CONSOLE"/>
   </logger>

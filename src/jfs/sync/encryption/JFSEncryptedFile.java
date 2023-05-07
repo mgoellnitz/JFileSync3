@@ -105,7 +105,7 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     public final String getName() {
-        LOG.debug("getName('{}') {}", getRelativePath(), fileInfo.getName());
+        // LOG.debug("getName('{}') {}", getRelativePath(), fileInfo.getName());
         return fileInfo.getName();
     }
 
@@ -203,7 +203,7 @@ public class JFSEncryptedFile extends JFSFile {
             if (files!=null) {
                 List<JFSFile> listing = new ArrayList<>(files.length);
                 for (int i = 0; i<files.length; i++) {
-                    // asFolder parameter doesn't to anything
+                    // asFolder parameter doesn't do anything
                     LOG.debug("getList({}) {} {}", getName(), i, files[i]);
                     try {
                         JFSFile entry = fileProducer.getJfsFile(getRelativePath()+fileProducer.getSeparator()+files[i], false);
@@ -214,9 +214,8 @@ public class JFSEncryptedFile extends JFSFile {
                 } // for
                 list = listing.toArray(list);
             }
+            LOG.debug("getList() {}", list.length);
         }
-
-        LOG.debug("getList() {}", list.length);
         return list;
     }
 

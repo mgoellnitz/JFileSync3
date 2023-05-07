@@ -246,6 +246,19 @@ public class JFSEncryptedStream extends OutputStream {
                     encoder.WriteCoderProperties(lzmaStream);
                     encoder.Code(inStream, lzmaStream, -1, -1, null);
                     compressedValue = lzmaStream.toByteArray();
+                    // Back-Check for Tests
+//                    ByteArrayInputStream backCheckStream = new ByteArrayInputStream(compressedValue);
+//                    byte[] properties = new byte[5];
+//                    int readBytes = backCheckStream.read(properties, 0, properties.length);
+//                    LOG.debug("CompressionThread.run() readBytes={}", readBytes);
+//                    if (readBytes!=properties.length) {
+//                        throw new Exception("Short read for LZMA decoder parameters.");
+//                    } else {
+//                        Decoder decoder = new Decoder();
+//                        if (!decoder.SetDecoderProperties(properties)) {
+//                            throw new Exception("Could not set LZMA decoder parameters.");
+//                        }
+//                    }
                 } catch (Throwable e) {
                     LOG.error("run()", e);
                 } // try/catch

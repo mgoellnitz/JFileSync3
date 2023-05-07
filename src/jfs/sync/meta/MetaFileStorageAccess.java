@@ -65,7 +65,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         result.setModificationDate(file.lastModified());
         result.setName(pathAndName[1]);
         result.setPath(pathAndName[0]);
-        result.setSize(result.isDirectory()?0:file.length());
+        result.setSize(result.isDirectory() ? 0 : file.length());
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("createFileInfo("+pathAndName[0]+"/"+pathAndName[1]+") "+result);
@@ -81,6 +81,10 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
         ExtendedFileInfo result = getParentListing(rootPath, pathAndName).get(pathAndName[1]);
         if (result==null) {
             result = createFileInfo(getFile(rootPath, relativePath), pathAndName);
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("getFileInfo() {} / {}.", result.getPath(), result.getName());
+            } // if
         } // if
         return result;
     } // getFileInfo()
