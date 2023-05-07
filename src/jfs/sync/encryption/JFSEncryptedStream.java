@@ -65,6 +65,8 @@ public class JFSEncryptedStream extends OutputStream {
 
     public static final int COMPRESSION_BUFFER_SIZE = 10240;
 
+    private static final byte[] NO_BYTES = new byte[0];
+
     private static final int SPACE_RESERVE = 3;
 
     private static final Logger LOG = LoggerFactory.getLogger(JFSEncryptedStream.class);
@@ -159,53 +161,55 @@ public class JFSEncryptedStream extends OutputStream {
     private void internalClose() throws IOException {
         delegate.close();
         byte[] bytes = delegate.toByteArray();
+        delegate = null;
         final byte[] originalBytes = bytes;
         long l = bytes.length;
 
         byte marker = COMPRESSION_NONE;
 
-        LOG.info("internalClose() checking for compressions.");
+        if (l>32) {
+            LOG.info("internalClose() checking for compressions.");
 
-        CompressionThread dt = new CompressionThread(originalBytes) {
+            CompressionThread dt = new CompressionThread(originalBytes) {
 
-            @Override
-            public void run() {
-                try {
-                    ByteArrayOutputStream deflaterStream = new ByteArrayOutputStream();
-                    Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION, true);
-                    OutputStream dos = new DeflaterOutputStream(deflaterStream, deflater, COMPRESSION_BUFFER_SIZE);
-                    dos.write(originalBytes);
-                    dos.close();
-                    compressedValue = deflaterStream.toByteArray();
-                } catch (Throwable e) {
-                    LOG.error("run()", e);
-                } // try/catch
-            } // run()
+                @Override
+                public void run() {
+                    try {
+                        ByteArrayOutputStream deflaterStream = new ByteArrayOutputStream();
+                        Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION, true);
+                        OutputStream dos = new DeflaterOutputStream(deflaterStream, deflater, COMPRESSION_BUFFER_SIZE);
+                        dos.write(originalBytes);
+                        dos.close();
+                        compressedValue = deflaterStream.toByteArray();
+                    } catch (Throwable e) {
+                        LOG.error("run()", e);
+                    } // try/catch
+                } // run()
 
-        };
+            };
 
-        CompressionThread bt = new CompressionThread(originalBytes) {
+            CompressionThread bt = new CompressionThread(originalBytes) {
 
-            @Override
-            public void run() {
-                try {
-                    if (originalBytes.length<BZIP_MAX_LENGTH) {
-                        ByteArrayOutputStream bzipStream = new ByteArrayOutputStream();
-                        OutputStream bos = new BZip2CompressorOutputStream(bzipStream);
-                        bos.write(originalBytes);
-                        bos.close();
-                        compressedValue = bzipStream.toByteArray();
-                    } // if
-                } catch (Throwable e) {
-                    LOG.error("run()", e);
-                } // try/catch
-            } // run()
+                @Override
+                public void run() {
+                    try {
+                        if (originalBytes.length<BZIP_MAX_LENGTH) {
+                            ByteArrayOutputStream bzipStream = new ByteArrayOutputStream();
+                            OutputStream bos = new BZip2CompressorOutputStream(bzipStream);
+                            bos.write(originalBytes);
+                            bos.close();
+                            compressedValue = bzipStream.toByteArray();
+                        } // if
+                    } catch (Throwable e) {
+                        LOG.error("run()", e);
+                    } // try/catch
+                } // run()
 
-        };
+            };
 
-        CompressionThread lt = new CompressionThread(originalBytes) {
+            CompressionThread lt = new CompressionThread(originalBytes) {
 
-            /*
+                /*
              * // "  -a{N}:  set compression mode - [0, 1], default: 1 (max)\n" +
              * "  -d{N}:  set dictionary - [0,28], default: 23 (8MB)\n"
              * +"  -fb{N}: set number of fast bytes - [5, 273], default: 128\n"
@@ -213,114 +217,103 @@ public class JFSEncryptedStream extends OutputStream {
              * +"  -lp{N}: set number of literal pos bits - [0, 4], default: 0\n"
              * +"  -pb{N}: set number of pos bits - [0, 4], default: 2\n"
              * +"  -mf{MF_ID}: set Match Finder: [bt2, bt4], default: bt4\n"+"  -eos:   write End Of Stream marker\n");
-             */
-            private static final int dictionarySize = 1<<23;
+                 */
+                private static final int dictionarySize = 1<<23;
 
-            private static final int lc = 3;
+                private static final int lc = 3;
 
-            private static final int lp = 0;
+                private static final int lp = 0;
 
-            private static final int pb = 2;
+                private static final int pb = 2;
 
-            private static final int fb = 128;
+                private static final int fb = 128;
 
-            public int algorithm = 2;
+                public int algorithm = 2;
 
-            public int matchFinderIndex = 1; // 0, 1, 2
+                public int matchFinderIndex = 1; // 0, 1, 2
 
 
-            @Override
-            public void run() {
-                try {
-                    Encoder encoder = new Encoder();
-                    encoder.SetEndMarkerMode(false);
-                    encoder.SetAlgorithm(algorithm); // Whatever that means
-                    encoder.SetDictionarySize(dictionarySize);
-                    encoder.SetNumFastBytes(fb);
-                    encoder.SetMatchFinder(matchFinderIndex);
-                    encoder.SetLcLpPb(lc, lp, pb);
+                @Override
+                public void run() {
+                    try {
+                        Encoder encoder = new Encoder();
+                        encoder.SetEndMarkerMode(false);
+                        encoder.SetAlgorithm(algorithm); // Whatever that means
+                        encoder.SetDictionarySize(dictionarySize);
+                        encoder.SetNumFastBytes(fb);
+                        encoder.SetMatchFinder(matchFinderIndex);
+                        encoder.SetLcLpPb(lc, lp, pb);
 
-                    ByteArrayOutputStream lzmaStream = new ByteArrayOutputStream();
-                    ByteArrayInputStream inStream = new ByteArrayInputStream(originalBytes);
+                        ByteArrayOutputStream lzmaStream = new ByteArrayOutputStream();
+                        ByteArrayInputStream inStream = new ByteArrayInputStream(originalBytes);
 
-                    encoder.WriteCoderProperties(lzmaStream);
-                    encoder.Code(inStream, lzmaStream, -1, -1, null);
-                    compressedValue = lzmaStream.toByteArray();
-                    // Back-Check for Tests
-//                    ByteArrayInputStream backCheckStream = new ByteArrayInputStream(compressedValue);
-//                    byte[] properties = new byte[5];
-//                    int readBytes = backCheckStream.read(properties, 0, properties.length);
-//                    LOG.debug("CompressionThread.run() readBytes={}", readBytes);
-//                    if (readBytes!=properties.length) {
-//                        throw new Exception("Short read for LZMA decoder parameters.");
-//                    } else {
-//                        Decoder decoder = new Decoder();
-//                        if (!decoder.SetDecoderProperties(properties)) {
-//                            throw new Exception("Could not set LZMA decoder parameters.");
-//                        }
-//                    }
-                } catch (Throwable e) {
-                    LOG.error("run()", e);
-                } // try/catch
-            } // run()
+                        encoder.WriteCoderProperties(lzmaStream);
+                        encoder.Code(inStream, lzmaStream, -1, -1, null);
+                        compressedValue = lzmaStream.toByteArray();
+                    } catch (Throwable e) {
+                        LOG.error("run()", e);
+                    } // try/catch
+                } // run()
 
-        };
+            };
 
-        dt.start();
-        bt.start();
-        lt.start();
+            dt.start();
+            bt.start();
+            lt.start();
 
-        try {
-            dt.join();
-            bt.join();
-            lt.join();
-        } catch (InterruptedException e) {
-            LOG.error("run()", e);
-        } // try/catch
+            try {
+                dt.join();
+                bt.join();
+                lt.join();
+            } catch (InterruptedException e) {
+                LOG.error("run()", e);
+            } // try/catch
 
-        int compressedLength = dt.compressedValue.length;
-        if ((compressedLength>5)&&(compressedLength<l)) {
-            marker = COMPRESSION_DEFLATE;
-            bytes = dt.compressedValue;
-            l = bytes.length;
-        } // if
+            int compressedLength = dt.compressedValue.length;
+            if ((compressedLength>5)&&(compressedLength<l)) {
+                marker = COMPRESSION_DEFLATE;
+                bytes = dt.compressedValue;
+                l = bytes.length;
+            } // if
 
-        compressedLength = lt.compressedValue.length;
-        if ((compressedLength>5)&&(compressedLength<l)) {
-            marker = COMPRESSION_LZMA;
-            bytes = lt.compressedValue;
-            l = bytes.length;
-        } // if
+            compressedLength = lt.compressedValue.length;
+            if ((compressedLength>5)&&(compressedLength<l)) {
+                marker = COMPRESSION_LZMA;
+                bytes = lt.compressedValue;
+                l = bytes.length;
+            } // if
 
-        compressedLength = bt.compressedValue.length;
-        if ((compressedLength>5)&&(compressedLength<l)) {
-            marker = COMPRESSION_BZIP2;
-            bytes = bt.compressedValue;
-            LOG.warn("internalClose() using bzip2 and saving {} bytes.", (l-bytes.length));
-            l = bytes.length;
-        } // if
+            compressedLength = bt.compressedValue.length;
+            if ((compressedLength>5)&&(compressedLength<l)) {
+                marker = COMPRESSION_BZIP2;
+                bytes = bt.compressedValue;
+                LOG.warn("internalClose() using bzip2 and saving {} bytes.", (l-bytes.length));
+                l = bytes.length;
+            } // if
 
-        if (marker==COMPRESSION_NONE) {
-            LOG.info("internalClose() using no compression");
-        } // if
-        if (marker==COMPRESSION_LZMA) {
-            LOG.info("internalClose() using lzma");
-        } // if
-        if (l<10) {
-            LOG.error("internalClose() short write");
+            if (marker==COMPRESSION_NONE) {
+                LOG.info("internalClose() using no compression");
+            } // if
+            if (marker==COMPRESSION_LZMA) {
+                LOG.info("internalClose() using lzma");
+            } // if
+        } else {
+            LOG.info("internalClose() not trying to compress size {}.", l);
         }
 
         ObjectOutputStream oos = new ObjectOutputStream(baseOutputStream);
         oos.writeByte(marker);
         oos.writeLong(originalBytes.length);
         oos.flush();
-        OutputStream out = baseOutputStream;
-        if (cipher!=null) {
-            out = new CipherOutputStream(out, cipher);
-        } // if
-        out.write(bytes);
-        out.close();
-        delegate = null;
+        if (l>0) {
+            OutputStream out = baseOutputStream;
+            if (cipher!=null) {
+                out = new CipherOutputStream(out, cipher);
+            } // if
+            out.write(bytes);
+            out.close();
+        }
+        baseOutputStream.close();
         baseOutputStream = null;
     } // internalClose()
 
@@ -386,10 +379,14 @@ public class JFSEncryptedStream extends OutputStream {
                     return null;
                 } // if
             } // if
-            if (cipher==null) {
-                LOG.error("JFSEncryptedStream.createInputStream() no cipher for length {}", expectedLength);
+            if (l>0) {
+                if (cipher!=null) {
+                    in = new CipherInputStream(in, cipher);
+                } else {
+                    LOG.error("JFSEncryptedStream.createInputStream() no cipher for length {}", expectedLength);
+                } // if
             } else {
-                in = new CipherInputStream(in, cipher);
+                in = new ByteArrayInputStream(NO_BYTES);
             } // if
             if (marker==COMPRESSION_DEFLATE) {
                 Inflater inflater = new Inflater(true);
