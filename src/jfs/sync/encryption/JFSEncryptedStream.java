@@ -375,8 +375,7 @@ public class JFSEncryptedStream extends OutputStream {
             LOG.debug("JFSEncryptedStream.createInputStream() length check {} == {}?", expectedLength, l);
             if (expectedLength!=DONT_CHECK_LENGTH) {
                 if (l!=expectedLength) {
-                    LOG.error("JFSEncryptedStream.createInputStream() length check failed");
-                    return null;
+                    throw new IOException("Length check failed when creating input stream.");
                 } // if
             } // if
             if (l>0) {

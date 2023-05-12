@@ -311,14 +311,16 @@ public class JFSEncryptedFile extends JFSFile {
      */
     @Override
     protected InputStream getInputStream() {
+        String path = "-?-";
         try {
-            InputStream stream = fileProducer.getInputStream(getRelativePath());
+            path = getRelativePath();
+            InputStream stream = fileProducer.getInputStream(path);
             return JFSEncryptedStream.createInputStream(stream, getLength(), getCipher(Cipher.DECRYPT_MODE));
         } catch (NullPointerException npe) {
-            LOG.error("getInputStream("+getRelativePath()+") Null Pointer Exception "+npe.getLocalizedMessage());
+            LOG.error("getInputStream("+path+") Null Pointer Exception "+npe.getLocalizedMessage());
             return null;
         } catch (IOException ioe) {
-            LOG.error("getInputStream() I/O Exception "+ioe.getLocalizedMessage());
+            LOG.error("getInputStream("+path+") I/O Exception "+ioe.getLocalizedMessage());
             return null;
         } // try/catch
     } // getInputStream()
