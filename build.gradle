@@ -19,6 +19,7 @@ plugins {
   id "edu.sc.seis.launch4j" version "2.5.4"
   id "net.ossindex.audit" version "0.4.11"
 }
+def l4j = true
 
 apply plugin: 'java'
 apply plugin: 'application'
@@ -59,7 +60,7 @@ dependencies {
   // implementation files(fileTree(dir: 'lib', includes: ['*.jar']))
 
   implementation 'org.slf4j:slf4j-api:2.0.7'
-  implementation ('com.github.lookfirst:sardine:5.10') {
+  implementation ('com.github.lookfirst:sardine:5.12') {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
   // Use later versions than required by sardine to address vulnerabilities
@@ -67,35 +68,36 @@ dependencies {
   implementation 'commons-codec:commons-codec:1.15'
 
   implementation 'org.slf4j:jcl-over-slf4j:2.0.7' // httpclient and vfs use JCL
-  implementation 'org.slf4j:jul-to-slf4j:2.0.7' // starting with version 5.6 Sardine uses JUL
+  implementation 'org.slf4j:jul-to-slf4j:2.0.7' // Sardine uses JUL
 
   // Cifs code looks good but I don't have shares to use so I skip this
   // implementation 'jcifs:jcifs:1.3.17'
   implementation ('org.apache.commons:commons-vfs2:2.9.0') {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
-  // Update transitive dependency from vfs - still has vulnerability
-  implementation 'org.apache.hadoop:hadoop-hdfs-client:3.3.5'
-  implementation 'org.apache.commons:commons-lang3:3.12.0'
+  // Update transitive dependency from vfs due to vulnerability
+  implementation 'org.apache.hadoop:hadoop-hdfs-client:3.3.6'
+  // Update transitive dependencies from hapood client due to vulnerabilities
+  implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.0'
+  implementation 'com.squareup.okio:okio:3.5.0'
+  implementation 'org.apache.commons:commons-lang3:3.13.0'
   implementation 'org.apache.commons:commons-compress:1.23.0'
   implementation ('net.sf.jsignature.io-tools:easystream:1.2.15') {
     exclude group: 'org.slf4j', module: 'slf4j-api'
     exclude group: 'commons-io', module: 'commons-io'
   }
   // easystream depends on outdated vulnerable dependency below
-  runtimeOnly 'commons-io:commons-io:2.11.0'
+  runtimeOnly 'commons-io:commons-io:2.12.0'
 
-  // implementation 'org.bouncycastle:bcprov-jdk16:1.46'
   implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
   implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
   // Logging:
-  runtimeOnly 'ch.qos.logback:logback-classic:1.4.7'
-  runtimeOnly 'org.codehaus.groovy:groovy:3.0.17'
+  runtimeOnly 'ch.qos.logback:logback-classic:1.4.11'
 }
 
 audit {
-  ignore = [ 'org.apache.hadoop:hadoop-hdfs-client:3.3.5',  'com.fasterxml.jackson.core:jackson-core:2.12.7' ]
+  ignore = [ 'org.bouncycastle:bcprov-jdk15on:1.70' ]
   user   = "$ossindexUser"
   token  = "$ossindexToken"
 }
@@ -108,29 +110,31 @@ mainClassName = 'jfs.JFileSync'
 
 distTar.enabled = false
 
-launch4j {
-  mainClassName = project.mainClassName
-  version = '3.0-SNAPSHOT'
-  textVersion = 'Executables Release'
-  fileDescription = 'Java based encrypting File Syncing Tool'
-  errTitle = project.name
-  // jreMinVersion = '11'
-  // splashFileName= 'win/JFileSync3-640x350-splash.bmp'
-  copyright = '(C) 2002-2023, J. Heidrich, M. Goellnitz'
-  downloadUrl = 'https://adoptium.net/de/temurin/releases'
-  supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
-  icon = "$project.projectDir/win/JFileSync3.ico"
-  dontWrapJar = true
-  initialHeapSize = 1280
-  maxHeapSize = 1536
-}
+if (l4j) {
+  launch4j {
+    mainClassName = project.mainClassName
+    version = '3.0-SNAPSHOT'
+    textVersion = 'Executables Release'
+    fileDescription = 'Java based encrypting File Syncing Tool'
+    errTitle = project.name
+    // jreMinVersion = '11'
+    // splashFileName= 'win/JFileSync3-640x350-splash.bmp'
+    copyright = '(C) 2002-2023, J. Heidrich, M. Goellnitz'
+    downloadUrl = 'https://adoptium.net/de/temurin/releases'
+    supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
+    icon = "$project.projectDir/win/JFileSync3.ico"
+    dontWrapJar = true
+    initialHeapSize = 1280
+    maxHeapSize = 1536
+  }
 
-task createApplication(type: edu.sc.seis.launch4j.tasks.Launch4jExternalTask) {
-  outfile = 'JFileSync3.exe'
-  xmlFileName = 'JFileSync3.xml'
-}
+  task createApplication(type: edu.sc.seis.launch4j.tasks.Launch4jExternalTask) {
+    outfile = 'JFileSync3.exe'
+    xmlFileName = 'JFileSync3.xml'
+  }
 
-startScripts.dependsOn createApplication
+  startScripts.dependsOn createApplication
+}
 
 startScripts {
   doLast {
