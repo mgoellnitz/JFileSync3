@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2020 Martin Goellnitz
+# Copyright 2020-2023 Martin Goellnitz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,13 +16,13 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 function usage {
-   echo "Usage: $MYNAME [-h] [-l name] [push]"
-   echo ""
-   echo "  -h         this page"
-   echo "  -l name    latest release name"
-   echo "     push    immediately push the result"
-   echo ""
-   exit
+   echo "Usage: $MYNAME [-h] [-l name] [push]" 1>&2
+   echo "" 1>&2
+   echo "  -h         this page" 1>&2
+   echo "  -l name    latest release name" 1>&2
+   echo "     push    immediately push the result" 1>&2
+   echo "" 1>&2
+   exit 1
 }
 
 CURRENT=$(git tag -l|sort -k1.2n|tail -1)
@@ -30,19 +30,20 @@ if [ -z "$CURRENT" ] ; then
   CURRENT="3.0.1"
 fi
 
-PSTART=`echo $1|sed -e 's/^\(.\).*/\1/g'`
-while [ "$PSTART" = "-" ] ; do
-  if [ "$1" = "-h" ] ; then
-    usage
-    exit
-  fi
-  if [ "$1" = "-l" ] ; then
-    shift
-    CURRENT=$1
-  fi
-  shift
-  PSTART=`echo $1|sed -e 's/^\(.\).*/\1/g'`
+while getopts "hl:" opt ; do
+  case "${opt}" in
+    h)
+      usage
+      ;;
+    l)
+      CURRENT=$OPTARG
+      ;;
+    *)
+      usage
+      ;;
+  esac
 done
+shift $((OPTIND-1))
 
 echo Current Release $CURRENT
 COUNTER=$(echo $CURRENT|sed -e 's/^[0-9][0-9]*\.[0-9][0-9]*\.//g')
