@@ -1,5 +1,5 @@
 #
-# Copyright 2022 Martin Goellnitz
+# Copyright 2022-2024 Martin Goellnitz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,14 +31,18 @@ jobs:
       image: provocon/java:latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Build with Gradle
-      run: ./gradlew -PossindexUser=${{secrets.OSS_INDEX_USER}} -PossindexToken=${{secrets.OSS_INDEX_TOKEN}} clean audit build
-    - name: Extract Package
-      run: unzip -q build/distributions/*.zip
-    - name: Archive Package
-      uses: actions/upload-artifact@v2
-      with:
-        name: JFileSync3-${{ github.ref_name }}
-        path: JFileSync3/*
-        retention-days: 5
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build with Gradle
+        run: ./gradlew -PossindexUser=${{secrets.OSS_INDEX_USER}} -PossindexToken=${{secrets.OSS_INDEX_TOKEN}} clean audit build
+
+      - name: Extract Package
+        run: unzip -q build/distributions/*.zip
+
+      - name: Archive Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: JFileSync3-${{ github.ref_name }}
+          path: JFileSync3/*
+          retention-days: 5
