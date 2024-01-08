@@ -9,6 +9,9 @@ File syncing with optional compression and encryption for local and WebDAV
 folders. For local folders, encryption can optionally be accomplished with
 EncFS and thus be compatible with encfs4win, EDS Lite, Encdroid and so on.
 
+[Support this project](https://ko-fi.com/backendzeit):
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/L4L5T3APO)
+
 JFileSync3 comes with a GUI, command line tooling, and stored profiles.
 
 Find more on the scenarios where this tool might help you in the rather small
