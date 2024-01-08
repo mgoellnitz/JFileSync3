@@ -177,13 +177,13 @@ You can find a copy of all licenses of JFileSync3 and the used libraries in the
 
 Required packages for JFileSync3 development (not included in the distribution):
 
-* Java 8 SDK >= 1.8.0 (see e.g. 'https://projects.eclipse.org/projects/adoptium')
-* Launch4j installation on the path (see https://sourceforge.net/projects/launch4j/)
+* Java 8 SDK >= 1.8.0 (see e.g. `https://projects.eclipse.org/projects/adoptium`)
+* [Launch4j](https://sourceforge.net/projects/launch4j/) installation on the path
 
 Used, and as a result recommended, development tools are:
 
 * OpenJDK 11.0
-* Netbeans 12.5
+* Netbeans 17
 
 The following structure describes all directories and files included in the
 JFileSync3 source repository:
