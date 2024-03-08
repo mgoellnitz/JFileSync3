@@ -12,7 +12,7 @@ if [ -f $DIR/../lib/JFileSync3.jar ] ; then
     fi
   fi
   PATTERN=$(echo $DIR|sed -e 's/\//\\\//g')\\/
-  sed -i.bak -e "s/^Exec=.*/Exec=${PATTERN}\\/bin\\/JFileSync3/" $DIR/share/applications/JFileSync3.desktop
-  sed -i.bak -e "s/^Icon=.*/Icon=${PATTERN}\\/share\\/icons\\/hicolor\\/64x64\\/apps\\/JFileSync3.png/" $DIR/share/applications/JFileSync3.desktop
+  sed -i.bak -e "s/^Exec=.*/Exec=${PATTERN}\\/bin\\/JFileSync3/" $DIR/share/applications/io.github.mgoellnitz.JFileSync3.desktop
+  sed -i.bak -e "s/^Icon=.*/Icon=${PATTERN}\\/share\\/icons\\/hicolor\\/64x64\\/apps\\/io.github.mgoellnitz.JFileSync3.png/" $DIR/share/applications/io.github.mgoellnitz.JFileSync3.desktop
   rm $DIR/JFileSync3.desktop.bak
 fi
