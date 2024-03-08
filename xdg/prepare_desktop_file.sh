@@ -1,8 +1,9 @@
 #!/bin/sh
-DIR=$(dirname $(readlink -f $0))
+DIR=$(dirname $(dirname $(readlink -f $0)))
 if [ -f $DIR/../lib/JFileSync3.jar ] ; then
-  if [ -f ~/.config/user-dirs.dirs ] ; then
-    DESKTOP_DIR=~/$(cat ~/.config/user-dirs.dirs |grep XDG_DESKTOP_DIR|sed -e 's/^.*HOME.\(.*\)./\1/g')
+  USER_DIRS="${XDG_CONFIG_HOME:-$HOME/.config}/user-dirs.dirs"
+  if [ -f ${USER_DIRS} ] ; then
+    DESKTOP_DIR=~/$(cat ${USER_DIRS} |grep XDG_DESKTOP_DIR|sed -e 's/^.*HOME.\(.*\)./\1/g')
   else
     if [ -f ~/.config/user-dirs.dirs ] ; then
       DESKTOP_DIR=~/$(cat /etc/xdg/user-dirs.defaults |grep DESKTOP|sed -e 's/^.*=\(.*\)$/\1/g')
@@ -11,7 +12,7 @@ if [ -f $DIR/../lib/JFileSync3.jar ] ; then
     fi
   fi
   PATTERN=$(echo $DIR|sed -e 's/\//\\\//g')\\/
-  sed -i.bak -e "s/^Exec=.*/Exec=${PATTERN}JFileSync3/" $DIR/JFileSync3.desktop
-  sed -i.bak -e "s/^Icon=.*/Icon=${PATTERN}JFileSync3.png/" $DIR/JFileSync3.desktop
+  sed -i.bak -e "s/^Exec=.*/Exec=${PATTERN}\\/bin\\/JFileSync3/" $DIR/share/applications/JFileSync3.desktop
+  sed -i.bak -e "s/^Icon=.*/Icon=${PATTERN}\\/share\\/icons\\/hicolor\\/64x64\\/apps\\/JFileSync3.png/" $DIR/share/applications/JFileSync3.desktop
   rm $DIR/JFileSync3.desktop.bak
 fi

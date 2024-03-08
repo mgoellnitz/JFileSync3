@@ -140,7 +140,7 @@ if (l4j) {
 startScripts {
   doLast {
     // Add some more reasonable memory settings to JFileSync3
-    unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-splash:$APP_HOME/bin/JFileSync3-640x350-splash.png -ms1280m -mx1536m -Xms1280m -Xmx1536m"')
+    unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-splash:$APP_HOME/share/icons/hicolor/scalable/actions/JFileSync3-640x350-splash.png -ms1280m -mx1536m -Xms1280m -Xmx1536m"')
     windowsScript.text = windowsScript.text.replace('DEFAULT_JVM_OPTS=', 'DEFAULT_JVM_OPTS=-ms1280m -mx1536m -Xms1280m -Xmx1536m')
     // Armor start script to use javaw and start when not used as a command line tool
     windowsScript.text = windowsScript.text.replace('java.exe', '%JAVA_CMD%')
@@ -154,13 +154,11 @@ ospackage {
   version = '3.0-SNAPSHOT'
   maintainer = 'Martin Goellnitz'
   url = 'https://mgoellnitz.github.io/JFileSync3'
-  into("/usr/share/applications") {
+  into("/usr/share") {
     from 'xdg'
-    include '*.desktop'
-  }
-  into("/usr/share/icons/hicolor/64x64") {
-    from 'xdg'
-    include '*.png'
+    include '**/*.desktop'
+    include '**/*.png'
+    include '**/*.xml'
   }
   into("/usr/share/$project.name") {
     from '.'
@@ -215,10 +213,10 @@ distZip {
     include '*.bmp'
   }
   // For the FreeDesktop.org desktop integration this looks better
-  into("$project.name/bin") {
+  into("$project.name/share") {
     from 'xdg'
-    include '*.desktop'
-    include '*.png'
+    include '**/*.desktop'
+    include '**/*.png'
     include 'prepare*.sh'
   }
   // legal stuff, examples, and documentation
