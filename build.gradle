@@ -217,6 +217,7 @@ distZip {
     from 'xdg'
     include '**/*.desktop'
     include '**/*.png'
+    include '**/*.xml'
     include 'prepare*.sh'
   }
   // legal stuff, examples, and documentation
