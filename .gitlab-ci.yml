@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2022 Martin Goellnitz
+# Copyright 2018-2024 Martin Goellnitz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,6 +25,14 @@ stages:
 JFileSync3:
   stage: build
   script:
+  - |
+    PACKAGE_VERSION=${CI_COMMIT_REF_NAME}
+    if [ ! -z "$(echo $PACKAGE_VERSION|grep '^3.0')" ] ; then
+      echo "$PACKAGE_VERSION"
+      sed -i.back -e "s/3.0-SNAPSHOT/$PACKAGE_VERSION/g" build.gradle
+      sed -i.back -e "s/3.0-SNAPSHOT/$PACKAGE_VERSION/g" src/jfs/resources/conf/JFSConfig.properties
+      sed -i.back -e "s/3.0-SNAPSHOT/$PACKAGE_VERSION/g" xdg/JFileSync3.desktop
+    fi
   - ./gradlew -PossindexUser=$OSS_INDEX_USER -PossindexToken=$OSS_INDEX_TOKEN clean audit build
   - unzip -q build/distributions/JFileSync3.zip
   artifacts:
