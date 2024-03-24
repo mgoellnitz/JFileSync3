@@ -116,7 +116,7 @@ You can start the application through
 - a Windows launcher ('JFileSync3.exe')
 - a batch file ('bin/JFileSync3.bat')
 - a Unix shell script ('bin/JFileSync3')
-- a XDG launcher script ('bin/JFileSync3.desktop')
+- a XDG launcher script ('share/applications/io.github.mgoellnitz.JFileSync3.desktop')
 
 ATTENTION: Because JFileSync3 is distributed as a ZIP archive, Unix users will
 have to give executable rights manually before launching the application, e.g.:
