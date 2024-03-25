@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2023 Martin Goellnitz
+ * Copyright (C) 2013-2024 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 plugins {
   id "edu.sc.seis.launch4j" version "2.5.4"
   id "net.ossindex.audit" version "0.4.11"
+  id "com.netflix.nebula.ospackage" version "11.8.1"
 }
 def l4j = true
 
@@ -119,7 +120,7 @@ if (l4j) {
     errTitle = project.name
     // jreMinVersion = '11'
     // splashFileName= 'win/JFileSync3-640x350-splash.bmp'
-    copyright = '(C) 2002-2023, J. Heidrich, M. Goellnitz'
+    copyright = '(C) 2002-2024, J. Heidrich, M. Goellnitz'
     downloadUrl = 'https://adoptium.net/de/temurin/releases'
     supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
     icon = "$project.projectDir/win/JFileSync3.ico"
@@ -148,7 +149,50 @@ startScripts {
   }
 }
 
-distZip.dependsOn startScripts
+ospackage {
+  packageName = 'jfilesync'
+  version = '3.0-SNAPSHOT'
+  maintainer = 'Martin Goellnitz'
+  url = 'https://mgoellnitz.github.io/JFileSync3'
+  into("/usr/share/applications") {
+    from 'xdg'
+    include '*.desktop'
+  }
+  into("/usr/share/icons/hicolor/64x64") {
+    from 'xdg'
+    include '*.png'
+  }
+  into("/usr/share/$project.name") {
+    from '.'
+    include 'legal/*.*'
+    include 'profiles/*.*'
+    include 'README.md'
+  }
+  into("/usr/lib/$packageName/lib") {
+    from "build/install/$project.name/lib"
+    include '*.jar'
+  }
+  into("/usr/lib/$packageName/script") {
+    from "build/install/$project.name/bin"
+    include "$project.name"
+  }
+}
+
+installDist.dependsOn startScripts
+
+buildDeb.dependsOn installDist
+
+buildDeb {
+  link("/usr/bin/$project.name", "/usr/lib/$packageName/script/$project.name")
+}
+
+buildRpm.dependsOn buildDeb
+
+buildRpm {
+  link("/usr/bin/$project.name", "/usr/lib/$packageName/script/$project.name")
+}
+
+distZip.dependsOn buildRpm
 
 distZip {
   // TODO: later...
@@ -175,6 +219,7 @@ distZip {
     from 'xdg'
     include '*.desktop'
     include '*.png'
+    include 'prepare*.sh'
   }
   // legal stuff, examples, and documentation
   into(project.name) {

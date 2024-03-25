@@ -106,6 +106,8 @@ based EncFS.
 
 - Only when using algorithms other than AES with such oldish JRE: JCE Extension
 
+We recommend using Java 11 or 17 LTS versions if possible.
+
 
 ## Installation and Application Start
 
@@ -118,9 +120,8 @@ You can start the application through
 - a Unix shell script ('bin/JFileSync3')
 - a XDG launcher script ('bin/JFileSync3.desktop')
 
-ATTENTION: Because JFileSync3 is distributed as a ZIP archive, Unix users will
-have to give executable rights manually before launching the application, e.g.:
-'chmod a+rx bin/JFileSync3'.
+The XDG launcher script can be automatically modified to reflect the current
+path with the script `prepare_xdg_file.sh`.
 
 Nearly all functions of JFileSync3 can be controlled via the Graphical User
 Interface (GUI). However, JFileSync3 provides full access to all features
@@ -185,8 +186,8 @@ Required packages for JFileSync3 development (not included in the distribution):
 
 Used, and as a result recommended, development tools are:
 
-* OpenJDK 11.0
-* Netbeans 17
+* OpenJDK 11, 17, or 21 respectively.
+* Netbeans 17 or above
 
 The following structure describes all directories and files included in the
 JFileSync3 source repository:
@@ -236,7 +237,7 @@ and can be started - e.g. for IDE integration - through
 ./gradlew run
 ```
 
-Take the ZIP file from build/distributions.
+Take the ZIP, DEB, or RPM file from build/distributions.
 
 A small test-suite can be found in profiles/test (which is not packaged in the
 distribution zip) and can be called via
