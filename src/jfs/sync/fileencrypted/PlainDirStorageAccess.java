@@ -132,6 +132,12 @@ public class PlainDirStorageAccess implements StorageAccess {
 
 
     @Override
+    public long getStorageSize(String rootpath, String path) {
+        return getFile(rootpath, path).length();
+    } // getStorageSize()
+
+
+    @Override
     public InputStream getInputStream(String rootPath, String relativePath) throws IOException {
         File file = getFile(rootPath, relativePath);
         if (log.isDebugEnabled()) {

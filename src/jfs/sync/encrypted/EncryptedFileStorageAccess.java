@@ -188,6 +188,12 @@ public class EncryptedFileStorageAccess extends AbstractEncryptedStorageAccess i
 
 
     @Override
+    public long getStorageSize(String rootpath, String path) {
+        return getFile(rootpath, path).length();
+    } // getStorageSize()
+
+
+    @Override
     public InputStream getInputStream(String rootPath, String relativePath) throws IOException {
         File file = getFile(rootPath, relativePath);
         LOG.info("getInputStream() getting input stream for {}", file.getPath());

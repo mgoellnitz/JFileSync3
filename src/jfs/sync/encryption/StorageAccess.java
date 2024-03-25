@@ -48,6 +48,9 @@ public interface StorageAccess {
     boolean delete(String rootpath, String path);
 
 
+    long getStorageSize(String rootpath, String path);
+
+
     InputStream getInputStream(String rootpath, String path) throws IOException;
 
 

@@ -437,6 +437,12 @@ public class JFSEncryptedFile extends JFSFile {
             if (srcFile.canExecute()) {
                 success = success&&setExecutable();
             } // if
+            final long storageSize = fileProducer.getStorageSize(relativePath);
+            if (storageSize < 9) {
+                LOG.error("postCopyTgt({}) {}", relativePath, storageSize);
+            } else {
+                LOG.info("postCopyTgt({}) {}", relativePath, storageSize);
+            }
         } // if
 
         return success;

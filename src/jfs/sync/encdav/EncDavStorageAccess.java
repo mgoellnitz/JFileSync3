@@ -282,6 +282,19 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
 
 
     @Override
+    public long getStorageSize(String rootPath, String relativePath) {
+        long result = -1;
+        try {
+            DavResource resource = getFile(rootPath, relativePath);
+            result = resource.getContentLength();
+        } catch (Exception e) {
+            LOG.warn("getStorageSize()", e);
+        } // try/catch
+        return result;
+    } // getStorageSize()
+
+
+    @Override
     public InputStream getInputStream(String rootpath, String relativePath) throws IOException {
         String url = getUrl(rootpath, relativePath);
         return getSardine().get(url);

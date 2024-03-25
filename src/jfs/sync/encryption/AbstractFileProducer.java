@@ -72,6 +72,11 @@ public abstract class AbstractFileProducer extends JFSFileProducer {
     }
 
 
+    public long getStorageSize(String relativePath) {
+        return storageAccess.getStorageSize(getRootPath(), relativePath);
+    }
+
+
     public InputStream getInputStream(String relativePath) throws IOException {
         return storageAccess.getInputStream(getRootPath(), relativePath);
     }
