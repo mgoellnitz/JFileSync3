@@ -66,7 +66,7 @@ dependencies {
   }
   // Use later versions than required by sardine to address vulnerabilities
   implementation 'org.apache.httpcomponents:httpclient:4.5.14'
-  implementation 'commons-codec:commons-codec:1.16.1'
+  implementation 'commons-codec:commons-codec:1.17.0'
 
   implementation 'org.slf4j:jcl-over-slf4j:2.0.13' // httpclient and vfs use JCL
   implementation 'org.slf4j:jul-to-slf4j:2.0.13' // Sardine uses JUL
@@ -88,7 +88,7 @@ dependencies {
     exclude group: 'commons-io', module: 'commons-io'
   }
   // easystream depends on outdated vulnerable dependency below
-  runtimeOnly 'commons-io:commons-io:2.15.1'
+  runtimeOnly 'commons-io:commons-io:2.16.1'
 
   implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
   implementation 'javax.servlet:javax.servlet-api:4.0.1'
