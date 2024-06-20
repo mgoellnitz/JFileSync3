@@ -78,11 +78,11 @@ dependencies {
   }
   // Update transitive dependency from vfs due to vulnerability
   implementation 'org.apache.hadoop:hadoop-hdfs-client:3.4.0'
-  // Update transitive dependencies from hapood client due to vulnerabilities
-  implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.23'
+  // Update transitive dependencies from hadoop client due to vulnerabilities
+  implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
   implementation 'com.squareup.okio:okio:3.9.0'
   implementation 'org.apache.commons:commons-lang3:3.14.0'
-  implementation 'org.apache.commons:commons-compress:1.26.1'
+  implementation 'org.apache.commons:commons-compress:1.26.2'
   implementation ('net.sf.jsignature.io-tools:easystream:1.2.15') {
     exclude group: 'org.slf4j', module: 'slf4j-api'
     exclude group: 'commons-io', module: 'commons-io'
