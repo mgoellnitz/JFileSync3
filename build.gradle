@@ -66,7 +66,7 @@ dependencies {
   }
   // Use later versions than required by sardine to address vulnerabilities
   implementation 'org.apache.httpcomponents:httpclient:4.5.14'
-  implementation 'commons-codec:commons-codec:1.17.0'
+  implementation 'commons-codec:commons-codec:1.17.1'
 
   implementation 'org.slf4j:jcl-over-slf4j:2.0.13' // httpclient and vfs use JCL
   implementation 'org.slf4j:jul-to-slf4j:2.0.13' // Sardine uses JUL
@@ -79,9 +79,9 @@ dependencies {
   // Update transitive dependency from vfs due to vulnerability
   implementation 'org.apache.hadoop:hadoop-hdfs-client:3.4.0'
   // Update transitive dependencies from hadoop client due to vulnerabilities
-  implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
+  implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.25'
   implementation 'com.squareup.okio:okio:3.9.0'
-  implementation 'org.apache.commons:commons-lang3:3.14.0'
+  implementation 'org.apache.commons:commons-lang3:3.15.0'
   implementation 'org.apache.commons:commons-compress:1.26.2'
   implementation ('net.sf.jsignature.io-tools:easystream:1.2.15') {
     exclude group: 'org.slf4j', module: 'slf4j-api'
