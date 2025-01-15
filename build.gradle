@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2024 Martin Goellnitz
+ * Copyright (C) 2013-2025 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,12 +61,12 @@ dependencies {
   // implementation files(fileTree(dir: 'lib', includes: ['*.jar']))
 
   implementation 'org.slf4j:slf4j-api:2.0.16'
-  implementation ('com.github.lookfirst:sardine:5.12') {
+  implementation ('com.github.lookfirst:sardine:5.13') {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
   // Use later versions than required by sardine to address vulnerabilities
   implementation 'org.apache.httpcomponents:httpclient:4.5.14'
-  implementation 'commons-codec:commons-codec:1.17.1'
+  implementation 'commons-codec:commons-codec:1.17.2'
 
   implementation 'org.slf4j:jcl-over-slf4j:2.0.16' // httpclient and vfs use JCL
   implementation 'org.slf4j:jul-to-slf4j:2.0.16' // Sardine uses JUL
@@ -89,7 +89,7 @@ dependencies {
   implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
   // Logging:
-  runtimeOnly 'ch.qos.logback:logback-classic:1.5.12'
+  runtimeOnly 'ch.qos.logback:logback-classic:1.5.16'
 }
 
 audit {
