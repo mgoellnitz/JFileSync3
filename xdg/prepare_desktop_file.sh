@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 DIR=$(dirname $(readlink -f $0))
 if [ -f $DIR/../lib/JFileSync3.jar ] ; then
   if [ -f ~/.config/user-dirs.dirs ] ; then
