@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2021 Martin Goellnitz
+ * Copyright (C) 2010-2025 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -258,7 +258,7 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
 
     @Override
     public boolean setWritable(String rootPath, String relativePath, boolean writable) {
-        return false;
+        return true;
     }
 
 
