@@ -17,6 +17,7 @@
  */
 package jfs.sync.util;
 
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -76,11 +77,12 @@ public final class SecurityUtils {
      * @throws NoSuchPaddingException
      * @throws InvalidKeyException
      */
-    public static Cipher getPasswordCipher(String cipherName, boolean decrypt, String password, String salt)
+    public static Cipher getPasswordCipher(String cipherName, boolean decrypt, String password)
             throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeySpecException, NoSuchPaddingException,
-            InvalidKeyException {
+            InvalidKeyException, UnsupportedEncodingException {
         int cipherMode = decrypt ? Cipher.DECRYPT_MODE : Cipher.ENCRYPT_MODE;
-        PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray());
+        byte[] salt = new StringBuilder(password).reverse().toString().getBytes("UTF-8");
+        PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, 16, 256);
         SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1", PROVIDER);
         SecretKey intermediate = keyFac.generateSecret(keySpec);
         SecretKey secretKey = new SecretKeySpec(intermediate.getEncoded(), "AES");

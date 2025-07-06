@@ -27,8 +27,8 @@ apply plugin: 'application'
 
 defaultTasks 'clean', 'build'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 compileJava.options.encoding = 'UTF-8'
 compileJava.options.deprecation = true
 
@@ -78,6 +78,8 @@ dependencies {
   }
   // Update transitive dependency from vfs due to vulnerability
   implementation 'org.apache.hadoop:hadoop-hdfs-client:3.4.1'
+  // Update transitive dependency from vfs through hadoop-hdfs-client due to vulnerability
+  implementation 'com.fasterxml.jackson.core:jackson-annotations:2.19.1'
 
   implementation 'org.apache.commons:commons-compress:1.27.1'
   implementation ('net.sf.jsignature.io-tools:easystream:1.2.15') {
@@ -90,6 +92,13 @@ dependencies {
 
   // Logging:
   runtimeOnly 'ch.qos.logback:logback-classic:1.5.18'
+
+  testImplementation 'org.testng:testng:7.11.0'
+}
+
+test {
+  useTestNG() {
+  }
 }
 
 audit {
