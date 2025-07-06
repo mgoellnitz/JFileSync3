@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2021 Martin Goellnitz
+ * Copyright (C) 2010-2025 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,7 +69,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
         try {
             InputStream inputStream = getInputStream(rootPath, getMetaDataPath(relativePath));
             byte[] credentials = getCredentials(relativePath);
-            Cipher cipher = SecurityUtils.getCipher(getCipherSpec(), Cipher.DECRYPT_MODE, credentials);
+            Cipher cipher = SecurityUtils.getCipher(getCipherSpec(), true, credentials);
             inputStream = new CipherInputStream(inputStream, cipher);
             LOG.debug("getMetaData() reading infos for {}", relativePath);
             ois = new ObjectInputStream(inputStream);
@@ -136,7 +136,7 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
 
             try {
                 byte[] credentials = getCredentials(pathAndName[0]);
-                Cipher cipher = SecurityUtils.getCipher(getCipherSpec(), Cipher.ENCRYPT_MODE, credentials);
+                Cipher cipher = SecurityUtils.getCipher(getCipherSpec(), false, credentials);
                 os = new CipherOutputStream(os, cipher);
             } catch (InvalidKeyException e) {
                 LOG.error("flushMetaData()", e);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2021 Martin Goellnitz
+ * Copyright (C) 2010-2025 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -373,7 +373,7 @@ public abstract class AbstractEncryptedStorageAccess {
             } // for
 
             // System.out.println("");
-            Cipher decrypter = SecurityUtils.getCipher(getCipherSpec(), Cipher.DECRYPT_MODE, getCredentials(relativePath));
+            Cipher decrypter = SecurityUtils.getCipher(getCipherSpec(), true, getCredentials(relativePath));
             byte[] decryptedBytes = decrypter.doFinal(decodedBytes);
             // name = new String(decryptedBytes, "UTF-8");
             String decryptedName = getDecodedFileName(relativePath, decryptedBytes);
@@ -391,7 +391,7 @@ public abstract class AbstractEncryptedStorageAccess {
             return encryptionCache.get(relativePath+getSeparator()+pathElement);
         } // if
         try {
-            Cipher encrypter = SecurityUtils.getCipher(getCipherSpec(), Cipher.ENCRYPT_MODE, getCredentials(relativePath));
+            Cipher encrypter = SecurityUtils.getCipher(getCipherSpec(), false, getCredentials(relativePath));
             byte[] bytes = encrypter.doFinal(getEncodedFileName(relativePath, pathElement));
             StringBuilder result = new StringBuilder();
             int index = 0;

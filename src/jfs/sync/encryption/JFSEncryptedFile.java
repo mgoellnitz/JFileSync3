@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2023 Martin Goellnitz
+ * Copyright (C) 2010-2025 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,11 +84,11 @@ public class JFSEncryptedFile extends JFSFile {
     }// JFSEncryptedFile()
 
 
-    private Cipher getCipher(int cipherMode) {
+    private Cipher getCipher(boolean decrypt) {
         try {
             String cipherSpec = ((AbstractFileProducer) getFileProducer()).storageAccess.getCipherSpec();
             byte[] credentials = ((AbstractFileProducer) getFileProducer()).storageAccess.getFileCredentials(getRelativePath());
-            return SecurityUtils.getCipher(cipherSpec, cipherMode, credentials);
+            return SecurityUtils.getCipher(cipherSpec, decrypt, credentials);
         } catch (NoSuchAlgorithmException nsae) {
             LOG.error("getCipher() No Such Algorhithm");
         } catch (NoSuchPaddingException nspe) {
@@ -315,7 +315,7 @@ public class JFSEncryptedFile extends JFSFile {
         try {
             path = getRelativePath();
             InputStream stream = fileProducer.getInputStream(path);
-            return JFSEncryptedStream.createInputStream(stream, getLength(), getCipher(Cipher.DECRYPT_MODE));
+            return JFSEncryptedStream.createInputStream(stream, getLength(), getCipher(true));
         } catch (NullPointerException npe) {
             LOG.error("getInputStream("+path+") Null Pointer Exception "+npe.getLocalizedMessage());
             return null;
@@ -348,7 +348,7 @@ public class JFSEncryptedFile extends JFSFile {
                 } // if
             } // if
             out = JFSEncryptedStream.createOutputStream(compressionLimit, fileProducer.getOutputStream(p), l,
-                    getCipher(Cipher.ENCRYPT_MODE));
+                    getCipher(false));
         } catch (IOException e) {
             LOG.error("getOutputStream()", e);
         } // try/catch

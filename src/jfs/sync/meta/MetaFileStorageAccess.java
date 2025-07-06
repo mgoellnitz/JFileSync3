@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2023 Martin Goellnitz
+ * Copyright (C) 2010-2025 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -244,7 +244,7 @@ public class MetaFileStorageAccess extends AbstractMetaStorageAccess {
 
         String cipherSpec = storage.getCipherSpec();
         byte[] credentials = storage.getFileCredentials(path);
-        Cipher cipher = SecurityUtils.getCipher(cipherSpec, Cipher.DECRYPT_MODE, credentials);
+        Cipher cipher = SecurityUtils.getCipher(cipherSpec, true, credentials);
 
         InputStream is = storage.getInputStream(args[1], path);
         is = JFSEncryptedStream.createInputStream(is, JFSEncryptedStream.DONT_CHECK_LENGTH, cipher);
