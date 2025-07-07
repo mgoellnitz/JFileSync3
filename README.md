@@ -102,16 +102,20 @@ based EncFS.
 
 ## Requirements
 
-- Java 8 Runtime Environment, OpenJDK based JREs supported and recommended
+- Java 17 Runtime Environment, OpenJDK based JREs supported and recommended
 
-- Only when using algorithms other than AES with such oldish JRE: JCE Extension
-
-We recommend using Java 11 or 17 LTS versions if possible.
+We recommend using Java 17 or 21 LTS versions if possible.
 
 
 ## Installation and Application Start
 
-Unzip the distribution file to a directory of your choice.
+Though the build scripts (see below) additionally generate RPM and DEB packages,
+the distribution currently only consists of a ZIP file. If you are in the
+position, you might try the DEB or RPM package and provide feedback.
+
+Unzip the distribution file to a directory of your choice. The XDG launcher
+script can be automatically modified to reflect this path with the script
+`prepare_xdg_file.sh`.
 
 You can start the application through
 
@@ -119,9 +123,6 @@ You can start the application through
 - a batch file ('bin/JFileSync3.bat')
 - a Unix shell script ('bin/JFileSync3')
 - a XDG launcher script ('bin/JFileSync3.desktop')
-
-The XDG launcher script can be automatically modified to reflect the current
-path with the script `prepare_xdg_file.sh`.
 
 Nearly all functions of JFileSync3 can be controlled via the Graphical User
 Interface (GUI). However, JFileSync3 provides full access to all features
@@ -181,13 +182,13 @@ You can find a copy of all licenses of JFileSync3 and the used libraries in the
 
 Required packages for JFileSync3 development (not included in the distribution):
 
-* Java 8 SDK >= 1.8.0 (see e.g. `https://projects.eclipse.org/projects/adoptium`)
+* Java 11 SDK or above (see e.g. `https://projects.eclipse.org/projects/adoptium`)
 * [Launch4j](https://sourceforge.net/projects/launch4j/) installation on the path
 
 Used, and as a result recommended, development tools are:
 
-* OpenJDK 11, 17, or 21 respectively.
-* Netbeans 17 or above
+* OpenJDK 17, or 21 respectively.
+* Netbeans 21 or above
 
 The following structure describes all directories and files included in the
 JFileSync3 source repository:
