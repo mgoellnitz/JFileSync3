@@ -140,7 +140,7 @@ if (l4j) {
 startScripts {
   doLast {
     // Add some more reasonable memory settings to JFileSync3
-    unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-splash:$APP_HOME/bin/JFileSync3-splash.png -ms1280m -mx1536m -Xms1280m -Xmx1536m"')
+    unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-splash:$APP_HOME/bin/images/scalable/JFileSync3-splash.png -ms1280m -mx1536m -Xms1280m -Xmx1536m"')
     windowsScript.text = windowsScript.text.replace('DEFAULT_JVM_OPTS=', 'DEFAULT_JVM_OPTS=-ms1280m -mx1536m -Xms1280m -Xmx1536m')
     // Armor start script to use javaw and start when not used as a command line tool
     windowsScript.text = windowsScript.text.replace('java.exe', '%JAVA_CMD%')
@@ -158,9 +158,9 @@ ospackage {
     from 'xdg'
     include '*.desktop'
   }
-  into("/usr/share/icons/hicolor/64x64") {
-    from 'xdg'
-    include '*.png'
+  into("/usr/share/icons/hicolor") {
+    from 'xdg/images'
+    include '**/*.png'
   }
   into("/usr/share/$project.name") {
     from '.'
@@ -195,11 +195,6 @@ buildRpm {
 distZip.dependsOn buildRpm
 
 distZip {
-  // TODO: later...
-  // into(project.name+"/bin") {
-  //	from 'bin'
-  //	include 'E*.bat'
-  //}
   into("$project.name") {
     from "$buildDir/launch4j"
     include '*.exe'
@@ -218,7 +213,7 @@ distZip {
   into("$project.name/bin") {
     from 'xdg'
     include '*.desktop'
-    include '*.png'
+    include '**/*.png'
     include 'prepare*.sh'
   }
   // legal stuff, examples, and documentation
@@ -234,7 +229,7 @@ distZip {
   from '..'
   include 'profiles/**'
   }
-   */
+  */
 }
 
 private List<String> getCmd(String cmd) {
