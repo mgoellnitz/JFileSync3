@@ -18,7 +18,7 @@
 plugins {
   id "edu.sc.seis.launch4j" version "2.5.4"
   id "net.ossindex.audit" version "0.4.11"
-  id "com.netflix.nebula.ospackage" version "11.11.2"
+  id "com.netflix.nebula.ospackage" version "12.0.0"
 }
 def l4j = true
 
@@ -27,8 +27,8 @@ apply plugin: 'application'
 
 defaultTasks 'clean', 'build'
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 17
+targetCompatibility = 17
 compileJava.options.encoding = 'UTF-8'
 compileJava.options.deprecation = true
 
@@ -119,7 +119,7 @@ if (l4j) {
     fileDescription = 'Java based encrypting File Syncing Tool'
     errTitle = project.name
     jreMinVersion = '17'
-    splashFileName= "$project.projectDir/win/JFileSync3-640x350-splash.bmp"
+    splashFileName= "$project.projectDir/win/JFileSync3-splash.bmp"
     copyright = '(C) 2002-2025, J. Heidrich, M. Goellnitz'
     downloadUrl = 'https://adoptium.net/de/temurin/releases'
     supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
@@ -140,7 +140,7 @@ if (l4j) {
 startScripts {
   doLast {
     // Add some more reasonable memory settings to JFileSync3
-    unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-splash:$APP_HOME/bin/JFileSync3-640x350-splash.png -ms1280m -mx1536m -Xms1280m -Xmx1536m"')
+    unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-splash:$APP_HOME/bin/JFileSync3-splash.png -ms1280m -mx1536m -Xms1280m -Xmx1536m"')
     windowsScript.text = windowsScript.text.replace('DEFAULT_JVM_OPTS=', 'DEFAULT_JVM_OPTS=-ms1280m -mx1536m -Xms1280m -Xmx1536m')
     // Armor start script to use javaw and start when not used as a command line tool
     windowsScript.text = windowsScript.text.replace('java.exe', '%JAVA_CMD%')
