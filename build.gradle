@@ -118,9 +118,9 @@ if (l4j) {
     textVersion = 'Executables Release'
     fileDescription = 'Java based encrypting File Syncing Tool'
     errTitle = project.name
-    // jreMinVersion = '11'
-    // splashFileName= 'win/JFileSync3-640x350-splash.bmp'
-    copyright = '(C) 2002-2024, J. Heidrich, M. Goellnitz'
+    jreMinVersion = '17'
+    splashFileName= "$project.projectDir/win/JFileSync3-640x350-splash.bmp"
+    copyright = '(C) 2002-2025, J. Heidrich, M. Goellnitz'
     downloadUrl = 'https://adoptium.net/de/temurin/releases'
     supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
     icon = "$project.projectDir/win/JFileSync3.ico"
