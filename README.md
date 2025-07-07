@@ -118,10 +118,10 @@ You can start the application through
 - a Windows launcher ('JFileSync3.exe')
 - a batch file ('bin/JFileSync3.bat')
 - a Unix shell script ('bin/JFileSync3')
-- a XDG launcher script ('bin/JFileSync3.desktop')
+- a XDG launcher script ('share/applications/io.github.mgoellnitz.JFileSync3.desktop')
 
 The XDG launcher script can be automatically modified to reflect the current
-path with the script `prepare_xdg_file.sh`.
+path with the script `share/prepare_xdg_file.sh`.
 
 Nearly all functions of JFileSync3 can be controlled via the Graphical User
 Interface (GUI). However, JFileSync3 provides full access to all features
