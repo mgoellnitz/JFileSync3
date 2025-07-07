@@ -17,9 +17,9 @@
  */
 package jfs.sync.webdav;
 
-import com.gc.iotools.stream.os.OutputStreamToInputStream;
 import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -208,16 +208,15 @@ public class JFSWebDavFile extends JFSFile {
         final String url = getUrl(info.getPath()+"/"+info.getName());
 
         try {
-            OutputStreamToInputStream<String> result = new OutputStreamToInputStream<String>() {
-
+            ByteArrayOutputStream result = new ByteArrayOutputStream() {
                 @Override
-                protected String doRead(InputStream input) throws Exception {
-                    getAccess().put(url, input);
-                    return "";
+                public void close() throws IOException {
+                    super.close();
+                    byte[] data = this.toByteArray();
+                    LOG.debug("getOutputStream().close() {}", data.length);
+                    getAccess().put(url, data);
                 }
-
             };
-            result.setDefaultPipeSize(256000);
             output = result;
             return result;
         } catch (Exception e) {
@@ -333,9 +332,11 @@ public class JFSWebDavFile extends JFSFile {
 
                         int i = 0;
                         for (DavResource resource : listing) {
-                            LOG.debug("getList({}) {} / {}", i, folder, resource.getPath());
-                            if (!folder.endsWith(resource.getPath())) {
-                                String path = resource.getPath().substring(rootLength);
+                            String path = resource.getPath();
+                            String pathPlus = path+"/";
+                            LOG.debug("getList({}) {} / {}", i, folder, path);
+                            if (!(folder.endsWith(path)||folder.endsWith(pathPlus))) {
+                                path = path.substring(rootLength);
                                 if (resource.isDirectory()) {
                                     path = path.substring(0, path.length()-1);
                                 } // if

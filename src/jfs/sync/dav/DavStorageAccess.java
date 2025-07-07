@@ -17,11 +17,11 @@
  */
 package jfs.sync.dav;
 
-import com.gc.iotools.stream.os.OutputStreamToInputStream;
 import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
 import com.github.sardine.impl.SardineException;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -297,24 +297,15 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
             flushMetaData(rootPath, pathAndName, listing);
             LOG.debug("getOutputStream() getting output stream for {} {}", url, info);
         } // if
-        OutputStreamToInputStream<String> result = new OutputStreamToInputStream<String>() {
-
+        ByteArrayOutputStream result = new ByteArrayOutputStream() {
             @Override
-            protected String doRead(InputStream input) throws Exception {
-                try {
-                    getSardine().put(url, input);
-                } catch (SardineException se) {
-                    if ((!forPayload)&&(se.getStatusCode()==403)) {
-                        getSardine().put(url, input);
-                    } else {
-                        throw se;
-                    } // if
-                } // try/catch
-                return "";
+            public void close() throws IOException {
+                super.close();
+                byte[] data = this.toByteArray();
+                LOG.debug("getOutputStream().close() {}", data.length);
+                getSardine().put(url, data);
             }
-
         };
-        result.setDefaultPipeSize(256000);
         return result;
     } // getOutputStream()
 

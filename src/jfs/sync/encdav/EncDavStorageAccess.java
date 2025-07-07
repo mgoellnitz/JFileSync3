@@ -21,6 +21,7 @@ import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
 import com.github.sardine.impl.SardineException;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -292,14 +293,14 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
     public OutputStream getOutputStream(String rootPath, final String relativePath) throws IOException {
         LOG.debug("getOutputStream() {}", relativePath);
         final String url = getUrl(rootPath, relativePath);
-        OutputStream result = new com.gc.iotools.stream.os.OutputStreamToInputStream<String>() {
-
+        ByteArrayOutputStream result = new ByteArrayOutputStream() {
             @Override
-            protected String doRead(InputStream input) throws Exception {
-                getSardine().put(url, input);
-                return "";
+            public void close() throws IOException {
+                super.close();
+                byte[] data = this.toByteArray();
+                LOG.debug("getOutputStream().close() {}", data.length);
+                getSardine().put(url, data);
             }
-
         };
         return result;
     } // getOutputStream()
