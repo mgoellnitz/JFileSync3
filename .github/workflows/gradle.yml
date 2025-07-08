@@ -56,3 +56,17 @@ jobs:
           name: JFileSync3-${{ github.ref_name }}
           path: JFileSync3/*
           retention-days: 5
+
+      - name: Archive Debian Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: JFileSync3-${{ github.ref_name }}-Debian
+          path: build/distributions/*.deb
+          retention-days: 50
+
+      - name: Archive RPM Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: JFileSync3-${{ github.ref_name }}-RPM
+          path: build/distributions/*.rpm
+          retention-days: 10
