@@ -42,16 +42,16 @@ public abstract class AbstractEncryptedStorageAccess {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractEncryptedStorageAccess.class);
 
-    /** 111 codes for now - so there's some room left */
-    private static final char[] FILE_NAME_CHARACTERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+    /** 113 codes for now - so there's some room left */
+    protected static final char[] FILE_NAME_CHARACTERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
         'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '.', ' ', '_', '-',
         'T', 'S', 'C', 'O', 'P', 'L', 'R', 'M', 'A', 'D', 'E', 'F', 'B', 'V', 'U', 'H', 'W', '<', '>', '*', ':', '/', '|', 'G',
         'I', 'J', 'K', 'N', 'Q', 'X', 'Y', 'Z', 'ä', 'ö', 'ü', 'ß', 'Ä', 'Ö', 'Ü', '+', '=', '{', '}', '[', ']', '$', '\'', '@',
-        '!', '&', '%', '~', ',', '#', ';', '(', ')', '»', '«', '÷', '´', '`', 'é', 'è', 'à', '²', '?', '"', 'ê', 'ï', 'ó', '§'};
+        '!', '&', '%', '~', ',', '#', ';', '(', ')', '»', '«', '÷', '´', '`', 'é', 'è', 'à', '²', '?', '"', 'ê', 'ï', 'ó', '§', '\''};
 
     private static final char[] DYNAMIC_SPECIAL_CODES = {'<', '>', '?', '*', ':', '"'};
 
-    private static final char[] CODES = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+    protected static final char[] CODES = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
         'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e',
         'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ä', 'ö', 'ü',
         'ß', 'Ä', 'Ö', 'Ü', '\'', 'µ', '÷', '@', '!', '&', '%', '~', '#', '(', ')', '[', ']', ',', '.', '{', '}', '´', '`', 'á',
