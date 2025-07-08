@@ -35,7 +35,7 @@
   </appender>
 
   <appender name="FILE" class="RollingFileAppender">
-    <file>~/jfs3.log</file>
+    <file>${user.home}/jfs3.log</file>
     <append>true</append>
     <rollingPolicy class="TimeBasedRollingPolicy">
       <fileNamePattern>jfs3-%d{yyyy-MM-dd_HH}.log</fileNamePattern>
