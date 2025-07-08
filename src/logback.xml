@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
- Copyright 2022 Martin Goellnitz
+ Copyright 2022-2025 Martin Goellnitz
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU Lesser General Public License as published by
@@ -35,7 +35,7 @@
   </appender>
 
   <appender name="FILE" class="RollingFileAppender">
-    <file>jfs3.log</file>
+    <file>~/jfs3.log</file>
     <append>true</append>
     <rollingPolicy class="TimeBasedRollingPolicy">
       <fileNamePattern>jfs3-%d{yyyy-MM-dd_HH}.log</fileNamePattern>
