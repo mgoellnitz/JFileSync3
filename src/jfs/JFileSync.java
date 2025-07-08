@@ -18,9 +18,12 @@
  */
 package jfs;
 
+import java.awt.Image;
+import java.awt.Taskbar;
 import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
+import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import jfs.conf.JFSConfig;
 import jfs.conf.JFSConst;
@@ -86,6 +89,16 @@ public final class JFileSync {
      * Command line arguments.
      */
     public static void main(String[] args) {
+        PrintStream p = JFSLog.getOut().getStream();
+        JFSConst constants = JFSConst.getInstance();
+        try {
+            Taskbar taskbar = Taskbar.getTaskbar();
+            ImageIcon dockImage = new ImageIcon(constants.getIconUrl("jfs.icon.dock"));
+            taskbar.setIconImage(dockImage.getImage());
+        } catch (UnsupportedOperationException e) {
+            ; // ignored for non macOS machines
+        }
+
         // Get settings for the first time in order to load stored
         // settings before doing any actions:
         JFSSettings s = JFSSettings.getInstance();
@@ -93,7 +106,6 @@ public final class JFileSync {
         // Get translation and configuration object:
         JFSText t = JFSText.getInstance();
         JFSConfig config = JFSConfig.getInstance();
-        PrintStream p = JFSLog.getOut().getStream();
 
         // Clean config before starting (if main method is used as service):
         config.clean();
@@ -227,7 +239,8 @@ public final class JFileSync {
             // Determine whether the last configuration when (stored when
             // the program was exited should be loaded at GUI startup:
             s.setNoGui(false);
-            new JFSMainView(loadDefaultFile);
+            ImageIcon jfsIcon = new ImageIcon(constants.getIconUrl("jfs.icon.logo"));
+            new JFSMainView(loadDefaultFile, jfsIcon.getImage());
         } else {
             s.setNoGui(true);
             JFSShell.startShell(quiet);

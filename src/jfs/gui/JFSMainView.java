@@ -24,6 +24,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,7 +46,6 @@ import java.util.List;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -260,7 +260,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
      * @param loadDefaults
      * Determine whether the last loaded configuration should be loaded at GUI startup.
      */
-    public JFSMainView(boolean loadDefaults) {
+    public JFSMainView(boolean loadDefaults, Image image) {
         this.lastOpenedProfiles = new JMenuItem[JFSConst.LAST_OPENED_PROFILES_SIZE];
         JFSConfig config = JFSConfig.getInstance();
 
@@ -291,8 +291,7 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
         frame.addComponentListener(this);
 
         // Add icon:
-        ImageIcon jfsIcon = new ImageIcon(JFSConst.getInstance().getIconUrl("jfs.icon.logo"));
-        frame.setIconImage(jfsIcon.getImage());
+        frame.setIconImage(image);
 
         Container cp = frame.getContentPane();
 
