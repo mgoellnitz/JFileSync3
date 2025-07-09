@@ -99,8 +99,10 @@ test {
 
 audit {
   ignore = [ 'org.bouncycastle:bcprov-jdk15on:1.70' ]
-  user   = "$ossindexUser"
-  token  = "$ossindexToken"
+  if (project.hasProperty('ossindexUser') && project.hasProperty('ossindexToken')) {
+    user   = "$ossindexUser"
+    token  = "$ossindexToken"
+  }
 }
 
 repositories {
