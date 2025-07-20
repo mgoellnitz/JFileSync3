@@ -79,7 +79,7 @@ dependencies {
   // Update transitive dependency from vfs due to vulnerability
   implementation 'org.apache.hadoop:hadoop-hdfs-client:3.4.1'
   // Update transitive dependency from vfs through hadoop-hdfs-client due to vulnerability
-  implementation 'com.fasterxml.jackson.core:jackson-annotations:2.19.1'
+  implementation 'com.fasterxml.jackson.core:jackson-annotations:2.19.2'
 
   implementation 'org.apache.commons:commons-compress:1.27.1'
 
@@ -142,7 +142,7 @@ if (l4j) {
 startScripts {
   doLast {
     // Add some more reasonable memory settings to JFileSync3
-    unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-splash:$APP_HOME/JFileSync3-splash.png -ms1280m -mx1536m -Xms1280m -Xmx1536m"')
+    unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-splash:$APP_HOME/JFileSync3-splash.png -ms2048m -mx4096m -Xms2048m -Xmx4096m"')
     windowsScript.text = windowsScript.text.replace('DEFAULT_JVM_OPTS=', 'DEFAULT_JVM_OPTS=-ms1280m -mx1536m -Xms1280m -Xmx1536m')
     // Armor start script to use javaw and start when not used as a command line tool
     windowsScript.text = windowsScript.text.replace('java.exe', '%JAVA_CMD%')
