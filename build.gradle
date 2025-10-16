@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
 plugins {
-  id "edu.sc.seis.launch4j" version "2.5.4"
+  id "edu.sc.seis.launch4j" version "4.0.0"
   id "net.ossindex.audit" version "0.4.11"
   id "com.netflix.nebula.ospackage" version "12.0.0"
 }
@@ -27,11 +27,13 @@ apply plugin: 'application'
 
 defaultTasks 'clean', 'build'
 
-sourceCompatibility = 17
-targetCompatibility = 17
 compileJava.options.encoding = 'UTF-8'
 compileJava.options.deprecation = true
 
+java {
+  sourceCompatibility = 17
+  targetCompatibility = 17
+}
 sourceSets {
   main {
     java {
@@ -80,7 +82,7 @@ dependencies {
   // Update transitive dependency from vfs due to vulnerability
   implementation 'org.apache.hadoop:hadoop-hdfs-client:3.4.2'
   // Update transitive dependency from vfs through hadoop-hdfs-client due to vulnerability
-  implementation 'com.fasterxml.jackson.core:jackson-annotations:2.19.2'
+  implementation 'com.fasterxml.jackson.core:jackson-core:2.20.0'
 
   implementation ('org.apache.commons:commons-compress:1.28.0') {
     exclude group: 'org.apache.commons', module: 'commons-lang3'
@@ -114,13 +116,17 @@ repositories {
   mavenCentral()
 }
 
-mainClassName = 'jfs.JFileSync'
+var applicationMainClass = 'jfs.JFileSync'
+
+application {
+  mainClass.set(applicationMainClass)
+}
 
 distTar.enabled = false
 
 if (l4j) {
   launch4j {
-    mainClassName = project.mainClassName
+    mainClassName = applicationMainClass
     version = '3.0-SNAPSHOT'
     textVersion = 'Executables Release'
     fileDescription = 'Java based encrypting File Syncing Tool'
@@ -136,7 +142,7 @@ if (l4j) {
     maxHeapSize = 1536
   }
 
-  task createApplication(type: edu.sc.seis.launch4j.tasks.Launch4jExternalTask) {
+  task createApplication(type: edu.sc.seis.launch4j.tasks.Launch4jLibraryTask) {
     outfile = 'JFileSync3.exe'
     xmlFileName = 'JFileSync3.xml'
   }
