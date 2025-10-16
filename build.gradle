@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
 plugins {
-  id "edu.sc.seis.launch4j" version "4.0.0"
+  id "edu.sc.seis.launch4j" version "2.5.4"
   id "net.ossindex.audit" version "0.4.11"
   id "com.netflix.nebula.ospackage" version "12.0.0"
 }
@@ -142,7 +142,7 @@ if (l4j) {
     maxHeapSize = 1536
   }
 
-  task createApplication(type: edu.sc.seis.launch4j.tasks.Launch4jLibraryTask) {
+  task createApplication(type: edu.sc.seis.launch4j.tasks.Launch4jExternalTask) {
     outfile = 'JFileSync3.exe'
     xmlFileName = 'JFileSync3.xml'
   }
