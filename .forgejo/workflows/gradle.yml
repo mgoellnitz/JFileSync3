@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Martin Goellnitz
+# Copyright 2024-2025 Martin Goellnitz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ jobs:
         run: apt update ; apt install -yq nodejs git
 
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Check and Set Release Version
         run: |
@@ -61,14 +61,14 @@ jobs:
           retention-days: 5
 
       - name: Archive Debian Package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: JFileSync3-${{ github.ref_name }}-Debian
           path: build/distributions/*.deb
           retention-days: 50
 
       - name: Archive RPM Package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: JFileSync3-${{ github.ref_name }}-RPM
           path: build/distributions/*.rpm
