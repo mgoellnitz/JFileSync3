@@ -94,7 +94,7 @@ dependencies {
   implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
   // Logging:
-  runtimeOnly 'ch.qos.logback:logback-classic:1.5.19'
+  runtimeOnly 'ch.qos.logback:logback-classic:1.5.20'
 
   testImplementation 'org.testng:testng:7.11.0'
 }
