@@ -88,7 +88,7 @@ dependencies {
     exclude group: 'org.apache.commons', module: 'commons-lang3'
   }
   // Update transitive dependency from commons-compress and vfs due to vulnerability
-  implementation 'org.apache.commons:commons-lang3:3.19.0'
+  implementation 'org.apache.commons:commons-lang3:3.20.0'
 
   implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
   implementation 'javax.servlet:javax.servlet-api:4.0.1'
