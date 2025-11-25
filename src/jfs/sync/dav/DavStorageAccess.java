@@ -240,7 +240,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
 
     @Override
     public boolean setExecutable(String rootpath, String path, boolean executable) {
-        return false;
+        return true;
     } // setExecutable()
 
 
@@ -285,6 +285,7 @@ public class DavStorageAccess extends AbstractMetaStorageAccess implements Stora
     } // getInputStream()
 
 
+    @Override
     protected OutputStream getOutputStream(String rootPath, final String relativePath, final boolean forPayload) throws IOException {
         LOG.debug("getOutputStream() {}", relativePath);
         final String url = getUrl(rootPath, relativePath);

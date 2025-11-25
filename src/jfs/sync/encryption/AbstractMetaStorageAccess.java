@@ -78,6 +78,8 @@ public abstract class AbstractMetaStorageAccess extends EncryptedFileStorageAcce
                 ExtendedFileInfo fi = null;
                 if (o instanceof ExtendedFileInfo) {
                     fi = (ExtendedFileInfo)o;
+                } else {
+                    LOG.error("getMetaData() still old limited file info in use.");
                 } // if
                 if ((fi==null)&&(o instanceof FileInfo)) {
                     FileInfo info = (FileInfo)o;

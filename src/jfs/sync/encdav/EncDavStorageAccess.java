@@ -265,7 +265,7 @@ public class EncDavStorageAccess extends AbstractEncryptedStorageAccess implemen
 
     @Override
     public boolean setExecutable(String rootPath, String relativePath, boolean executable) {
-        return false;
+        return true;
     }
 
 
