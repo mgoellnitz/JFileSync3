@@ -226,16 +226,19 @@ distZip {
     from 'win'
     include '*.bmp'
   }
+  // For the FreeDesktop.org desktop integration this looks better
   into("$project.name") {
     from 'xdg'
     include '*.png'
   }
-  // For the FreeDesktop.org desktop integration this looks better
   into("$project.name/bin") {
     from 'xdg'
     include '*.desktop'
-    include '**/*.png'
     include 'prepare*.sh'
+  }
+  into("$project.name/bin/images") {
+    from 'xdg/images'
+    include '**/*.png'
   }
   // legal stuff, examples, and documentation
   into(project.name) {
