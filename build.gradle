@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2025 Martin Goellnitz
+ * Copyright (C) 2013-2026 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -94,7 +94,7 @@ dependencies {
   implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
   // Logging:
-  runtimeOnly 'ch.qos.logback:logback-classic:1.5.21'
+  runtimeOnly 'ch.qos.logback:logback-classic:1.5.24'
 
   testImplementation 'org.testng:testng:7.11.0'
 }
