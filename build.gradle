@@ -82,7 +82,7 @@ dependencies {
   // Update transitive dependency from vfs due to vulnerability
   implementation 'org.apache.hadoop:hadoop-hdfs-client:3.4.2'
   // Update transitive dependency from vfs through hadoop-hdfs-client due to vulnerability
-  implementation 'com.fasterxml.jackson.core:jackson-core:2.20.1'
+  implementation 'com.fasterxml.jackson.core:jackson-core:2.21.0'
 
   implementation ('org.apache.commons:commons-compress:1.28.0') {
     exclude group: 'org.apache.commons', module: 'commons-lang3'
@@ -94,9 +94,9 @@ dependencies {
   implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
   // Logging:
-  runtimeOnly 'ch.qos.logback:logback-classic:1.5.24'
+  runtimeOnly 'ch.qos.logback:logback-classic:1.5.31'
 
-  testImplementation 'org.testng:testng:7.11.0'
+  testImplementation 'org.testng:testng:7.12.0'
 }
 
 test {
