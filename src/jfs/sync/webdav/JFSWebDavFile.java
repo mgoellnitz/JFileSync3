@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2022 Martin Goellnitz
+ * Copyright (C) 2010-2026 Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.file.Paths;
 import java.util.List;
 import jfs.conf.JFSConfig;
 import jfs.sync.JFSFile;
@@ -328,7 +328,7 @@ public class JFSWebDavFile extends JFSFile {
                     List<DavResource> listing = ((JFSWebDavFileProducer)getFileProducer()).getListing(url);
                     if (listing.size()>1) {
                         list = new JFSWebDavFile[listing.size()-1];
-                        int rootLength = new URL(getFileProducer().getRootPath()).getPath().length();
+                        int rootLength = Paths.get(getFileProducer().getRootPath()).toUri().toURL().getPath().length();
 
                         int i = 0;
                         for (DavResource resource : listing) {

@@ -18,7 +18,6 @@
  */
 package jfs;
 
-import java.awt.Image;
 import java.awt.Taskbar;
 import java.io.File;
 import java.io.PrintStream;
@@ -64,8 +63,16 @@ public final class JFileSync {
 
             // JFS started from JAR:
             if (packageUrl.getProtocol().equals("jar")) {
-                URL jarUrl = new URL(packageUrl.getFile());
-                File jfsFile = new File(jarUrl.toURI());
+                String uriString = packageUrl.getFile();
+                int idx = uriString.indexOf('!');
+                if (idx>0) {
+                    uriString = uriString.substring(0, idx);
+                } // if
+                idx = uriString.lastIndexOf("file:");
+                if (idx>=0) {
+                    uriString=uriString.substring(idx+5);
+                }
+                File jfsFile = new File(uriString);
                 jfsLibDir = jfsFile.getParentFile().getParentFile();
             }
 

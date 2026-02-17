@@ -36,7 +36,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -159,12 +158,15 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             File jfsFile = null;
             // JFS started from JAR:
             if (packageUrl.getProtocol().equals("jar")) {
-                URL jarUrl = new URL(packageUrl.getFile());
-                String uriString = jarUrl.toURI().getPath();
+                String uriString = packageUrl.getFile();
                 int idx = uriString.indexOf('!');
                 if (idx>0) {
                     uriString = uriString.substring(0, idx);
                 } // if
+                idx = uriString.lastIndexOf("file:");
+                if (idx>=0) {
+                    uriString=uriString.substring(idx+5);
+                }
                 jfsFile = new File(uriString);
             }
             // JFS started from classes directory:
@@ -174,8 +176,6 @@ public class JFSMainView extends WindowAdapter implements ActionListener, Compon
             SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
             buildInfo += " - build date "+formatter.format(new Date(jfsFile.lastModified()))+" ";
         } catch (URISyntaxException use) {
-            ;
-        } catch (MalformedURLException mue) {
             ;
         } // try/catch
 
