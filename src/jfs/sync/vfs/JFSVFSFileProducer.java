@@ -1,6 +1,6 @@
 /*
  * JFileSync
- * Copyright (C) 2002-2022 Jens Heidrich, Martin Goellnitz
+ * Copyright (C) 2002-2026 Jens Heidrich, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
  */
 package jfs.sync.vfs;
 
-import java.util.ArrayList;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
 import org.apache.commons.vfs2.FileObject;
@@ -35,8 +34,6 @@ import org.slf4j.LoggerFactory;
  * @author Jens Heidrich
  */
 public class JFSVFSFileProducer extends JFSFileProducer {
-
-    private static final String SCHEME_SFTP = "sftp";
 
     private static final Logger LOG = LoggerFactory.getLogger(JFSVFSFileProducer.class);
 
@@ -75,6 +72,7 @@ public class JFSVFSFileProducer extends JFSFileProducer {
     /**
      * @see JFSFileProducer#getRootJfsFile()
      */
+    @Override
     public JFSFile getRootJfsFile() {
         if (rootFile==null) {
             rootFile = new JFSVFSFile(this);
@@ -88,26 +86,6 @@ public class JFSVFSFileProducer extends JFSFileProducer {
      */
     public JFSFile getJfsFile(String path, boolean asFolder) {
         return new JFSVFSFile(this, path);
-    }
-
-
-    /**
-     * @return Returns the available schemes.
-     */
-    static public String[] getSchemes() {
-        ArrayList<String> schemes = new ArrayList<>();
-        String[] schemesArray = new String[0];
-        try {
-            schemes.add(SCHEME_SFTP);
-            for (String s : VFS.getManager().getSchemes()) {
-                if (!("file:".equals(s)||s.equals(SCHEME_SFTP))) {
-                    schemes.add(s);
-                }
-            }
-        } catch (FileSystemException e) {
-            LOG.error("getSchemes()", e);
-        }
-        return schemes.toArray(schemesArray);
     }
 
 

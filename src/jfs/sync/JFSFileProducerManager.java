@@ -1,6 +1,6 @@
 /*
  * JFileSync
- * Copyright (C) 2002-2007, Jens Heidrich
+ * Copyright (C) 2002-2026 Jens Heidrich, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -86,8 +86,9 @@ public final class JFSFileProducerManager {
                                 .loadClass(className);
                         Constructor<JFSFileProducerFactory> constructor = c.getConstructor(new Class<?>[0]);
                         JFSFileProducerFactory factory = constructor.newInstance(new Object[0]);
-                        String name = factory.getName();
-                        factories.put(name, factory);
+                        for (String scheme : factory.getSchemes()) {
+                            factories.put(scheme, factory);
+                        }
                     } catch (Exception e) {
                         LOG.error("JFSFileProducerManager()", e);
                     } // try/catch

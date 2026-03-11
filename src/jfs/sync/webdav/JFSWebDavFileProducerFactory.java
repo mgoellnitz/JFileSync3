@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2026, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,8 @@ public class JFSWebDavFileProducerFactory extends AbstractJFSFileProducerFactory
      */
     public static final String SCHEME_NAME = "webdav";
 
+    public static final String[] SCHEMES = { SCHEME_NAME };
+
 
     public JFSWebDavFileProducerFactory() {
         System.setProperty("java.net.useSystemProxies", "true");
@@ -42,9 +44,9 @@ public class JFSWebDavFileProducerFactory extends AbstractJFSFileProducerFactory
 
 
     @Override
-    public String getName() {
-        return SCHEME_NAME;
-    } // getName()
+    public String[] getSchemes() {
+        return SCHEMES;
+    }
 
 
     /**

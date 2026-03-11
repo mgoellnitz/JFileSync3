@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2015, Martin Goellnitz
+ * Copyright (C) 2010-2026, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,14 +31,15 @@ public class JFSDavFileProducerFactory extends AbstractEncryptedFileProducerFact
 
     public static final String SCHEME_NAME = "dav";
 
-
-    @Override
-    public String getName() {
-        return SCHEME_NAME;
-    } // getName()
+    public static final String[] SCHEMES = { SCHEME_NAME };
 
 
     @Override
+    public String[] getSchemes() {
+        return SCHEMES;
+    }
+
+
     public JFSFileProducer createProducer(String uri) {
         DavStorageAccess storageAccess = new DavStorageAccess(JFSConfig.getInstance().getEncryptionCipher());
         Map<String, Long> levels = getCompressionsLevels();

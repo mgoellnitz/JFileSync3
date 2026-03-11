@@ -1,6 +1,6 @@
 /*
  * JFileSync
- * Copyright (C) 2002-2007, Jens Heidrich
+ * Copyright (C) 2002-2026 Jens Heidrich, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA, 02110-1301, USA
  */
-
 package jfs.sync;
+
 
 /**
  * This class produces and destroys factories for JFS files.
@@ -27,7 +27,7 @@ package jfs.sync;
  */
 public interface JFSFileProducerFactory {
 
-    String getName();
+    String[] getSchemes();
 
 
     /**
@@ -39,8 +39,7 @@ public interface JFSFileProducerFactory {
     /**
      * Returns a new procucer for a special URI.
      *
-     * @param uri
-     *            The URI to create the producer for.
+     * @param uri The URI to create the producer for.
      * @return The created producer.
      */
     JFSFileProducer createProducer(String uri);

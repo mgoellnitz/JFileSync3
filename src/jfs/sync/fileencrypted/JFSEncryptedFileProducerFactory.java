@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2013, Martin Goellnitz
+ * Copyright (C) 2010-2026, Martin Goellnitz
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,15 +21,18 @@ import jfs.sync.JFSFileProducer;
 import jfs.sync.encryption.AbstractEncryptedFileProducerFactory;
 import jfs.sync.encryption.JFSEncryptedFileProducer;
 
+
 public class JFSEncryptedFileProducerFactory extends AbstractEncryptedFileProducerFactory {
 
     public static final String SCHEME_NAME = "slowenc";
 
+    public static final String[] SCHEMES = { SCHEME_NAME };
+
 
     @Override
-    public String getName() {
-        return SCHEME_NAME;
-    } // getName()
+    public String[] getSchemes() {
+        return SCHEMES;
+    }
 
 
     @Override
