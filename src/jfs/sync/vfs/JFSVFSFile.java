@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import jfs.sync.JFSFile;
@@ -494,7 +496,10 @@ public class JFSVFSFile extends JFSFile {
                 FileObject[] files = file.getChildren();
                 if (files!=null) {
                     LOG.debug("fillFileList({}):", file.getName());
-                    String dummyName = file.getName()+"/"+file.getName().getBaseName();
+                    String baseName = file.getName().getBaseName();
+                    baseName = URLEncoder.encode(baseName, Charset.defaultCharset());
+                    baseName = baseName.replaceAll("\\+", "%20");
+                    String dummyName = file.getName()+"/"+baseName;
                     LOG.debug("fillFileList() dummy: {}", dummyName);
                     for (FileObject fo : files) {
                         if (dummyName.equals(""+fo.getName())) {
