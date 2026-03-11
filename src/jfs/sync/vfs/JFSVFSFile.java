@@ -23,9 +23,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import jfs.sync.JFSFile;
 import jfs.sync.JFSFileProducer;
+import jfs.sync.JFSUserAuthentication;
+import jfs.sync.JFSUserAuthenticationInterface;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
@@ -72,10 +75,10 @@ public class JFSVFSFile extends JFSFile {
         try {
             FileSystemOptions opts = new FileSystemOptions();
 
-            // TODO:
             // Avoid using known hosts file if SFTP is used:
             if (fileProducer.getScheme().equals("sftp")) {
-                SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(opts, "no");
+                SftpFileSystemConfigBuilder.getInstance()
+                        .setStrictHostKeyChecking(opts, "no");
             }
 
             // Get user name and password, if not specified:
@@ -83,10 +86,12 @@ public class JFSVFSFile extends JFSFile {
                 URI uriObject = new URI(fileProducer.getUri());
                 String userInfo = uriObject.getUserInfo();
                 if (userInfo==null||!userInfo.contains(":")) {
-                    // TODO:
-                    String username = "";
-                    String password = "";
-                    StaticUserAuthenticator auth = new StaticUserAuthenticator(null, username, password);
+                    JFSUserAuthentication userAuth = JFSUserAuthentication.getInstance();
+                    userAuth.setResource(fileProducer.getUri());
+                    JFSUserAuthenticationInterface userInterface = userAuth.getUserInterface();
+                    StaticUserAuthenticator auth = new StaticUserAuthenticator(
+                            null, userInterface.getUserName(),
+                            userInterface.getPassword());
                     DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(opts, auth);
                 }
             } catch (URISyntaxException e) {
@@ -147,6 +152,7 @@ public class JFSVFSFile extends JFSFile {
     /**
      * @see JFSFile#getInputStream()
      */
+    @Override
     protected InputStream getInputStream() {
         if (file==null) {
             return null;
@@ -164,6 +170,7 @@ public class JFSVFSFile extends JFSFile {
     /**
      * @see JFSFile#getOutputStream()
      */
+    @Override
     protected OutputStream getOutputStream() {
         if (file==null) {
             return null;
@@ -180,6 +187,7 @@ public class JFSVFSFile extends JFSFile {
     /**
      * @see JFSFile#closeInputStream()
      */
+    @Override
     protected void closeInputStream() {
         if (file!=null) {
             try {
@@ -194,6 +202,7 @@ public class JFSVFSFile extends JFSFile {
     /**
      * @see JFSFile#closeOutputStream()
      */
+    @Override
     protected void closeOutputStream() {
         if (file!=null) {
             try {
@@ -240,6 +249,7 @@ public class JFSVFSFile extends JFSFile {
     /**
      * @see JFSFile#exists()
      */
+    @Override
     public boolean exists() {
         if (file==null) {
             return false;
@@ -256,6 +266,7 @@ public class JFSVFSFile extends JFSFile {
     /**
      * @see JFSFile#getLastModified()
      */
+    @Override
     public long getLastModified() {
         if (lastModified==-1) {
             if (file==null||isDirectory()) {
@@ -264,6 +275,7 @@ public class JFSVFSFile extends JFSFile {
                 try {
                     lastModified = file.getContent().getLastModifiedTime();
                 } catch (FileSystemException e) {
+                    lastModified = 0;
                     LOG.error("getLastModified()", e);
                 }
             }
@@ -275,6 +287,7 @@ public class JFSVFSFile extends JFSFile {
     /**
      * @see JFSFile#getLength()
      */
+    @Override
     public long getLength() {
         if (length==-1) {
             if (file==null||isDirectory()) {
@@ -283,6 +296,7 @@ public class JFSVFSFile extends JFSFile {
                 try {
                     length = file.getContent().getSize();
                 } catch (FileSystemException e) {
+                    length = 0;
                     LOG.error("getLength()", e);
                 }
             }
@@ -292,35 +306,12 @@ public class JFSVFSFile extends JFSFile {
 
 
     /**
-     * @see JFSFile#fillFileList(List)
-     */
-    public void fillFileList(List<JFSFile> list) {
-        if (isDirectory()&&list!=null&&file!=null) {
-            try {
-                FileObject[] files = file.getChildren();
-                if (files!=null) {
-                    for (FileObject fo : files) {
-                        list.add(new JFSVFSFile(fileProducer, fo,
-                                getRelativePath()+"/"
-                                +fo.getName().getBaseName()));
-                    }
-                }
-            } catch (FileSystemException e) {
-                LOG.error("fillFileList()", e);
-            }
-        }
-    }
-
-
-    /**
      * @see JFSFile#getName()
      */
+    @Override
     public String getName() {
-        if (file==null) {
-            return "NAV";
-        }
         if (name==null) {
-            name = file.getName().getBaseName();
+            name = (file==null) ? "" : file.getName().getBaseName();
         }
         return name;
     }
@@ -330,11 +321,8 @@ public class JFSVFSFile extends JFSFile {
      * @see JFSFile#getPath()
      */
     public String getPath() {
-        if (file==null) {
-            return "NAV";
-        }
         if (path==null) {
-            path = file.getName().getPath();
+            path = (file==null) ? "" : file.getName().getPath();
         }
         return path;
     }
@@ -397,61 +385,141 @@ public class JFSVFSFile extends JFSFile {
 
     @Override
     protected boolean preCopyTgt(JFSFile srcFile) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            file.getContent().close();
+            return true;
+        } catch (FileSystemException e) {
+            LOG.error("preCopyTgt()", e);
+            return false;
+        }
     }
 
 
     @Override
     protected boolean preCopySrc(JFSFile tgtFile) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 
 
     @Override
     protected boolean postCopyTgt(JFSFile srcFile) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            if (!srcFile.isDirectory()) {
+                file.getContent().setLastModifiedTime(srcFile.getLastModified());
+            }
+            file.refresh();
+            return true;
+        } catch (FileSystemException e) {
+            LOG.error("preCopyTgt()", e);
+            return false;
+        }
     }
 
 
     @Override
     protected boolean postCopySrc(JFSFile tgtFile) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 
 
+    /**
+     * @see JFSFile#canRead()
+     */
     @Override
     public boolean canRead() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (file==null) {
+            return false;
+        }
+        try {
+            return file.isReadable();
+        } catch (FileSystemException e) {
+            LOG.error("canRead()", e);
+            return false;
+        }
     }
 
 
+    /**
+     * @see JFSFile#canWrite()
+     */
     @Override
     public boolean canWrite() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (file==null) {
+            return false;
+        }
+        try {
+            return file.isWriteable();
+        } catch (FileSystemException e) {
+            LOG.error("canWrite()", e);
+            return false;
+        }
     }
 
 
     @Override
     public boolean canExecute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
 
     @Override
     public boolean setReadOnly() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            file.setWritable(false, true);
+            file.setWritable(false, false);
+        } catch (FileSystemException e) {
+            LOG.error("setReadOnly()", e);
+            return false;
+        }
+        return true;
     }
 
 
     @Override
     public boolean setExecutable() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            file.setExecutable(false, true);
+            file.setExecutable(false, false);
+        } catch (FileSystemException e) {
+            LOG.error("setExecutable()", e);
+            return false;
+        }
+        return true;
+    }
+
+
+    private void fillFileList(List<JFSFile> list) {
+        if (isDirectory()&&list!=null&&file!=null) {
+            try {
+                FileObject[] files = file.getChildren();
+                if (files!=null) {
+                    LOG.debug("fillFileList({}):", file.getName());
+                    String dummyName = file.getName()+"/"+file.getName().getBaseName();
+                    LOG.debug("fillFileList() dummy: {}", dummyName);
+                    for (FileObject fo : files) {
+                        if (dummyName.equals(""+fo.getName())) {
+                            LOG.info("fillFileList() leaving out {} in {}", fo, file);
+                        } else {
+                            LOG.debug("fillFileList({})   {}", getRelativePath(), fo.getName());
+                            String p = getRelativePath()+"/"+fo.getName().getBaseName();
+                            list.add(new JFSVFSFile(fileProducer, fo, p));
+                        }
+                    }
+                    LOG.debug("fillFileList({}).", file.getName());
+                }
+            } catch (FileSystemException e) {
+                LOG.error("fillFileList()", e);
+            }
+        }
     }
 
 
     @Override
     public JFSFile[] getList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JFSFile[] template = new JFSFile[0];
+        List<JFSFile> fileList = new ArrayList<>();
+        fillFileList(fileList);
+        return fileList.toArray(template);
     }
 
 }
