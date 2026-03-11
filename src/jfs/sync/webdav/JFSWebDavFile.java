@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.util.List;
@@ -328,8 +330,7 @@ public class JFSWebDavFile extends JFSFile {
                     List<DavResource> listing = ((JFSWebDavFileProducer)getFileProducer()).getListing(url);
                     if (listing.size()>1) {
                         list = new JFSWebDavFile[listing.size()-1];
-                        int rootLength = Paths.get(getFileProducer().getRootPath()).toUri().toURL().getPath().length();
-
+                        int rootLength = new URI(getFileProducer().getRootPath()).toURL().getPath().length();
                         int i = 0;
                         for (DavResource resource : listing) {
                             String path = resource.getPath();
