@@ -187,8 +187,8 @@ Required packages for JFileSync3 development (not included in the distribution):
 
 Used, and as a result recommended, development tools are:
 
-* OpenJDK 17, or 21 respectively.
-* Netbeans 21 or above
+* OpenJDK 17 or 21 respectively.
+* Netbeans 26 or above
 
 The following structure describes all directories and files included in the
 JFileSync3 source repository:
