@@ -115,7 +115,7 @@ position, you might try the DEB or RPM package and provide feedback.
 
 Unzip the distribution file to a directory of your choice. The XDG launcher
 script can be automatically modified to reflect this path with the script
-`prepare_xdg_file.sh`.
+`prepare_desktop_file.sh`.
 
 You can start the application through
 
