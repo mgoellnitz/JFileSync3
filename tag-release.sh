@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 #
-# Copyright 2020-2025 Martin Goellnitz
+# Copyright 2020-2026 Martin Goellnitz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,13 +16,13 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 usage() {
-   echo "Usage: $MYNAME [-h] [-l name] [push]" 1>&2
+   echo "Usage: $MYNAME [-h] [-t] [-p] [-l name]" 1>&2
    echo "" 1>&2
    echo "  -h         this page" 1>&2
    echo "  -l name    latest release name" 1>&2
-   echo "     push    immediately push the result" 1>&2
+   echo "  -p         also push the release" 1>&2
+   echo "  -t         really tag instead of a dry run which is the default" 1>&2
    echo "" 1>&2
-   exit 1
 }
 
 CURRENT=$(git tag -l|sort -k1.2n|tail -1)
@@ -30,25 +30,37 @@ if [ -z "$CURRENT" ] ; then
   CURRENT="3.0.1"
 fi
 
-while getopts "hl:" opt ; do
+while getopts "hl:pt" opt ; do
   case "${opt}" in
     h)
       usage
+      exit
       ;;
     l)
       CURRENT=$OPTARG
       ;;
+    p)
+      PUSH=true
+      ;;
+    t)
+      APPLY=true
+      ;;
     *)
       usage
+      exit 1
       ;;
   esac
 done
 shift $((OPTIND-1))
 
-echo Current Release $CURRENT
-COUNTER=$(echo $CURRENT|sed -e 's/^[0-9][0-9]*\.[0-9][0-9]*\.//g')
-COUNTER=$[ $COUNTER + 1 ]
-TAG="$(echo $CURRENT|sed -e 's/[0-9][0-9]$//g')$COUNTER"
-echo Next Release $TAG
-git tag -a -m "Release $TAG" $TAG
-git commit -m "Move to next Release" build.gradle src/jfs/resources/conf/JFSConfig.properties xdg/JFileSync3.desktop
+echo "Current Release $CURRENT"
+COUNTER=$(echo "$CURRENT"|sed -e 's/^[0-9][0-9]*\.[0-9][0-9]*\.//g')
+COUNTER=$(( COUNTER + 1 ))
+TAG="$(echo "$CURRENT"|sed -e 's/[0-9][0-9]$//g')$COUNTER"
+echo "Next Release $TAG"
+if [ ! -z "$APPLY" ] ; then
+  git tag -a -m "Release $TAG" "$TAG"
+fi
+if [ ! -z "$PUSH" ] ; then
+  git push --tags
+fi
