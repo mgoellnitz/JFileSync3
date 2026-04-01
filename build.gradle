@@ -20,6 +20,9 @@ plugins {
   id "net.ossindex.audit" version "0.4.11"
   id "com.netflix.nebula.ospackage" version "12.0.0"
 }
+def applicationMainClass = 'jfs.JFileSync'
+def projectName = project.name.toLowerCase()
+
 def l4j = true
 
 apply plugin: 'java'
@@ -118,8 +121,6 @@ repositories {
   mavenCentral()
 }
 
-var applicationMainClass = 'jfs.JFileSync'
-
 application {
   mainClass.set(applicationMainClass)
 }
@@ -165,7 +166,7 @@ startScripts {
 }
 
 ospackage {
-  packageName = 'jfilesync'
+  packageName = projectName
   version = '3.0-SNAPSHOT'
   maintainer = 'Martin Goellnitz'
   url = 'https://mgoellnitz.github.io/JFileSync3'
@@ -211,52 +212,51 @@ buildRpm {
   link("/usr/bin/$project.name", "/usr/lib/$packageName/script/$project.name")
 }
 
-distZip.dependsOn buildRpm
-
-distZip {
-  into("$project.name") {
-    from "$buildDir/launch4j"
-    include '*.exe'
+distributions {
+  main {
+    contents {
+      into('.') {
+        from "$buildDir/launch4j"
+        include '*.exe'
+      }
+      // Sometimes I want to have the icon file at hand
+      into('bin') {
+        from 'win'
+        include '*.ico'
+      }
+      // For the FreeDesktop.org desktop integration this looks better
+      into('.') {
+        from 'xdg'
+        include '*.png'
+      }
+      into('bin') {
+        from 'xdg'
+        include '*.desktop'
+        include 'prepare*.sh'
+      }
+      into('lib/icons/hicolor') {
+        from 'xdg/images'
+        include '**/*.png'
+      }
+      // legal stuff, examples, and documentation
+      into('.') {
+        from '.'
+        include 'legal/*.*'
+        include 'profiles/*.*'
+        include 'README.md'
+      }
+      /*
+      // You might package your personal profiles in here
+      into('.') {
+          from '..'
+          include 'profiles/**'
+      }
+      */
+    }
   }
-  // Sometimes I want to have the icon file at hand
-  into("$project.name/bin") {
-    from 'win'
-    include '*.ico'
-  }
-  // Spash screens
-  into("$project.name/bin") {
-    from 'win'
-    include '*.bmp'
-  }
-  // For the FreeDesktop.org desktop integration this looks better
-  into("$project.name") {
-    from 'xdg'
-    include '*.png'
-  }
-  into("$project.name/bin") {
-    from 'xdg'
-    include '*.desktop'
-    include 'prepare*.sh'
-  }
-  into("$project.name/bin/images") {
-    from 'xdg/images'
-    include '**/*.png'
-  }
-  // legal stuff, examples, and documentation
-  into(project.name) {
-    from '.'
-    include 'legal/*.*'
-    include 'profiles/*.*'
-    include 'README.md'
-  }
-  /*
-  // You might package your personal profiles in here
-  into(project.name) {
-  from '..'
-  include 'profiles/**'
-  }
-  */
 }
+
+distZip.dependsOn buildRpm
 
 private List<String> getCmd(String cmd) {
   // TODO: OS-Switch
@@ -315,7 +315,3 @@ encrypt.dependsOn makeTestExecutable
 makeTestExecutable.dependsOn prepareTest
 prepareTest.dependsOn prepareTestee
 prepareTestee.dependsOn check
-
-// Project specific default output directory for eclipse users
-// apply plugin: 'eclipse'
-// eclipse.classpath.conventionMapping.defaultOutputDir = { new File(project.projectDir, 'build/classes/main') }
