@@ -22,6 +22,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javax.swing.JFrame;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -66,7 +67,7 @@ public final class JFSConst {
     /**
      * The default location for JFS configuration files.
      */
-    public final static String HOME_DIR = System.getProperty("user.home", ".")+File.separator+".jfs3";
+    public final static String HOME_DIR;
 
     /**
      * The current working directory.
@@ -185,6 +186,28 @@ public final class JFSConst {
      * The associated bundle to access the properties file.
      */
     private final ResourceBundle bundle;
+
+    static {
+        String configDir = System.getenv("XDG_CONFIG_HOME");
+        if (StringUtils.isNotEmpty(configDir)) {
+            File userConfig = new File(configDir);
+            if (!userConfig.exists()) {
+                configDir = null;
+            }
+        }
+        if (StringUtils.isEmpty(configDir)) {
+            configDir = System.getProperty("user.home", ".")+File.separator+".config";
+            File userConfig = new File(configDir);
+            if (!userConfig.exists()) {
+                configDir = null;
+            }
+        }
+        if (StringUtils.isNotEmpty(configDir)) {
+            HOME_DIR = configDir+File.separator+"JFileSync3";
+        } else {
+            HOME_DIR = System.getProperty("user.home", ".")+File.separator+".jfs3";
+        }
+    }
 
 
     /**
