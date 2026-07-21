@@ -334,6 +334,8 @@ public class JFSWebDavFile extends JFSFile {
                         int i = 0;
                         for (DavResource resource : listing) {
                             String path = resource.getPath();
+                            // Just in case server tells me something.s Should be obsolete.
+                            path = path.replaceAll("\\.\\.", "");
                             String pathPlus = path+"/";
                             LOG.debug("getList({}) {} / {}", i, folder, path);
                             if (!(folder.endsWith(path)||folder.endsWith(pathPlus))) {
