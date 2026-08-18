@@ -72,7 +72,7 @@ dependencies {
   }
   // Use later versions than required by sardine to address vulnerabilities
   implementation 'org.apache.httpcomponents:httpclient:4.5.14'
-  implementation 'commons-codec:commons-codec:1.21.0'
+  implementation 'commons-codec:commons-codec:1.22.1'
 
   runtimeOnly 'org.slf4j:jcl-over-slf4j:2.0.18' // httpclient and vfs use JCL
   runtimeOnly 'org.slf4j:jul-to-slf4j:2.0.18' // Sardine uses JUL
@@ -85,11 +85,11 @@ dependencies {
   runtimeOnly ('org.apache.commons:commons-vfs2-jackrabbit2:2.10.0') {
     exclude group: 'commons-logging', module: 'commons-logging'
   }
-  runtimeOnly 'com.github.mwiede:jsch:2.28.4'
+  runtimeOnly 'com.github.mwiede:jsch:2.28.6'
   // Update transitive dependency from vfs due to vulnerability
   runtimeOnly 'org.apache.hadoop:hadoop-hdfs-client:3.5.0'
   // Update transitive dependency from vfs through hadoop-hdfs-client due to vulnerability
-  runtimeOnly 'com.fasterxml.jackson.core:jackson-core:2.21.5'
+  runtimeOnly 'com.fasterxml.jackson.core:jackson-core:2.22.2'
 
   implementation ('org.apache.commons:commons-compress:1.28.0')
   // Update transitive dependency from commons-compress and vfs due to vulnerability
@@ -99,7 +99,7 @@ dependencies {
   implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
   // Logging:
-  runtimeOnly 'ch.qos.logback:logback-classic:1.5.38'
+  runtimeOnly 'ch.qos.logback:logback-classic:1.6.3'
 
   testImplementation 'org.testng:testng:7.12.0'
 }
