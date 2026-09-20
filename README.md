@@ -120,7 +120,7 @@ You can start the application through
 - a Windows launcher ('JFileSync3.exe')
 - a batch file ('bin/JFileSync3.bat')
 - a Unix shell script ('bin/JFileSync3')
-- a XDG launcher script ('bin/JFileSync3.desktop')
+- an XDG launcher script ('bin/de.provocon.JFileSync3.desktop')
 
 Nearly all functions of JFileSync3 can be controlled via the Graphical User
 Interface (GUI). However, JFileSync3 provides full access to all features

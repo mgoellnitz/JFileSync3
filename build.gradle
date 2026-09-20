@@ -174,6 +174,10 @@ ospackage {
     from 'packaging/xdg'
     include '*.desktop'
   }
+  into("/usr/share/metainfo") {
+    from '.'
+    include '*metainfo.xml'
+  }
   into("/usr/share/icons/hicolor") {
     from 'packaging/xdg/images'
     include '**/*.png'
@@ -224,7 +228,6 @@ distributions {
         from 'packaging/win'
         include '*.ico'
       }
-      // For the FreeDesktop.org desktop integration this looks better
       into('.') {
         from 'packaging/xdg'
         include '*.png'

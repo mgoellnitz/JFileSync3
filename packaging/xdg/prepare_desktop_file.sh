@@ -20,7 +20,7 @@ if [ -f $DIR/../lib/JFileSync3.jar ] ; then
   LIBDIR=$(dirname $(readlink -f $DIR/../lib/JFileSync3.jar))
   PATTERN=$(echo $DIR|sed -e 's/\//\\\//g')\\/
   IMAGE_FILE=$(find $LIBDIR -name "JFileSync3.png"|sed -e 's/\//\\\//g')
-  sed -i.bak -e "s/^Exec=.*/Exec=${PATTERN}JFileSync3/" $DIR/JFileSync3.desktop
-  sed -i.bak -e "s/^Icon=.*/Icon=$IMAGE_FILE/" $DIR/JFileSync3.desktop
+  sed -i.bak -e "s/^Exec=.*/Exec=${PATTERN}JFileSync3/" $DIR/de.provocon.JFileSync3.desktop
+  sed -i.bak -e "s/^Icon=.*/Icon=$IMAGE_FILE/" $DIR/de.provocon.JFileSync3.desktop
   rm -f $DIR/JFileSync3.desktop.bak
 fi

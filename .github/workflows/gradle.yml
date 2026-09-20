@@ -43,6 +43,11 @@ jobs:
             sed -i.back -e "s/3.0-SNAPSHOT/$PACKAGE_VERSION/g" src/jfs/resources/conf/JFSConfig.properties
             sed -i.back -e "s/3.0-SNAPSHOT/$PACKAGE_VERSION/g" xdg/JFileSync3.desktop
           fi
+          packaging/scripts/list-releases.sh > de.provocon.JFileSync3.metainfo.xml
+
+      - name: Prepare metainfo
+        run: |
+          packaging/scripts/list-releases.sh > de.provocon.JFileSync3.metainfo.xml
 
       - name: Build with Gradle
         run: ./gradlew -PossindexUser=${{secrets.OSS_INDEX_USER}} -PossindexToken=${{secrets.OSS_INDEX_TOKEN}} clean audit build
