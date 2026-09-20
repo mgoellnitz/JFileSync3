@@ -95,7 +95,7 @@ dependencies {
   // Update transitive dependency from commons-compress and vfs due to vulnerability
   implementation 'org.apache.commons:commons-lang3:3.20.0'
 
-  implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+  implementation 'org.bouncycastle:bcprov-jdk18on:1.86'
   implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
   // Logging:
@@ -110,7 +110,7 @@ test {
 }
 
 audit {
-  ignore = [ 'org.bouncycastle:bcprov-jdk15on:1.70' ]
+  ignore = [ 'com.fasterxml.jackson.core:jackson-databind:2.22.2' ]
   if (project.hasProperty('ossindexUser') && project.hasProperty('ossindexToken')) {
     user   = "$ossindexUser"
     token  = "$ossindexToken"
@@ -136,7 +136,7 @@ if (l4j) {
     errTitle = project.name
     jreMinVersion = '17'
     splashFileName= "$project.projectDir/win/JFileSync3-splash.bmp"
-    copyright = '(C) 2002-2025, J. Heidrich, M. Goellnitz'
+    copyright = '(C) 2002-2026, J. Heidrich, M. Goellnitz'
     downloadUrl = 'https://adoptium.net/de/temurin/releases'
     supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
     icon = "$project.projectDir/win/JFileSync3.ico"
