@@ -15,9 +15,8 @@ EncFS and thus be compatible with encfs4win, EDS Lite, Encdroid and so on.
 JFileSync3 comes with a GUI, command line tooling, and stored profiles.
 
 Find more on the scenarios where this tool might help you in the rather small
-[project wiki](https://github.com/mgoellnitz/JFileSync3/wiki). We have a
+[project wiki](https://codeberg.org/backendzeit/JFileSync3/wiki). We have a
 little bit of discussion in the [issues area at GitHub](https://github.com/mgoellnitz/JFileSync3/issues),
-so feel free to add your comments there.
 
 This software was developed because I personally needed an easy to use syncing
 tool to have everyday backups of highly confidential material - business and
@@ -182,13 +181,13 @@ You can find a copy of all licenses of JFileSync3 and the used libraries in the
 
 Required packages for JFileSync3 development (not included in the distribution):
 
-* Java 11 SDK or above (see e.g. `https://projects.eclipse.org/projects/adoptium`)
+* Java 17 SDK or above (see e.g. `https://projects.eclipse.org/projects/adoptium`)
 * [Launch4j](https://sourceforge.net/projects/launch4j/) installation on the path
 
 Used, and as a result recommended, development tools are:
 
 * OpenJDK 17 or 21 respectively.
-* Netbeans 26 or above
+* Netbeans 29 or above
 
 The following structure describes all directories and files included in the
 JFileSync3 source repository:
@@ -216,10 +215,7 @@ names, but calculated ones.
 Passwords to derive keys from are not constant along the whole directory
 structure.
 
-For oldish Java 8 setups, you will need the unlimited encryption add-on by
-Oracle for your JDK, if you want to use anything except the default cipher AES.
-
-Feel free to issue bug reports and ideas here.
+Feel free to issue bug reports and ideas.
 
 
 ## Building and Packaging
