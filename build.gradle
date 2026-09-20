@@ -135,11 +135,11 @@ if (l4j) {
     fileDescription = 'Java based encrypting File Syncing Tool'
     errTitle = project.name
     jreMinVersion = '17'
-    splashFileName= "$project.projectDir/win/JFileSync3-splash.bmp"
+    splashFileName= "$project.projectDir/packaging/win/JFileSync3-splash.bmp"
     copyright = '(C) 2002-2026, J. Heidrich, M. Goellnitz'
     downloadUrl = 'https://adoptium.net/de/temurin/releases'
     supportUrl = 'https://github.com/mgoellnitz/JFileSync3'
-    icon = "$project.projectDir/win/JFileSync3.ico"
+    icon = "$project.projectDir/packaging/win/JFileSync3.ico"
     dontWrapJar = true
     initialHeapSize = 1280
     maxHeapSize = 1536
@@ -171,11 +171,11 @@ ospackage {
   maintainer = 'Martin Goellnitz'
   url = 'https://mgoellnitz.github.io/JFileSync3'
   into("/usr/share/applications") {
-    from 'xdg'
+    from 'packaging/xdg'
     include '*.desktop'
   }
   into("/usr/share/icons/hicolor") {
-    from 'xdg/images'
+    from 'packaging/xdg/images'
     include '**/*.png'
   }
   into("/usr/share/$project.name") {
@@ -185,7 +185,7 @@ ospackage {
     include 'README.md'
   }
   into("/usr/lib/$packageName") {
-    from "xdg"
+    from "packaging/xdg"
     include '*.png'
   }
   into("/usr/lib/$packageName/lib") {
@@ -221,21 +221,21 @@ distributions {
       }
       // Sometimes I want to have the icon file at hand
       into('bin') {
-        from 'win'
+        from 'packaging/win'
         include '*.ico'
       }
       // For the FreeDesktop.org desktop integration this looks better
       into('.') {
-        from 'xdg'
+        from 'packaging/xdg'
         include '*.png'
       }
       into('bin') {
-        from 'xdg'
+        from 'packaging/xdg'
         include '*.desktop'
         include 'prepare*.sh'
       }
       into('lib/icons/hicolor') {
-        from 'xdg/images'
+        from 'packaging/xdg/images'
         include '**/*.png'
       }
       // legal stuff, examples, and documentation

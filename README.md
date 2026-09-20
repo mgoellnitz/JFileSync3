@@ -15,8 +15,7 @@ EncFS and thus be compatible with encfs4win, EDS Lite, Encdroid and so on.
 JFileSync3 comes with a GUI, command line tooling, and stored profiles.
 
 Find more on the scenarios where this tool might help you in the rather small
-[project wiki](https://codeberg.org/backendzeit/JFileSync3/wiki). We have a
-little bit of discussion in the [issues area at GitHub](https://github.com/mgoellnitz/JFileSync3/issues),
+[project wiki](https://codeberg.org/backendzeit/JFileSync3/wiki).
 
 This software was developed because I personally needed an easy to use syncing
 tool to have everyday backups of highly confidential material - business and
