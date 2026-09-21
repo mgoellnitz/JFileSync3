@@ -20,6 +20,7 @@ on:
   push:
     branches:
     - master
+    tags:
     - 3.*
   pull_request:
     branches: [ master ]
@@ -44,7 +45,7 @@ jobs:
             echo "$PACKAGE_VERSION"
             sed -i.back -e "s/3.0-SNAPSHOT/$PACKAGE_VERSION/g" build.gradle
             sed -i.back -e "s/3.0-SNAPSHOT/$PACKAGE_VERSION/g" src/jfs/resources/conf/JFSConfig.properties
-            sed -i.back -e "s/3.0-SNAPSHOT/$PACKAGE_VERSION/g" xdg/JFileSync3.desktop
+            sed -i.back -e "s/3.0-SNAPSHOT/$PACKAGE_VERSION/g" packaging/xdg/de.provocon.JFileSync3.desktop
           fi
 
       - name: Build with Gradle
@@ -75,7 +76,7 @@ jobs:
           retention-days: 10
 
       - name: Upload Packages
-        if: github.event_name == 'push' && startsWith(github.ref_name, '3.') && github.server_url == 'https://codeberg.org'
+        if: startsWith(github.ref_name, '3.')
         env:
           REGISTRY: ${{ github.server_url }}/api/packages/${{ github.repository_owner }}
         run: |

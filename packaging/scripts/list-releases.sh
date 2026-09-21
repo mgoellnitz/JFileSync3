@@ -44,6 +44,6 @@ while IFS= read -r release ; do
   TAG=$(echo $release|cut -d '_' -f 1)
   DATE=$(echo $release|cut -d '_' -f 2|cut -d ' ' -f 1-5)
   D=$(date -d "$DATE" +%Y-%m-%d)
-  echo '    <release version="'$TAG'" date="'$D'">'
+  echo '    <release version="'$TAG'" date="'$D'"/>'
 done
 cat packaging/xdg/JFileSync3.metainfo.xml|tail -25
