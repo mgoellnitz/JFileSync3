@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Prepare Tools
-        run: apt update ; apt install -yq nodejs git
+        run: apt update ; apt install -yq nodejs git curl
 
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -73,3 +73,33 @@ jobs:
           name: JFileSync3-${{ github.ref_name }}-RPM
           path: build/distributions/*.rpm
           retention-days: 10
+
+      - name: Upload Packages
+        if: github.event_name == 'push' && startsWith(github.ref_name, '3.') && github.server_url == 'https://codeberg.org'
+        env:
+          REGISTRY: ${{ github.server_url }}/api/packages/${{ github.repository_owner }}
+        run: |
+          set -eu
+
+          upload() {
+            echo "Uploading $1 to $2"
+            curl --fail-with-body -sS \
+              --user "${{vars.CODEBERG_USER}}:${{secrets.CODEBERG_TOKEN}}" \
+              --upload-file "$1" "$2"
+            echo
+          }
+
+          # ZIP as generic package
+          for f in build/distributions/*.zip ; do
+            upload "$f" "$REGISTRY/generic/jfilesync3/${{ github.ref_name }}/$(basename "$f")"
+          done
+
+          # Debian package: distribution "stable", component "main"
+          for f in build/distributions/*.deb ; do
+            upload "$f" "$REGISTRY/debian/pool/stable/main/upload"
+          done
+
+          # RPM package
+          for f in build/distributions/*.rpm ; do
+            upload "$f" "$REGISTRY/rpm/upload"
+          done
