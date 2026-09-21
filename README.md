@@ -1,9 +1,11 @@
 # Java based encrypting File Syncing Tool
 
-[![Latest Release](https://img.shields.io/github/release/mgoellnitz/JFileSync3.svg)](https://github.com/mgoellnitz/JFileSync3/releases/latest)
+[![Latest Release](https://codeberg.org/backendzeit/JFileSync3/badges/release.svg)](https://codeberg.org/backendzeit/JFileSync3/releases/latest)
+[![Download](https://img.shields.io/badge/Download-Release-blue)](https://codeberg.org/backendzeit/JFileSync3/packages)
+[![Build Status](https://codeberg.org/backendzeit/JFileSync3/badges/workflows/gradle.yml/badge.svg)](https://codeberg.org/backendzeit/JFileSync3/actions)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/mgoellnitz/JFileSync3/gradle.yml)](https://github.com/mgoellnitz/JFileSync3/actions/workflows/gradle.yml)
 [![Build Status](https://img.shields.io/gitlab/pipeline/mgoellnitz/JFileSync3.svg)](https://gitlab.com/mgoellnitz/JFileSync3/pipelines)
-[![Download](https://img.shields.io/badge/Download-Snapshot-blue)](https://gitlab.com/mgoellnitz/JFileSync3/-/jobs/artifacts/master/download?job=JFileSync3)
+[![Snapshot](https://img.shields.io/badge/Download-Snapshot-orange)](https://gitlab.com/mgoellnitz/JFileSync3/-/jobs/artifacts/master/download?job=JFileSync3)
 
 File syncing with optional compression and encryption for local and WebDAV
 folders. For local folders, encryption can optionally be accomplished with
